@@ -2,7 +2,7 @@
 
 An embedded backend plugin platform for owner-controlled applications and plugins. Applications own their domain contracts, authorization and durable state; WeavePort owns bound execution, callbacks, admission and worker lifecycle.
 
-The current internal distribution is **0.1.0-internal.2**, qualified for native macOS arm64. It is not a public stable release or a hostile-plugin sandbox. See [current status and open work](docs/status.md), [architecture](docs/architecture.md) and the [integration contract](docs/v1-integration-contract.md).
+The first public NuGet version is **0.1.0**, licensed under [MIT](LICENSE). Functional qualification covers native macOS arm64. The API is evolving and native execution is not a hostile-plugin sandbox. See [current status and open work](docs/status.md), [architecture](docs/architecture.md) and the [integration contract](docs/v1-integration-contract.md).
 
 ## Start here
 

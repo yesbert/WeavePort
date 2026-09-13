@@ -1,6 +1,6 @@
 # Product status
 
-Current internal delivery: **0.1.0-internal.2**. The release includes four core NuGet packages, their exact offline dependency closure, Python/TypeScript author SDKs and three reference applications. It is an internal integration foundation, not a stable public release.
+Public NuGet version: **0.1.0**, under MIT, with four core packages: Abstractions, Hosting, Sdk and Sdk.Client. Native macOS arm64 is the qualified platform. This pre-1.0 API remains subject to evolution. Python/TypeScript registry publication and a new offline distribution are outside this release. The historical internal distribution remains **0.1.0-internal.2**.
 
 Implemented and checked: immutable installed-artifact selection, exact compatibility/API gates, shared coordinator template, guarded native recovery, optional safe diagnostics and standalone offline installation. The [candidate evidence](../reports/release/0.1.0-internal.2/candidate/report.md) records 398 assertion executions; the [distribution evidence](../reports/release/0.1.0-internal.2/distribution/report.md) records 144 application assertions and six offline template builds. These records identify their exact source and artifacts.
 
@@ -18,6 +18,6 @@ This qualifies the recorded native macOS arm64 profile. Individual latency reach
 
 The remaining platform change is [qualify-native-capacity-and-platform-comparison](../openspec/changes/qualify-native-capacity-and-platform-comparison/tasks.md): native Windows functional/performance qualification is not executed because no local Windows VM was available at the recorded check. Source support and compilation do not qualify Windows. See [platform requirements](platform-qualification.md).
 
-HiveWeaver, TreeWeaver and NextPA integration remains separate application work. Public package publication, signing/notarization, stronger sandboxing and automatic deployment/migration are separate release decisions, not hidden tasks needed to run the current internal examples.
+HiveWeaver, TreeWeaver and NextPA integration remains separate application work. Signing/notarization, stronger sandboxing and automatic deployment/migration are separate release decisions, not hidden tasks needed to run the current internal examples.
 
 The [repository cleanup qualification](../reports/verification/current/README.md) adds a maintained-link check (399 assertion executions), moved adapter checks and a packaging regression. It does not replace the exact current release evidence above.

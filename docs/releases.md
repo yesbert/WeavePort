@@ -6,7 +6,7 @@ The GitHub delivery target is [yesbert/WeavePort](https://github.com/yesbert/Wea
 
 The release allowlist in `build/release-packages.json` contains `WeavePort.Abstractions`, `WeavePort.Hosting`, `WeavePort.Sdk` and `WeavePort.Sdk.Client`. Gateway, Composition and Testing remain optional/experimental; adding them requires appropriate package-consumer evidence. Python and TypeScript author SDK publication is separate from NuGet delivery.
 
-The current version `0.1.0-internal.2` is an internal candidate and is deliberately rejected by the public release gate. Setting up Actions does not publish it or allocate a public version. Before the first public prerelease, review the version change across `Directory.Build.props`, the exact compatibility matrix, package references, example installation metadata, API expectations and documentation. Requalify the complete candidate. A simple tag override would leave incompatible declarations and is therefore refused.
+The first public version is `0.1.0`, licensed under [MIT](../LICENSE). The four core package references and exact compatibility matrix use this version; host API and wire protocol remain 1. Python/TypeScript SDK versions remain 0.1.0 without registry publication. Historical internal distribution and measurement evidence retain their original identities. Public releases require a complete clean candidate qualification; a tag override cannot substitute for updating compatibility inputs.
 
 ## Trusted Publishing setup
 

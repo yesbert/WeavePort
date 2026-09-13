@@ -1,6 +1,6 @@
 ## Context
 
-WeavePort targets .NET 10 with SDK 10.0.401 and an exact four-package compatibility matrix. The current version remains 0.1.0-internal.2. This change prepares public delivery without implicitly publishing the internal candidate.
+WeavePort targets .NET 10 with SDK 10.0.401 and an exact four-package compatibility matrix. The first public version is 0.1.0 under MIT. The historical internal candidate retains its original identity.
 
 ## Decisions
 
@@ -21,7 +21,7 @@ The reviewed API snapshot includes the already implemented OldestQuarantineSecon
 
 ## Remaining release work
 
-Confirm the package license and public version, reconcile exact compatibility metadata, then qualify and deliberately tag that release. Trusted Publishing policy configuration does not prove a successful OIDC exchange or package publication.
+Qualify the MIT-licensed 0.1.0 package set and deliberately tag the release. Trusted Publishing policy configuration does not prove a successful OIDC exchange or package publication.
 
 ## Sources
 
