@@ -474,7 +474,7 @@ The sealer generates this block from the reviewed matrix; plugins do not choose 
 
 The metadata is a trusted deployment declaration, not runtime package attestation. The gate inspects real packed package metadata and loaded assembly versions; the installation resolver validates declarations and file hashes. It does not interrogate every transitive runtime dependency inside a running worker. Same `0.1.0` labels across different development builds do not prove identical bytes or behavior. Keep one coherent tested deployment and its pinned content; stable-file requirements in [installed-plugin resolution](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/installed-plugins.md) still apply.
 
-Old manifests without `Compatibility` fail closed. Rebuild/reseal only offline. This changes manifest identity, so existing pins require the original deployment or new application state; recovery never upgrades a pin automatically. Manifest schema remains 1 during this unreleased evolution. A released-format evolution will need an explicit migration/format decision rather than relying on this development convention.
+Old manifests without `Compatibility` fail closed. Rebuild/reseal only offline. This changes manifest identity, so existing pins require the original deployment or new application state; recovery never upgrades a pin automatically. Manifest schema is 1 for the first public release. Future format evolution requires an explicit migration/format decision.
 
 ## Reviewed package/API surface
 
