@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <IsPackable>true</IsPackable>
+    <PackageReadmeFile>PACKAGE.md</PackageReadmeFile>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <WarningsAsErrors>$(WarningsAsErrors);CS1591</WarningsAsErrors>
+    <Description>WeavePort proof-of-concept testing.</Description>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../WeavePort.Abstractions/WeavePort.Abstractions.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="../../docs/package.md" Pack="true" PackagePath="PACKAGE.md" />
+  </ItemGroup>
+</Project>

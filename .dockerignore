@@ -1,0 +1,11 @@
+**/bin
+**/obj
+.git
+node_modules
+artifacts
+reports
+.agents
+.claude
+.codex
+AGENTS.md
+CLAUDE.md

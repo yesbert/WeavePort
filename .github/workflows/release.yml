@@ -1,0 +1,122 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  pack:
+    name: Qualify and select packages
+    runs-on: macos-15
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-dotnet@v6.0.0
+        with:
+          global-json-file: global.json
+      - uses: actions/setup-python@v7.0.0
+        with:
+          python-version: '3.13'
+      - uses: actions/setup-node@v7.0.0
+        with:
+          node-version: '22'
+      - name: Verify deliberate release identity
+        env:
+          TAG: ${{ github.ref_name }}
+        run: python3 scripts/release.py "$TAG"
+      - run: python3 scripts/generate-llms.py --check
+      - run: python3 scripts/check-public-tree.py
+      - run: python3 tests/release/test_release.py
+      - name: Qualify committed source and packed consumers
+        run: ./scripts/verify.sh
+      - name: Export original tested packages
+        env:
+          TAG: ${{ github.ref_name }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          candidates=(artifacts/candidates/*/result.json)
+          [[ ${#candidates[@]} -eq 1 ]]
+          python3 scripts/release.py "$TAG" --candidate "$(dirname "${candidates[0]}")"
+      - uses: actions/upload-artifact@v7.0.1
+        with:
+          name: nupkgs
+          path: artifacts/release/*
+          if-no-files-found: error
+          retention-days: 14
+      - name: Retain qualification evidence
+        if: always()
+        uses: actions/upload-artifact@v7.0.1
+        with:
+          name: release-evidence
+          path: |
+            artifacts/candidates/*/result.json
+            artifacts/candidates/*/artifact-manifest.json
+            artifacts/candidates/*/package-set.json
+            artifacts/candidates/*/logs/*.log
+          if-no-files-found: warn
+          retention-days: 14
+
+  publish:
+    name: Publish to NuGet.org
+    needs: pack
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    environment: nuget-org
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/download-artifact@v8.0.1
+        with:
+          name: nupkgs
+          path: artifacts/release
+      - uses: actions/setup-dotnet@v6.0.0
+        with:
+          dotnet-version: '10.0.x'
+      - name: Exchange OIDC for a short-lived NuGet key
+        id: login
+        uses: NuGet/login@v1
+        with:
+          user: ${{ vars.NUGET_USER }}
+      - name: Push packages and sibling symbols
+        env:
+          NUGET_API_KEY: ${{ steps.login.outputs.NUGET_API_KEY }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ -n "$NUGET_API_KEY" ]]
+          for package in artifacts/release/*.nupkg; do
+            dotnet nuget push "$package" --source https://api.nuget.org/v3/index.json --api-key "$NUGET_API_KEY" --skip-duplicate
+          done
+
+  announce:
+    name: Announce published release
+    needs: publish
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - name: Create release after successful publication
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          TAG: ${{ github.ref_name }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if gh release view "$TAG" >/dev/null 2>&1; then exit 0; fi
+          args=(--verify-tag --generate-notes --title "WeavePort ${TAG#v}")
+          if [[ "$TAG" == *-* ]]; then args+=(--prerelease); fi
+          gh release create "$TAG" "${args[@]}"

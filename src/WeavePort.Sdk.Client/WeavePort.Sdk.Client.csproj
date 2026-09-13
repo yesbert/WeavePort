@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <IsPackable>true</IsPackable>
+    <PackageReadmeFile>PACKAGE.md</PackageReadmeFile>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <WarningsAsErrors>$(WarningsAsErrors);CS1591</WarningsAsErrors>
+    <Description>Typed WeavePort plugin calls and bounded result streams.</Description>
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../WeavePort.Abstractions/WeavePort.Abstractions.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="../Shared/Cleanup.cs" Link="Internal/Cleanup.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="../../docs/package.md" Pack="true" PackagePath="PACKAGE.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="../Shared/JsonSize.cs" Link="Internal/JsonSize.cs" />
+  </ItemGroup>
+</Project>

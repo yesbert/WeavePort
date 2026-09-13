@@ -1,0 +1,247 @@
+using System.Security.Cryptography;
+
+namespace WeavePort.Composition;
+/// <summary>An immutable result belonging exclusively to its creating request scope. Contains no filesystem path.</summary>
+public sealed class ResultHandle
+{
+    internal ResultHandle(string id, long length)
+    {
+        Id = id;
+        Length = length;
+    }
+
+    internal string Id { get; }
+    /// <summary>Gets the committed byte length.</summary>
+    public long Length { get; }
+}
+
+/// <summary>Limits retained result bytes and object count within one trusted product request.</summary>
+public sealed record ResultLimits(long MaximumObjectBytes = 256L * 1024 * 1024, long MaximumScopeBytes = 1024L * 1024 * 1024, int MaximumObjects = 32);
+/// <summary>Private, request-owned immutable file results. The trusted product supplies tenant identity and a private storage root.</summary>
+public sealed class ResultScope : IAsyncDisposable
+{
+    private readonly string _directory;
+    private readonly ResultLimits _limits;
+    private readonly object _sync = new();
+    private readonly Dictionary<string, ResultHandle> _results = [];
+    private readonly CancellationTokenSource _lifetime = new();
+    private readonly TaskCompletionSource _idle = new(TaskCreationOptions.RunContinuationsAsynchronously);
+    private int _active, _objects;
+    private long _bytes;
+    private bool _closed;
+    private Task? _disposal;
+    /// <summary>Creates a new request scope under a trusted, host-private root; plugins must not be given access to that root.</summary>
+    public ResultScope(string privateRoot, string tenant, ResultLimits? limits = null)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(tenant);
+        Tenant = tenant;
+        _limits = limits ?? new();
+        if (_limits.MaximumObjectBytes <= 0 || _limits.MaximumScopeBytes <= 0 || _limits.MaximumObjects <= 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(limits));
+        }
+
+        _directory = Path.Combine(Path.GetFullPath(privateRoot), Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(_directory);
+        if (!OperatingSystem.IsWindows())
+        {
+            File.SetUnixFileMode(_directory, UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.UserExecute);
+        }
+    }
+
+    /// <summary>Gets host-supplied identity; plugin payloads must never determine this value.</summary>
+    public string Tenant { get; }
+
+    /// <summary>Gets committed and in-progress byte reservations.</summary>
+    public long ReservedBytes
+    {
+        get
+        {
+            lock (_sync)
+            {
+                return _bytes;
+            }
+        }
+    }
+
+    private IDisposable Enter()
+    {
+        lock (_sync)
+        {
+            ObjectDisposedException.ThrowIf(_closed, this);
+            _active++;
+            return new Operation(this);
+        }
+    }
+
+    private sealed class Operation(ResultScope owner) : IDisposable
+    {
+        public void Dispose()
+        {
+            lock (owner._sync)
+            {
+                if (--owner._active == 0 && owner._closed)
+                {
+                    owner._idle.TrySetResult();
+                }
+            }
+        }
+    }
+
+    private FileStream Open(string id, bool write) => new(Path.Combine(_directory, id), new FileStreamOptions { Mode = write ? FileMode.CreateNew : FileMode.Open, Access = write ? FileAccess.Write : FileAccess.Read, Share = FileShare.Read, Options = FileOptions.Asynchronous | FileOptions.SequentialScan, BufferSize = 65536 });
+    private string Resolve(ResultHandle handle)
+    {
+        lock (_sync)
+        {
+            if (!_results.TryGetValue(handle.Id, out ResultHandle? found) || !ReferenceEquals(found, handle))
+            {
+                throw new UnauthorizedAccessException("Result does not belong to this request.");
+            }
+
+            return handle.Id;
+        }
+    }
+
+    /// <summary>Produces a result atomically. The producer must await its writes and must not retain the supplied stream.</summary>
+    public async Task<ResultHandle> CreateAsync(Func<Stream, CancellationToken, Task> producer, CancellationToken cancellationToken = default)
+    {
+        using var active = Enter();
+        using var linked = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, _lifetime.Token);
+        lock (_sync)
+        {
+            if (_objects >= _limits.MaximumObjects)
+            {
+                throw new IOException("Result object quota exceeded.");
+            }
+
+            _objects++;
+        }
+
+        string id = Guid.NewGuid().ToString("N");
+        long reserved = 0;
+        try
+        {
+            await using (FileStream file = Open(id, true))
+            {
+                using var limited = new BoundedOutput(file, linked.Token, count =>
+                {
+                    lock (_sync)
+                    {
+                        if (count > _limits.MaximumObjectBytes - reserved || count > _limits.MaximumScopeBytes - _bytes)
+                        {
+                            throw new IOException("Result byte quota exceeded.");
+                        }
+
+                        reserved += count;
+                        _bytes += count;
+                    }
+                });
+                await producer(limited, linked.Token);
+                linked.Token.ThrowIfCancellationRequested();
+                await file.FlushAsync(linked.Token);
+                if (file.Length != reserved)
+                {
+                    throw new IOException("Producer writes did not complete consistently.");
+                }
+            }
+
+            var handle = new ResultHandle(id, reserved);
+            lock (_sync)
+            {
+                _results.Add(id, handle);
+            }
+
+            return handle;
+        }
+        catch
+        {
+            File.Delete(Path.Combine(_directory, id));
+            lock (_sync)
+            {
+                _bytes -= reserved;
+                _objects--;
+            }
+
+            throw;
+        }
+    }
+
+    /// <summary>Streams an authorized immutable result to a caller-owned destination with bounded buffering.</summary>
+    public async Task CopyToAsync(ResultHandle handle, Stream destination, CancellationToken cancellationToken = default)
+    {
+        using var active = Enter();
+        using var linked = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, _lifetime.Token);
+        await using FileStream source = Open(Resolve(handle), false);
+        await source.CopyToAsync(destination, 65536, linked.Token);
+    }
+
+    /// <summary>Transforms one bounded chunk at a time. The transform must not retain its input memory after returning.</summary>
+    public async Task<ResultHandle> TransformAsync(ResultHandle input, Func<ReadOnlyMemory<byte>, CancellationToken, ValueTask<ReadOnlyMemory<byte>>> transform, int chunkBytes = 65536, CancellationToken cancellationToken = default)
+    {
+        if (chunkBytes is < 4096 or > 262144)
+        {
+            throw new ArgumentOutOfRangeException(nameof(chunkBytes));
+        }
+
+        using var active = Enter();
+        string id = Resolve(input);
+        return await CreateAsync(async (output, token) =>
+        {
+            await using FileStream source = Open(id, false);
+            byte[] buffer = new byte[chunkBytes];
+            try
+            {
+                int count;
+                while ((count = await source.ReadAsync(buffer, token)) != 0)
+                {
+                    ReadOnlyMemory<byte> result = await transform(buffer.AsMemory(0, count), token);
+                    if (result.Length > chunkBytes)
+                    {
+                        throw new InvalidDataException("Transformed chunk exceeds bound.");
+                    }
+
+                    await output.WriteAsync(result, token);
+                }
+            }
+            finally
+            {
+                CryptographicOperations.ZeroMemory(buffer);
+            }
+        }, cancellationToken);
+    }
+
+    /// <summary>Cancels operations, waits for their owners to release I/O and removes all request results. Cooperative producers must observe cancellation.</summary>
+    public ValueTask DisposeAsync()
+    {
+        lock (_sync)
+        {
+            if (_disposal is not null)
+            {
+                return new(_disposal);
+            }
+
+            _closed = true;
+            if (_active == 0)
+            {
+                _idle.TrySetResult();
+            }
+
+            return new(_disposal = DisposeCoreAsync());
+        }
+    }
+
+    private async Task DisposeCoreAsync()
+    {
+        await _lifetime.CancelAsync();
+        await _idle.Task;
+        Directory.Delete(_directory, true);
+        lock (_sync)
+        {
+            _results.Clear();
+            _bytes = 0;
+            _objects = 0;
+        }
+
+        _lifetime.Dispose();
+    }
+}

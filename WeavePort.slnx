@@ -1,0 +1,53 @@
+<Solution>
+  <Folder Name="/benchmarks/">
+    <Project Path="benchmarks/WeavePort.Benchmarks/WeavePort.Benchmarks.csproj" />
+  </Folder>
+  <Folder Name="/examples/">
+    <Project Path="examples/sdk/csharp/ExamplePlugin.csproj" />
+  </Folder>
+  <Folder Name="/plugins/">
+    <Project Path="plugins/csharp/WeavePort.SamplePlugin.csproj" />
+  </Folder>
+  <Folder Name="/samples/">
+    <Project Path="samples/AppointmentDesk/Contracts/AppointmentDesk.Contracts.csproj" />
+    <Project Path="samples/AppointmentDesk/Host/AppointmentDesk.Host.csproj" />
+    <Project Path="samples/AppointmentDesk/Worker/AppointmentDesk.Worker.csproj" />
+    <Project Path="samples/DecisionRoom/Contracts/DecisionRoom.Contracts.csproj" />
+    <Project Path="samples/DecisionRoom/Host/DecisionRoom.Host.csproj" />
+    <Project Path="samples/DecisionRoom/Plugin/DecisionRoom.Plugin.csproj" />
+    <Project Path="samples/DocumentWorkshop/Contracts/DocumentWorkshop.Contracts.csproj" />
+    <Project Path="samples/DocumentWorkshop/Host/DocumentWorkshop.Host.csproj" />
+    <Project Path="samples/DocumentWorkshop/Worker/DocumentWorkshop.Worker.csproj" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/WeavePort.Abstractions/WeavePort.Abstractions.csproj" />
+    <Project Path="src/WeavePort.Composition/WeavePort.Composition.csproj" />
+    <Project Path="src/WeavePort.Hosting/WeavePort.Hosting.csproj" />
+    <Project Path="src/WeavePort.Sdk.Client/WeavePort.Sdk.Client.csproj" />
+    <Project Path="src/WeavePort.Sdk.Gateway/WeavePort.Sdk.Gateway.csproj" />
+    <Project Path="src/WeavePort.Sdk/WeavePort.Sdk.csproj" />
+    <Project Path="src/WeavePort.Testing/WeavePort.Testing.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/WeavePort.CapacityTests/WeavePort.CapacityTests.csproj" />
+    <Project Path="tests/WeavePort.Composition.Tests/WeavePort.BulkDemo.csproj" />
+    <Project Path="tests/WeavePort.Docker.Tests/WeavePort.Demo.csproj" />
+    <Project Path="tests/WeavePort.Gateway.Tests/WeavePort.Gateway.Tests.csproj" />
+    <Project Path="tests/WeavePort.GatewayRegression/WeavePort.GatewayRegression.csproj" />
+    <Project Path="tests/WeavePort.Hosting.Tests/WeavePort.Hosting.Tests.csproj" />
+    <Project Path="tests/WeavePort.LifecycleTests/WeavePort.LifecycleTests.csproj" />
+    <Project Path="tests/WeavePort.LoadTests/WeavePort.LoadTests.csproj" />
+    <Project Path="tests/WeavePort.Local.Tests/WeavePort.LocalDemo.csproj" />
+    <Project Path="tests/WeavePort.SdkFixture/WeavePort.SdkFixture.csproj" />
+    <Project Path="tests/WeavePort.SdkTests/WeavePort.SdkTests.csproj" />
+    <Project Path="tests/WeavePort.SdkVersionTests/WeavePort.SdkVersionTests.csproj" />
+    <Project Path="tests/WeavePort.SecurityTests/WeavePort.SecurityTests.csproj" />
+    <Project Path="tests/WeavePort.WorkerHost/WeavePort.WorkerHost.csproj" />
+    <Project Path="tests/compatibility/Compatibility.csproj" />
+    <Project Path="tests/installations/Installations.csproj" />
+  </Folder>
+  <Folder Name="/tools/">
+    <Project Path="tools/WeavePort.CodeStyle/WeavePort.CodeStyle.csproj" />
+    <Project Path="tools/WeavePort.Runner/WeavePort.Runner.csproj" />
+  </Folder>
+</Solution>

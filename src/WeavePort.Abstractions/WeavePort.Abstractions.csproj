@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <IsPackable>true</IsPackable>
+    <PackageReadmeFile>PACKAGE.md</PackageReadmeFile>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <WarningsAsErrors>$(WarningsAsErrors);CS1591</WarningsAsErrors>
+    <Description>Contracts for owner-controlled WeavePort plugin execution and callbacks.</Description>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="../../docs/package.md" Pack="true" PackagePath="PACKAGE.md" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../Contracts/DecisionRoom.Contracts.csproj" />
+    <PackageReference Include="WeavePort.Hosting" Version="0.1.0-internal.2" />
+    <PackageReference Include="WeavePort.Sdk.Client" Version="0.1.0-internal.2" />
+  </ItemGroup>
+</Project>

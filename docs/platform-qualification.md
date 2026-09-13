@@ -1,0 +1,37 @@
+# Platform qualification
+
+WeavePort's contracts, tenant binding and protocol are shared .NET code. Process launch, communication, filesystem permissions and resource enforcement are platform-specific concerns. Successful compilation is not runtime, security or performance qualification.
+
+| Environment | Execution and evidence | Remaining limits |
+| --- | --- | --- |
+| macOS arm64 | Trusted process stdio/socket; qualified packaged multilingual checks; current benchmarks are linked from [status](status.md) | No hostile-code sandbox; unsigned developer bundle; system-wide memory/swap includes background applications |
+| Linux arm64, Docker Desktop VM | Historical container and trusted-process comparisons; no current delivered-package qualification | Ordinary children still live inside the trusted coordinator container; not bare metal or independent hardware |
+| Windows | Source includes trusted stdio process support; optimized Unix socket profile explicitly rejects Windows | Native functional, installation, performance and security qualification not executed |
+| Other CPU architectures/distributions | Intended platform targets where .NET and required plugin runtimes are available | Not implied by arm64 results |
+
+The local machine has Parallels Desktop installed, but `prlctl list -a -o name,status,ostemplate` returned no registered virtual machines on 2026-09-11. No Windows guest or additional runtime was installed for this work. Windows qualification remains an open OpenSpec task.
+
+## Common acceptance matrix
+
+Each actual target must run the same tenant A/B fixtures for C#, Python and TypeScript: context separation, callbacks, independent workspace/state, crash/hang/cancellation, restart, and cleanup. Capacity evidence includes one outstanding request per active customer, small/large payloads, per-customer tails, all errors, growth, stop reason and recovery. BenchmarkDotNet iteration statistics stay separate from request-level capacity evidence.
+
+Select an explicit supported transport; never silently downgrade a requested security profile. Buffer sizes measured on macOS are workload-specific configuration, not portable defaults. Native execution currently trusts plugin code on every platform: separate processes alone do not establish an adversarial tenant boundary.
+
+## Windows qualification entry point
+
+Use a Windows machine with the repository SDK, Python 3.14+ and Node 24.12+. Keep interpreter paths explicit in a local JSON configuration if `python3`/`node` discovery does not resolve the intended installation. Execute the existing C# consumer, not a reimplementation of its tests:
+
+```powershell
+# After packing the three src packages into artifacts/packages and publishing the C# fixture:
+dotnet restore tests/WeavePort.Local.Tests --force --no-cache
+dotnet build tests/WeavePort.Local.Tests -c Release
+# Configure writes fixture paths relative to this checkout; doctor checks actual prerequisites.
+dotnet tests/WeavePort.Local.Tests/bin/Release/net10.0/WeavePort.LocalDemo.dll configure . artifacts/local/config.json
+$env:WEAVEPORT_LOCAL_TRANSPORT = 'stdio'
+Remove-Item Env:WEAVEPORT_LOCAL_SOCKET_BUFFER_BYTES -ErrorAction SilentlyContinue
+dotnet tests/WeavePort.Local.Tests/bin/Release/net10.0/WeavePort.LocalDemo.dll verify artifacts/local/config.json artifacts/runs/windows-functional
+```
+
+These are reproduction instructions, not a claim they have run. Before Windows capacity qualification, add and validate a Windows system memory/commit observer: the current native observer returns unavailable system headroom outside macOS/Linux. A conservative summed-RSS ceiling does not replace that qualification. Evaluate a Windows transport adapter separately if stdio is insufficient; preserve common contracts and multilingual compatibility.
+
+See [local installation](internal-distribution.md), [execution boundaries](local-execution.md) and [platform comparison results (historical) — pre-public record](history.md).

@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "dependencies": {
+    "net10.0": {
+      "WeavePort.Hosting": {
+        "type": "Direct",
+        "requested": "[0.1.0-internal.2, )",
+        "resolved": "0.1.0-internal.2",
+        "contentHash": "1RcM7r5i+7DmnFVpt5xrWp5oEMyI/gSoPoxaKU0MffLS79uAiudc5gOR9SD61cOTjCCy94MOClKZCSTZhb0ppA==",
+        "dependencies": {
+          "Microsoft.Extensions.Logging.Abstractions": "10.0.11",
+          "WeavePort.Abstractions": "0.1.0-internal.2"
+        }
+      },
+      "WeavePort.Testing": {
+        "type": "Direct",
+        "requested": "[0.1.0-internal.2, )",
+        "resolved": "0.1.0-internal.2",
+        "contentHash": "XmRtVkE2CObxsazQlpwDd7nCWvD3iRXsI+gNIYHBoH/ROry4djFz4zSyieK3yFiVcZg9SDFGqCVzUFFhpdcUyw==",
+        "dependencies": {
+          "WeavePort.Abstractions": "0.1.0-internal.2"
+        }
+      },
+      "Microsoft.Extensions.DependencyInjection.Abstractions": {
+        "type": "Transitive",
+        "resolved": "10.0.11",
+        "contentHash": "/a1aJz4m7ylhEDf25ugQChLQoN5XwoGjWw/BoR/ZWWKsO1v4DdJElS1uyngahz4B/eOzjFk1KNTkarRLE5wsIg=="
+      },
+      "Microsoft.Extensions.Logging.Abstractions": {
+        "type": "Transitive",
+        "resolved": "10.0.11",
+        "contentHash": "Ljd0Uxoq5XpScD2Bg0nM/r3mwx7Ao5Uq24eo2ARxbGvqJ7Zht6rt2cJtwVRH4Cv+1ZVMdXz6TB43KbpmsxRrvQ==",
+        "dependencies": {
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.11"
+        }
+      },
+      "WeavePort.Abstractions": {
+        "type": "Transitive",
+        "resolved": "0.1.0-internal.2",
+        "contentHash": "dDbPkwekSCl5/tKRHRe35u/WMJaKmXyA1LPBRIYH4mzhQlnt04JJ23vkkk/8nuV7NmWrwrjFQFOJ0GGOtGvUFw=="
+      }
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "dependencies": {
+    "net10.0": {
+      "WeavePort.Sdk": {
+        "type": "Direct",
+        "requested": "[0.1.0-internal.2, )",
+        "resolved": "0.1.0-internal.2",
+        "contentHash": "OtI2UhjUm9GgrZtUfBe1SHuDwgbdpzuZqWQQZU0kaQRznlBF86CrNnpGqp/n3XMlYUaM+svAW4hCnakS9P4oJQ=="
+      }
+    }
+  }
+}

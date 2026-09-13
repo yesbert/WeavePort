@@ -1,0 +1,629 @@
+{
+  "schema": 1,
+  "version": "0.1.0-internal.2",
+  "qualifiedSourceCommit": "2c20723a6308d9f8cb2a5547e533cfd7b4c3bc52",
+  "components": {
+    "nuget": {
+      "Microsoft.Extensions.DependencyInjection.Abstractions.10.0.11.nupkg": "e4f65e4205a6568f0afbb1a028454077ac5c9fedd754d5734f8720fc306d8ea6",
+      "Microsoft.Extensions.Logging.Abstractions.10.0.11.nupkg": "1dd507daae7995b03032cc0c7508d7d350eb81ac5e82d6f2328e1561ece1075a",
+      "WeavePort.Abstractions.0.1.0-internal.2.nupkg": "6a9fb8632cba09941ec9422cbe7af2cc7885c9e767a469f0fbbc9dcf38c473e8",
+      "WeavePort.Hosting.0.1.0-internal.2.nupkg": "c7903b88272ef400d0c2d7dee9ae262f587365c7833106f3669f7838210fb7ec",
+      "WeavePort.Sdk.0.1.0-internal.2.nupkg": "b93f3e1090fc59897302fcbdb7f0612951440c2544aef07881e8c0f08d9b2130",
+      "WeavePort.Sdk.Client.0.1.0-internal.2.nupkg": "7d7e198de6a1913bb894e7333976f3b4873e1226de0f1a264fa838d87eeaef7c"
+    },
+    "python": "weaveport-sdk 0.1.0",
+    "typescript": "@weaveport/sdk 0.1.0"
+  },
+  "prerequisites": {
+    "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+    "architecture": "arm64",
+    "python": "Python 3.14.7",
+    "runtimeExecutables": {
+      "dotnet": "00c673767ee2538369f307d3c8a0ce06f16bc9e0ecf8ce767b64dd02b2230e98",
+      "python3": "87d4df53fd91304be5bac391fb204643c36b7df2023c04a0953bcbc7d4fdf634",
+      "node": "902b6a6984d5d825829ea9064ab73b734548df37bc0683990dca31c8dc2a9253"
+    }
+  },
+  "qualificationAssertions": 398,
+  "qualifiedArtifacts": {
+    "apps/appointment-desk/host/AppointmentDesk.Contracts.dll": {
+      "candidatePath": "artifacts/appointment-desk/host/AppointmentDesk.Contracts.dll",
+      "sha256": "49073fef37ede8d68cfbd2c185dd27a74b5a21bf3f696ad0c7827580231c76b5"
+    },
+    "apps/appointment-desk/host/AppointmentDesk.Contracts.pdb": {
+      "candidatePath": "artifacts/appointment-desk/host/AppointmentDesk.Contracts.pdb",
+      "sha256": "b9caf1326633e8f4cac5d04728eedd0039ebc907f6f29da7994e933a183f3464"
+    },
+    "apps/appointment-desk/host/AppointmentDesk.Host": {
+      "candidatePath": "artifacts/appointment-desk/host/AppointmentDesk.Host",
+      "sha256": "19f87624dee2464a1ac9cf78822e861404affdb2d7f519eb4f9709028f47dcd7"
+    },
+    "apps/appointment-desk/host/AppointmentDesk.Host.deps.json": {
+      "candidatePath": "artifacts/appointment-desk/host/AppointmentDesk.Host.deps.json",
+      "sha256": "e70ce3f1f311aaab1ead1d51cf3e7abad976e328ad3853a86c4dbf15bd2a4812"
+    },
+    "apps/appointment-desk/host/AppointmentDesk.Host.dll": {
+      "candidatePath": "artifacts/appointment-desk/host/AppointmentDesk.Host.dll",
+      "sha256": "e66c4932e131a1bbaadcde2943045c5afd50563e0126cef7120b32aa2a693148"
+    },
+    "apps/appointment-desk/host/AppointmentDesk.Host.pdb": {
+      "candidatePath": "artifacts/appointment-desk/host/AppointmentDesk.Host.pdb",
+      "sha256": "0c5d6fba48dd03bd2adaea9277d0946ea867dfee42b39550a2ceee8669f0e436"
+    },
+    "apps/appointment-desk/host/AppointmentDesk.Host.runtimeconfig.json": {
+      "candidatePath": "artifacts/appointment-desk/host/AppointmentDesk.Host.runtimeconfig.json",
+      "sha256": "9950d4583cfc9a106857c0d5b8a75b53e8774852b57b80bc3823a74d44a4d87f"
+    },
+    "apps/appointment-desk/host/Microsoft.Extensions.DependencyInjection.Abstractions.dll": {
+      "candidatePath": "artifacts/appointment-desk/host/Microsoft.Extensions.DependencyInjection.Abstractions.dll",
+      "sha256": "43497d8f23b82159295933effe92c82447469b60cdbefcca4a62232e4ebbca99"
+    },
+    "apps/appointment-desk/host/Microsoft.Extensions.Logging.Abstractions.dll": {
+      "candidatePath": "artifacts/appointment-desk/host/Microsoft.Extensions.Logging.Abstractions.dll",
+      "sha256": "cec836c1dff8e64701ee4fd3a710bd971fef953c90a34b577d9f4363103e6c39"
+    },
+    "apps/appointment-desk/host/WeavePort.Abstractions.dll": {
+      "candidatePath": "artifacts/appointment-desk/host/WeavePort.Abstractions.dll",
+      "sha256": "2955e89be97e0c0cca2867b0ab0a8af194adbe9e7649ced793cd16317427c480"
+    },
+    "apps/appointment-desk/host/WeavePort.Hosting.dll": {
+      "candidatePath": "artifacts/appointment-desk/host/WeavePort.Hosting.dll",
+      "sha256": "a3d7c8ee1b9dbd273cd951c059e4282880e7f543573a526b1fa6c961163b3938"
+    },
+    "apps/appointment-desk/host/WeavePort.Sdk.Client.dll": {
+      "candidatePath": "artifacts/appointment-desk/host/WeavePort.Sdk.Client.dll",
+      "sha256": "2fd780f53b0df3a69ef5831b2a6f95860078609d4a6aca1e36d33731d7aad8ba"
+    },
+    "apps/appointment-desk/releases/1/AppointmentDesk.Contracts.dll": {
+      "candidatePath": "artifacts/appointment-desk/releases/1/AppointmentDesk.Contracts.dll",
+      "sha256": "2d3cc83a529719aa142c4e5684717998e995a8c1ae42271f1685c10c1efb39e2"
+    },
+    "apps/appointment-desk/releases/1/AppointmentDesk.Contracts.pdb": {
+      "candidatePath": "artifacts/appointment-desk/releases/1/AppointmentDesk.Contracts.pdb",
+      "sha256": "fdcb24ebcb0953bccbfae3a9218b6f65e0c0cc69409270c36138aa547161c667"
+    },
+    "apps/appointment-desk/releases/1/AppointmentDesk.Worker": {
+      "candidatePath": "artifacts/appointment-desk/releases/1/AppointmentDesk.Worker",
+      "sha256": "a1258c4ed197b77740a24f0c654153a088ccd19be6b4511a9d0e73071ee4ab34"
+    },
+    "apps/appointment-desk/releases/1/AppointmentDesk.Worker.deps.json": {
+      "candidatePath": "artifacts/appointment-desk/releases/1/AppointmentDesk.Worker.deps.json",
+      "sha256": "9406e44317b2d17e1e3220d14b83bafe63085e0238f9aea926913723c388f2c6"
+    },
+    "apps/appointment-desk/releases/1/AppointmentDesk.Worker.dll": {
+      "candidatePath": "artifacts/appointment-desk/releases/1/AppointmentDesk.Worker.dll",
+      "sha256": "5cf26ef1188188c31b22b27004bdd231610f7a2d37ccf68b6c2e9dfce72c9b8a"
+    },
+    "apps/appointment-desk/releases/1/AppointmentDesk.Worker.pdb": {
+      "candidatePath": "artifacts/appointment-desk/releases/1/AppointmentDesk.Worker.pdb",
+      "sha256": "f4787c299b83b8c184bf3705dc91602825350158d878c5902588c3771fb392a7"
+    },
+    "apps/appointment-desk/releases/1/AppointmentDesk.Worker.runtimeconfig.json": {
+      "candidatePath": "artifacts/appointment-desk/releases/1/AppointmentDesk.Worker.runtimeconfig.json",
+      "sha256": "9950d4583cfc9a106857c0d5b8a75b53e8774852b57b80bc3823a74d44a4d87f"
+    },
+    "apps/appointment-desk/releases/1/WeavePort.Sdk.dll": {
+      "candidatePath": "artifacts/appointment-desk/releases/1/WeavePort.Sdk.dll",
+      "sha256": "85fb9b3b51070b3433eddba14a853477337b229f6f607296d1c5abf104533854"
+    },
+    "apps/appointment-desk/releases/1/installation.json": {
+      "candidatePath": "artifacts/appointment-desk/releases/1/installation.json",
+      "sha256": "318713b48ccf762f2e3a1721aad4f5f7aae9fa7e720c1ce9fe8ee251dda16339"
+    },
+    "apps/appointment-desk/releases/2/AppointmentDesk.Contracts.dll": {
+      "candidatePath": "artifacts/appointment-desk/releases/2/AppointmentDesk.Contracts.dll",
+      "sha256": "ee4209c732056704313b1eb2ddea6d7c3e3471c0c4fa9bab8d93c340b27bc0f1"
+    },
+    "apps/appointment-desk/releases/2/AppointmentDesk.Contracts.pdb": {
+      "candidatePath": "artifacts/appointment-desk/releases/2/AppointmentDesk.Contracts.pdb",
+      "sha256": "50c99a8d7451ab08a83ac715c746bff507881bc327ebedd85032ec2a471e1597"
+    },
+    "apps/appointment-desk/releases/2/AppointmentDesk.Worker": {
+      "candidatePath": "artifacts/appointment-desk/releases/2/AppointmentDesk.Worker",
+      "sha256": "a1258c4ed197b77740a24f0c654153a088ccd19be6b4511a9d0e73071ee4ab34"
+    },
+    "apps/appointment-desk/releases/2/AppointmentDesk.Worker.deps.json": {
+      "candidatePath": "artifacts/appointment-desk/releases/2/AppointmentDesk.Worker.deps.json",
+      "sha256": "9406e44317b2d17e1e3220d14b83bafe63085e0238f9aea926913723c388f2c6"
+    },
+    "apps/appointment-desk/releases/2/AppointmentDesk.Worker.dll": {
+      "candidatePath": "artifacts/appointment-desk/releases/2/AppointmentDesk.Worker.dll",
+      "sha256": "a1f653f0ef538201ba60b6589dddb6c5e6990f143f81a34fdcae515dbb0b53bf"
+    },
+    "apps/appointment-desk/releases/2/AppointmentDesk.Worker.pdb": {
+      "candidatePath": "artifacts/appointment-desk/releases/2/AppointmentDesk.Worker.pdb",
+      "sha256": "9d90911e0247765205189c710692d4ae3b9d30795b6074c38424e20630157337"
+    },
+    "apps/appointment-desk/releases/2/AppointmentDesk.Worker.runtimeconfig.json": {
+      "candidatePath": "artifacts/appointment-desk/releases/2/AppointmentDesk.Worker.runtimeconfig.json",
+      "sha256": "9950d4583cfc9a106857c0d5b8a75b53e8774852b57b80bc3823a74d44a4d87f"
+    },
+    "apps/appointment-desk/releases/2/WeavePort.Sdk.dll": {
+      "candidatePath": "artifacts/appointment-desk/releases/2/WeavePort.Sdk.dll",
+      "sha256": "85fb9b3b51070b3433eddba14a853477337b229f6f607296d1c5abf104533854"
+    },
+    "apps/appointment-desk/releases/2/installation.json": {
+      "candidatePath": "artifacts/appointment-desk/releases/2/installation.json",
+      "sha256": "1b7027638b95152b802a6405301675b3297946cdb705ae09f2d721085c256903"
+    },
+    "apps/decision-room/host/DecisionRoom.Contracts.dll": {
+      "candidatePath": "artifacts/decision-room/host/DecisionRoom.Contracts.dll",
+      "sha256": "5617d28153d3a92b59c5ea397b0086e360f9c56c05130cbea348ec312ba35d08"
+    },
+    "apps/decision-room/host/DecisionRoom.Contracts.pdb": {
+      "candidatePath": "artifacts/decision-room/host/DecisionRoom.Contracts.pdb",
+      "sha256": "643780eb8dcb0506c7405ca37b86c3d179d08356e273f041797de9a68099322e"
+    },
+    "apps/decision-room/host/DecisionRoom.Host": {
+      "candidatePath": "artifacts/decision-room/host/DecisionRoom.Host",
+      "sha256": "aaa29a3aef64f8a7efcb4126e2b09e3562a1a24cbd36f8e0504af0d4d7abadb2"
+    },
+    "apps/decision-room/host/DecisionRoom.Host.deps.json": {
+      "candidatePath": "artifacts/decision-room/host/DecisionRoom.Host.deps.json",
+      "sha256": "8a3dc232b9f7986687689f363bfd2427ad4ba6786eae0700fdba20a230fa8f3e"
+    },
+    "apps/decision-room/host/DecisionRoom.Host.dll": {
+      "candidatePath": "artifacts/decision-room/host/DecisionRoom.Host.dll",
+      "sha256": "e690cb1c8d112dfa8835aff16b6ea8009253a906638fafe1a027b96ef3800f1d"
+    },
+    "apps/decision-room/host/DecisionRoom.Host.pdb": {
+      "candidatePath": "artifacts/decision-room/host/DecisionRoom.Host.pdb",
+      "sha256": "2a14e26bb3f26ef0d008dc0c9bb6d9e9aab6eff8f30e27c99e990580d54ef134"
+    },
+    "apps/decision-room/host/DecisionRoom.Host.runtimeconfig.json": {
+      "candidatePath": "artifacts/decision-room/host/DecisionRoom.Host.runtimeconfig.json",
+      "sha256": "9950d4583cfc9a106857c0d5b8a75b53e8774852b57b80bc3823a74d44a4d87f"
+    },
+    "apps/decision-room/host/Microsoft.Extensions.DependencyInjection.Abstractions.dll": {
+      "candidatePath": "artifacts/decision-room/host/Microsoft.Extensions.DependencyInjection.Abstractions.dll",
+      "sha256": "43497d8f23b82159295933effe92c82447469b60cdbefcca4a62232e4ebbca99"
+    },
+    "apps/decision-room/host/Microsoft.Extensions.Logging.Abstractions.dll": {
+      "candidatePath": "artifacts/decision-room/host/Microsoft.Extensions.Logging.Abstractions.dll",
+      "sha256": "cec836c1dff8e64701ee4fd3a710bd971fef953c90a34b577d9f4363103e6c39"
+    },
+    "apps/decision-room/host/WeavePort.Abstractions.dll": {
+      "candidatePath": "artifacts/decision-room/host/WeavePort.Abstractions.dll",
+      "sha256": "2955e89be97e0c0cca2867b0ab0a8af194adbe9e7649ced793cd16317427c480"
+    },
+    "apps/decision-room/host/WeavePort.Hosting.dll": {
+      "candidatePath": "artifacts/decision-room/host/WeavePort.Hosting.dll",
+      "sha256": "a3d7c8ee1b9dbd273cd951c059e4282880e7f543573a526b1fa6c961163b3938"
+    },
+    "apps/decision-room/host/WeavePort.Sdk.Client.dll": {
+      "candidatePath": "artifacts/decision-room/host/WeavePort.Sdk.Client.dll",
+      "sha256": "2fd780f53b0df3a69ef5831b2a6f95860078609d4a6aca1e36d33731d7aad8ba"
+    },
+    "apps/decision-room/releases/1/DecisionRoom.Contracts.dll": {
+      "candidatePath": "artifacts/decision-room/releases/1/DecisionRoom.Contracts.dll",
+      "sha256": "9104d8230fc4d9787c77f85f7da53809abc88c3380752ade52cbe57c37cc730e"
+    },
+    "apps/decision-room/releases/1/DecisionRoom.Contracts.pdb": {
+      "candidatePath": "artifacts/decision-room/releases/1/DecisionRoom.Contracts.pdb",
+      "sha256": "5e9d02285ae27e88528fdd825b03f681b52a8f41f36396e05b8b779c119fc36c"
+    },
+    "apps/decision-room/releases/1/DecisionRoom.Plugin": {
+      "candidatePath": "artifacts/decision-room/releases/1/DecisionRoom.Plugin",
+      "sha256": "7c3e377c397d98a1766322891030e7ccd33e2bad23a6c8af6b027bb66fc903e4"
+    },
+    "apps/decision-room/releases/1/DecisionRoom.Plugin.deps.json": {
+      "candidatePath": "artifacts/decision-room/releases/1/DecisionRoom.Plugin.deps.json",
+      "sha256": "0869de1b44a6924f7f756673c1de888e8da742cf6c52387b691c57d5e9ac0bd1"
+    },
+    "apps/decision-room/releases/1/DecisionRoom.Plugin.dll": {
+      "candidatePath": "artifacts/decision-room/releases/1/DecisionRoom.Plugin.dll",
+      "sha256": "98ab68b39c31ca536a34b2a791c90da5e214b7dfa98e69c37d284bf6f53f4f49"
+    },
+    "apps/decision-room/releases/1/DecisionRoom.Plugin.pdb": {
+      "candidatePath": "artifacts/decision-room/releases/1/DecisionRoom.Plugin.pdb",
+      "sha256": "dbaf47d83bef5895acb35f1c3074dda1b397ac4457a0e75d8979bd94fb49ed21"
+    },
+    "apps/decision-room/releases/1/DecisionRoom.Plugin.runtimeconfig.json": {
+      "candidatePath": "artifacts/decision-room/releases/1/DecisionRoom.Plugin.runtimeconfig.json",
+      "sha256": "9950d4583cfc9a106857c0d5b8a75b53e8774852b57b80bc3823a74d44a4d87f"
+    },
+    "apps/decision-room/releases/1/WeavePort.Sdk.dll": {
+      "candidatePath": "artifacts/decision-room/releases/1/WeavePort.Sdk.dll",
+      "sha256": "85fb9b3b51070b3433eddba14a853477337b229f6f607296d1c5abf104533854"
+    },
+    "apps/decision-room/releases/1/installation.json": {
+      "candidatePath": "artifacts/decision-room/releases/1/installation.json",
+      "sha256": "88dbcff3da835502e375a810d008e49adc96925fa5c95314333bdab05bb71667"
+    },
+    "apps/decision-room/releases/1/plugin.py": {
+      "candidatePath": "artifacts/decision-room/releases/1/plugin.py",
+      "sha256": "d697da188a9d7b6564c00cd8544453a12e9fb09a40d031267a10029dada9d998"
+    },
+    "apps/decision-room/releases/1/release.py": {
+      "candidatePath": "artifacts/decision-room/releases/1/release.py",
+      "sha256": "6fe918429fd508c0bf5d363184f640ee1d6ad2a6ef2e532a8c56215dc17891da"
+    },
+    "apps/decision-room/releases/2/DecisionRoom.Contracts.dll": {
+      "candidatePath": "artifacts/decision-room/releases/2/DecisionRoom.Contracts.dll",
+      "sha256": "f416512054f24e3e2098a8e8f5a99576b5bd34c934d2c1765f20e7aed4cabfad"
+    },
+    "apps/decision-room/releases/2/DecisionRoom.Contracts.pdb": {
+      "candidatePath": "artifacts/decision-room/releases/2/DecisionRoom.Contracts.pdb",
+      "sha256": "934010c29560fde1c09462c96e92442b04782be37379fac41244c5b06186cfa6"
+    },
+    "apps/decision-room/releases/2/DecisionRoom.Plugin": {
+      "candidatePath": "artifacts/decision-room/releases/2/DecisionRoom.Plugin",
+      "sha256": "7c3e377c397d98a1766322891030e7ccd33e2bad23a6c8af6b027bb66fc903e4"
+    },
+    "apps/decision-room/releases/2/DecisionRoom.Plugin.deps.json": {
+      "candidatePath": "artifacts/decision-room/releases/2/DecisionRoom.Plugin.deps.json",
+      "sha256": "0869de1b44a6924f7f756673c1de888e8da742cf6c52387b691c57d5e9ac0bd1"
+    },
+    "apps/decision-room/releases/2/DecisionRoom.Plugin.dll": {
+      "candidatePath": "artifacts/decision-room/releases/2/DecisionRoom.Plugin.dll",
+      "sha256": "464fb76ecd0ed61be17dbda4b68ae0a6f173f0dc2c7c2ac774e88d933d576615"
+    },
+    "apps/decision-room/releases/2/DecisionRoom.Plugin.pdb": {
+      "candidatePath": "artifacts/decision-room/releases/2/DecisionRoom.Plugin.pdb",
+      "sha256": "61d4db2c3258b339744cd92234949cacfbd3382805d1a476866bfe6a799258f6"
+    },
+    "apps/decision-room/releases/2/DecisionRoom.Plugin.runtimeconfig.json": {
+      "candidatePath": "artifacts/decision-room/releases/2/DecisionRoom.Plugin.runtimeconfig.json",
+      "sha256": "9950d4583cfc9a106857c0d5b8a75b53e8774852b57b80bc3823a74d44a4d87f"
+    },
+    "apps/decision-room/releases/2/WeavePort.Sdk.dll": {
+      "candidatePath": "artifacts/decision-room/releases/2/WeavePort.Sdk.dll",
+      "sha256": "85fb9b3b51070b3433eddba14a853477337b229f6f607296d1c5abf104533854"
+    },
+    "apps/decision-room/releases/2/installation.json": {
+      "candidatePath": "artifacts/decision-room/releases/2/installation.json",
+      "sha256": "4eb1077f242eca515ab38f0a38a281f2a9e304cb1d9ce27a7c1f998cc0ad0e8d"
+    },
+    "apps/decision-room/releases/2/plugin.py": {
+      "candidatePath": "artifacts/decision-room/releases/2/plugin.py",
+      "sha256": "d697da188a9d7b6564c00cd8544453a12e9fb09a40d031267a10029dada9d998"
+    },
+    "apps/decision-room/releases/2/release.py": {
+      "candidatePath": "artifacts/decision-room/releases/2/release.py",
+      "sha256": "d83614742a5688937848743e0c19e346bdbf99ef2bb9219fe0f8827743ca0df4"
+    },
+    "packages/python/weaveport_sdk-0.1.0-py3-none-any.whl": {
+      "candidatePath": "artifacts/decision-room/wheel/weaveport_sdk-0.1.0-py3-none-any.whl",
+      "sha256": "37c163432fc1a79d5eeb8bfd5ad093d1a2bbc7e081080ed5e3d4906a2f8fdb3c"
+    },
+    "apps/document-workshop/host/DocumentWorkshop.Contracts.dll": {
+      "candidatePath": "artifacts/document-workshop/host/DocumentWorkshop.Contracts.dll",
+      "sha256": "4cf51ac9410dcd6b96e0922f8fcb745f008a07bd4d9d2cd51dec1c19e9640475"
+    },
+    "apps/document-workshop/host/DocumentWorkshop.Contracts.pdb": {
+      "candidatePath": "artifacts/document-workshop/host/DocumentWorkshop.Contracts.pdb",
+      "sha256": "fd62b24a6a8f0b0429ce7eb0238c2bab69526844fe1114503fc964a770c2cb8c"
+    },
+    "apps/document-workshop/host/DocumentWorkshop.Host": {
+      "candidatePath": "artifacts/document-workshop/host/DocumentWorkshop.Host",
+      "sha256": "84aa62cd99bb3a56891292a52d36cdc26f7344f96f849777438dc18ea2db3eed"
+    },
+    "apps/document-workshop/host/DocumentWorkshop.Host.deps.json": {
+      "candidatePath": "artifacts/document-workshop/host/DocumentWorkshop.Host.deps.json",
+      "sha256": "2950b58c2e5430df7d29dfbedebc83e4bb9829c486f3ac1abfb24c729141a644"
+    },
+    "apps/document-workshop/host/DocumentWorkshop.Host.dll": {
+      "candidatePath": "artifacts/document-workshop/host/DocumentWorkshop.Host.dll",
+      "sha256": "bf707eb7df7b76a5e01664ccc67a21344ba3d0b138f591e6098185a4dce4d4ff"
+    },
+    "apps/document-workshop/host/DocumentWorkshop.Host.pdb": {
+      "candidatePath": "artifacts/document-workshop/host/DocumentWorkshop.Host.pdb",
+      "sha256": "3189147bc6c8e1a7255638301549ef2a009d36fdaba7709ce9543d9aee76e859"
+    },
+    "apps/document-workshop/host/DocumentWorkshop.Host.runtimeconfig.json": {
+      "candidatePath": "artifacts/document-workshop/host/DocumentWorkshop.Host.runtimeconfig.json",
+      "sha256": "9950d4583cfc9a106857c0d5b8a75b53e8774852b57b80bc3823a74d44a4d87f"
+    },
+    "apps/document-workshop/host/Microsoft.Extensions.DependencyInjection.Abstractions.dll": {
+      "candidatePath": "artifacts/document-workshop/host/Microsoft.Extensions.DependencyInjection.Abstractions.dll",
+      "sha256": "43497d8f23b82159295933effe92c82447469b60cdbefcca4a62232e4ebbca99"
+    },
+    "apps/document-workshop/host/Microsoft.Extensions.Logging.Abstractions.dll": {
+      "candidatePath": "artifacts/document-workshop/host/Microsoft.Extensions.Logging.Abstractions.dll",
+      "sha256": "cec836c1dff8e64701ee4fd3a710bd971fef953c90a34b577d9f4363103e6c39"
+    },
+    "apps/document-workshop/host/WeavePort.Abstractions.dll": {
+      "candidatePath": "artifacts/document-workshop/host/WeavePort.Abstractions.dll",
+      "sha256": "2955e89be97e0c0cca2867b0ab0a8af194adbe9e7649ced793cd16317427c480"
+    },
+    "apps/document-workshop/host/WeavePort.Hosting.dll": {
+      "candidatePath": "artifacts/document-workshop/host/WeavePort.Hosting.dll",
+      "sha256": "a3d7c8ee1b9dbd273cd951c059e4282880e7f543573a526b1fa6c961163b3938"
+    },
+    "apps/document-workshop/host/WeavePort.Sdk.Client.dll": {
+      "candidatePath": "artifacts/document-workshop/host/WeavePort.Sdk.Client.dll",
+      "sha256": "2fd780f53b0df3a69ef5831b2a6f95860078609d4a6aca1e36d33731d7aad8ba"
+    },
+    "apps/document-workshop/releases/1/DocumentWorkshop.Contracts.dll": {
+      "candidatePath": "artifacts/document-workshop/releases/1/DocumentWorkshop.Contracts.dll",
+      "sha256": "bf9ebe4b2191e533eedee327d19f30fb9e8e62e08388b6f4aa49111849617709"
+    },
+    "apps/document-workshop/releases/1/DocumentWorkshop.Contracts.pdb": {
+      "candidatePath": "artifacts/document-workshop/releases/1/DocumentWorkshop.Contracts.pdb",
+      "sha256": "16d620fba1ce61bbf61bc3e9c7fc2566cd4de3ba3dcb4f8010e6b36286e5cf5a"
+    },
+    "apps/document-workshop/releases/1/DocumentWorkshop.Worker": {
+      "candidatePath": "artifacts/document-workshop/releases/1/DocumentWorkshop.Worker",
+      "sha256": "2e3334064b239e3a09a4a5079b803e042528330b9ead905f25e9beb9a284077b"
+    },
+    "apps/document-workshop/releases/1/DocumentWorkshop.Worker.deps.json": {
+      "candidatePath": "artifacts/document-workshop/releases/1/DocumentWorkshop.Worker.deps.json",
+      "sha256": "06d79e47edf50bf7dc447294bba18841cda7b6edc351405102c92bda9e34bece"
+    },
+    "apps/document-workshop/releases/1/DocumentWorkshop.Worker.dll": {
+      "candidatePath": "artifacts/document-workshop/releases/1/DocumentWorkshop.Worker.dll",
+      "sha256": "760113a7e26dd0bdc23eb4b598589a7d7c38de7be1ce7e9eb69b14e29a87f025"
+    },
+    "apps/document-workshop/releases/1/DocumentWorkshop.Worker.pdb": {
+      "candidatePath": "artifacts/document-workshop/releases/1/DocumentWorkshop.Worker.pdb",
+      "sha256": "edb9a51aec917fe0249e5553b9f5093582353d6c809fd4a099f00b9e719f892a"
+    },
+    "apps/document-workshop/releases/1/DocumentWorkshop.Worker.runtimeconfig.json": {
+      "candidatePath": "artifacts/document-workshop/releases/1/DocumentWorkshop.Worker.runtimeconfig.json",
+      "sha256": "9950d4583cfc9a106857c0d5b8a75b53e8774852b57b80bc3823a74d44a4d87f"
+    },
+    "apps/document-workshop/releases/1/WeavePort.Sdk.dll": {
+      "candidatePath": "artifacts/document-workshop/releases/1/WeavePort.Sdk.dll",
+      "sha256": "85fb9b3b51070b3433eddba14a853477337b229f6f607296d1c5abf104533854"
+    },
+    "apps/document-workshop/releases/1/installation.json": {
+      "candidatePath": "artifacts/document-workshop/releases/1/installation.json",
+      "sha256": "e9f1fc282a1e95e3da6062ebe3997b0f927ca2e890a17ff3af78980cc1797624"
+    },
+    "apps/document-workshop/releases/2/DocumentWorkshop.Contracts.dll": {
+      "candidatePath": "artifacts/document-workshop/releases/2/DocumentWorkshop.Contracts.dll",
+      "sha256": "445c4b26e4b294814a9db9b3071fddc1fc53fec5509c57f5f1f4d24ac2250146"
+    },
+    "apps/document-workshop/releases/2/DocumentWorkshop.Contracts.pdb": {
+      "candidatePath": "artifacts/document-workshop/releases/2/DocumentWorkshop.Contracts.pdb",
+      "sha256": "d519820d00d208b8e06c8a4474f4c57c3318865ab298252083b3d4217b4ae84f"
+    },
+    "apps/document-workshop/releases/2/DocumentWorkshop.Worker": {
+      "candidatePath": "artifacts/document-workshop/releases/2/DocumentWorkshop.Worker",
+      "sha256": "2e3334064b239e3a09a4a5079b803e042528330b9ead905f25e9beb9a284077b"
+    },
+    "apps/document-workshop/releases/2/DocumentWorkshop.Worker.deps.json": {
+      "candidatePath": "artifacts/document-workshop/releases/2/DocumentWorkshop.Worker.deps.json",
+      "sha256": "06d79e47edf50bf7dc447294bba18841cda7b6edc351405102c92bda9e34bece"
+    },
+    "apps/document-workshop/releases/2/DocumentWorkshop.Worker.dll": {
+      "candidatePath": "artifacts/document-workshop/releases/2/DocumentWorkshop.Worker.dll",
+      "sha256": "65a686e936300ab8757b1add6e91dda5c357101592c54f62a2480867a1680b53"
+    },
+    "apps/document-workshop/releases/2/DocumentWorkshop.Worker.pdb": {
+      "candidatePath": "artifacts/document-workshop/releases/2/DocumentWorkshop.Worker.pdb",
+      "sha256": "cd686afd14eca1761a3029242e674332f48d1f5994cd0a89ffc29b76343285bd"
+    },
+    "apps/document-workshop/releases/2/DocumentWorkshop.Worker.runtimeconfig.json": {
+      "candidatePath": "artifacts/document-workshop/releases/2/DocumentWorkshop.Worker.runtimeconfig.json",
+      "sha256": "9950d4583cfc9a106857c0d5b8a75b53e8774852b57b80bc3823a74d44a4d87f"
+    },
+    "apps/document-workshop/releases/2/WeavePort.Sdk.dll": {
+      "candidatePath": "artifacts/document-workshop/releases/2/WeavePort.Sdk.dll",
+      "sha256": "85fb9b3b51070b3433eddba14a853477337b229f6f607296d1c5abf104533854"
+    },
+    "apps/document-workshop/releases/2/installation.json": {
+      "candidatePath": "artifacts/document-workshop/releases/2/installation.json",
+      "sha256": "3b5150a656d2895df5cdbedc79c28ad1716a3bee113c47418cfdc21aff07ea3a"
+    },
+    "packages/nuget/Microsoft.Extensions.DependencyInjection.Abstractions.10.0.11.nupkg": {
+      "candidatePath": "artifacts/packages/Microsoft.Extensions.DependencyInjection.Abstractions.10.0.11.nupkg",
+      "sha256": "e4f65e4205a6568f0afbb1a028454077ac5c9fedd754d5734f8720fc306d8ea6"
+    },
+    "packages/nuget/Microsoft.Extensions.Logging.Abstractions.10.0.11.nupkg": {
+      "candidatePath": "artifacts/packages/Microsoft.Extensions.Logging.Abstractions.10.0.11.nupkg",
+      "sha256": "1dd507daae7995b03032cc0c7508d7d350eb81ac5e82d6f2328e1561ece1075a"
+    },
+    "packages/nuget/WeavePort.Abstractions.0.1.0-internal.2.nupkg": {
+      "candidatePath": "artifacts/packages/WeavePort.Abstractions.0.1.0-internal.2.nupkg",
+      "sha256": "6a9fb8632cba09941ec9422cbe7af2cc7885c9e767a469f0fbbc9dcf38c473e8"
+    },
+    "packages/nuget/WeavePort.Hosting.0.1.0-internal.2.nupkg": {
+      "candidatePath": "artifacts/packages/WeavePort.Hosting.0.1.0-internal.2.nupkg",
+      "sha256": "c7903b88272ef400d0c2d7dee9ae262f587365c7833106f3669f7838210fb7ec"
+    },
+    "packages/nuget/WeavePort.Sdk.0.1.0-internal.2.nupkg": {
+      "candidatePath": "artifacts/packages/WeavePort.Sdk.0.1.0-internal.2.nupkg",
+      "sha256": "b93f3e1090fc59897302fcbdb7f0612951440c2544aef07881e8c0f08d9b2130"
+    },
+    "packages/nuget/WeavePort.Sdk.Client.0.1.0-internal.2.nupkg": {
+      "candidatePath": "artifacts/packages/WeavePort.Sdk.Client.0.1.0-internal.2.nupkg",
+      "sha256": "7d7e198de6a1913bb894e7333976f3b4873e1226de0f1a264fa838d87eeaef7c"
+    },
+    "packages/typescript/weaveport-sdk-0.1.0.tgz": {
+      "candidatePath": "artifacts/sdk-version-tests/weaveport-sdk-0.1.0.tgz",
+      "sha256": "4b652a95ff8ce35889e46fefbd0089ae81f8b90b9b8557a09dbe6d1a52f114e7"
+    }
+  },
+  "files": {
+    "README.md": "aedbf212ff4677d3271e23a21502558bd316db878eb96730221b2f501618cb0f",
+    "apps/appointment-desk/host/AppointmentDesk.Contracts.dll": "49073fef37ede8d68cfbd2c185dd27a74b5a21bf3f696ad0c7827580231c76b5",
+    "apps/appointment-desk/host/AppointmentDesk.Contracts.pdb": "b9caf1326633e8f4cac5d04728eedd0039ebc907f6f29da7994e933a183f3464",
+    "apps/appointment-desk/host/AppointmentDesk.Host": "19f87624dee2464a1ac9cf78822e861404affdb2d7f519eb4f9709028f47dcd7",
+    "apps/appointment-desk/host/AppointmentDesk.Host.deps.json": "e70ce3f1f311aaab1ead1d51cf3e7abad976e328ad3853a86c4dbf15bd2a4812",
+    "apps/appointment-desk/host/AppointmentDesk.Host.dll": "e66c4932e131a1bbaadcde2943045c5afd50563e0126cef7120b32aa2a693148",
+    "apps/appointment-desk/host/AppointmentDesk.Host.pdb": "0c5d6fba48dd03bd2adaea9277d0946ea867dfee42b39550a2ceee8669f0e436",
+    "apps/appointment-desk/host/AppointmentDesk.Host.runtimeconfig.json": "9950d4583cfc9a106857c0d5b8a75b53e8774852b57b80bc3823a74d44a4d87f",
+    "apps/appointment-desk/host/Microsoft.Extensions.DependencyInjection.Abstractions.dll": "43497d8f23b82159295933effe92c82447469b60cdbefcca4a62232e4ebbca99",
+    "apps/appointment-desk/host/Microsoft.Extensions.Logging.Abstractions.dll": "cec836c1dff8e64701ee4fd3a710bd971fef953c90a34b577d9f4363103e6c39",
+    "apps/appointment-desk/host/WeavePort.Abstractions.dll": "2955e89be97e0c0cca2867b0ab0a8af194adbe9e7649ced793cd16317427c480",
+    "apps/appointment-desk/host/WeavePort.Hosting.dll": "a3d7c8ee1b9dbd273cd951c059e4282880e7f543573a526b1fa6c961163b3938",
+    "apps/appointment-desk/host/WeavePort.Sdk.Client.dll": "2fd780f53b0df3a69ef5831b2a6f95860078609d4a6aca1e36d33731d7aad8ba",
+    "apps/appointment-desk/releases/1/AppointmentDesk.Contracts.dll": "2d3cc83a529719aa142c4e5684717998e995a8c1ae42271f1685c10c1efb39e2",
+    "apps/appointment-desk/releases/1/AppointmentDesk.Contracts.pdb": "fdcb24ebcb0953bccbfae3a9218b6f65e0c0cc69409270c36138aa547161c667",
+    "apps/appointment-desk/releases/1/AppointmentDesk.Worker": "a1258c4ed197b77740a24f0c654153a088ccd19be6b4511a9d0e73071ee4ab34",
+    "apps/appointment-desk/releases/1/AppointmentDesk.Worker.deps.json": "9406e44317b2d17e1e3220d14b83bafe63085e0238f9aea926913723c388f2c6",
+    "apps/appointment-desk/releases/1/AppointmentDesk.Worker.dll": "5cf26ef1188188c31b22b27004bdd231610f7a2d37ccf68b6c2e9dfce72c9b8a",
+    "apps/appointment-desk/releases/1/AppointmentDesk.Worker.pdb": "f4787c299b83b8c184bf3705dc91602825350158d878c5902588c3771fb392a7",
+    "apps/appointment-desk/releases/1/AppointmentDesk.Worker.runtimeconfig.json": "9950d4583cfc9a106857c0d5b8a75b53e8774852b57b80bc3823a74d44a4d87f",
+    "apps/appointment-desk/releases/1/WeavePort.Sdk.dll": "85fb9b3b51070b3433eddba14a853477337b229f6f607296d1c5abf104533854",
+    "apps/appointment-desk/releases/1/installation.json": "318713b48ccf762f2e3a1721aad4f5f7aae9fa7e720c1ce9fe8ee251dda16339",
+    "apps/appointment-desk/releases/2/AppointmentDesk.Contracts.dll": "ee4209c732056704313b1eb2ddea6d7c3e3471c0c4fa9bab8d93c340b27bc0f1",
+    "apps/appointment-desk/releases/2/AppointmentDesk.Contracts.pdb": "50c99a8d7451ab08a83ac715c746bff507881bc327ebedd85032ec2a471e1597",
+    "apps/appointment-desk/releases/2/AppointmentDesk.Worker": "a1258c4ed197b77740a24f0c654153a088ccd19be6b4511a9d0e73071ee4ab34",
+    "apps/appointment-desk/releases/2/AppointmentDesk.Worker.deps.json": "9406e44317b2d17e1e3220d14b83bafe63085e0238f9aea926913723c388f2c6",
+    "apps/appointment-desk/releases/2/AppointmentDesk.Worker.dll": "a1f653f0ef538201ba60b6589dddb6c5e6990f143f81a34fdcae515dbb0b53bf",
+    "apps/appointment-desk/releases/2/AppointmentDesk.Worker.pdb": "9d90911e0247765205189c710692d4ae3b9d30795b6074c38424e20630157337",
+    "apps/appointment-desk/releases/2/AppointmentDesk.Worker.runtimeconfig.json": "9950d4583cfc9a106857c0d5b8a75b53e8774852b57b80bc3823a74d44a4d87f",
+    "apps/appointment-desk/releases/2/WeavePort.Sdk.dll": "85fb9b3b51070b3433eddba14a853477337b229f6f607296d1c5abf104533854",
+    "apps/appointment-desk/releases/2/installation.json": "1b7027638b95152b802a6405301675b3297946cdb705ae09f2d721085c256903",
+    "apps/decision-room/host/DecisionRoom.Contracts.dll": "5617d28153d3a92b59c5ea397b0086e360f9c56c05130cbea348ec312ba35d08",
+    "apps/decision-room/host/DecisionRoom.Contracts.pdb": "643780eb8dcb0506c7405ca37b86c3d179d08356e273f041797de9a68099322e",
+    "apps/decision-room/host/DecisionRoom.Host": "aaa29a3aef64f8a7efcb4126e2b09e3562a1a24cbd36f8e0504af0d4d7abadb2",
+    "apps/decision-room/host/DecisionRoom.Host.deps.json": "8a3dc232b9f7986687689f363bfd2427ad4ba6786eae0700fdba20a230fa8f3e",
+    "apps/decision-room/host/DecisionRoom.Host.dll": "e690cb1c8d112dfa8835aff16b6ea8009253a906638fafe1a027b96ef3800f1d",
+    "apps/decision-room/host/DecisionRoom.Host.pdb": "2a14e26bb3f26ef0d008dc0c9bb6d9e9aab6eff8f30e27c99e990580d54ef134",
+    "apps/decision-room/host/DecisionRoom.Host.runtimeconfig.json": "9950d4583cfc9a106857c0d5b8a75b53e8774852b57b80bc3823a74d44a4d87f",
+    "apps/decision-room/host/Microsoft.Extensions.DependencyInjection.Abstractions.dll": "43497d8f23b82159295933effe92c82447469b60cdbefcca4a62232e4ebbca99",
+    "apps/decision-room/host/Microsoft.Extensions.Logging.Abstractions.dll": "cec836c1dff8e64701ee4fd3a710bd971fef953c90a34b577d9f4363103e6c39",
+    "apps/decision-room/host/WeavePort.Abstractions.dll": "2955e89be97e0c0cca2867b0ab0a8af194adbe9e7649ced793cd16317427c480",
+    "apps/decision-room/host/WeavePort.Hosting.dll": "a3d7c8ee1b9dbd273cd951c059e4282880e7f543573a526b1fa6c961163b3938",
+    "apps/decision-room/host/WeavePort.Sdk.Client.dll": "2fd780f53b0df3a69ef5831b2a6f95860078609d4a6aca1e36d33731d7aad8ba",
+    "apps/decision-room/releases/1/DecisionRoom.Contracts.dll": "9104d8230fc4d9787c77f85f7da53809abc88c3380752ade52cbe57c37cc730e",
+    "apps/decision-room/releases/1/DecisionRoom.Contracts.pdb": "5e9d02285ae27e88528fdd825b03f681b52a8f41f36396e05b8b779c119fc36c",
+    "apps/decision-room/releases/1/DecisionRoom.Plugin": "7c3e377c397d98a1766322891030e7ccd33e2bad23a6c8af6b027bb66fc903e4",
+    "apps/decision-room/releases/1/DecisionRoom.Plugin.deps.json": "0869de1b44a6924f7f756673c1de888e8da742cf6c52387b691c57d5e9ac0bd1",
+    "apps/decision-room/releases/1/DecisionRoom.Plugin.dll": "98ab68b39c31ca536a34b2a791c90da5e214b7dfa98e69c37d284bf6f53f4f49",
+    "apps/decision-room/releases/1/DecisionRoom.Plugin.pdb": "dbaf47d83bef5895acb35f1c3074dda1b397ac4457a0e75d8979bd94fb49ed21",
+    "apps/decision-room/releases/1/DecisionRoom.Plugin.runtimeconfig.json": "9950d4583cfc9a106857c0d5b8a75b53e8774852b57b80bc3823a74d44a4d87f",
+    "apps/decision-room/releases/1/WeavePort.Sdk.dll": "85fb9b3b51070b3433eddba14a853477337b229f6f607296d1c5abf104533854",
+    "apps/decision-room/releases/1/installation.json": "88dbcff3da835502e375a810d008e49adc96925fa5c95314333bdab05bb71667",
+    "apps/decision-room/releases/1/plugin.py": "d697da188a9d7b6564c00cd8544453a12e9fb09a40d031267a10029dada9d998",
+    "apps/decision-room/releases/1/release.py": "6fe918429fd508c0bf5d363184f640ee1d6ad2a6ef2e532a8c56215dc17891da",
+    "apps/decision-room/releases/2/DecisionRoom.Contracts.dll": "f416512054f24e3e2098a8e8f5a99576b5bd34c934d2c1765f20e7aed4cabfad",
+    "apps/decision-room/releases/2/DecisionRoom.Contracts.pdb": "934010c29560fde1c09462c96e92442b04782be37379fac41244c5b06186cfa6",
+    "apps/decision-room/releases/2/DecisionRoom.Plugin": "7c3e377c397d98a1766322891030e7ccd33e2bad23a6c8af6b027bb66fc903e4",
+    "apps/decision-room/releases/2/DecisionRoom.Plugin.deps.json": "0869de1b44a6924f7f756673c1de888e8da742cf6c52387b691c57d5e9ac0bd1",
+    "apps/decision-room/releases/2/DecisionRoom.Plugin.dll": "464fb76ecd0ed61be17dbda4b68ae0a6f173f0dc2c7c2ac774e88d933d576615",
+    "apps/decision-room/releases/2/DecisionRoom.Plugin.pdb": "61d4db2c3258b339744cd92234949cacfbd3382805d1a476866bfe6a799258f6",
+    "apps/decision-room/releases/2/DecisionRoom.Plugin.runtimeconfig.json": "9950d4583cfc9a106857c0d5b8a75b53e8774852b57b80bc3823a74d44a4d87f",
+    "apps/decision-room/releases/2/WeavePort.Sdk.dll": "85fb9b3b51070b3433eddba14a853477337b229f6f607296d1c5abf104533854",
+    "apps/decision-room/releases/2/installation.json": "4eb1077f242eca515ab38f0a38a281f2a9e304cb1d9ce27a7c1f998cc0ad0e8d",
+    "apps/decision-room/releases/2/plugin.py": "d697da188a9d7b6564c00cd8544453a12e9fb09a40d031267a10029dada9d998",
+    "apps/decision-room/releases/2/release.py": "d83614742a5688937848743e0c19e346bdbf99ef2bb9219fe0f8827743ca0df4",
+    "apps/document-workshop/host/DocumentWorkshop.Contracts.dll": "4cf51ac9410dcd6b96e0922f8fcb745f008a07bd4d9d2cd51dec1c19e9640475",
+    "apps/document-workshop/host/DocumentWorkshop.Contracts.pdb": "fd62b24a6a8f0b0429ce7eb0238c2bab69526844fe1114503fc964a770c2cb8c",
+    "apps/document-workshop/host/DocumentWorkshop.Host": "84aa62cd99bb3a56891292a52d36cdc26f7344f96f849777438dc18ea2db3eed",
+    "apps/document-workshop/host/DocumentWorkshop.Host.deps.json": "2950b58c2e5430df7d29dfbedebc83e4bb9829c486f3ac1abfb24c729141a644",
+    "apps/document-workshop/host/DocumentWorkshop.Host.dll": "bf707eb7df7b76a5e01664ccc67a21344ba3d0b138f591e6098185a4dce4d4ff",
+    "apps/document-workshop/host/DocumentWorkshop.Host.pdb": "3189147bc6c8e1a7255638301549ef2a009d36fdaba7709ce9543d9aee76e859",
+    "apps/document-workshop/host/DocumentWorkshop.Host.runtimeconfig.json": "9950d4583cfc9a106857c0d5b8a75b53e8774852b57b80bc3823a74d44a4d87f",
+    "apps/document-workshop/host/Microsoft.Extensions.DependencyInjection.Abstractions.dll": "43497d8f23b82159295933effe92c82447469b60cdbefcca4a62232e4ebbca99",
+    "apps/document-workshop/host/Microsoft.Extensions.Logging.Abstractions.dll": "cec836c1dff8e64701ee4fd3a710bd971fef953c90a34b577d9f4363103e6c39",
+    "apps/document-workshop/host/WeavePort.Abstractions.dll": "2955e89be97e0c0cca2867b0ab0a8af194adbe9e7649ced793cd16317427c480",
+    "apps/document-workshop/host/WeavePort.Hosting.dll": "a3d7c8ee1b9dbd273cd951c059e4282880e7f543573a526b1fa6c961163b3938",
+    "apps/document-workshop/host/WeavePort.Sdk.Client.dll": "2fd780f53b0df3a69ef5831b2a6f95860078609d4a6aca1e36d33731d7aad8ba",
+    "apps/document-workshop/releases/1/DocumentWorkshop.Contracts.dll": "bf9ebe4b2191e533eedee327d19f30fb9e8e62e08388b6f4aa49111849617709",
+    "apps/document-workshop/releases/1/DocumentWorkshop.Contracts.pdb": "16d620fba1ce61bbf61bc3e9c7fc2566cd4de3ba3dcb4f8010e6b36286e5cf5a",
+    "apps/document-workshop/releases/1/DocumentWorkshop.Worker": "2e3334064b239e3a09a4a5079b803e042528330b9ead905f25e9beb9a284077b",
+    "apps/document-workshop/releases/1/DocumentWorkshop.Worker.deps.json": "06d79e47edf50bf7dc447294bba18841cda7b6edc351405102c92bda9e34bece",
+    "apps/document-workshop/releases/1/DocumentWorkshop.Worker.dll": "760113a7e26dd0bdc23eb4b598589a7d7c38de7be1ce7e9eb69b14e29a87f025",
+    "apps/document-workshop/releases/1/DocumentWorkshop.Worker.pdb": "edb9a51aec917fe0249e5553b9f5093582353d6c809fd4a099f00b9e719f892a",
+    "apps/document-workshop/releases/1/DocumentWorkshop.Worker.runtimeconfig.json": "9950d4583cfc9a106857c0d5b8a75b53e8774852b57b80bc3823a74d44a4d87f",
+    "apps/document-workshop/releases/1/WeavePort.Sdk.dll": "85fb9b3b51070b3433eddba14a853477337b229f6f607296d1c5abf104533854",
+    "apps/document-workshop/releases/1/installation.json": "e9f1fc282a1e95e3da6062ebe3997b0f927ca2e890a17ff3af78980cc1797624",
+    "apps/document-workshop/releases/2/DocumentWorkshop.Contracts.dll": "445c4b26e4b294814a9db9b3071fddc1fc53fec5509c57f5f1f4d24ac2250146",
+    "apps/document-workshop/releases/2/DocumentWorkshop.Contracts.pdb": "d519820d00d208b8e06c8a4474f4c57c3318865ab298252083b3d4217b4ae84f",
+    "apps/document-workshop/releases/2/DocumentWorkshop.Worker": "2e3334064b239e3a09a4a5079b803e042528330b9ead905f25e9beb9a284077b",
+    "apps/document-workshop/releases/2/DocumentWorkshop.Worker.deps.json": "06d79e47edf50bf7dc447294bba18841cda7b6edc351405102c92bda9e34bece",
+    "apps/document-workshop/releases/2/DocumentWorkshop.Worker.dll": "65a686e936300ab8757b1add6e91dda5c357101592c54f62a2480867a1680b53",
+    "apps/document-workshop/releases/2/DocumentWorkshop.Worker.pdb": "cd686afd14eca1761a3029242e674332f48d1f5994cd0a89ffc29b76343285bd",
+    "apps/document-workshop/releases/2/DocumentWorkshop.Worker.runtimeconfig.json": "9950d4583cfc9a106857c0d5b8a75b53e8774852b57b80bc3823a74d44a4d87f",
+    "apps/document-workshop/releases/2/WeavePort.Sdk.dll": "85fb9b3b51070b3433eddba14a853477337b229f6f607296d1c5abf104533854",
+    "apps/document-workshop/releases/2/installation.json": "3b5150a656d2895df5cdbedc79c28ad1716a3bee113c47418cfdc21aff07ea3a",
+    "docs/embedded-coordinator.md": "f3a99493c914e1e56812bb98420adf10ff005a9f5b4495255e14d7930762006c",
+    "docs/installed-plugins.md": "01d8cb6be0068186ffb19e7332dde30f1932ee71b21745961895c3fb4a23d3f2",
+    "docs/native-operations.md": "47d660c21b3ea003706ce08b3aafc978e752010db751281cf733e6977ef60de0",
+    "docs/package-compatibility.md": "63a7a77f8e145cd8f01d1430515ad1be2274b0232de0ecda86b06dbdd56a7512",
+    "docs/runtime-diagnostics.md": "1474dc9747832d84cd44307a949a0c428b57b5c7a7fdba999c3fcff20ed7f271",
+    "evidence/artifact-manifest.json": "dcab0ee0490791ac656c9e83f07ce10ad37c3d4c52df9d4d0241f6b2df957a34",
+    "evidence/lockfile-refreshes.json": "438ac1adeb1a3ac823a86068675bbd639680779c4cf9d8e89c2684eb6db16ba5",
+    "evidence/package-set.json": "f5a185aeee8289a44ec42eb9aad3cbf85398fbc5f4e4c7b2985a88c2412c8677",
+    "evidence/report.md": "32fcdb90eb21ac7b30851b93020f662a107cb5a04b18e9c48b2b6406b65d0d70",
+    "evidence/result.json": "9863499ac2f8f3cba6c2d9ff3e5fbcfcc9b4df678e79bf34521f2fd6c8e57b67",
+    "packages/nuget/Microsoft.Extensions.DependencyInjection.Abstractions.10.0.11.nupkg": "e4f65e4205a6568f0afbb1a028454077ac5c9fedd754d5734f8720fc306d8ea6",
+    "packages/nuget/Microsoft.Extensions.Logging.Abstractions.10.0.11.nupkg": "1dd507daae7995b03032cc0c7508d7d350eb81ac5e82d6f2328e1561ece1075a",
+    "packages/nuget/WeavePort.Abstractions.0.1.0-internal.2.nupkg": "6a9fb8632cba09941ec9422cbe7af2cc7885c9e767a469f0fbbc9dcf38c473e8",
+    "packages/nuget/WeavePort.Hosting.0.1.0-internal.2.nupkg": "c7903b88272ef400d0c2d7dee9ae262f587365c7833106f3669f7838210fb7ec",
+    "packages/nuget/WeavePort.Sdk.0.1.0-internal.2.nupkg": "b93f3e1090fc59897302fcbdb7f0612951440c2544aef07881e8c0f08d9b2130",
+    "packages/nuget/WeavePort.Sdk.Client.0.1.0-internal.2.nupkg": "7d7e198de6a1913bb894e7333976f3b4873e1226de0f1a264fa838d87eeaef7c",
+    "packages/python/weaveport_sdk-0.1.0-py3-none-any.whl": "37c163432fc1a79d5eeb8bfd5ad093d1a2bbc7e081080ed5e3d4906a2f8fdb3c",
+    "packages/typescript/weaveport-sdk-0.1.0.tgz": "4b652a95ff8ce35889e46fefbd0089ae81f8b90b9b8557a09dbe6d1a52f114e7",
+    "templates/Directory.Build.props": "9cee960da6570a661cb66ef581844e32adf355d8188d6e54eaf17051f34bd1e1",
+    "templates/NuGet.Config": "3b2c1b10bf1ac8f3839d0166ed42499e199777294eb216e84ee99223e12705ff",
+    "templates/artifacts/packages/Microsoft.Extensions.DependencyInjection.Abstractions.10.0.11.nupkg": "e4f65e4205a6568f0afbb1a028454077ac5c9fedd754d5734f8720fc306d8ea6",
+    "templates/artifacts/packages/Microsoft.Extensions.Logging.Abstractions.10.0.11.nupkg": "1dd507daae7995b03032cc0c7508d7d350eb81ac5e82d6f2328e1561ece1075a",
+    "templates/artifacts/packages/WeavePort.Abstractions.0.1.0-internal.2.nupkg": "6a9fb8632cba09941ec9422cbe7af2cc7885c9e767a469f0fbbc9dcf38c473e8",
+    "templates/artifacts/packages/WeavePort.Hosting.0.1.0-internal.2.nupkg": "c7903b88272ef400d0c2d7dee9ae262f587365c7833106f3669f7838210fb7ec",
+    "templates/artifacts/packages/WeavePort.Sdk.0.1.0-internal.2.nupkg": "b93f3e1090fc59897302fcbdb7f0612951440c2544aef07881e8c0f08d9b2130",
+    "templates/artifacts/packages/WeavePort.Sdk.Client.0.1.0-internal.2.nupkg": "7d7e198de6a1913bb894e7333976f3b4873e1226de0f1a264fa838d87eeaef7c",
+    "templates/docs/embedded-coordinator.md": "ace50e5797516571e8680ef041ce33ccdca76ab30e65a37e67856a996e3d504c",
+    "templates/docs/installed-plugins.md": "01d8cb6be0068186ffb19e7332dde30f1932ee71b21745961895c3fb4a23d3f2",
+    "templates/docs/native-operations.md": "00f6b2039e920df15500665c6e6e0d4747d7191a687bf50f6edc1b733ec8e08c",
+    "templates/docs/package-compatibility.md": "63a7a77f8e145cd8f01d1430515ad1be2274b0232de0ecda86b06dbdd56a7512",
+    "templates/docs/runtime-diagnostics.md": "1474dc9747832d84cd44307a949a0c428b57b5c7a7fdba999c3fcff20ed7f271",
+    "templates/global.json": "fc4602f9d88c9440f70f72732343a88c5e4190223fb9b77f9b8ac8eb1c4c8c2d",
+    "templates/samples/AppointmentDesk/Contracts/AppointmentDesk.Contracts.csproj": "8d654c44b7bebb6b31a9f2f606927f45b5072193adc4eef8cce3f3cf3b278df3",
+    "templates/samples/AppointmentDesk/Contracts/Contracts.cs": "eae7da51fdecfc4fcb6f09904b85b2b74cb0cd3d8a6b4dd2bb2f6562015ef364",
+    "templates/samples/AppointmentDesk/Directory.Build.props": "5ba74f498f07df4a521e583fce4ade994fa00c3a2711ed27a87da5629678d1c3",
+    "templates/samples/AppointmentDesk/Host/AppointmentDesk.Host.csproj": "8a4403cd233a5b387671234354d3422021081844943780bf3e688c8325af10a0",
+    "templates/samples/AppointmentDesk/Host/BookingCallbacks.cs": "e7e740650ab5da4183bbd538dd4b6a36d7d3c356943dea7777dd6b366d560b4c",
+    "templates/samples/AppointmentDesk/Host/CalendarStore.cs": "4acf85a86c66b3a6ba766af0ced585e92fd1ad9b5b31383c5972e14563685ba8",
+    "templates/samples/AppointmentDesk/Host/CoordinatorVerification.cs": "9ce1bfd5bca94ae7fdf760d8b344339072a70df49f313ab2c3f65700173c98eb",
+    "templates/samples/AppointmentDesk/Host/Desk.cs": "f203e4eef8a0ea2842411924b0f7503aeee0aaacc43eef727db24db94644f5d0",
+    "templates/samples/AppointmentDesk/Host/GuardedBooking.cs": "cdb998eee31ae65e94c17b0fdc7fd7b7560ce652fe1eac6fd7b4e6a8359a1b76",
+    "templates/samples/AppointmentDesk/Host/Models.cs": "523f012feafcd062d8f232879dd691fa0bc5585e66a2ed3bf68d9f8c000e80fe",
+    "templates/samples/AppointmentDesk/Host/Program.cs": "e6600d75a4692ad8bb94c901fb0e9cec76974836a090c0f548e1a771f76bea18",
+    "templates/samples/AppointmentDesk/Host/RunGuardVerification.cs": "6d77b94bb1c9b7310b5420870b318070db6f768630b418b51e3d43f2b43ede15",
+    "templates/samples/AppointmentDesk/Host/StorageVerification.cs": "4e9d41ba0518bd65e9a50081bf298f0e976b40f84b12980f75d40a3edcc92bf7",
+    "templates/samples/AppointmentDesk/Host/Verification.cs": "41651a481aaa3307a7101abe2e55e689f787934e0a07a6686ccf4fd7ffad6096",
+    "templates/samples/AppointmentDesk/Host/WorkerFaults.cs": "fb4648dc08ac6fde0fd8a220b90b222b8a4a884cc15e5a3907b50334585f9191",
+    "templates/samples/AppointmentDesk/README.md": "fec5e52bc988177dcacae7b2cae5cd35bb705f85d564dec880358beca6af9c2d",
+    "templates/samples/AppointmentDesk/Worker/AppointmentDesk.Worker.csproj": "adfcec887b682534bd3207a1495a23ef6f73642d3a83c48dbb74256fa97f2c19",
+    "templates/samples/AppointmentDesk/Worker/Program.cs": "7c5a2aac1f0dfb7c52cb99ed23afdc3c6d13308eb6ff20c978db590a00500869",
+    "templates/samples/DecisionRoom/Contracts/Contracts.cs": "bfb483ddb5df6abb3c31a4011bccdf15dd4219de9a7235dffca7527468c34862",
+    "templates/samples/DecisionRoom/Contracts/DecisionRoom.Contracts.csproj": "8d654c44b7bebb6b31a9f2f606927f45b5072193adc4eef8cce3f3cf3b278df3",
+    "templates/samples/DecisionRoom/Contracts/packages.lock.json": "a29c6aa8cfb81874ff8bb78dc369d7416f28c9b8cc47e99592bfc019b20c41eb",
+    "templates/samples/DecisionRoom/Directory.Build.props": "369c3dc545b16c90e4f378a206e174201d765a22eaeaf75a2075f9f95e998a2e",
+    "templates/samples/DecisionRoom/Host/Configuration.cs": "76455cce523227c96ec05ecc53497ac9f7ab1091f597ba2743117bede5d242cc",
+    "templates/samples/DecisionRoom/Host/DecisionRoom.Host.csproj": "759643aa5141e2e73fb5269a242a69f2bf430de47734b2c3b056626560c688f1",
+    "templates/samples/DecisionRoom/Host/Journal.cs": "8b70179e10fceae869aca859febca627c132ccdf4c13931856dfe526865d2a47",
+    "templates/samples/DecisionRoom/Host/KnowledgeCallbacks.cs": "de0ac66babc6a1647cfda5d1f494d0ff35eb07294df0cbf75510b4dd0e50084a",
+    "templates/samples/DecisionRoom/Host/Program.cs": "1638b22d4fb732135a7d1619ce151d24330027d52511699195fe7d450207498f",
+    "templates/samples/DecisionRoom/Host/RoomRunner.cs": "a762c4190a6c3820644771a681725eca24ea76fe67321dcbf59715e5caaf171a",
+    "templates/samples/DecisionRoom/Host/RuntimePaths.cs": "21a942a330a0e69e15e1465037d9a22c6b471e3460d220de9b9beae5ded304fe",
+    "templates/samples/DecisionRoom/Host/Verification.cs": "78c658ceefa717fa57c8279a859ef12ba27dc36b0936778d741f92d8dda9ae55",
+    "templates/samples/DecisionRoom/Host/VersionVerification.cs": "43134a96cf9808f106f36015b0b8a010589369158403e69d3bda5e76fc3cffcc",
+    "templates/samples/DecisionRoom/Host/packages.lock.json": "1e6beed52c60e0367c66c68aaa440790ab04c7bb20d18ee3a7540a73e9390799",
+    "templates/samples/DecisionRoom/Plugin/DecisionRoom.Plugin.csproj": "909e1774556176856627e8cb6f36d34ca7f98b75cb93de89f7add7c5201b8006",
+    "templates/samples/DecisionRoom/Plugin/Program.cs": "09ed1b31345ce0991e87ef8aa9e73f485e0828b149867f76324805f4b7ebed92",
+    "templates/samples/DecisionRoom/Plugin/packages.lock.json": "a8a5e7144412f44a00c241f0cc95edb62a2db38eafa876a9108a1cd1a226675b",
+    "templates/samples/DecisionRoom/Python/plugin.py": "d697da188a9d7b6564c00cd8544453a12e9fb09a40d031267a10029dada9d998",
+    "templates/samples/DecisionRoom/README.md": "b245adf1476962832ee9b4dcab54727f7bc4682737415db38f12a5381e2b03cc",
+    "templates/samples/DecisionRoom/config.json": "9560a745716f6ec9152613263b2ada490f30bb8a263be67784bd39c4e8e81c18",
+    "templates/samples/DecisionRoom/verification.md": "2ce87c24ba5c3cf37ea53063446ce3422b81409073e0d4c5f633f3d65854051c",
+    "templates/samples/DocumentWorkshop/Contracts/Contracts.cs": "7557f8d30a0558b89edfb9f469a54dd0b8565a067b7557220920eeaef7c69583",
+    "templates/samples/DocumentWorkshop/Contracts/DocumentWorkshop.Contracts.csproj": "8d654c44b7bebb6b31a9f2f606927f45b5072193adc4eef8cce3f3cf3b278df3",
+    "templates/samples/DocumentWorkshop/Directory.Build.props": "507eb3222e99e96ac9d83c378f025ede4fd1fc2275092617e97bee672f263b35",
+    "templates/samples/DocumentWorkshop/Host/DocumentWorkshop.Host.csproj": "a673f0f7a14cde507a328120bc72ac692427a2a38c8c422d97d4626ba8ab0b1f",
+    "templates/samples/DocumentWorkshop/Host/FailureVerification.cs": "058c1ecb29f13ce69e6df7fa092a1a3cc99a45a2abe948f8b756d10d08d02e4b",
+    "templates/samples/DocumentWorkshop/Host/Importer.cs": "a09e1130081379d919581c1b96bbb1a9e5b37382c3d6a4d866bcd45ea5a09e1b",
+    "templates/samples/DocumentWorkshop/Host/LeaseVerification.cs": "fdff4192a44d574842df2c2fe937ff0826cdc38a2f153d439dcb571a1a4d555f",
+    "templates/samples/DocumentWorkshop/Host/Models.cs": "3e04e5c8de2989fdfbcffa60b3acfc6b84aefb0a6cc490bfc7ad31cc3b214307",
+    "templates/samples/DocumentWorkshop/Host/PageValidator.cs": "74ba022b57c8dbe3e7a3175a0faf6ca91fae61c7b95d7c3fdc189bea00baa1be",
+    "templates/samples/DocumentWorkshop/Host/Program.cs": "ab16b309ce5a5f6f5520b18ddd0921f4339810277dc5ed5ea8dc33548ec4f6ad",
+    "templates/samples/DocumentWorkshop/Host/SourceLease.cs": "473d10f6430638a5512ef70e130751901d62670304816d3b06e8d37285ee0c81",
+    "templates/samples/DocumentWorkshop/Host/Verification.cs": "a62d35f5a97e92af4175668dd694d5c3d3f4af294e6ead9906f877d3ce9c685d",
+    "templates/samples/DocumentWorkshop/README.md": "8688a2d855a46d2b6823343dc0c2a67b2f4df9a4654f121aea74db447b60223e",
+    "templates/samples/DocumentWorkshop/Worker/DocumentWorkshop.Worker.csproj": "0fd3f23848e6dbad5721b52e91e5aded06881e81df8f3453b8932c5cc63671e5",
+    "templates/samples/DocumentWorkshop/Worker/Extraction.cs": "da5afcef9bce6f3b017a3ee702f79ce2fbc876a1a2bc23e23281c0589f396c94",
+    "templates/samples/DocumentWorkshop/Worker/OutlineParser.cs": "f45b871d451f025ed4d5560eb564deb6559e9df4d31d0854db24ebd3c3d08ca5",
+    "templates/samples/DocumentWorkshop/Worker/Program.cs": "c072d3f8be37dc8571bd421ed9ada161a919d7e597e3061b9650981ff6b89da1",
+    "templates/samples/DocumentWorkshop/config.json": "4b4f625bd23878f74e886df37e16ea844e1d11108b85d72c748a6cc0c72d0a8c",
+    "templates/samples/DocumentWorkshop/fixtures/handbook.md": "961e9f94e04aac9f52dbd82a4fb96454823d08c303ee16cf7ef75f731cdcd2ec",
+    "templates/samples/DocumentWorkshop/fixtures/notes.md": "15b2a3843658227a65d57526c5697ca896d95fd1d9d3c9873ab4f7cea84ef2c3",
+    "templates/samples/Shared/EmbeddedCoordinator.cs": "0a1de01e98e66592094a1e332719d7734c58ac8aeffa1570f3dfd9c9cf4127ff",
+    "templates/samples/Shared/NativeRunGuard.cs": "0883b43ab4a9b99349941c917320af70a04440a6a8b369d1085b83664e25a21e",
+    "weaveport.py": "b6f51cbfc270d28da88637634815d83ea2778e5b5f9c913346267502389386fa"
+  }
+}

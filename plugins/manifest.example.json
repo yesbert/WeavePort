@@ -1,0 +1,30 @@
+{
+  "id": "demo",
+  "version": "1",
+  "protocol": 1,
+  "languages": [
+    "csharp",
+    "python",
+    "typescript"
+  ],
+  "operations": [
+    "search",
+    "reduce"
+  ],
+  "requestedHostCapabilities": [
+    "documents.read"
+  ],
+  "display": {
+    "name": "Example integration",
+    "description": "Demonstrates application-owned operations"
+  },
+  "configurationSchema": {
+    "type": "object",
+    "properties": {
+      "secret": {
+        "type": "string",
+        "writeOnly": true
+      }
+    }
+  }
+}

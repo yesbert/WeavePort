@@ -1,0 +1,25 @@
+node_modules/
+.DS_Store
+**/bin/
+**/obj/
+.env
+.env.*
+!.env.example
+artifacts/
+reports/**/console.log
+reports/benchmarks/**/bin/
+reports/benchmarks/**/obj/
+reports/benchmarks/**/*.log
+BenchmarkDotNet.Artifacts/
+__pycache__/
+*.egg-info/
+sdks/python/build/
+sdks/typescript/dist/
+examples/sdk/typescript/dist/
+
+# Local development context (including symlinks).
+/.agents
+/.claude
+/.codex
+/AGENTS.md
+/CLAUDE.md

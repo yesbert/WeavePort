@@ -1,0 +1,89 @@
+{
+  "scope": "Native macOS loopback fixture. Before/after diagnostic pacing is 50 ms, not the regular four-hour qualification. Library defaults and zero-error acceptance are unchanged.",
+  "checks": {
+    "hostingAssertions": 311,
+    "packedSdkChecks": 382,
+    "pythonSupervisorTests": 10
+  },
+  "runs": [
+    {
+      "run": "admission-diagnostic-20260913",
+      "status": "failed",
+      "stopReason": "k6-failed",
+      "elapsedSeconds": 7.337682583951391,
+      "sourceCommit": "f335bb6868cdc9728af58a9028b11fddfef702b2",
+      "sourcePatchSha256": "c6e0f719a8ef62abf3ca07b1226c383a6d43a7ece834c59f67a762c8b0e7878f",
+      "clients": 24,
+      "paceMs": 50,
+      "maximumConcurrentStarts": 8,
+      "completedOperations": 984,
+      "unexpectedErrorSamples": 8,
+      "p99Ms": 414.34,
+      "admissionEvents": [
+        "Admission rejected: concurrent-starts",
+        "Admission rejected: concurrent-starts",
+        "Admission rejected: concurrent-starts",
+        "Admission rejected: concurrent-starts"
+      ],
+      "forcedCleanup": {
+        "k6": false,
+        "gateway": false
+      },
+      "remainingProcesses": [],
+      "remainingWorkspaceEntries": 0,
+      "loaded": {
+        "WeavePort.Hosting": "5d06d26be888d9cb2da7baa6a5d781bc7f3faedae44c498ebc7c1ca8476862d9",
+        "WeavePort.Abstractions": "e4f838ac740ebc7e83ba5a49f04be400c53403c11f42e9395faa6fef22914100",
+        "WeavePort.Sdk.Client": "157172300b1f1b140cec95e71144315d5bcf6771bbf49824a3ef927ab4fa1ff9",
+        "WeavePort.Sdk.Gateway": "58bd0136d7363c319b66bf63fc707de2edd64c708ffb7ab64c1a0d4ce4df85b2"
+      }
+    },
+    {
+      "run": "admission-corrected-20260913",
+      "status": "passed",
+      "stopReason": "completed",
+      "elapsedSeconds": 125.21946991601726,
+      "sourceCommit": "f335bb6868cdc9728af58a9028b11fddfef702b2",
+      "sourcePatchSha256": "6879688387b5681607215dfbce01a16fdb993937b87cf40fe9f401523a7fcf9e",
+      "clients": 24,
+      "paceMs": 50,
+      "maximumConcurrentStarts": 24,
+      "completedOperations": 75522,
+      "unexpectedErrorSamples": 0,
+      "p99Ms": 314,
+      "admissionEvents": [],
+      "forcedCleanup": {
+        "k6": false,
+        "gateway": false
+      },
+      "remainingProcesses": [],
+      "remainingWorkspaceEntries": 0,
+      "loaded": {
+        "WeavePort.Hosting": "5d06d26be888d9cb2da7baa6a5d781bc7f3faedae44c498ebc7c1ca8476862d9",
+        "WeavePort.Abstractions": "e4f838ac740ebc7e83ba5a49f04be400c53403c11f42e9395faa6fef22914100",
+        "WeavePort.Sdk.Client": "157172300b1f1b140cec95e71144315d5bcf6771bbf49824a3ef927ab4fa1ff9",
+        "WeavePort.Sdk.Gateway": "58bd0136d7363c319b66bf63fc707de2edd64c708ffb7ab64c1a0d4ce4df85b2"
+      }
+    }
+  ],
+  "normalPilot": {
+    "run": "admission-normal-pilot-20260913",
+    "sourceCommit": "905dea4edd248cde4be9f2d824571e83a89a1618",
+    "loaded": {
+      "WeavePort.Hosting": "1d56217a34ed399b23303a97b0cb5169f8c7d15c7d232af3996db26ccb59882e",
+      "WeavePort.Abstractions": "1819777e6ac69c090ca9c1c26d7826474d5203c1b47f8546927288b32dc66458",
+      "WeavePort.Sdk.Client": "410be04e30c04cbeab7819cf908762a8b51901beab9c1008e3502482ab090838",
+      "WeavePort.Sdk.Gateway": "c20052b30f22608cf3964f2ea1f0eb7868bbd2c1e4ed8771ba4881bf76a7c938"
+    },
+    "actualK6DurationMs": 360571.196,
+    "completedOperations": 172171,
+    "expectedFaults": 8508,
+    "unexpectedErrorSamples": 0,
+    "p99Ms": 252,
+    "peakSummedRssMiB": 1715.265625,
+    "maximumPendingRemovalSeconds": 0.1479632,
+    "allTenantsServed": true,
+    "cleanShutdown": true,
+    "maximumConcurrentStarts": 24
+  }
+}

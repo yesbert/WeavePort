@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <IsPackable>true</IsPackable>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <WarningsAsErrors>$(WarningsAsErrors);CS1591</WarningsAsErrors>
+    <Description>WeavePort PoC Sdk.Gateway.</Description>
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../WeavePort.Sdk.Client/WeavePort.Sdk.Client.csproj" />
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Grpc.AspNetCore.Server" Version="2.83.0" />
+    <PackageReference Include="Grpc.Net.Client" Version="2.83.0" />
+    <PackageReference Include="Google.Protobuf" Version="3.36.1" />
+    <PackageReference Include="Grpc.Tools" Version="2.83.0" PrivateAssets="all" />
+    <Protobuf Include="gateway.proto" GrpcServices="Both" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="../Shared/Cleanup.cs" Link="Internal/Cleanup.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="../Shared/JsonSize.cs" Link="Internal/JsonSize.cs" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,8 @@
+{
+  "Microsoft.Extensions.DependencyInjection.Abstractions.10.0.11.nupkg": "e4f65e4205a6568f0afbb1a028454077ac5c9fedd754d5734f8720fc306d8ea6",
+  "Microsoft.Extensions.Logging.Abstractions.10.0.11.nupkg": "1dd507daae7995b03032cc0c7508d7d350eb81ac5e82d6f2328e1561ece1075a",
+  "WeavePort.Abstractions.0.1.0-internal.2.nupkg": "6a9fb8632cba09941ec9422cbe7af2cc7885c9e767a469f0fbbc9dcf38c473e8",
+  "WeavePort.Hosting.0.1.0-internal.2.nupkg": "c7903b88272ef400d0c2d7dee9ae262f587365c7833106f3669f7838210fb7ec",
+  "WeavePort.Sdk.0.1.0-internal.2.nupkg": "b93f3e1090fc59897302fcbdb7f0612951440c2544aef07881e8c0f08d9b2130",
+  "WeavePort.Sdk.Client.0.1.0-internal.2.nupkg": "7d7e198de6a1913bb894e7333976f3b4873e1226de0f1a264fa838d87eeaef7c"
+}

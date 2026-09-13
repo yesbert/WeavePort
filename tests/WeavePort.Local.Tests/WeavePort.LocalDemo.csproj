@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <RestoreSources>$(MSBuildThisFileDirectory)../../artifacts/packages;https://api.nuget.org/v3/index.json</RestoreSources>
+    <RestorePackagesPath>$(MSBuildThisFileDirectory)../../artifacts/local-consumer-packages</RestorePackagesPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="WeavePort.Hosting" Version="0.1.0-internal.2" />
+    <PackageReference Include="WeavePort.Testing" Version="0.1.0-internal.2" />
+    <Compile Include="../../tools/SharedLocal/LocalConfiguration.cs" Link="LocalConfiguration.cs" />
+  </ItemGroup>
+</Project>

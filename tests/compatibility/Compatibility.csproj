@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <IsPackable>false</IsPackable>
+    <RestorePackagesPath>$(MSBuildThisFileDirectory)../../artifacts/compatibility/packages</RestorePackagesPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="WeavePort.Abstractions" Version="0.1.0-internal.2" />
+    <PackageReference Include="WeavePort.Hosting" Version="0.1.0-internal.2" />
+    <PackageReference Include="WeavePort.Sdk.Client" Version="0.1.0-internal.2" />
+    <PackageReference Include="WeavePort.Sdk" Version="0.1.0-internal.2" />
+  </ItemGroup>
+</Project>

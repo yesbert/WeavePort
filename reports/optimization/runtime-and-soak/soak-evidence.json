@@ -1,0 +1,5739 @@
+{
+  "scope": "Short harness qualification only; no multi-hour run executed. Each run records its actual tooling hashes.",
+  "runs": [
+    {
+      "status": "passed",
+      "stopReason": "completed",
+      "elapsedSeconds": 31.54674162500305,
+      "sourceCommit": "162fade1718a4a4ddfd060fdc28a2ebf74e582f4",
+      "runtimes": {
+        "k6": "k6 v2.2.0 (commit/devel, go1.26.5, darwin/arm64)",
+        "dotnet": "10.0.401",
+        "node": "v24.18.0"
+      },
+      "loaded": {
+        "WeavePort.Hosting": "d0500763b1c44e630a2f180ffa1413509dc94c3282bc9178dcb6a8b7144a676b",
+        "WeavePort.Abstractions": "81edcef2bc8d6363ff120184b0f3dc396af88bb7e736e2887f84cde7a72b57fc",
+        "WeavePort.Sdk.Client": "cb92a6b8df2cf07cd55e76b253150cc83a68644a3e8adb44ebd0be7bd3364f81",
+        "WeavePort.Sdk.Gateway": "8643442609bc610b523c33ad37f7584d35e9f17df9a5fe3a8f3d6cf19b7aed9d"
+      },
+      "packages": {
+        "WeavePort.Sdk.Client.0.1.0-poc.nupkg": "67d71d5ae5d5c1c6c017fe7ea4917a9146c5214100f61b11db604c0d81318b2b",
+        "WeavePort.Sdk.Client.0.1.0-internal.2.nupkg": "1d991d004bbde14da8ec9aaf01bd48469f8989789b7162ba47ed86037708299f",
+        "WeavePort.Sdk.0.1.0-internal.2.nupkg": "f9db715f0f73ff601bee874a5ad7ad9262a3a95edd73b6866ad29bacf24e7ff3",
+        "WeavePort.Sdk.0.1.0-poc.nupkg": "deca1093687a52de198f8f578e8f5de224c356117929dadf95324a2c9b3a2745",
+        "WeavePort.Abstractions.0.1.0-poc.nupkg": "207987bd7ba7d2355ae5feb260d0d8581b296edb783c78d148acafbba3205780",
+        "WeavePort.Sdk.Gateway.0.1.0-internal.2.nupkg": "cc002c0015ac2a22504271c0fc155b068966ca547cf03cfbc50ade7425dbc501",
+        "WeavePort.Composition.0.1.0-poc.nupkg": "ff71eb1f26f4baee6d00dc20e1a97acdab501f4e7e9f5f9c41ce59889fa1e74a",
+        "WeavePort.Testing.0.1.0-poc.nupkg": "72d77a33b67a343e65a2b753dbd30346f85a8c3f5d4b16e3e52836cf96737214",
+        "WeavePort.Hosting.0.1.0-poc.nupkg": "0518a6c9df4e5e1271d3ee05f7989e5e0e6cbbb0afdbd07cbfd44f103ac4c2e9",
+        "WeavePort.Sdk.Gateway.0.1.0-poc.nupkg": "042ef9f6285f8ae94fb3e0470c734afa48def86c3c8ab32954a0d6e1ee3e0309",
+        "WeavePort.Abstractions.0.1.0-internal.2.nupkg": "6cce5e861cfd02a347ae6f32e70165275fc7b5619adeeb8e186b36a959555048",
+        "WeavePort.Hosting.0.1.0-internal.2.nupkg": "338987a96b6c3ebd24d8b0bd7b9da32078613a5f9c43b95dbe011083a11e2e2e"
+      },
+      "artifacts": {
+        "artifacts/sdk-csharp/ExamplePlugin.dll": "2624897c5efe312a8b28a4b941abccbb033daef0c071c69554e6d9d0ee848485",
+        "artifacts/sdk-python-example/plugin.py": "1da268cb7df9d22f85c81660a96c83b8c3364d5309d0c5ca77a55959ee622772",
+        "examples/sdk/typescript/dist/plugin.js": "66ba01e33f2a3f8679a9771da87cebff87922d8ae5c9b9086ab6656f9ddcef88",
+        "artifacts/sdk-python/lib/python3.14/site-packages/weaveport_sdk/__init__.py": "4679cf3008e5dafd28be08ae66ff9725f1dd80c84e7a476f2f537072b02e12ad",
+        "artifacts/sdk-csharp/WeavePort.Sdk.dll": "f588f795a683c328f005ce78a9f254a2bdab502594af71db91129d68106a1d9d",
+        "examples/sdk/typescript/node_modules/@weaveport/sdk/dist/index.js": "77388924eb14498c6d4b0d21541046ceed0d2236a0dfcb33de6fe7ae4d75cfbc"
+      },
+      "tooling": {
+        "tests/soak/workload.js": "9fc517ee23075c58789e873f290cbe53183ab250137658db68504f09f56e012f",
+        "tools/soak/run.py": "afbdb89ef75b3dd4f1a3b8b636f52440d1d46727f10b2a885919f4c56a6ad54a",
+        "tools/soak/support.py": "9d30ec8d6f88b1e5eedcab68ebcc876b1bba7560ac5bf5706bcd5bea204c22ed"
+      },
+      "workerHostSha256": "7f6687d4bf7e4a72389cba0942db3b66e13f8b5d89f82b4cf61a7ee8e07a433e",
+      "forcedCleanup": {
+        "k6": false,
+        "gateway": false
+      },
+      "cleanupErrors": [],
+      "remainingProcesses": [],
+      "k6ExitCode": 0,
+      "run": "smoke-5",
+      "settings": {
+        "seconds": 30,
+        "clients": 3,
+        "pace_ms": 100,
+        "p99_ms": 2000,
+        "max_rss_mib": 8192,
+        "max_growth_mib": 2048,
+        "growth_after": 300,
+        "sample_seconds": 1.0,
+        "inject_failure": false
+      },
+      "metrics": {
+        "completed_operations{kind:crash}": {
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "rate": 0.9958667215632664,
+            "count": 30
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          }
+        },
+        "operation_ms{kind:recovery}": {
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "max": 84,
+            "p(95)": 77.05,
+            "p(99)": 80.46,
+            "avg": 65.7,
+            "min": 48,
+            "med": 70
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          }
+        },
+        "unexpected_errors{tenant:tenant-2}": {
+          "type": "rate",
+          "contains": "default",
+          "values": {
+            "rate": 0,
+            "passes": 0,
+            "fails": 780
+          },
+          "thresholds": {
+            "rate==0": {
+              "ok": true
+            }
+          }
+        },
+        "completed_operations{kind:recovery}": {
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "count": 60,
+            "rate": 1.9917334431265328
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          }
+        },
+        "operation_ms{kind:denied}": {
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "avg": 92.56666666666666,
+            "min": 72,
+            "med": 96,
+            "max": 109,
+            "p(95)": 106.55,
+            "p(99)": 108.42
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          }
+        },
+        "completed_operations{kind:denied}": {
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "count": 30,
+            "rate": 0.9958667215632664
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          }
+        },
+        "completed_operations{tenant:tenant-1}": {
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "count": 741,
+            "rate": 24.597908022612682
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          }
+        },
+        "completed_operations{kind:records}": {
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "count": 694,
+            "rate": 23.037716825496897
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          }
+        },
+        "expected_faults": {
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "count": 120,
+            "rate": 3.9834668862530656
+          }
+        },
+        "operation_ms{kind:failure}": {
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "avg": 27.4,
+            "min": 21,
+            "med": 26,
+            "max": 43,
+            "p(95)": 40.65,
+            "p(99)": 42.71
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          }
+        },
+        "operation_ms{kind:crash}": {
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "avg": 71.33333333333333,
+            "min": 51,
+            "med": 73,
+            "max": 104,
+            "p(95)": 99.3,
+            "p(99)": 103.42
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          }
+        },
+        "operation_ms{tenant:tenant-1}": {
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "avg": 9.676113360323887,
+            "min": 0,
+            "med": 1,
+            "max": 338,
+            "p(95)": 75,
+            "p(99)": 114.6
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          }
+        },
+        "completed_operations": {
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "count": 2262,
+            "rate": 75.08835080587029
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          }
+        },
+        "operation_ms": {
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "p(99)": 111,
+            "avg": 8.858090185676392,
+            "min": 0,
+            "med": 1,
+            "max": 338,
+            "p(95)": 74
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          }
+        },
+        "operation_ms{tenant:tenant-0}": {
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "max": 315,
+            "p(95)": 76,
+            "p(99)": 118.6,
+            "avg": 9.600539811066128,
+            "min": 0,
+            "med": 1
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          }
+        },
+        "completed_operations{kind:callback}": {
+          "contains": "default",
+          "values": {
+            "count": 694,
+            "rate": 23.037716825496897
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          },
+          "type": "counter"
+        },
+        "unexpected_errors{tenant:tenant-0}": {
+          "contains": "default",
+          "values": {
+            "passes": 0,
+            "fails": 741,
+            "rate": 0
+          },
+          "thresholds": {
+            "rate==0": {
+              "ok": true
+            }
+          },
+          "type": "rate"
+        },
+        "unexpected_errors{tenant:tenant-1}": {
+          "contains": "default",
+          "values": {
+            "rate": 0,
+            "passes": 0,
+            "fails": 741
+          },
+          "thresholds": {
+            "rate==0": {
+              "ok": true
+            }
+          },
+          "type": "rate"
+        },
+        "operation_ms{kind:records}": {
+          "values": {
+            "p(95)": 76.34999999999997,
+            "p(99)": 115.48999999999995,
+            "avg": 8.269452449567723,
+            "min": 1,
+            "med": 2,
+            "max": 338
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          },
+          "type": "trend",
+          "contains": "time"
+        },
+        "completed_operations{kind:cancel}": {
+          "contains": "default",
+          "values": {
+            "count": 30,
+            "rate": 0.9958667215632664
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          },
+          "type": "counter"
+        },
+        "completed_operations{kind:echo}": {
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "count": 694,
+            "rate": 23.037716825496897
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          }
+        },
+        "operation_ms{tenant:tenant-2}": {
+          "contains": "time",
+          "values": {
+            "avg": 7.375641025641026,
+            "min": 0,
+            "med": 1,
+            "max": 143,
+            "p(95)": 54.04999999999997,
+            "p(99)": 97.21
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          },
+          "type": "trend"
+        },
+        "operation_ms{kind:cancel}": {
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "p(99)": 142.42,
+            "avg": 109.36666666666666,
+            "min": 93,
+            "med": 101,
+            "max": 143,
+            "p(95)": 136.04999999999998
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          }
+        },
+        "operation_ms{kind:echo}": {
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "avg": 1.1469740634005763,
+            "min": 0,
+            "med": 1,
+            "max": 41,
+            "p(95)": 2,
+            "p(99)": 11.069999999999993
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          }
+        },
+        "completed_operations{tenant:tenant-2}": {
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "count": 780,
+            "rate": 25.892534760644928
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          }
+        },
+        "completed_operations{tenant:tenant-0}": {
+          "contains": "default",
+          "values": {
+            "count": 741,
+            "rate": 24.597908022612682
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          },
+          "type": "counter"
+        },
+        "unexpected_errors": {
+          "type": "rate",
+          "contains": "default",
+          "values": {
+            "rate": 0,
+            "passes": 0,
+            "fails": 2262
+          },
+          "thresholds": {
+            "rate==0": {
+              "ok": true
+            }
+          }
+        },
+        "operation_ms{kind:callback}": {
+          "contains": "time",
+          "values": {
+            "med": 1,
+            "max": 9,
+            "p(95)": 1,
+            "p(99)": 7,
+            "avg": 0.7780979827089337,
+            "min": 0
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          },
+          "type": "trend"
+        },
+        "completed_operations{kind:failure}": {
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          },
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "count": 30,
+            "rate": 0.9958667215632664
+          }
+        }
+      },
+      "resources": {
+        "samples": 30,
+        "peakSummedRssMiB": 357.375,
+        "firstCoordinator": {
+          "snapshot": {
+            "Workers": 3,
+            "Pristine": 0,
+            "Starting": 0,
+            "Quarantined": 0,
+            "ReservedMemoryMiB": 768,
+            "Bindings": 3,
+            "Tenants": 3,
+            "MaintenanceFailure": null
+          },
+          "workers": [
+            81137,
+            81140,
+            81141
+          ],
+          "managedBytes": 1776336,
+          "allocatedBytes": 1772352,
+          "gen0": 0,
+          "gen1": 0,
+          "gen2": 0,
+          "handles": 0
+        },
+        "lastCoordinator": {
+          "snapshot": {
+            "Workers": 3,
+            "Pristine": 0,
+            "Starting": 1,
+            "Quarantined": 0,
+            "ReservedMemoryMiB": 768,
+            "Bindings": 3,
+            "Tenants": 3,
+            "MaintenanceFailure": null
+          },
+          "workers": [
+            81357,
+            81366,
+            81333
+          ],
+          "managedBytes": 21776208,
+          "allocatedBytes": 1182108464,
+          "gen0": 194,
+          "gen1": 145,
+          "gen2": 126,
+          "handles": 0
+        },
+        "firstRootDescriptorCounts": [],
+        "lastRootDescriptorCounts": []
+      }
+    },
+    {
+      "status": "passed",
+      "stopReason": "completed",
+      "elapsedSeconds": 128.2440371249977,
+      "sourceCommit": "162fade1718a4a4ddfd060fdc28a2ebf74e582f4",
+      "runtimes": {
+        "k6": "k6 v2.2.0 (commit/devel, go1.26.5, darwin/arm64)",
+        "dotnet": "10.0.401",
+        "node": "v24.18.0"
+      },
+      "loaded": {
+        "WeavePort.Hosting": "d0500763b1c44e630a2f180ffa1413509dc94c3282bc9178dcb6a8b7144a676b",
+        "WeavePort.Abstractions": "81edcef2bc8d6363ff120184b0f3dc396af88bb7e736e2887f84cde7a72b57fc",
+        "WeavePort.Sdk.Client": "cb92a6b8df2cf07cd55e76b253150cc83a68644a3e8adb44ebd0be7bd3364f81",
+        "WeavePort.Sdk.Gateway": "8643442609bc610b523c33ad37f7584d35e9f17df9a5fe3a8f3d6cf19b7aed9d"
+      },
+      "packages": {
+        "WeavePort.Sdk.Client.0.1.0-poc.nupkg": "67d71d5ae5d5c1c6c017fe7ea4917a9146c5214100f61b11db604c0d81318b2b",
+        "WeavePort.Sdk.Client.0.1.0-internal.2.nupkg": "1d991d004bbde14da8ec9aaf01bd48469f8989789b7162ba47ed86037708299f",
+        "WeavePort.Sdk.0.1.0-internal.2.nupkg": "f9db715f0f73ff601bee874a5ad7ad9262a3a95edd73b6866ad29bacf24e7ff3",
+        "WeavePort.Sdk.0.1.0-poc.nupkg": "deca1093687a52de198f8f578e8f5de224c356117929dadf95324a2c9b3a2745",
+        "WeavePort.Abstractions.0.1.0-poc.nupkg": "207987bd7ba7d2355ae5feb260d0d8581b296edb783c78d148acafbba3205780",
+        "WeavePort.Sdk.Gateway.0.1.0-internal.2.nupkg": "cc002c0015ac2a22504271c0fc155b068966ca547cf03cfbc50ade7425dbc501",
+        "WeavePort.Composition.0.1.0-poc.nupkg": "ff71eb1f26f4baee6d00dc20e1a97acdab501f4e7e9f5f9c41ce59889fa1e74a",
+        "WeavePort.Testing.0.1.0-poc.nupkg": "72d77a33b67a343e65a2b753dbd30346f85a8c3f5d4b16e3e52836cf96737214",
+        "WeavePort.Hosting.0.1.0-poc.nupkg": "0518a6c9df4e5e1271d3ee05f7989e5e0e6cbbb0afdbd07cbfd44f103ac4c2e9",
+        "WeavePort.Sdk.Gateway.0.1.0-poc.nupkg": "042ef9f6285f8ae94fb3e0470c734afa48def86c3c8ab32954a0d6e1ee3e0309",
+        "WeavePort.Abstractions.0.1.0-internal.2.nupkg": "6cce5e861cfd02a347ae6f32e70165275fc7b5619adeeb8e186b36a959555048",
+        "WeavePort.Hosting.0.1.0-internal.2.nupkg": "338987a96b6c3ebd24d8b0bd7b9da32078613a5f9c43b95dbe011083a11e2e2e"
+      },
+      "artifacts": {
+        "artifacts/sdk-csharp/ExamplePlugin.dll": "2624897c5efe312a8b28a4b941abccbb033daef0c071c69554e6d9d0ee848485",
+        "artifacts/sdk-python-example/plugin.py": "1da268cb7df9d22f85c81660a96c83b8c3364d5309d0c5ca77a55959ee622772",
+        "examples/sdk/typescript/dist/plugin.js": "66ba01e33f2a3f8679a9771da87cebff87922d8ae5c9b9086ab6656f9ddcef88",
+        "artifacts/sdk-python/lib/python3.14/site-packages/weaveport_sdk/__init__.py": "4679cf3008e5dafd28be08ae66ff9725f1dd80c84e7a476f2f537072b02e12ad",
+        "artifacts/sdk-csharp/WeavePort.Sdk.dll": "f588f795a683c328f005ce78a9f254a2bdab502594af71db91129d68106a1d9d",
+        "examples/sdk/typescript/node_modules/@weaveport/sdk/dist/index.js": "77388924eb14498c6d4b0d21541046ceed0d2236a0dfcb33de6fe7ae4d75cfbc"
+      },
+      "tooling": {
+        "tests/soak/workload.js": "9fc517ee23075c58789e873f290cbe53183ab250137658db68504f09f56e012f",
+        "tools/soak/run.py": "afbdb89ef75b3dd4f1a3b8b636f52440d1d46727f10b2a885919f4c56a6ad54a",
+        "tools/soak/support.py": "9d30ec8d6f88b1e5eedcab68ebcc876b1bba7560ac5bf5706bcd5bea204c22ed"
+      },
+      "workerHostSha256": "7f6687d4bf7e4a72389cba0942db3b66e13f8b5d89f82b4cf61a7ee8e07a433e",
+      "forcedCleanup": {
+        "k6": false,
+        "gateway": false
+      },
+      "cleanupErrors": [],
+      "remainingProcesses": [],
+      "k6ExitCode": 0,
+      "run": "pilot-24",
+      "settings": {
+        "seconds": 120,
+        "clients": 24,
+        "pace_ms": 100,
+        "p99_ms": 2000,
+        "max_rss_mib": 8192,
+        "max_growth_mib": 2048,
+        "growth_after": 300,
+        "sample_seconds": 5,
+        "inject_failure": false
+      },
+      "metrics": {
+        "operation_ms": {
+          "contains": "time",
+          "values": {
+            "med": 3,
+            "max": 625,
+            "p(95)": 104,
+            "p(99)": 217.98999999999947,
+            "avg": 16.2738295278574,
+            "min": 0
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          },
+          "type": "trend"
+        },
+        "unexpected_errors{tenant:tenant-23}": {
+          "thresholds": {
+            "rate==0": {
+              "ok": true
+            }
+          },
+          "type": "rate",
+          "contains": "default",
+          "values": {
+            "fails": 2604,
+            "rate": 0,
+            "passes": 0
+          }
+        },
+        "unexpected_errors{tenant:tenant-2}": {
+          "contains": "default",
+          "values": {
+            "rate": 0,
+            "passes": 0,
+            "fails": 2607
+          },
+          "thresholds": {
+            "rate==0": {
+              "ok": true
+            }
+          },
+          "type": "rate"
+        },
+        "operation_ms{kind:echo}": {
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "p(95)": 16,
+            "p(99)": 22,
+            "avg": 4.9534920973942755,
+            "min": 0,
+            "med": 2,
+            "max": 137
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          }
+        },
+        "operation_ms{tenant:tenant-6}": {
+          "contains": "time",
+          "values": {
+            "avg": 16.34909377462569,
+            "min": 0,
+            "med": 2,
+            "max": 476,
+            "p(95)": 110,
+            "p(99)": 208.62999999999997
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          },
+          "type": "trend"
+        },
+        "unexpected_errors{tenant:tenant-10}": {
+          "type": "rate",
+          "contains": "default",
+          "values": {
+            "rate": 0,
+            "passes": 0,
+            "fails": 2457
+          },
+          "thresholds": {
+            "rate==0": {
+              "ok": true
+            }
+          }
+        },
+        "completed_operations{tenant:tenant-16}": {
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "rate": 20.08276618298131,
+            "count": 2424
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          }
+        },
+        "completed_operations{tenant:tenant-2}": {
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "count": 2607,
+            "rate": 21.59891561016183
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          }
+        },
+        "operation_ms{tenant:tenant-16}": {
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "max": 625,
+            "p(95)": 114,
+            "p(99)": 273.9299999999998,
+            "avg": 18.30280528052805,
+            "min": 0,
+            "med": 3
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          }
+        },
+        "completed_operations{tenant:tenant-10}": {
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "count": 2457,
+            "rate": 20.356170178046646
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          }
+        },
+        "operation_ms{tenant:tenant-21}": {
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "p(99)": 192.61999999999992,
+            "avg": 15.809187279151944,
+            "min": 0,
+            "med": 2,
+            "max": 478,
+            "p(95)": 108.69999999999989
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          }
+        },
+        "operation_ms{tenant:tenant-13}": {
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "p(99)": 269.4299999999995,
+            "avg": 17.546341463414635,
+            "min": 0,
+            "med": 3,
+            "max": 503,
+            "p(95)": 108.0499999999999
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          }
+        },
+        "operation_ms{tenant:tenant-1}": {
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "p(95)": 103,
+            "p(99)": 285,
+            "avg": 17.506277845281492,
+            "min": 0,
+            "med": 3,
+            "max": 506
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          }
+        },
+        "unexpected_errors{tenant:tenant-20}": {
+          "type": "rate",
+          "contains": "default",
+          "values": {
+            "rate": 0,
+            "passes": 0,
+            "fails": 2589
+          },
+          "thresholds": {
+            "rate==0": {
+              "ok": true
+            }
+          }
+        },
+        "completed_operations{tenant:tenant-12}": {
+          "contains": "default",
+          "values": {
+            "count": 2532,
+            "rate": 20.97754289410424
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          },
+          "type": "counter"
+        },
+        "unexpected_errors{tenant:tenant-9}": {
+          "thresholds": {
+            "rate==0": {
+              "ok": true
+            }
+          },
+          "type": "rate",
+          "contains": "default",
+          "values": {
+            "rate": 0,
+            "passes": 0,
+            "fails": 2535
+          }
+        },
+        "operation_ms{tenant:tenant-14}": {
+          "contains": "time",
+          "values": {
+            "p(99)": 219,
+            "avg": 14.965703275529865,
+            "min": 0,
+            "med": 2,
+            "max": 456,
+            "p(95)": 93.29999999999988
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          },
+          "type": "trend"
+        },
+        "unexpected_errors{tenant:tenant-14}": {
+          "type": "rate",
+          "contains": "default",
+          "values": {
+            "rate": 0,
+            "passes": 0,
+            "fails": 2595
+          },
+          "thresholds": {
+            "rate==0": {
+              "ok": true
+            }
+          }
+        },
+        "operation_ms{tenant:tenant-19}": {
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          },
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "med": 3,
+            "max": 609,
+            "p(95)": 110.74999999999967,
+            "p(99)": 281.94999999999993,
+            "avg": 18.045155993431855,
+            "min": 0
+          }
+        },
+        "unexpected_errors{tenant:tenant-13}": {
+          "type": "rate",
+          "contains": "default",
+          "values": {
+            "rate": 0,
+            "passes": 0,
+            "fails": 2460
+          },
+          "thresholds": {
+            "rate==0": {
+              "ok": true
+            }
+          }
+        },
+        "completed_operations{tenant:tenant-17}": {
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "count": 2589,
+            "rate": 21.449786158308005
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          }
+        },
+        "completed_operations{tenant:tenant-14}": {
+          "contains": "default",
+          "values": {
+            "count": 2595,
+            "rate": 21.499495975592612
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          },
+          "type": "counter"
+        },
+        "operation_ms{tenant:tenant-0}": {
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "avg": 16.123076923076923,
+            "min": 0,
+            "med": 2,
+            "max": 468,
+            "p(95)": 108.29999999999988,
+            "p(99)": 202.65999999999997
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          }
+        },
+        "unexpected_errors{tenant:tenant-7}": {
+          "thresholds": {
+            "rate==0": {
+              "ok": true
+            }
+          },
+          "type": "rate",
+          "contains": "default",
+          "values": {
+            "rate": 0,
+            "passes": 0,
+            "fails": 2466
+          }
+        },
+        "operation_ms{kind:cancel}": {
+          "contains": "time",
+          "values": {
+            "med": 156,
+            "max": 331,
+            "p(95)": 219,
+            "p(99)": 253.43999999999997,
+            "avg": 160.2058432934927,
+            "min": 95
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          },
+          "type": "trend"
+        },
+        "completed_operations{tenant:tenant-21}": {
+          "contains": "default",
+          "values": {
+            "count": 2547,
+            "rate": 21.101817437315756
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          },
+          "type": "counter"
+        },
+        "operation_ms{kind:recovery}": {
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "avg": 83.64807436918991,
+            "min": 51,
+            "med": 82,
+            "max": 209,
+            "p(95)": 120.74999999999993,
+            "p(99)": 148.89999999999998
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          }
+        },
+        "completed_operations{kind:failure}": {
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "count": 753,
+            "rate": 6.238582069218204
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          }
+        },
+        "completed_operations{tenant:tenant-9}": {
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "count": 2535,
+            "rate": 21.00239780274654
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          }
+        },
+        "completed_operations{tenant:tenant-11}": {
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "count": 2607,
+            "rate": 21.59891561016183
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          }
+        },
+        "operation_ms{tenant:tenant-18}": {
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "max": 482,
+            "p(95)": 119.79999999999988,
+            "p(99)": 205.91999999999996,
+            "avg": 16.725349301397205,
+            "min": 0,
+            "med": 2
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          }
+        },
+        "operation_ms{kind:denied}": {
+          "contains": "time",
+          "values": {
+            "avg": 152.67596281540506,
+            "min": 75,
+            "med": 148,
+            "max": 339,
+            "p(95)": 220,
+            "p(99)": 267.96
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          },
+          "type": "trend"
+        },
+        "operation_ms{kind:failure}": {
+          "values": {
+            "p(95)": 124,
+            "p(99)": 151.95999999999998,
+            "avg": 70.26427622841966,
+            "min": 23,
+            "med": 66,
+            "max": 172
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          },
+          "type": "trend",
+          "contains": "time"
+        },
+        "operation_ms{tenant:tenant-9}": {
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "max": 472,
+            "p(95)": 102.29999999999988,
+            "p(99)": 201.65999999999997,
+            "avg": 16.04378698224852,
+            "min": 0,
+            "med": 2
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          }
+        },
+        "completed_operations{kind:records}": {
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "count": 18728,
+            "rate": 155.16090968435392
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          }
+        },
+        "completed_operations{tenant:tenant-23}": {
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "count": 2604,
+            "rate": 21.574060701519524
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          }
+        },
+        "completed_operations{tenant:tenant-8}": {
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "rate": 21.74804506201565,
+            "count": 2625
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          }
+        },
+        "completed_operations{tenant:tenant-3}": {
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "rate": 20.952687985461935,
+            "count": 2529
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          }
+        },
+        "unexpected_errors": {
+          "type": "rate",
+          "contains": "default",
+          "values": {
+            "passes": 0,
+            "fails": 60702,
+            "rate": 0
+          },
+          "thresholds": {
+            "rate==0": {
+              "ok": true
+            }
+          }
+        },
+        "operation_ms{tenant:tenant-5}": {
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "med": 3,
+            "max": 472,
+            "p(95)": 90.49999999999977,
+            "p(99)": 197.69999999999996,
+            "avg": 14.831039755351682,
+            "min": 0
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          }
+        },
+        "completed_operations{tenant:tenant-22}": {
+          "values": {
+            "count": 2478,
+            "rate": 20.530154538542774
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          },
+          "type": "counter",
+          "contains": "default"
+        },
+        "operation_ms{tenant:tenant-2}": {
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "med": 2,
+            "max": 551,
+            "p(95)": 91.39999999999976,
+            "p(99)": 189,
+            "avg": 14.859608745684696,
+            "min": 0
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          }
+        },
+        "unexpected_errors{tenant:tenant-16}": {
+          "type": "rate",
+          "contains": "default",
+          "values": {
+            "rate": 0,
+            "passes": 0,
+            "fails": 2424
+          },
+          "thresholds": {
+            "rate==0": {
+              "ok": true
+            }
+          }
+        },
+        "unexpected_errors{tenant:tenant-5}": {
+          "type": "rate",
+          "contains": "default",
+          "values": {
+            "passes": 0,
+            "fails": 2616,
+            "rate": 0
+          },
+          "thresholds": {
+            "rate==0": {
+              "ok": true
+            }
+          }
+        },
+        "expected_faults": {
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "count": 3012,
+            "rate": 24.954328276872815
+          }
+        },
+        "operation_ms{kind:callback}": {
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "p(95)": 17,
+            "p(99)": 22,
+            "avg": 2.709792823579667,
+            "min": 0,
+            "med": 1,
+            "max": 175
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          }
+        },
+        "unexpected_errors{tenant:tenant-8}": {
+          "type": "rate",
+          "contains": "default",
+          "values": {
+            "rate": 0,
+            "passes": 0,
+            "fails": 2625
+          },
+          "thresholds": {
+            "rate==0": {
+              "ok": true
+            }
+          }
+        },
+        "completed_operations{kind:cancel}": {
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "count": 753,
+            "rate": 6.238582069218204
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          }
+        },
+        "unexpected_errors{tenant:tenant-17}": {
+          "type": "rate",
+          "contains": "default",
+          "values": {
+            "rate": 0,
+            "passes": 0,
+            "fails": 2589
+          },
+          "thresholds": {
+            "rate==0": {
+              "ok": true
+            }
+          }
+        },
+        "completed_operations{tenant:tenant-4}": {
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "rate": 20.306460360762042,
+            "count": 2451
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          }
+        },
+        "operation_ms{kind:records}": {
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          },
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "avg": 18.55868218709953,
+            "min": 1,
+            "med": 4,
+            "max": 625,
+            "p(95)": 96.64999999999917,
+            "p(99)": 319.72999999999985
+          }
+        },
+        "completed_operations{kind:echo}": {
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "count": 18728,
+            "rate": 155.16090968435392
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          }
+        },
+        "completed_operations{tenant:tenant-13}": {
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "count": 2460,
+            "rate": 20.38102508668895
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          }
+        },
+        "unexpected_errors{tenant:tenant-11}": {
+          "type": "rate",
+          "contains": "default",
+          "values": {
+            "rate": 0,
+            "passes": 0,
+            "fails": 2607
+          },
+          "thresholds": {
+            "rate==0": {
+              "ok": true
+            }
+          }
+        },
+        "operation_ms{tenant:tenant-20}": {
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "avg": 15.10776361529548,
+            "min": 0,
+            "med": 2,
+            "max": 540,
+            "p(95)": 92.59999999999988,
+            "p(99)": 214.59999999999988
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          }
+        },
+        "unexpected_errors{tenant:tenant-19}": {
+          "contains": "default",
+          "values": {
+            "rate": 0,
+            "passes": 0,
+            "fails": 2436
+          },
+          "thresholds": {
+            "rate==0": {
+              "ok": true
+            }
+          },
+          "type": "rate"
+        },
+        "operation_ms{tenant:tenant-7}": {
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          },
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "avg": 17.520275750202757,
+            "min": 0,
+            "med": 3,
+            "max": 524,
+            "p(95)": 113,
+            "p(99)": 256
+          }
+        },
+        "unexpected_errors{tenant:tenant-4}": {
+          "type": "rate",
+          "contains": "default",
+          "values": {
+            "rate": 0,
+            "passes": 0,
+            "fails": 2451
+          },
+          "thresholds": {
+            "rate==0": {
+              "ok": true
+            }
+          }
+        },
+        "operation_ms{kind:crash}": {
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "med": 104,
+            "max": 296,
+            "p(95)": 171.39999999999998,
+            "p(99)": 194,
+            "avg": 109.27755644090306,
+            "min": 56
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          }
+        },
+        "operation_ms{tenant:tenant-22}": {
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "avg": 17.189669087974174,
+            "min": 0,
+            "med": 3,
+            "max": 480,
+            "p(95)": 100.14999999999989,
+            "p(99)": 262.75999999999976
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          }
+        },
+        "operation_ms{tenant:tenant-15}": {
+          "values": {
+            "max": 439,
+            "p(95)": 107.29999999999978,
+            "p(99)": 214,
+            "avg": 16.597288676236044,
+            "min": 0,
+            "med": 2
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          },
+          "type": "trend",
+          "contains": "time"
+        },
+        "unexpected_errors{tenant:tenant-15}": {
+          "type": "rate",
+          "contains": "default",
+          "values": {
+            "rate": 0,
+            "passes": 0,
+            "fails": 2508
+          },
+          "thresholds": {
+            "rate==0": {
+              "ok": true
+            }
+          }
+        },
+        "completed_operations{tenant:tenant-6}": {
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "count": 2538,
+            "rate": 21.027252711388844
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          }
+        },
+        "completed_operations{kind:callback}": {
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "rate": 155.16090968435392,
+            "count": 18728
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          }
+        },
+        "operation_ms{tenant:tenant-23}": {
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "avg": 14.873271889400922,
+            "min": 0,
+            "med": 2,
+            "max": 494,
+            "p(95)": 96.84999999999988,
+            "p(99)": 189.96999999999997
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          }
+        },
+        "operation_ms{tenant:tenant-3}": {
+          "values": {
+            "med": 2,
+            "max": 471,
+            "p(95)": 108.59999999999988,
+            "p(99)": 214.71999999999997,
+            "avg": 16.42071965203638,
+            "min": 0
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          },
+          "type": "trend",
+          "contains": "time"
+        },
+        "operation_ms{tenant:tenant-11}": {
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          },
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "med": 2,
+            "max": 449,
+            "p(95)": 90,
+            "p(99)": 205,
+            "avg": 14.78711162255466,
+            "min": 0
+          }
+        },
+        "completed_operations{kind:recovery}": {
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "count": 1506,
+            "rate": 12.477164138436407
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          }
+        },
+        "completed_operations{tenant:tenant-0}": {
+          "contains": "default",
+          "values": {
+            "count": 2535,
+            "rate": 21.00239780274654
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          },
+          "type": "counter"
+        },
+        "completed_operations{tenant:tenant-18}": {
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          },
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "count": 2505,
+            "rate": 20.753848716323507
+          }
+        },
+        "operation_ms{tenant:tenant-17}": {
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          },
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "max": 450,
+            "p(95)": 90,
+            "p(99)": 224.11999999999998,
+            "avg": 15.100811123986094,
+            "min": 0,
+            "med": 2
+          }
+        },
+        "completed_operations{tenant:tenant-19}": {
+          "contains": "default",
+          "values": {
+            "count": 2436,
+            "rate": 20.182185817550522
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          },
+          "type": "counter"
+        },
+        "completed_operations{tenant:tenant-20}": {
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "count": 2589,
+            "rate": 21.449786158308005
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          }
+        },
+        "operation_ms{tenant:tenant-12}": {
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "p(99)": 211.06999999999994,
+            "avg": 16.147709320695103,
+            "min": 0,
+            "med": 2,
+            "max": 475,
+            "p(95)": 114
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          }
+        },
+        "unexpected_errors{tenant:tenant-18}": {
+          "type": "rate",
+          "contains": "default",
+          "values": {
+            "rate": 0,
+            "passes": 0,
+            "fails": 2505
+          },
+          "thresholds": {
+            "rate==0": {
+              "ok": true
+            }
+          }
+        },
+        "operation_ms{tenant:tenant-8}": {
+          "values": {
+            "max": 457,
+            "p(95)": 83,
+            "p(99)": 200,
+            "avg": 14.669714285714285,
+            "min": 0,
+            "med": 2
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          },
+          "type": "trend",
+          "contains": "time"
+        },
+        "unexpected_errors{tenant:tenant-12}": {
+          "type": "rate",
+          "contains": "default",
+          "values": {
+            "rate": 0,
+            "passes": 0,
+            "fails": 2532
+          },
+          "thresholds": {
+            "rate==0": {
+              "ok": true
+            }
+          }
+        },
+        "operation_ms{tenant:tenant-4}": {
+          "contains": "time",
+          "values": {
+            "p(99)": 270.9999999999996,
+            "avg": 18.100775193798448,
+            "min": 0,
+            "med": 3,
+            "max": 616,
+            "p(95)": 117
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          },
+          "type": "trend"
+        },
+        "completed_operations{tenant:tenant-1}": {
+          "values": {
+            "count": 2469,
+            "rate": 20.455589812615862
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          },
+          "type": "counter",
+          "contains": "default"
+        },
+        "unexpected_errors{tenant:tenant-3}": {
+          "type": "rate",
+          "contains": "default",
+          "values": {
+            "rate": 0,
+            "passes": 0,
+            "fails": 2529
+          },
+          "thresholds": {
+            "rate==0": {
+              "ok": true
+            }
+          }
+        },
+        "unexpected_errors{tenant:tenant-22}": {
+          "type": "rate",
+          "contains": "default",
+          "values": {
+            "rate": 0,
+            "passes": 0,
+            "fails": 2478
+          },
+          "thresholds": {
+            "rate==0": {
+              "ok": true
+            }
+          }
+        },
+        "completed_operations{tenant:tenant-7}": {
+          "contains": "default",
+          "values": {
+            "count": 2466,
+            "rate": 20.43073490397356
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          },
+          "type": "counter"
+        },
+        "unexpected_errors{tenant:tenant-0}": {
+          "type": "rate",
+          "contains": "default",
+          "values": {
+            "fails": 2535,
+            "rate": 0,
+            "passes": 0
+          },
+          "thresholds": {
+            "rate==0": {
+              "ok": true
+            }
+          }
+        },
+        "unexpected_errors{tenant:tenant-6}": {
+          "type": "rate",
+          "contains": "default",
+          "values": {
+            "rate": 0,
+            "passes": 0,
+            "fails": 2538
+          },
+          "thresholds": {
+            "rate==0": {
+              "ok": true
+            }
+          }
+        },
+        "unexpected_errors{tenant:tenant-21}": {
+          "type": "rate",
+          "contains": "default",
+          "values": {
+            "rate": 0,
+            "passes": 0,
+            "fails": 2547
+          },
+          "thresholds": {
+            "rate==0": {
+              "ok": true
+            }
+          }
+        },
+        "completed_operations{kind:denied}": {
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "count": 753,
+            "rate": 6.238582069218204
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          }
+        },
+        "completed_operations": {
+          "contains": "default",
+          "values": {
+            "count": 60702,
+            "rate": 502.914221468371
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          },
+          "type": "counter"
+        },
+        "completed_operations{tenant:tenant-5}": {
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "count": 2616,
+            "rate": 21.673480336088737
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          }
+        },
+        "completed_operations{tenant:tenant-15}": {
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "rate": 20.778703624965807,
+            "count": 2508
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          }
+        },
+        "operation_ms{tenant:tenant-10}": {
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "avg": 17.64997964997965,
+            "min": 0,
+            "med": 3,
+            "max": 550,
+            "p(95)": 116.39999999999978,
+            "p(99)": 265.6399999999999
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          }
+        },
+        "unexpected_errors{tenant:tenant-1}": {
+          "type": "rate",
+          "contains": "default",
+          "values": {
+            "rate": 0,
+            "passes": 0,
+            "fails": 2469
+          },
+          "thresholds": {
+            "rate==0": {
+              "ok": true
+            }
+          }
+        },
+        "completed_operations{kind:crash}": {
+          "contains": "default",
+          "values": {
+            "count": 753,
+            "rate": 6.238582069218204
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          },
+          "type": "counter"
+        }
+      },
+      "resources": {
+        "samples": 25,
+        "peakSummedRssMiB": 1618.109375,
+        "firstCoordinator": {
+          "snapshot": {
+            "Workers": 24,
+            "Pristine": 0,
+            "Starting": 0,
+            "Quarantined": 0,
+            "ReservedMemoryMiB": 6144,
+            "Bindings": 24,
+            "Tenants": 24,
+            "MaintenanceFailure": null
+          },
+          "workers": [
+            81517,
+            81520,
+            81524,
+            81529,
+            81532,
+            81533,
+            81534,
+            81539,
+            81544,
+            81551,
+            81554,
+            81555,
+            81557,
+            81558,
+            81559,
+            81560,
+            81562,
+            81563,
+            81564,
+            81565,
+            81567,
+            81568,
+            81569,
+            81570
+          ],
+          "managedBytes": 3186976,
+          "allocatedBytes": 3178768,
+          "gen0": 0,
+          "gen1": 0,
+          "gen2": 0,
+          "handles": 0
+        },
+        "lastCoordinator": {
+          "snapshot": {
+            "Workers": 24,
+            "Pristine": 0,
+            "Starting": 0,
+            "Quarantined": 0,
+            "ReservedMemoryMiB": 6144,
+            "Bindings": 24,
+            "Tenants": 24,
+            "MaintenanceFailure": null
+          },
+          "workers": [
+            85938,
+            85911,
+            85964,
+            85973,
+            85980,
+            85977,
+            85981,
+            85958,
+            85979,
+            85837,
+            85841,
+            85866,
+            85863,
+            85844,
+            85889,
+            85926,
+            85945,
+            85944,
+            85950,
+            85933,
+            85955,
+            85868,
+            85862,
+            85943
+          ],
+          "managedBytes": 52437176,
+          "allocatedBytes": 31399537520,
+          "gen0": 3132,
+          "gen1": 2136,
+          "gen2": 1211,
+          "handles": 0
+        },
+        "firstRootDescriptorCounts": [],
+        "lastRootDescriptorCounts": []
+      }
+    },
+    {
+      "status": "passed",
+      "stopReason": "completed",
+      "elapsedSeconds": 72.85317899999791,
+      "sourceCommit": "162fade1718a4a4ddfd060fdc28a2ebf74e582f4",
+      "runtimes": {
+        "k6": "k6 v2.2.0 (commit/devel, go1.26.5, darwin/arm64)",
+        "dotnet": "10.0.401",
+        "node": "v24.18.0"
+      },
+      "loaded": {
+        "WeavePort.Hosting": "d0500763b1c44e630a2f180ffa1413509dc94c3282bc9178dcb6a8b7144a676b",
+        "WeavePort.Abstractions": "81edcef2bc8d6363ff120184b0f3dc396af88bb7e736e2887f84cde7a72b57fc",
+        "WeavePort.Sdk.Client": "cb92a6b8df2cf07cd55e76b253150cc83a68644a3e8adb44ebd0be7bd3364f81",
+        "WeavePort.Sdk.Gateway": "8643442609bc610b523c33ad37f7584d35e9f17df9a5fe3a8f3d6cf19b7aed9d"
+      },
+      "packages": {
+        "WeavePort.Sdk.Client.0.1.0-poc.nupkg": "67d71d5ae5d5c1c6c017fe7ea4917a9146c5214100f61b11db604c0d81318b2b",
+        "WeavePort.Sdk.Client.0.1.0-internal.2.nupkg": "1d991d004bbde14da8ec9aaf01bd48469f8989789b7162ba47ed86037708299f",
+        "WeavePort.Sdk.0.1.0-internal.2.nupkg": "f9db715f0f73ff601bee874a5ad7ad9262a3a95edd73b6866ad29bacf24e7ff3",
+        "WeavePort.Sdk.0.1.0-poc.nupkg": "deca1093687a52de198f8f578e8f5de224c356117929dadf95324a2c9b3a2745",
+        "WeavePort.Abstractions.0.1.0-poc.nupkg": "207987bd7ba7d2355ae5feb260d0d8581b296edb783c78d148acafbba3205780",
+        "WeavePort.Sdk.Gateway.0.1.0-internal.2.nupkg": "cc002c0015ac2a22504271c0fc155b068966ca547cf03cfbc50ade7425dbc501",
+        "WeavePort.Composition.0.1.0-poc.nupkg": "ff71eb1f26f4baee6d00dc20e1a97acdab501f4e7e9f5f9c41ce59889fa1e74a",
+        "WeavePort.Testing.0.1.0-poc.nupkg": "72d77a33b67a343e65a2b753dbd30346f85a8c3f5d4b16e3e52836cf96737214",
+        "WeavePort.Hosting.0.1.0-poc.nupkg": "0518a6c9df4e5e1271d3ee05f7989e5e0e6cbbb0afdbd07cbfd44f103ac4c2e9",
+        "WeavePort.Sdk.Gateway.0.1.0-poc.nupkg": "042ef9f6285f8ae94fb3e0470c734afa48def86c3c8ab32954a0d6e1ee3e0309",
+        "WeavePort.Abstractions.0.1.0-internal.2.nupkg": "6cce5e861cfd02a347ae6f32e70165275fc7b5619adeeb8e186b36a959555048",
+        "WeavePort.Hosting.0.1.0-internal.2.nupkg": "338987a96b6c3ebd24d8b0bd7b9da32078613a5f9c43b95dbe011083a11e2e2e"
+      },
+      "artifacts": {
+        "artifacts/sdk-csharp/ExamplePlugin.dll": "2624897c5efe312a8b28a4b941abccbb033daef0c071c69554e6d9d0ee848485",
+        "artifacts/sdk-python-example/plugin.py": "1da268cb7df9d22f85c81660a96c83b8c3364d5309d0c5ca77a55959ee622772",
+        "examples/sdk/typescript/dist/plugin.js": "66ba01e33f2a3f8679a9771da87cebff87922d8ae5c9b9086ab6656f9ddcef88",
+        "artifacts/sdk-python/lib/python3.14/site-packages/weaveport_sdk/__init__.py": "4679cf3008e5dafd28be08ae66ff9725f1dd80c84e7a476f2f537072b02e12ad",
+        "artifacts/sdk-csharp/WeavePort.Sdk.dll": "f588f795a683c328f005ce78a9f254a2bdab502594af71db91129d68106a1d9d",
+        "examples/sdk/typescript/node_modules/@weaveport/sdk/dist/index.js": "77388924eb14498c6d4b0d21541046ceed0d2236a0dfcb33de6fe7ae4d75cfbc"
+      },
+      "tooling": {
+        "tests/soak/workload.js": "521b59a8db25e5d0c0282a54969bcfc6cf2ae3fb1a6d73f8aa0f499ccb895a7f",
+        "tools/soak/run.py": "aeab7ddf0e814e55def837a7b849f4a7e7ee79c482ea150d49a18d366cb6b72e",
+        "tools/soak/support.py": "c316cfe51f8a56e408540823a7061bc48e07ceced99a923359a8d30132ecf9c7"
+      },
+      "workerHostSha256": "7f6687d4bf7e4a72389cba0942db3b66e13f8b5d89f82b4cf61a7ee8e07a433e",
+      "forcedCleanup": {
+        "k6": false,
+        "gateway": false
+      },
+      "cleanupErrors": [],
+      "remainingProcesses": [],
+      "k6ExitCode": 0,
+      "run": "pilot-final",
+      "settings": {
+        "seconds": 60,
+        "clients": 24,
+        "pace_ms": 100,
+        "p99_ms": 2000,
+        "max_rss_mib": 8192,
+        "max_growth_mib": 2048,
+        "growth_after": 300,
+        "sample_seconds": 5,
+        "inject_failure": false
+      },
+      "metrics": {
+        "operation_ms{tenant:tenant-22}": {
+          "contains": "time",
+          "values": {
+            "p(99)": 278.09999999999985,
+            "avg": 17.772616136919314,
+            "min": 0,
+            "med": 3,
+            "max": 471,
+            "p(95)": 102.69999999999995
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          },
+          "type": "trend"
+        },
+        "operation_ms{tenant:tenant-15}": {
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "avg": 16.31678486997636,
+            "min": 0,
+            "med": 2,
+            "max": 456,
+            "p(95)": 101.19999999999989,
+            "p(99)": 211.64
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          }
+        },
+        "operation_ms{tenant:tenant-23}": {
+          "contains": "time",
+          "values": {
+            "med": 2,
+            "max": 445,
+            "p(95)": 94.79999999999994,
+            "p(99)": 195.75999999999993,
+            "avg": 14.711877394636016,
+            "min": 0
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          },
+          "type": "trend"
+        },
+        "completed_operations{tenant:tenant-20}": {
+          "contains": "default",
+          "values": {
+            "count": 1299,
+            "rate": 19.754054869525834
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          },
+          "type": "counter"
+        },
+        "operation_ms{tenant:tenant-8}": {
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "avg": 15.076982294072364,
+            "min": 0,
+            "med": 2,
+            "max": 529,
+            "p(95)": 78,
+            "p(99)": 214.23999999999987
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          }
+        },
+        "completed_operations{tenant:tenant-12}": {
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          },
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "rate": 19.20659838353436,
+            "count": 1263
+          }
+        },
+        "operation_ms{tenant:tenant-13}": {
+          "contains": "time",
+          "values": {
+            "p(95)": 110.5999999999999,
+            "p(99)": 278.71999999999997,
+            "avg": 18.182716049382716,
+            "min": 0,
+            "med": 3,
+            "max": 598
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          },
+          "type": "trend"
+        },
+        "completed_operations{tenant:tenant-3}": {
+          "contains": "default",
+          "values": {
+            "count": 1260,
+            "rate": 19.160977009701735
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          },
+          "type": "counter"
+        },
+        "operation_ms{tenant:tenant-3}": {
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "max": 454,
+            "p(95)": 99.04999999999994,
+            "p(99)": 199.27999999999992,
+            "avg": 16.433333333333334,
+            "min": 0,
+            "med": 2
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          }
+        },
+        "completed_operations{tenant:tenant-21}": {
+          "values": {
+            "count": 1266,
+            "rate": 19.25221975736698
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          },
+          "type": "counter",
+          "contains": "default"
+        },
+        "completed_operations{tenant:tenant-7}": {
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "count": 1218,
+            "rate": 18.52227777604501
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          }
+        },
+        "unexpected_errors{tenant:tenant-18}": {
+          "type": "rate",
+          "contains": "default",
+          "values": {
+            "fails": 1278,
+            "rate": 0,
+            "passes": 0
+          },
+          "thresholds": {
+            "rate==0": {
+              "ok": true
+            }
+          }
+        },
+        "completed_operations{tenant:tenant-6}": {
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "count": 1263,
+            "rate": 19.20659838353436
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          }
+        },
+        "completed_operations{tenant:tenant-9}": {
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "count": 1269,
+            "rate": 19.297841131199604
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          }
+        },
+        "completed_operations{kind:echo}": {
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "count": 9192,
+            "rate": 139.7838894231574
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          }
+        },
+        "unexpected_errors{tenant:tenant-1}": {
+          "type": "rate",
+          "contains": "default",
+          "values": {
+            "rate": 0,
+            "passes": 0,
+            "fails": 1227
+          },
+          "thresholds": {
+            "rate==0": {
+              "ok": true
+            }
+          }
+        },
+        "operation_ms{tenant:tenant-10}": {
+          "values": {
+            "avg": 18.29042904290429,
+            "min": 0,
+            "med": 3,
+            "max": 620,
+            "p(95)": 117,
+            "p(99)": 289.57999999999976
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          },
+          "type": "trend",
+          "contains": "time"
+        },
+        "completed_operations{tenant:tenant-1}": {
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "count": 1227,
+            "rate": 18.65914189754288
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          }
+        },
+        "unexpected_errors{tenant:tenant-5}": {
+          "values": {
+            "rate": 0,
+            "passes": 0,
+            "fails": 1320
+          },
+          "thresholds": {
+            "rate==0": {
+              "ok": true
+            }
+          },
+          "type": "rate",
+          "contains": "default"
+        },
+        "completed_operations{kind:recovery}": {
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "count": 741,
+            "rate": 11.268479336657926
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          }
+        },
+        "unexpected_errors{tenant:tenant-7}": {
+          "type": "rate",
+          "contains": "default",
+          "values": {
+            "rate": 0,
+            "passes": 0,
+            "fails": 1218
+          },
+          "thresholds": {
+            "rate==0": {
+              "ok": true
+            }
+          }
+        },
+        "unexpected_errors{tenant:tenant-22}": {
+          "type": "rate",
+          "contains": "default",
+          "values": {
+            "rate": 0,
+            "passes": 0,
+            "fails": 1227
+          },
+          "thresholds": {
+            "rate==0": {
+              "ok": true
+            }
+          }
+        },
+        "completed_operations{tenant:tenant-18}": {
+          "values": {
+            "count": 1278,
+            "rate": 19.434705252697473
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          },
+          "type": "counter",
+          "contains": "default"
+        },
+        "operation_ms{tenant:tenant-1}": {
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "p(99)": 271.47999999999996,
+            "avg": 18.115729421352892,
+            "min": 0,
+            "med": 3,
+            "max": 574,
+            "p(95)": 104
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          }
+        },
+        "unexpected_errors{tenant:tenant-23}": {
+          "type": "rate",
+          "contains": "default",
+          "values": {
+            "fails": 1305,
+            "rate": 0,
+            "passes": 0
+          },
+          "thresholds": {
+            "rate==0": {
+              "ok": true
+            }
+          }
+        },
+        "operation_ms{tenant:tenant-7}": {
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "avg": 18.057471264367816,
+            "min": 0,
+            "med": 3,
+            "max": 615,
+            "p(95)": 98.14999999999995,
+            "p(99)": 295.21999999999963
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          }
+        },
+        "completed_operations{kind:callback}": {
+          "contains": "default",
+          "values": {
+            "count": 9192,
+            "rate": 139.7838894231574
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          },
+          "type": "counter"
+        },
+        "operation_ms{kind:records}": {
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "avg": 19.271975630983462,
+            "min": 1,
+            "med": 4,
+            "max": 661,
+            "p(95)": 98.89999999999918,
+            "p(99)": 353.0899999999999
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          }
+        },
+        "completed_operations{kind:cancel}": {
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "rate": 5.6266361060235255,
+            "count": 370
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          }
+        },
+        "operation_ms{tenant:tenant-16}": {
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          },
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "p(99)": 275.61999999999983,
+            "avg": 18.023809523809526,
+            "min": 0,
+            "med": 3,
+            "max": 463,
+            "p(95)": 118
+          }
+        },
+        "operation_ms{tenant:tenant-6}": {
+          "contains": "time",
+          "values": {
+            "med": 2,
+            "max": 495,
+            "p(95)": 109.19999999999955,
+            "p(99)": 210.89999999999995,
+            "avg": 16.350752177355503,
+            "min": 0
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          },
+          "type": "trend"
+        },
+        "completed_operations{tenant:tenant-10}": {
+          "contains": "default",
+          "values": {
+            "count": 1212,
+            "rate": 18.431035028379764
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          },
+          "type": "counter"
+        },
+        "operation_ms{kind:callback}": {
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "p(95)": 18,
+            "p(99)": 21,
+            "avg": 2.5602697998259356,
+            "min": 0,
+            "med": 1,
+            "max": 80
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          }
+        },
+        "operation_ms{kind:recovery}": {
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "min": 54,
+            "med": 81,
+            "max": 218,
+            "p(95)": 117,
+            "p(99)": 139.6,
+            "avg": 82.4251012145749
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          }
+        },
+        "unexpected_errors{tenant:tenant-17}": {
+          "type": "rate",
+          "contains": "default",
+          "values": {
+            "rate": 0,
+            "passes": 0,
+            "fails": 1296
+          },
+          "thresholds": {
+            "rate==0": {
+              "ok": true
+            }
+          }
+        },
+        "operation_ms{kind:crash}": {
+          "contains": "time",
+          "values": {
+            "avg": 107.80862533692722,
+            "min": 54,
+            "med": 102,
+            "max": 266,
+            "p(95)": 159.49999999999997,
+            "p(99)": 211.59999999999997
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          },
+          "type": "trend"
+        },
+        "unexpected_errors{tenant:tenant-20}": {
+          "type": "rate",
+          "contains": "default",
+          "values": {
+            "rate": 0,
+            "passes": 0,
+            "fails": 1299
+          },
+          "thresholds": {
+            "rate==0": {
+              "ok": true
+            }
+          }
+        },
+        "completed_operations{tenant:tenant-14}": {
+          "contains": "default",
+          "values": {
+            "count": 778,
+            "rate": 11.831142947260277
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          },
+          "type": "counter"
+        },
+        "unexpected_errors{tenant:tenant-4}": {
+          "type": "rate",
+          "contains": "default",
+          "values": {
+            "rate": 0,
+            "passes": 0,
+            "fails": 1221
+          },
+          "thresholds": {
+            "rate==0": {
+              "ok": true
+            }
+          }
+        },
+        "completed_operations{tenant:tenant-15}": {
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "count": 1269,
+            "rate": 19.297841131199604
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          }
+        },
+        "unexpected_errors{tenant:tenant-16}": {
+          "values": {
+            "rate": 0,
+            "passes": 0,
+            "fails": 1218
+          },
+          "thresholds": {
+            "rate==0": {
+              "ok": true
+            }
+          },
+          "type": "rate",
+          "contains": "default"
+        },
+        "completed_operations{tenant:tenant-0}": {
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "count": 1272,
+            "rate": 19.343462505032228
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          }
+        },
+        "unexpected_errors{tenant:tenant-8}": {
+          "thresholds": {
+            "rate==0": {
+              "ok": true
+            }
+          },
+          "type": "rate",
+          "contains": "default",
+          "values": {
+            "rate": 0,
+            "passes": 0,
+            "fails": 1299
+          }
+        },
+        "completed_operations{tenant:tenant-17}": {
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          },
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "count": 1296,
+            "rate": 19.708433495693214
+          }
+        },
+        "unexpected_errors{tenant:tenant-19}": {
+          "type": "rate",
+          "contains": "default",
+          "values": {
+            "fails": 1218,
+            "rate": 0,
+            "passes": 0
+          },
+          "thresholds": {
+            "rate==0": {
+              "ok": true
+            }
+          }
+        },
+        "completed_operations{tenant:tenant-13}": {
+          "values": {
+            "count": 1215,
+            "rate": 18.476656402212388
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          },
+          "type": "counter",
+          "contains": "default"
+        },
+        "unexpected_errors": {
+          "type": "rate",
+          "contains": "default",
+          "values": {
+            "rate": 0,
+            "passes": 0,
+            "fails": 29800
+          },
+          "thresholds": {
+            "rate==0": {
+              "ok": true
+            }
+          }
+        },
+        "unexpected_errors{tenant:tenant-11}": {
+          "type": "rate",
+          "contains": "default",
+          "values": {
+            "rate": 0,
+            "passes": 0,
+            "fails": 1308
+          },
+          "thresholds": {
+            "rate==0": {
+              "ok": true
+            }
+          }
+        },
+        "operation_ms{tenant:tenant-19}": {
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "med": 3,
+            "max": 464,
+            "p(95)": 120.2999999999999,
+            "p(99)": 267.97999999999996,
+            "avg": 18.114942528735632,
+            "min": 0
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          }
+        },
+        "completed_operations{kind:records}": {
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "count": 9192,
+            "rate": 139.7838894231574
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          }
+        },
+        "operation_ms{tenant:tenant-11}": {
+          "contains": "time",
+          "values": {
+            "avg": 14.685015290519878,
+            "min": 0,
+            "med": 2,
+            "max": 534,
+            "p(95)": 82.94999999999983,
+            "p(99)": 190.5099999999999
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          },
+          "type": "trend"
+        },
+        "completed_operations{tenant:tenant-8}": {
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "count": 1299,
+            "rate": 19.754054869525834
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          }
+        },
+        "completed_operations{tenant:tenant-11}": {
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          },
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "count": 1308,
+            "rate": 19.890918991023707
+          }
+        },
+        "completed_operations{kind:denied}": {
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          },
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "count": 371,
+            "rate": 5.641843230634399
+          }
+        },
+        "operation_ms{tenant:tenant-20}": {
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "min": 0,
+            "med": 2,
+            "max": 449,
+            "p(95)": 95,
+            "p(99)": 201.23999999999987,
+            "avg": 15.104695919938415
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          }
+        },
+        "unexpected_errors{tenant:tenant-9}": {
+          "type": "rate",
+          "contains": "default",
+          "values": {
+            "rate": 0,
+            "passes": 0,
+            "fails": 1269
+          },
+          "thresholds": {
+            "rate==0": {
+              "ok": true
+            }
+          }
+        },
+        "unexpected_errors{tenant:tenant-12}": {
+          "type": "rate",
+          "contains": "default",
+          "values": {
+            "rate": 0,
+            "passes": 0,
+            "fails": 1263
+          },
+          "thresholds": {
+            "rate==0": {
+              "ok": true
+            }
+          }
+        },
+        "unexpected_errors{tenant:tenant-10}": {
+          "type": "rate",
+          "contains": "default",
+          "values": {
+            "fails": 1212,
+            "rate": 0,
+            "passes": 0
+          },
+          "thresholds": {
+            "rate==0": {
+              "ok": true
+            }
+          }
+        },
+        "operation_ms": {
+          "values": {
+            "min": 0,
+            "med": 2,
+            "max": 661,
+            "p(95)": 102,
+            "p(99)": 223,
+            "avg": 16.399295302013424
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          },
+          "type": "trend",
+          "contains": "time"
+        },
+        "operation_ms{tenant:tenant-4}": {
+          "values": {
+            "avg": 17.983619983619985,
+            "min": 0,
+            "med": 3,
+            "max": 661,
+            "p(95)": 107,
+            "p(99)": 257.1999999999999
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          },
+          "type": "trend",
+          "contains": "time"
+        },
+        "operation_ms{tenant:tenant-17}": {
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          },
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "p(99)": 218.3499999999999,
+            "avg": 15.250771604938272,
+            "min": 0,
+            "med": 2,
+            "max": 488,
+            "p(95)": 90.24999999999994
+          }
+        },
+        "completed_operations{tenant:tenant-23}": {
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "rate": 19.845297617191083,
+            "count": 1305
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          }
+        },
+        "operation_ms{kind:cancel}": {
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "avg": 158.55405405405406,
+            "min": 98,
+            "med": 154,
+            "max": 361,
+            "p(95)": 217,
+            "p(99)": 277.10999999999973
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          }
+        },
+        "completed_operations{kind:crash}": {
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "rate": 5.641843230634399,
+            "count": 371
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          }
+        },
+        "completed_operations{tenant:tenant-16}": {
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          },
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "count": 1218,
+            "rate": 18.52227777604501
+          }
+        },
+        "operation_ms{kind:denied}": {
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          },
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "avg": 150.3234501347709,
+            "min": 84,
+            "med": 148,
+            "max": 302,
+            "p(95)": 209.99999999999997,
+            "p(99)": 264.2
+          }
+        },
+        "operation_ms{tenant:tenant-2}": {
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "avg": 14.989992301770593,
+            "min": 0,
+            "med": 2,
+            "max": 509,
+            "p(95)": 91.19999999999989,
+            "p(99)": 209.03999999999996
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          }
+        },
+        "operation_ms{tenant:tenant-14}": {
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "med": 2,
+            "max": 561,
+            "p(95)": 82.74999999999983,
+            "p(99)": 197.37999999999997,
+            "avg": 15.348329048843187,
+            "min": 0
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          }
+        },
+        "completed_operations": {
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "count": 29800,
+            "rate": 453.1723134040569
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          }
+        },
+        "unexpected_errors{tenant:tenant-21}": {
+          "type": "rate",
+          "contains": "default",
+          "values": {
+            "rate": 0,
+            "passes": 0,
+            "fails": 1266
+          },
+          "thresholds": {
+            "rate==0": {
+              "ok": true
+            }
+          }
+        },
+        "completed_operations{tenant:tenant-22}": {
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "count": 1227,
+            "rate": 18.65914189754288
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          }
+        },
+        "operation_ms{kind:failure}": {
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "med": 63,
+            "max": 198,
+            "p(95)": 117,
+            "p(99)": 143.89999999999998,
+            "avg": 66.97843665768194,
+            "min": 24
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          }
+        },
+        "completed_operations{kind:failure}": {
+          "contains": "default",
+          "values": {
+            "rate": 5.641843230634399,
+            "count": 371
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          },
+          "type": "counter"
+        },
+        "operation_ms{tenant:tenant-9}": {
+          "contains": "time",
+          "values": {
+            "avg": 16.041765169424743,
+            "min": 0,
+            "med": 2,
+            "max": 439,
+            "p(95)": 105,
+            "p(99)": 196.55999999999992
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          },
+          "type": "trend"
+        },
+        "operation_ms{tenant:tenant-12}": {
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "min": 0,
+            "med": 2,
+            "max": 487,
+            "p(95)": 104,
+            "p(99)": 193.76,
+            "avg": 16.431512272367378
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          }
+        },
+        "unexpected_errors{tenant:tenant-0}": {
+          "thresholds": {
+            "rate==0": {
+              "ok": true
+            }
+          },
+          "type": "rate",
+          "contains": "default",
+          "values": {
+            "rate": 0,
+            "passes": 0,
+            "fails": 1272
+          }
+        },
+        "expected_faults": {
+          "contains": "default",
+          "values": {
+            "count": 1484,
+            "rate": 22.567372922537597
+          },
+          "type": "counter"
+        },
+        "completed_operations{tenant:tenant-2}": {
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "count": 1299,
+            "rate": 19.754054869525834
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          }
+        },
+        "unexpected_errors{tenant:tenant-14}": {
+          "type": "rate",
+          "contains": "default",
+          "values": {
+            "rate": 0,
+            "passes": 0,
+            "fails": 778
+          },
+          "thresholds": {
+            "rate==0": {
+              "ok": true
+            }
+          }
+        },
+        "completed_operations{tenant:tenant-4}": {
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "count": 1221,
+            "rate": 18.567899149877633
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          }
+        },
+        "operation_ms{tenant:tenant-21}": {
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "min": 0,
+            "med": 2,
+            "max": 471,
+            "p(95)": 108.24999999999983,
+            "p(99)": 224.74999999999994,
+            "avg": 16.02685624012638
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          }
+        },
+        "unexpected_errors{tenant:tenant-3}": {
+          "type": "rate",
+          "contains": "default",
+          "values": {
+            "passes": 0,
+            "fails": 1260,
+            "rate": 0
+          },
+          "thresholds": {
+            "rate==0": {
+              "ok": true
+            }
+          }
+        },
+        "operation_ms{tenant:tenant-0}": {
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "avg": 15.913522012578616,
+            "min": 0,
+            "med": 2,
+            "max": 449,
+            "p(95)": 99.44999999999995,
+            "p(99)": 191.29
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          }
+        },
+        "completed_operations{tenant:tenant-19}": {
+          "values": {
+            "count": 1218,
+            "rate": 18.52227777604501
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          },
+          "type": "counter",
+          "contains": "default"
+        },
+        "operation_ms{kind:echo}": {
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "avg": 5.184834638816362,
+            "min": 0,
+            "med": 2,
+            "max": 119,
+            "p(95)": 17,
+            "p(99)": 21
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          }
+        },
+        "unexpected_errors{tenant:tenant-13}": {
+          "contains": "default",
+          "values": {
+            "rate": 0,
+            "passes": 0,
+            "fails": 1215
+          },
+          "thresholds": {
+            "rate==0": {
+              "ok": true
+            }
+          },
+          "type": "rate"
+        },
+        "unexpected_errors{tenant:tenant-2}": {
+          "type": "rate",
+          "contains": "default",
+          "values": {
+            "rate": 0,
+            "passes": 0,
+            "fails": 1299
+          },
+          "thresholds": {
+            "rate==0": {
+              "ok": true
+            }
+          }
+        },
+        "operation_ms{tenant:tenant-18}": {
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          },
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "max": 456,
+            "p(95)": 104.14999999999995,
+            "p(99)": 202.75999999999988,
+            "avg": 16.077464788732396,
+            "min": 0,
+            "med": 2
+          }
+        },
+        "operation_ms{tenant:tenant-5}": {
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "avg": 14.690909090909091,
+            "min": 0,
+            "med": 2,
+            "max": 491,
+            "p(95)": 84.09999999999988,
+            "p(99)": 180.66999999999993
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          }
+        },
+        "completed_operations{tenant:tenant-5}": {
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "count": 1320,
+            "rate": 20.0734044863542
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          }
+        },
+        "unexpected_errors{tenant:tenant-6}": {
+          "type": "rate",
+          "contains": "default",
+          "values": {
+            "rate": 0,
+            "passes": 0,
+            "fails": 1263
+          },
+          "thresholds": {
+            "rate==0": {
+              "ok": true
+            }
+          }
+        },
+        "unexpected_errors{tenant:tenant-15}": {
+          "contains": "default",
+          "values": {
+            "rate": 0,
+            "passes": 0,
+            "fails": 1269
+          },
+          "thresholds": {
+            "rate==0": {
+              "ok": true
+            }
+          },
+          "type": "rate"
+        }
+      },
+      "resources": {
+        "samples": 14,
+        "peakSummedRssMiB": 1628.421875,
+        "firstCoordinator": {
+          "snapshot": {
+            "Workers": 24,
+            "Pristine": 0,
+            "Starting": 0,
+            "Quarantined": 0,
+            "ReservedMemoryMiB": 6144,
+            "Bindings": 24,
+            "Tenants": 24,
+            "MaintenanceFailure": null
+          },
+          "workers": [
+            86074,
+            86075,
+            86076,
+            86079,
+            86080,
+            86081,
+            86082,
+            86083,
+            86084,
+            86085,
+            86086,
+            86087,
+            86089,
+            86092,
+            86093,
+            86094,
+            86095,
+            86096,
+            86097,
+            86100,
+            86101,
+            86102,
+            86103,
+            86104
+          ],
+          "managedBytes": 3187904,
+          "allocatedBytes": 3179648,
+          "gen0": 0,
+          "gen1": 0,
+          "gen2": 0,
+          "handles": 0
+        },
+        "lastCoordinator": {
+          "snapshot": {
+            "Workers": 23,
+            "Pristine": 0,
+            "Starting": 0,
+            "Quarantined": 0,
+            "ReservedMemoryMiB": 5888,
+            "Bindings": 24,
+            "Tenants": 24,
+            "MaintenanceFailure": null
+          },
+          "workers": [
+            87813,
+            87882,
+            87788,
+            87840,
+            87790,
+            87889,
+            87857,
+            87810,
+            87822,
+            87862,
+            87833,
+            87818,
+            87873,
+            87839,
+            87141,
+            87884,
+            87848,
+            87858,
+            87888,
+            87864,
+            87867,
+            87801,
+            87865,
+            87866
+          ],
+          "managedBytes": 48625400,
+          "allocatedBytes": 15513939216,
+          "gen0": 1412,
+          "gen1": 938,
+          "gen2": 469,
+          "handles": 0
+        },
+        "firstRootDescriptorCounts": [],
+        "lastRootDescriptorCounts": []
+      }
+    },
+    {
+      "status": "passed",
+      "stopReason": "completed",
+      "elapsedSeconds": 21.447253708000062,
+      "sourceCommit": "162fade1718a4a4ddfd060fdc28a2ebf74e582f4",
+      "runtimes": {
+        "k6": "k6 v2.2.0 (commit/devel, go1.26.5, darwin/arm64)",
+        "dotnet": "10.0.401",
+        "node": "v24.18.0"
+      },
+      "loaded": {
+        "WeavePort.Hosting": "d0500763b1c44e630a2f180ffa1413509dc94c3282bc9178dcb6a8b7144a676b",
+        "WeavePort.Abstractions": "81edcef2bc8d6363ff120184b0f3dc396af88bb7e736e2887f84cde7a72b57fc",
+        "WeavePort.Sdk.Client": "cb92a6b8df2cf07cd55e76b253150cc83a68644a3e8adb44ebd0be7bd3364f81",
+        "WeavePort.Sdk.Gateway": "8643442609bc610b523c33ad37f7584d35e9f17df9a5fe3a8f3d6cf19b7aed9d"
+      },
+      "packages": {
+        "WeavePort.Sdk.Client.0.1.0-poc.nupkg": "67d71d5ae5d5c1c6c017fe7ea4917a9146c5214100f61b11db604c0d81318b2b",
+        "WeavePort.Sdk.Client.0.1.0-internal.2.nupkg": "1d991d004bbde14da8ec9aaf01bd48469f8989789b7162ba47ed86037708299f",
+        "WeavePort.Sdk.0.1.0-internal.2.nupkg": "f9db715f0f73ff601bee874a5ad7ad9262a3a95edd73b6866ad29bacf24e7ff3",
+        "WeavePort.Sdk.0.1.0-poc.nupkg": "deca1093687a52de198f8f578e8f5de224c356117929dadf95324a2c9b3a2745",
+        "WeavePort.Abstractions.0.1.0-poc.nupkg": "207987bd7ba7d2355ae5feb260d0d8581b296edb783c78d148acafbba3205780",
+        "WeavePort.Sdk.Gateway.0.1.0-internal.2.nupkg": "cc002c0015ac2a22504271c0fc155b068966ca547cf03cfbc50ade7425dbc501",
+        "WeavePort.Composition.0.1.0-poc.nupkg": "ff71eb1f26f4baee6d00dc20e1a97acdab501f4e7e9f5f9c41ce59889fa1e74a",
+        "WeavePort.Testing.0.1.0-poc.nupkg": "72d77a33b67a343e65a2b753dbd30346f85a8c3f5d4b16e3e52836cf96737214",
+        "WeavePort.Hosting.0.1.0-poc.nupkg": "0518a6c9df4e5e1271d3ee05f7989e5e0e6cbbb0afdbd07cbfd44f103ac4c2e9",
+        "WeavePort.Sdk.Gateway.0.1.0-poc.nupkg": "042ef9f6285f8ae94fb3e0470c734afa48def86c3c8ab32954a0d6e1ee3e0309",
+        "WeavePort.Abstractions.0.1.0-internal.2.nupkg": "6cce5e861cfd02a347ae6f32e70165275fc7b5619adeeb8e186b36a959555048",
+        "WeavePort.Hosting.0.1.0-internal.2.nupkg": "338987a96b6c3ebd24d8b0bd7b9da32078613a5f9c43b95dbe011083a11e2e2e"
+      },
+      "artifacts": {
+        "artifacts/sdk-csharp/ExamplePlugin.dll": "2624897c5efe312a8b28a4b941abccbb033daef0c071c69554e6d9d0ee848485",
+        "artifacts/sdk-python-example/plugin.py": "1da268cb7df9d22f85c81660a96c83b8c3364d5309d0c5ca77a55959ee622772",
+        "examples/sdk/typescript/dist/plugin.js": "66ba01e33f2a3f8679a9771da87cebff87922d8ae5c9b9086ab6656f9ddcef88",
+        "artifacts/sdk-python/lib/python3.14/site-packages/weaveport_sdk/__init__.py": "4679cf3008e5dafd28be08ae66ff9725f1dd80c84e7a476f2f537072b02e12ad",
+        "artifacts/sdk-csharp/WeavePort.Sdk.dll": "f588f795a683c328f005ce78a9f254a2bdab502594af71db91129d68106a1d9d",
+        "examples/sdk/typescript/node_modules/@weaveport/sdk/dist/index.js": "77388924eb14498c6d4b0d21541046ceed0d2236a0dfcb33de6fe7ae4d75cfbc"
+      },
+      "tooling": {
+        "tests/soak/workload.js": "521b59a8db25e5d0c0282a54969bcfc6cf2ae3fb1a6d73f8aa0f499ccb895a7f",
+        "tools/soak/run.py": "495461b4b28fa49545d3ee197262613f34d1b4c7b80b6c8bc5a0c7285cb91954",
+        "tools/soak/support.py": "a6e43eb8c6c8767ce1dc101b6d68428ddd74969ff7134cd1085c3de3ddb2acd9"
+      },
+      "workerHostSha256": "7f6687d4bf7e4a72389cba0942db3b66e13f8b5d89f82b4cf61a7ee8e07a433e",
+      "forcedCleanup": {
+        "k6": false,
+        "gateway": false
+      },
+      "cleanupErrors": [],
+      "remainingProcesses": [],
+      "k6ExitCode": 0,
+      "run": "final-telemetry",
+      "settings": {
+        "seconds": 20,
+        "clients": 3,
+        "pace_ms": 100,
+        "p99_ms": 2000,
+        "max_rss_mib": 8192,
+        "max_growth_mib": 2048,
+        "growth_after": 300,
+        "sample_seconds": 1.0,
+        "inject_failure": false
+      },
+      "metrics": {
+        "operation_ms{kind:denied}": {
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "avg": 116.26315789473684,
+            "min": 84,
+            "med": 112,
+            "max": 191,
+            "p(95)": 145.09999999999997,
+            "p(99)": 181.82
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          }
+        },
+        "unexpected_errors{tenant:tenant-1}": {
+          "type": "rate",
+          "contains": "default",
+          "values": {
+            "rate": 0,
+            "passes": 0,
+            "fails": 483
+          },
+          "thresholds": {
+            "rate==0": {
+              "ok": true
+            }
+          }
+        },
+        "operation_ms": {
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          },
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "avg": 9.94478527607362,
+            "min": 0,
+            "med": 1,
+            "max": 308,
+            "p(95)": 81,
+            "p(99)": 133.01999999999995
+          }
+        },
+        "unexpected_errors{tenant:tenant-2}": {
+          "type": "rate",
+          "contains": "default",
+          "values": {
+            "rate": 0,
+            "passes": 0,
+            "fails": 501
+          },
+          "thresholds": {
+            "rate==0": {
+              "ok": true
+            }
+          }
+        },
+        "operation_ms{tenant:tenant-0}": {
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "avg": 10.304347826086957,
+            "min": 0,
+            "med": 1,
+            "max": 201,
+            "p(95)": 84,
+            "p(99)": 145.35999999999999
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          }
+        },
+        "completed_operations{tenant:tenant-0}": {
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "count": 483,
+            "rate": 23.986760500092668
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          }
+        },
+        "completed_operations{kind:records}": {
+          "contains": "default",
+          "values": {
+            "count": 451,
+            "rate": 22.397575539424004
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          },
+          "type": "counter"
+        },
+        "operation_ms{kind:crash}": {
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          },
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "max": 145,
+            "p(95)": 129.7,
+            "p(99)": 141.94,
+            "avg": 92.10526315789474,
+            "min": 62,
+            "med": 87
+          }
+        },
+        "completed_operations{kind:crash}": {
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          },
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "count": 19,
+            "rate": 0.9435785703970201
+          }
+        },
+        "expected_faults": {
+          "contains": "default",
+          "values": {
+            "count": 76,
+            "rate": 3.7743142815880804
+          },
+          "type": "counter"
+        },
+        "operation_ms{kind:echo}": {
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "p(99)": 20.499999999999996,
+            "avg": 1.370288248337029,
+            "min": 0,
+            "med": 1,
+            "max": 45,
+            "p(95)": 2
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          }
+        },
+        "operation_ms{kind:failure}": {
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          },
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "p(95)": 53.29999999999998,
+            "p(99)": 69.86,
+            "avg": 33.21052631578947,
+            "min": 21,
+            "med": 27,
+            "max": 74
+          }
+        },
+        "completed_operations{tenant:tenant-1}": {
+          "contains": "default",
+          "values": {
+            "count": 483,
+            "rate": 23.986760500092668
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          },
+          "type": "counter"
+        },
+        "operation_ms{tenant:tenant-2}": {
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "p(99)": 112,
+            "avg": 9.303393213572853,
+            "min": 0,
+            "med": 1,
+            "max": 308,
+            "p(95)": 73
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          }
+        },
+        "operation_ms{kind:cancel}": {
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "p(95)": 153.79999999999998,
+            "p(99)": 159.56,
+            "avg": 116.78947368421052,
+            "min": 96,
+            "med": 107,
+            "max": 161
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          }
+        },
+        "completed_operations{kind:failure}": {
+          "values": {
+            "count": 19,
+            "rate": 0.9435785703970201
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          },
+          "type": "counter",
+          "contains": "default"
+        },
+        "unexpected_errors": {
+          "contains": "default",
+          "values": {
+            "passes": 0,
+            "fails": 1467,
+            "rate": 0
+          },
+          "thresholds": {
+            "rate==0": {
+              "ok": true
+            }
+          },
+          "type": "rate"
+        },
+        "completed_operations{kind:callback}": {
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "count": 451,
+            "rate": 22.397575539424004
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          }
+        },
+        "completed_operations{kind:cancel}": {
+          "values": {
+            "count": 19,
+            "rate": 0.9435785703970201
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          },
+          "type": "counter",
+          "contains": "default"
+        },
+        "operation_ms{kind:recovery}": {
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "avg": 76.52631578947368,
+            "min": 57,
+            "med": 79.5,
+            "max": 162,
+            "p(95)": 86.84999999999997,
+            "p(99)": 140.17
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          }
+        },
+        "operation_ms{kind:records}": {
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "avg": 8.753880266075388,
+            "min": 1,
+            "med": 2,
+            "max": 308,
+            "p(95)": 78,
+            "p(99)": 132.4999999999999
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          }
+        },
+        "unexpected_errors{tenant:tenant-0}": {
+          "type": "rate",
+          "contains": "default",
+          "values": {
+            "rate": 0,
+            "passes": 0,
+            "fails": 483
+          },
+          "thresholds": {
+            "rate==0": {
+              "ok": true
+            }
+          }
+        },
+        "completed_operations": {
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "count": 1467,
+            "rate": 72.85419804065413
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          }
+        },
+        "completed_operations{tenant:tenant-2}": {
+          "contains": "default",
+          "values": {
+            "count": 501,
+            "rate": 24.880677040468793
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          },
+          "type": "counter"
+        },
+        "completed_operations{kind:denied}": {
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          },
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "rate": 0.9435785703970201,
+            "count": 19
+          }
+        },
+        "operation_ms{kind:callback}": {
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "avg": 0.6784922394678492,
+            "min": 0,
+            "med": 1,
+            "max": 8,
+            "p(95)": 1,
+            "p(99)": 6
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          }
+        },
+        "completed_operations{kind:echo}": {
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "count": 451,
+            "rate": 22.397575539424004
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          }
+        },
+        "operation_ms{tenant:tenant-1}": {
+          "contains": "time",
+          "values": {
+            "avg": 10.250517598343686,
+            "min": 0,
+            "med": 1,
+            "max": 269,
+            "p(95)": 82.89999999999998,
+            "p(99)": 130.15999999999994
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          },
+          "type": "trend"
+        },
+        "completed_operations{kind:recovery}": {
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "count": 38,
+            "rate": 1.8871571407940402
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          }
+        }
+      },
+      "resources": {
+        "samples": 19,
+        "peakSummedRssMiB": 363.453125,
+        "firstCoordinator": {
+          "snapshot": {
+            "Workers": 3,
+            "Pristine": 0,
+            "Starting": 0,
+            "Quarantined": 0,
+            "ReservedMemoryMiB": 768,
+            "Bindings": 3,
+            "Tenants": 3,
+            "MaintenanceFailure": null
+          },
+          "workers": [
+            88343,
+            88344,
+            88345
+          ],
+          "managedBytes": 1778176,
+          "allocatedBytes": 1774144,
+          "gen0": 0,
+          "gen1": 0,
+          "gen2": 0,
+          "handles": 0
+        },
+        "lastCoordinator": {
+          "snapshot": {
+            "Workers": 3,
+            "Pristine": 0,
+            "Starting": 0,
+            "Quarantined": 1,
+            "ReservedMemoryMiB": 768,
+            "Bindings": 3,
+            "Tenants": 3,
+            "MaintenanceFailure": null
+          },
+          "workers": [
+            88566,
+            88567,
+            88557
+          ],
+          "managedBytes": 15477808,
+          "allocatedBytes": 775995488,
+          "gen0": 127,
+          "gen1": 94,
+          "gen2": 83,
+          "handles": 0
+        },
+        "firstRootDescriptorCounts": [
+          227,
+          10
+        ],
+        "lastRootDescriptorCounts": [
+          235,
+          10
+        ]
+      }
+    },
+    {
+      "status": "failed",
+      "stopReason": "k6-failed",
+      "elapsedSeconds": 3.9212845410220325,
+      "sourceCommit": "162fade1718a4a4ddfd060fdc28a2ebf74e582f4",
+      "runtimes": {
+        "k6": "k6 v2.2.0 (commit/devel, go1.26.5, darwin/arm64)",
+        "dotnet": "10.0.401",
+        "node": "v24.18.0"
+      },
+      "loaded": {
+        "WeavePort.Hosting": "d0500763b1c44e630a2f180ffa1413509dc94c3282bc9178dcb6a8b7144a676b",
+        "WeavePort.Abstractions": "81edcef2bc8d6363ff120184b0f3dc396af88bb7e736e2887f84cde7a72b57fc",
+        "WeavePort.Sdk.Client": "cb92a6b8df2cf07cd55e76b253150cc83a68644a3e8adb44ebd0be7bd3364f81",
+        "WeavePort.Sdk.Gateway": "8643442609bc610b523c33ad37f7584d35e9f17df9a5fe3a8f3d6cf19b7aed9d"
+      },
+      "packages": {
+        "WeavePort.Sdk.Client.0.1.0-poc.nupkg": "67d71d5ae5d5c1c6c017fe7ea4917a9146c5214100f61b11db604c0d81318b2b",
+        "WeavePort.Sdk.Client.0.1.0-internal.2.nupkg": "1d991d004bbde14da8ec9aaf01bd48469f8989789b7162ba47ed86037708299f",
+        "WeavePort.Sdk.0.1.0-internal.2.nupkg": "f9db715f0f73ff601bee874a5ad7ad9262a3a95edd73b6866ad29bacf24e7ff3",
+        "WeavePort.Sdk.0.1.0-poc.nupkg": "deca1093687a52de198f8f578e8f5de224c356117929dadf95324a2c9b3a2745",
+        "WeavePort.Abstractions.0.1.0-poc.nupkg": "207987bd7ba7d2355ae5feb260d0d8581b296edb783c78d148acafbba3205780",
+        "WeavePort.Sdk.Gateway.0.1.0-internal.2.nupkg": "cc002c0015ac2a22504271c0fc155b068966ca547cf03cfbc50ade7425dbc501",
+        "WeavePort.Composition.0.1.0-poc.nupkg": "ff71eb1f26f4baee6d00dc20e1a97acdab501f4e7e9f5f9c41ce59889fa1e74a",
+        "WeavePort.Testing.0.1.0-poc.nupkg": "72d77a33b67a343e65a2b753dbd30346f85a8c3f5d4b16e3e52836cf96737214",
+        "WeavePort.Hosting.0.1.0-poc.nupkg": "0518a6c9df4e5e1271d3ee05f7989e5e0e6cbbb0afdbd07cbfd44f103ac4c2e9",
+        "WeavePort.Sdk.Gateway.0.1.0-poc.nupkg": "042ef9f6285f8ae94fb3e0470c734afa48def86c3c8ab32954a0d6e1ee3e0309",
+        "WeavePort.Abstractions.0.1.0-internal.2.nupkg": "6cce5e861cfd02a347ae6f32e70165275fc7b5619adeeb8e186b36a959555048",
+        "WeavePort.Hosting.0.1.0-internal.2.nupkg": "338987a96b6c3ebd24d8b0bd7b9da32078613a5f9c43b95dbe011083a11e2e2e"
+      },
+      "artifacts": {
+        "artifacts/sdk-csharp/ExamplePlugin.dll": "2624897c5efe312a8b28a4b941abccbb033daef0c071c69554e6d9d0ee848485",
+        "artifacts/sdk-python-example/plugin.py": "1da268cb7df9d22f85c81660a96c83b8c3364d5309d0c5ca77a55959ee622772",
+        "examples/sdk/typescript/dist/plugin.js": "66ba01e33f2a3f8679a9771da87cebff87922d8ae5c9b9086ab6656f9ddcef88",
+        "artifacts/sdk-python/lib/python3.14/site-packages/weaveport_sdk/__init__.py": "4679cf3008e5dafd28be08ae66ff9725f1dd80c84e7a476f2f537072b02e12ad",
+        "artifacts/sdk-csharp/WeavePort.Sdk.dll": "f588f795a683c328f005ce78a9f254a2bdab502594af71db91129d68106a1d9d",
+        "examples/sdk/typescript/node_modules/@weaveport/sdk/dist/index.js": "77388924eb14498c6d4b0d21541046ceed0d2236a0dfcb33de6fe7ae4d75cfbc"
+      },
+      "tooling": {
+        "tests/soak/workload.js": "521b59a8db25e5d0c0282a54969bcfc6cf2ae3fb1a6d73f8aa0f499ccb895a7f",
+        "tools/soak/run.py": "aeab7ddf0e814e55def837a7b849f4a7e7ee79c482ea150d49a18d366cb6b72e",
+        "tools/soak/support.py": "a6e43eb8c6c8767ce1dc101b6d68428ddd74969ff7134cd1085c3de3ddb2acd9"
+      },
+      "workerHostSha256": "7f6687d4bf7e4a72389cba0942db3b66e13f8b5d89f82b4cf61a7ee8e07a433e",
+      "forcedCleanup": {
+        "k6": false,
+        "gateway": false
+      },
+      "cleanupErrors": [],
+      "remainingProcesses": [],
+      "k6ExitCode": 99,
+      "run": "negative-validation",
+      "settings": {
+        "seconds": 60,
+        "clients": 3,
+        "pace_ms": 100,
+        "p99_ms": 2000,
+        "max_rss_mib": 8192,
+        "max_growth_mib": 2048,
+        "growth_after": 300,
+        "sample_seconds": 1.0,
+        "inject_failure": true
+      },
+      "metrics": {
+        "completed_operations{kind:cancel}": {
+          "values": {
+            "count": 0,
+            "rate": 0
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": false
+            }
+          },
+          "type": "counter",
+          "contains": "default"
+        },
+        "completed_operations{tenant:tenant-2}": {
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "count": 0,
+            "rate": 0
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": false
+            }
+          }
+        },
+        "operation_ms{kind:echo}": {
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "p(95)": 0,
+            "p(99)": 0,
+            "avg": 0,
+            "min": 0,
+            "med": 0,
+            "max": 0
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          }
+        },
+        "operation_ms{kind:crash}": {
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "max": 0,
+            "p(95)": 0,
+            "p(99)": 0,
+            "avg": 0,
+            "min": 0,
+            "med": 0
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          }
+        },
+        "operation_ms{kind:cancel}": {
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "med": 0,
+            "max": 0,
+            "p(95)": 0,
+            "p(99)": 0,
+            "avg": 0,
+            "min": 0
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          }
+        },
+        "completed_operations{kind:failure}": {
+          "contains": "default",
+          "values": {
+            "count": 0,
+            "rate": 0
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": false
+            }
+          },
+          "type": "counter"
+        },
+        "operation_ms{kind:callback}": {
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "min": 0,
+            "med": 0,
+            "max": 0,
+            "p(95)": 0,
+            "p(99)": 0,
+            "avg": 0
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          }
+        },
+        "operation_ms{kind:recovery}": {
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          },
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "min": 0,
+            "med": 0,
+            "max": 0,
+            "p(95)": 0,
+            "p(99)": 0,
+            "avg": 0
+          }
+        },
+        "operation_ms{kind:records}": {
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "avg": 0,
+            "min": 0,
+            "med": 0,
+            "max": 0,
+            "p(95)": 0,
+            "p(99)": 0
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          }
+        },
+        "completed_operations{kind:callback}": {
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "count": 0,
+            "rate": 0
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": false
+            }
+          }
+        },
+        "unexpected_errors{tenant:tenant-0}": {
+          "type": "rate",
+          "contains": "default",
+          "values": {
+            "passes": 38,
+            "fails": 0,
+            "rate": 1
+          },
+          "thresholds": {
+            "rate==0": {
+              "ok": false
+            }
+          }
+        },
+        "unexpected_errors{tenant:tenant-2}": {
+          "type": "rate",
+          "contains": "default",
+          "values": {
+            "rate": 1,
+            "passes": 38,
+            "fails": 0
+          },
+          "thresholds": {
+            "rate==0": {
+              "ok": false
+            }
+          }
+        },
+        "completed_operations": {
+          "values": {
+            "count": 0,
+            "rate": 0
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": false
+            }
+          },
+          "type": "counter",
+          "contains": "default"
+        },
+        "completed_operations{kind:records}": {
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "count": 0,
+            "rate": 0
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": false
+            }
+          }
+        },
+        "completed_operations{kind:echo}": {
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "count": 0,
+            "rate": 0
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": false
+            }
+          }
+        },
+        "operation_ms": {
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "avg": 0,
+            "min": 0,
+            "med": 0,
+            "max": 0,
+            "p(95)": 0,
+            "p(99)": 0
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          }
+        },
+        "operation_ms{tenant:tenant-1}": {
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "med": 0,
+            "max": 0,
+            "p(95)": 0,
+            "p(99)": 0,
+            "avg": 0,
+            "min": 0
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          }
+        },
+        "completed_operations{kind:denied}": {
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "count": 0,
+            "rate": 0
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": false
+            }
+          }
+        },
+        "unexpected_errors": {
+          "type": "rate",
+          "contains": "default",
+          "values": {
+            "passes": 114,
+            "fails": 0,
+            "rate": 1
+          },
+          "thresholds": {
+            "rate==0": {
+              "ok": false
+            }
+          }
+        },
+        "completed_operations{kind:recovery}": {
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "count": 0,
+            "rate": 0
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": false
+            }
+          }
+        },
+        "operation_ms{kind:failure}": {
+          "values": {
+            "max": 0,
+            "p(95)": 0,
+            "p(99)": 0,
+            "avg": 0,
+            "min": 0,
+            "med": 0
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          },
+          "type": "trend",
+          "contains": "time"
+        },
+        "completed_operations{tenant:tenant-0}": {
+          "values": {
+            "count": 0,
+            "rate": 0
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": false
+            }
+          },
+          "type": "counter",
+          "contains": "default"
+        },
+        "operation_ms{tenant:tenant-2}": {
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "p(99)": 0,
+            "avg": 0,
+            "min": 0,
+            "med": 0,
+            "max": 0,
+            "p(95)": 0
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          }
+        },
+        "completed_operations{tenant:tenant-1}": {
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "count": 0,
+            "rate": 0
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": false
+            }
+          }
+        },
+        "completed_operations{kind:crash}": {
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "count": 0,
+            "rate": 0
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": false
+            }
+          }
+        },
+        "operation_ms{tenant:tenant-0}": {
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          },
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "p(95)": 0,
+            "p(99)": 0,
+            "avg": 0,
+            "min": 0,
+            "med": 0,
+            "max": 0
+          }
+        },
+        "operation_ms{kind:denied}": {
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "max": 0,
+            "p(95)": 0,
+            "p(99)": 0,
+            "avg": 0,
+            "min": 0,
+            "med": 0
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          }
+        },
+        "unexpected_errors{tenant:tenant-1}": {
+          "thresholds": {
+            "rate==0": {
+              "ok": false
+            }
+          },
+          "type": "rate",
+          "contains": "default",
+          "values": {
+            "passes": 38,
+            "fails": 0,
+            "rate": 1
+          }
+        }
+      },
+      "resources": {
+        "samples": 3,
+        "peakSummedRssMiB": 262.9375,
+        "firstCoordinator": {
+          "snapshot": {
+            "Workers": 3,
+            "Pristine": 0,
+            "Starting": 0,
+            "Quarantined": 0,
+            "ReservedMemoryMiB": 768,
+            "Bindings": 3,
+            "Tenants": 3,
+            "MaintenanceFailure": null
+          },
+          "workers": [
+            87985,
+            87986,
+            87987
+          ],
+          "managedBytes": 1774448,
+          "allocatedBytes": 1770392,
+          "gen0": 0,
+          "gen1": 0,
+          "gen2": 0,
+          "handles": 0
+        },
+        "lastCoordinator": {
+          "snapshot": {
+            "Workers": 3,
+            "Pristine": 0,
+            "Starting": 0,
+            "Quarantined": 0,
+            "ReservedMemoryMiB": 768,
+            "Bindings": 3,
+            "Tenants": 3,
+            "MaintenanceFailure": null
+          },
+          "workers": [
+            87985,
+            87986,
+            87987
+          ],
+          "managedBytes": 5818296,
+          "allocatedBytes": 5811312,
+          "gen0": 0,
+          "gen1": 0,
+          "gen2": 0,
+          "handles": 0
+        },
+        "firstRootDescriptorCounts": [
+          224,
+          7
+        ],
+        "lastRootDescriptorCounts": [
+          224,
+          null
+        ]
+      }
+    },
+    {
+      "status": "failed",
+      "stopReason": "rss-limit",
+      "elapsedSeconds": 0.8897928330115974,
+      "sourceCommit": "162fade1718a4a4ddfd060fdc28a2ebf74e582f4",
+      "runtimes": {
+        "k6": "k6 v2.2.0 (commit/devel, go1.26.5, darwin/arm64)",
+        "dotnet": "10.0.401",
+        "node": "v24.18.0"
+      },
+      "loaded": {
+        "WeavePort.Hosting": "d0500763b1c44e630a2f180ffa1413509dc94c3282bc9178dcb6a8b7144a676b",
+        "WeavePort.Abstractions": "81edcef2bc8d6363ff120184b0f3dc396af88bb7e736e2887f84cde7a72b57fc",
+        "WeavePort.Sdk.Client": "cb92a6b8df2cf07cd55e76b253150cc83a68644a3e8adb44ebd0be7bd3364f81",
+        "WeavePort.Sdk.Gateway": "8643442609bc610b523c33ad37f7584d35e9f17df9a5fe3a8f3d6cf19b7aed9d"
+      },
+      "packages": {
+        "WeavePort.Sdk.Client.0.1.0-poc.nupkg": "67d71d5ae5d5c1c6c017fe7ea4917a9146c5214100f61b11db604c0d81318b2b",
+        "WeavePort.Sdk.Client.0.1.0-internal.2.nupkg": "1d991d004bbde14da8ec9aaf01bd48469f8989789b7162ba47ed86037708299f",
+        "WeavePort.Sdk.0.1.0-internal.2.nupkg": "f9db715f0f73ff601bee874a5ad7ad9262a3a95edd73b6866ad29bacf24e7ff3",
+        "WeavePort.Sdk.0.1.0-poc.nupkg": "deca1093687a52de198f8f578e8f5de224c356117929dadf95324a2c9b3a2745",
+        "WeavePort.Abstractions.0.1.0-poc.nupkg": "207987bd7ba7d2355ae5feb260d0d8581b296edb783c78d148acafbba3205780",
+        "WeavePort.Sdk.Gateway.0.1.0-internal.2.nupkg": "cc002c0015ac2a22504271c0fc155b068966ca547cf03cfbc50ade7425dbc501",
+        "WeavePort.Composition.0.1.0-poc.nupkg": "ff71eb1f26f4baee6d00dc20e1a97acdab501f4e7e9f5f9c41ce59889fa1e74a",
+        "WeavePort.Testing.0.1.0-poc.nupkg": "72d77a33b67a343e65a2b753dbd30346f85a8c3f5d4b16e3e52836cf96737214",
+        "WeavePort.Hosting.0.1.0-poc.nupkg": "0518a6c9df4e5e1271d3ee05f7989e5e0e6cbbb0afdbd07cbfd44f103ac4c2e9",
+        "WeavePort.Sdk.Gateway.0.1.0-poc.nupkg": "042ef9f6285f8ae94fb3e0470c734afa48def86c3c8ab32954a0d6e1ee3e0309",
+        "WeavePort.Abstractions.0.1.0-internal.2.nupkg": "6cce5e861cfd02a347ae6f32e70165275fc7b5619adeeb8e186b36a959555048",
+        "WeavePort.Hosting.0.1.0-internal.2.nupkg": "338987a96b6c3ebd24d8b0bd7b9da32078613a5f9c43b95dbe011083a11e2e2e"
+      },
+      "artifacts": {
+        "artifacts/sdk-csharp/ExamplePlugin.dll": "2624897c5efe312a8b28a4b941abccbb033daef0c071c69554e6d9d0ee848485",
+        "artifacts/sdk-python-example/plugin.py": "1da268cb7df9d22f85c81660a96c83b8c3364d5309d0c5ca77a55959ee622772",
+        "examples/sdk/typescript/dist/plugin.js": "66ba01e33f2a3f8679a9771da87cebff87922d8ae5c9b9086ab6656f9ddcef88",
+        "artifacts/sdk-python/lib/python3.14/site-packages/weaveport_sdk/__init__.py": "4679cf3008e5dafd28be08ae66ff9725f1dd80c84e7a476f2f537072b02e12ad",
+        "artifacts/sdk-csharp/WeavePort.Sdk.dll": "f588f795a683c328f005ce78a9f254a2bdab502594af71db91129d68106a1d9d",
+        "examples/sdk/typescript/node_modules/@weaveport/sdk/dist/index.js": "77388924eb14498c6d4b0d21541046ceed0d2236a0dfcb33de6fe7ae4d75cfbc"
+      },
+      "tooling": {
+        "tests/soak/workload.js": "521b59a8db25e5d0c0282a54969bcfc6cf2ae3fb1a6d73f8aa0f499ccb895a7f",
+        "tools/soak/run.py": "aeab7ddf0e814e55def837a7b849f4a7e7ee79c482ea150d49a18d366cb6b72e",
+        "tools/soak/support.py": "a6e43eb8c6c8767ce1dc101b6d68428ddd74969ff7134cd1085c3de3ddb2acd9"
+      },
+      "workerHostSha256": "7f6687d4bf7e4a72389cba0942db3b66e13f8b5d89f82b4cf61a7ee8e07a433e",
+      "forcedCleanup": {
+        "k6": false,
+        "gateway": false
+      },
+      "cleanupErrors": [],
+      "remainingProcesses": [],
+      "k6ExitCode": null,
+      "run": "negative-rss",
+      "settings": {
+        "seconds": 60,
+        "clients": 3,
+        "pace_ms": 100,
+        "p99_ms": 2000,
+        "max_rss_mib": 1.0,
+        "max_growth_mib": 2048,
+        "growth_after": 300,
+        "sample_seconds": 1.0,
+        "inject_failure": false
+      },
+      "metrics": {
+        "unexpected_errors{tenant:tenant-1}": {
+          "values": {
+            "fails": 2,
+            "rate": 0,
+            "passes": 0
+          },
+          "thresholds": {
+            "rate==0": {
+              "ok": true
+            }
+          },
+          "type": "rate",
+          "contains": "default"
+        },
+        "completed_operations{kind:callback}": {
+          "values": {
+            "count": 3,
+            "rate": 34.10951428051664
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          },
+          "type": "counter",
+          "contains": "default"
+        },
+        "operation_ms": {
+          "contains": "time",
+          "values": {
+            "avg": 23.833333333333332,
+            "min": 5,
+            "med": 24.5,
+            "max": 42,
+            "p(95)": 42,
+            "p(99)": 42
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          },
+          "type": "trend"
+        },
+        "completed_operations{tenant:tenant-0}": {
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "count": 2,
+            "rate": 22.739676187011096
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          }
+        },
+        "completed_operations": {
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          },
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "count": 6,
+            "rate": 68.21902856103328
+          }
+        },
+        "operation_ms{tenant:tenant-1}": {
+          "contains": "time",
+          "values": {
+            "min": 5,
+            "med": 23.5,
+            "max": 42,
+            "p(95)": 40.15,
+            "p(99)": 41.63,
+            "avg": 23.5
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          },
+          "type": "trend"
+        },
+        "operation_ms{tenant:tenant-0}": {
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "min": 7,
+            "med": 24.5,
+            "max": 42,
+            "p(95)": 40.25,
+            "p(99)": 41.65,
+            "avg": 24.5
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          }
+        },
+        "completed_operations{tenant:tenant-1}": {
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          },
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "count": 2,
+            "rate": 22.739676187011096
+          }
+        },
+        "completed_operations{kind:cancel}": {
+          "thresholds": {
+            "count>0": {
+              "ok": false
+            }
+          },
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "count": 0,
+            "rate": 0
+          }
+        },
+        "completed_operations{kind:echo}": {
+          "contains": "default",
+          "values": {
+            "count": 3,
+            "rate": 34.10951428051664
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          },
+          "type": "counter"
+        },
+        "operation_ms{kind:crash}": {
+          "values": {
+            "med": 0,
+            "max": 0,
+            "p(95)": 0,
+            "p(99)": 0,
+            "avg": 0,
+            "min": 0
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          },
+          "type": "trend",
+          "contains": "time"
+        },
+        "unexpected_errors": {
+          "type": "rate",
+          "contains": "default",
+          "values": {
+            "passes": 0,
+            "fails": 6,
+            "rate": 0
+          },
+          "thresholds": {
+            "rate==0": {
+              "ok": true
+            }
+          }
+        },
+        "completed_operations{tenant:tenant-2}": {
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "count": 2,
+            "rate": 22.739676187011096
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          }
+        },
+        "operation_ms{kind:cancel}": {
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "avg": 0,
+            "min": 0,
+            "med": 0,
+            "max": 0,
+            "p(95)": 0,
+            "p(99)": 0
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          }
+        },
+        "unexpected_errors{tenant:tenant-2}": {
+          "type": "rate",
+          "contains": "default",
+          "values": {
+            "rate": 0,
+            "passes": 0,
+            "fails": 2
+          },
+          "thresholds": {
+            "rate==0": {
+              "ok": true
+            }
+          }
+        },
+        "completed_operations{kind:denied}": {
+          "contains": "default",
+          "values": {
+            "count": 0,
+            "rate": 0
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": false
+            }
+          },
+          "type": "counter"
+        },
+        "operation_ms{kind:callback}": {
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "avg": 5.666666666666667,
+            "min": 5,
+            "med": 5,
+            "max": 7,
+            "p(95)": 6.8,
+            "p(99)": 6.96
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          }
+        },
+        "operation_ms{kind:echo}": {
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "avg": 42,
+            "min": 42,
+            "med": 42,
+            "max": 42,
+            "p(95)": 42,
+            "p(99)": 42
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          }
+        },
+        "completed_operations{kind:recovery}": {
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "count": 0,
+            "rate": 0
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": false
+            }
+          }
+        },
+        "completed_operations{kind:failure}": {
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "count": 0,
+            "rate": 0
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": false
+            }
+          }
+        },
+        "operation_ms{kind:records}": {
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "max": 0,
+            "p(95)": 0,
+            "p(99)": 0,
+            "avg": 0,
+            "min": 0,
+            "med": 0
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          }
+        },
+        "operation_ms{kind:denied}": {
+          "contains": "time",
+          "values": {
+            "avg": 0,
+            "min": 0,
+            "med": 0,
+            "max": 0,
+            "p(95)": 0,
+            "p(99)": 0
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          },
+          "type": "trend"
+        },
+        "operation_ms{kind:failure}": {
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "p(95)": 0,
+            "p(99)": 0,
+            "avg": 0,
+            "min": 0,
+            "med": 0,
+            "max": 0
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          }
+        },
+        "operation_ms{kind:recovery}": {
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "med": 0,
+            "max": 0,
+            "p(95)": 0,
+            "p(99)": 0,
+            "avg": 0,
+            "min": 0
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          }
+        },
+        "unexpected_errors{tenant:tenant-0}": {
+          "type": "rate",
+          "contains": "default",
+          "values": {
+            "passes": 0,
+            "fails": 2,
+            "rate": 0
+          },
+          "thresholds": {
+            "rate==0": {
+              "ok": true
+            }
+          }
+        },
+        "operation_ms{tenant:tenant-2}": {
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "med": 23.5,
+            "max": 42,
+            "p(95)": 40.15,
+            "p(99)": 41.63,
+            "avg": 23.5,
+            "min": 5
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          }
+        },
+        "completed_operations{kind:records}": {
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "count": 0,
+            "rate": 0
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": false
+            }
+          }
+        },
+        "completed_operations{kind:crash}": {
+          "values": {
+            "count": 0,
+            "rate": 0
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": false
+            }
+          },
+          "type": "counter",
+          "contains": "default"
+        }
+      },
+      "resources": {
+        "samples": 1,
+        "peakSummedRssMiB": 232.21875,
+        "firstCoordinator": {
+          "snapshot": {
+            "Workers": 3,
+            "Pristine": 0,
+            "Starting": 0,
+            "Quarantined": 0,
+            "ReservedMemoryMiB": 768,
+            "Bindings": 3,
+            "Tenants": 3,
+            "MaintenanceFailure": null
+          },
+          "workers": [
+            88021,
+            88022,
+            88023
+          ],
+          "managedBytes": 1787016,
+          "allocatedBytes": 1782936,
+          "gen0": 0,
+          "gen1": 0,
+          "gen2": 0,
+          "handles": 0
+        },
+        "lastCoordinator": {
+          "snapshot": {
+            "Workers": 3,
+            "Pristine": 0,
+            "Starting": 0,
+            "Quarantined": 0,
+            "ReservedMemoryMiB": 768,
+            "Bindings": 3,
+            "Tenants": 3,
+            "MaintenanceFailure": null
+          },
+          "workers": [
+            88021,
+            88022,
+            88023
+          ],
+          "managedBytes": 1787016,
+          "allocatedBytes": 1782936,
+          "gen0": 0,
+          "gen1": 0,
+          "gen2": 0,
+          "handles": 0
+        },
+        "firstRootDescriptorCounts": [
+          227,
+          10
+        ],
+        "lastRootDescriptorCounts": [
+          227,
+          10
+        ]
+      }
+    },
+    {
+      "status": "failed",
+      "stopReason": "operator-stop",
+      "elapsedSeconds": 4.0917920419888105,
+      "sourceCommit": "162fade1718a4a4ddfd060fdc28a2ebf74e582f4",
+      "runtimes": {
+        "k6": "k6 v2.2.0 (commit/devel, go1.26.5, darwin/arm64)",
+        "dotnet": "10.0.401",
+        "node": "v24.18.0"
+      },
+      "loaded": {
+        "WeavePort.Hosting": "d0500763b1c44e630a2f180ffa1413509dc94c3282bc9178dcb6a8b7144a676b",
+        "WeavePort.Abstractions": "81edcef2bc8d6363ff120184b0f3dc396af88bb7e736e2887f84cde7a72b57fc",
+        "WeavePort.Sdk.Client": "cb92a6b8df2cf07cd55e76b253150cc83a68644a3e8adb44ebd0be7bd3364f81",
+        "WeavePort.Sdk.Gateway": "8643442609bc610b523c33ad37f7584d35e9f17df9a5fe3a8f3d6cf19b7aed9d"
+      },
+      "packages": {
+        "WeavePort.Sdk.Client.0.1.0-poc.nupkg": "67d71d5ae5d5c1c6c017fe7ea4917a9146c5214100f61b11db604c0d81318b2b",
+        "WeavePort.Sdk.Client.0.1.0-internal.2.nupkg": "1d991d004bbde14da8ec9aaf01bd48469f8989789b7162ba47ed86037708299f",
+        "WeavePort.Sdk.0.1.0-internal.2.nupkg": "f9db715f0f73ff601bee874a5ad7ad9262a3a95edd73b6866ad29bacf24e7ff3",
+        "WeavePort.Sdk.0.1.0-poc.nupkg": "deca1093687a52de198f8f578e8f5de224c356117929dadf95324a2c9b3a2745",
+        "WeavePort.Abstractions.0.1.0-poc.nupkg": "207987bd7ba7d2355ae5feb260d0d8581b296edb783c78d148acafbba3205780",
+        "WeavePort.Sdk.Gateway.0.1.0-internal.2.nupkg": "cc002c0015ac2a22504271c0fc155b068966ca547cf03cfbc50ade7425dbc501",
+        "WeavePort.Composition.0.1.0-poc.nupkg": "ff71eb1f26f4baee6d00dc20e1a97acdab501f4e7e9f5f9c41ce59889fa1e74a",
+        "WeavePort.Testing.0.1.0-poc.nupkg": "72d77a33b67a343e65a2b753dbd30346f85a8c3f5d4b16e3e52836cf96737214",
+        "WeavePort.Hosting.0.1.0-poc.nupkg": "0518a6c9df4e5e1271d3ee05f7989e5e0e6cbbb0afdbd07cbfd44f103ac4c2e9",
+        "WeavePort.Sdk.Gateway.0.1.0-poc.nupkg": "042ef9f6285f8ae94fb3e0470c734afa48def86c3c8ab32954a0d6e1ee3e0309",
+        "WeavePort.Abstractions.0.1.0-internal.2.nupkg": "6cce5e861cfd02a347ae6f32e70165275fc7b5619adeeb8e186b36a959555048",
+        "WeavePort.Hosting.0.1.0-internal.2.nupkg": "338987a96b6c3ebd24d8b0bd7b9da32078613a5f9c43b95dbe011083a11e2e2e"
+      },
+      "artifacts": {
+        "artifacts/sdk-csharp/ExamplePlugin.dll": "2624897c5efe312a8b28a4b941abccbb033daef0c071c69554e6d9d0ee848485",
+        "artifacts/sdk-python-example/plugin.py": "1da268cb7df9d22f85c81660a96c83b8c3364d5309d0c5ca77a55959ee622772",
+        "examples/sdk/typescript/dist/plugin.js": "66ba01e33f2a3f8679a9771da87cebff87922d8ae5c9b9086ab6656f9ddcef88",
+        "artifacts/sdk-python/lib/python3.14/site-packages/weaveport_sdk/__init__.py": "4679cf3008e5dafd28be08ae66ff9725f1dd80c84e7a476f2f537072b02e12ad",
+        "artifacts/sdk-csharp/WeavePort.Sdk.dll": "f588f795a683c328f005ce78a9f254a2bdab502594af71db91129d68106a1d9d",
+        "examples/sdk/typescript/node_modules/@weaveport/sdk/dist/index.js": "77388924eb14498c6d4b0d21541046ceed0d2236a0dfcb33de6fe7ae4d75cfbc"
+      },
+      "tooling": {
+        "tests/soak/workload.js": "521b59a8db25e5d0c0282a54969bcfc6cf2ae3fb1a6d73f8aa0f499ccb895a7f",
+        "tools/soak/run.py": "aeab7ddf0e814e55def837a7b849f4a7e7ee79c482ea150d49a18d366cb6b72e",
+        "tools/soak/support.py": "a6e43eb8c6c8767ce1dc101b6d68428ddd74969ff7134cd1085c3de3ddb2acd9"
+      },
+      "workerHostSha256": "7f6687d4bf7e4a72389cba0942db3b66e13f8b5d89f82b4cf61a7ee8e07a433e",
+      "forcedCleanup": {
+        "k6": false,
+        "gateway": false
+      },
+      "cleanupErrors": [],
+      "remainingProcesses": [],
+      "k6ExitCode": null,
+      "run": "operator-stop",
+      "settings": {
+        "seconds": 60,
+        "clients": 3,
+        "pace_ms": 100,
+        "p99_ms": 2000,
+        "max_rss_mib": 8192,
+        "max_growth_mib": 2048,
+        "growth_after": 300,
+        "sample_seconds": 1.0,
+        "inject_failure": false
+      },
+      "metrics": {
+        "operation_ms{tenant:tenant-2}": {
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "p(95)": 79.74999999999999,
+            "p(99)": 131.19999999999996,
+            "avg": 10.85897435897436,
+            "min": 0,
+            "med": 1,
+            "max": 162
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          }
+        },
+        "completed_operations{kind:callback}": {
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          },
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "rate": 21.402584759586293,
+            "count": 70
+          }
+        },
+        "completed_operations{kind:cancel}": {
+          "values": {
+            "count": 3,
+            "rate": 0.9172536325536983
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          },
+          "type": "counter",
+          "contains": "default"
+        },
+        "completed_operations{tenant:tenant-1}": {
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "count": 75,
+            "rate": 22.931340813842457
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          }
+        },
+        "unexpected_errors{tenant:tenant-1}": {
+          "type": "rate",
+          "contains": "default",
+          "values": {
+            "rate": 0,
+            "passes": 0,
+            "fails": 75
+          },
+          "thresholds": {
+            "rate==0": {
+              "ok": true
+            }
+          }
+        },
+        "operation_ms{kind:echo}": {
+          "contains": "time",
+          "values": {
+            "avg": 2.7285714285714286,
+            "min": 0,
+            "med": 1,
+            "max": 45,
+            "p(95)": 2,
+            "p(99)": 45
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          },
+          "type": "trend"
+        },
+        "completed_operations{tenant:tenant-2}": {
+          "values": {
+            "count": 78,
+            "rate": 23.848594446396156
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          },
+          "type": "counter",
+          "contains": "default"
+        },
+        "completed_operations": {
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          },
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "count": 228,
+            "rate": 69.71127607408107
+          }
+        },
+        "operation_ms{kind:recovery}": {
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "med": 90,
+            "max": 134,
+            "p(95)": 131,
+            "p(99)": 133.4,
+            "avg": 94,
+            "min": 56
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          }
+        },
+        "operation_ms{kind:denied}": {
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "min": 84,
+            "med": 101,
+            "max": 118,
+            "p(95)": 116.3,
+            "p(99)": 117.66,
+            "avg": 101
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          }
+        },
+        "operation_ms{kind:records}": {
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "med": 2.5,
+            "max": 145,
+            "p(95)": 95.74999999999993,
+            "p(99)": 123.60999999999999,
+            "avg": 11.471428571428572,
+            "min": 2
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          }
+        },
+        "completed_operations{kind:echo}": {
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "count": 70,
+            "rate": 21.402584759586293
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          }
+        },
+        "expected_faults": {
+          "values": {
+            "count": 12,
+            "rate": 3.669014530214793
+          },
+          "type": "counter",
+          "contains": "default"
+        },
+        "operation_ms": {
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "p(99)": 157.40999999999997,
+            "avg": 12.228070175438596,
+            "min": 0,
+            "med": 1,
+            "max": 198,
+            "p(95)": 93.09999999999985
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          }
+        },
+        "unexpected_errors": {
+          "contains": "default",
+          "values": {
+            "rate": 0,
+            "passes": 0,
+            "fails": 228
+          },
+          "thresholds": {
+            "rate==0": {
+              "ok": true
+            }
+          },
+          "type": "rate"
+        },
+        "operation_ms{kind:failure}": {
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "p(95)": 41.9,
+            "p(99)": 41.98,
+            "avg": 41,
+            "min": 40,
+            "med": 41,
+            "max": 42
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          }
+        },
+        "operation_ms{tenant:tenant-0}": {
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "min": 0,
+            "med": 1,
+            "max": 198,
+            "p(95)": 87.69999999999993,
+            "p(99)": 150.63999999999996,
+            "avg": 12.666666666666666
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          }
+        },
+        "operation_ms{kind:cancel}": {
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "min": 162,
+            "med": 177,
+            "max": 198,
+            "p(95)": 195.9,
+            "p(99)": 197.58,
+            "avg": 179
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          }
+        },
+        "completed_operations{kind:crash}": {
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "count": 3,
+            "rate": 0.9172536325536983
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          }
+        },
+        "completed_operations{kind:records}": {
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "count": 70,
+            "rate": 21.402584759586293
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          }
+        },
+        "completed_operations{tenant:tenant-0}": {
+          "contains": "default",
+          "values": {
+            "count": 75,
+            "rate": 22.931340813842457
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          },
+          "type": "counter"
+        },
+        "operation_ms{tenant:tenant-1}": {
+          "contains": "time",
+          "values": {
+            "min": 0,
+            "med": 1,
+            "max": 177,
+            "p(95)": 102.79999999999995,
+            "p(99)": 153.32,
+            "avg": 13.213333333333333
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          },
+          "type": "trend"
+        },
+        "unexpected_errors{tenant:tenant-2}": {
+          "type": "rate",
+          "contains": "default",
+          "values": {
+            "rate": 0,
+            "passes": 0,
+            "fails": 78
+          },
+          "thresholds": {
+            "rate==0": {
+              "ok": true
+            }
+          }
+        },
+        "completed_operations{kind:failure}": {
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "rate": 0.9172536325536983,
+            "count": 3
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          }
+        },
+        "operation_ms{kind:callback}": {
+          "contains": "time",
+          "values": {
+            "avg": 0.7285714285714285,
+            "min": 0,
+            "med": 0,
+            "max": 8,
+            "p(95)": 2.6499999999999906,
+            "p(99)": 7.31
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          },
+          "type": "trend"
+        },
+        "completed_operations{kind:recovery}": {
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "count": 6,
+            "rate": 1.8345072651073966
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          }
+        },
+        "unexpected_errors{tenant:tenant-0}": {
+          "type": "rate",
+          "contains": "default",
+          "values": {
+            "rate": 0,
+            "passes": 0,
+            "fails": 75
+          },
+          "thresholds": {
+            "rate==0": {
+              "ok": true
+            }
+          }
+        },
+        "completed_operations{kind:denied}": {
+          "type": "counter",
+          "contains": "default",
+          "values": {
+            "count": 3,
+            "rate": 0.9172536325536983
+          },
+          "thresholds": {
+            "count>0": {
+              "ok": true
+            }
+          }
+        },
+        "operation_ms{kind:crash}": {
+          "type": "trend",
+          "contains": "time",
+          "values": {
+            "avg": 72,
+            "min": 60,
+            "med": 77,
+            "max": 79,
+            "p(95)": 78.8,
+            "p(99)": 78.96
+          },
+          "thresholds": {
+            "p(99)<2000": {
+              "ok": true
+            }
+          }
+        }
+      },
+      "resources": {
+        "samples": 3,
+        "peakSummedRssMiB": 331.234375,
+        "firstCoordinator": {
+          "snapshot": {
+            "Workers": 3,
+            "Pristine": 0,
+            "Starting": 0,
+            "Quarantined": 0,
+            "ReservedMemoryMiB": 768,
+            "Bindings": 3,
+            "Tenants": 3,
+            "MaintenanceFailure": null
+          },
+          "workers": [
+            88051,
+            88052,
+            88053
+          ],
+          "managedBytes": 1780856,
+          "allocatedBytes": 1776824,
+          "gen0": 0,
+          "gen1": 0,
+          "gen2": 0,
+          "handles": 0
+        },
+        "lastCoordinator": {
+          "snapshot": {
+            "Workers": 3,
+            "Pristine": 0,
+            "Starting": 0,
+            "Quarantined": 0,
+            "ReservedMemoryMiB": 768,
+            "Bindings": 3,
+            "Tenants": 3,
+            "MaintenanceFailure": null
+          },
+          "workers": [
+            88071,
+            88072,
+            88073
+          ],
+          "managedBytes": 17545008,
+          "allocatedBytes": 110551064,
+          "gen0": 17,
+          "gen1": 12,
+          "gen2": 11,
+          "handles": 0
+        },
+        "firstRootDescriptorCounts": [
+          227,
+          10
+        ],
+        "lastRootDescriptorCounts": [
+          253,
+          10
+        ]
+      }
+    }
+  ]
+}

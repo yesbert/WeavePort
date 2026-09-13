@@ -1,0 +1,14 @@
+{
+  "HostApi": 1,
+  "Protocol": 1,
+  "HostPackages": {
+    "WeavePort.Abstractions": "0.1.0-internal.2",
+    "WeavePort.Hosting": "0.1.0-internal.2",
+    "WeavePort.Sdk.Client": "0.1.0-internal.2"
+  },
+  "AuthorSdks": {
+    "dotnet": { "Package": "WeavePort.Sdk", "Version": "0.1.0-internal.2" },
+    "python": { "Package": "weaveport-sdk", "Version": "0.1.0" },
+    "node": { "Package": "@weaveport/sdk", "Version": "0.1.0" }
+  }
+}

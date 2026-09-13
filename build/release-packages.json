@@ -1,0 +1,6 @@
+[
+  "WeavePort.Abstractions",
+  "WeavePort.Hosting",
+  "WeavePort.Sdk",
+  "WeavePort.Sdk.Client"
+]

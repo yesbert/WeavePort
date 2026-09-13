@@ -1,0 +1,141 @@
+{
+  "archiveSha256": "6370aa8ec620528de3d399b70f2aa444779c387b7aeb960ecd56dbd4f79f531c",
+  "status": "passed",
+  "stages": [
+    {
+      "name": "wrong-runtime",
+      "exitCode": 1,
+      "expectedExitCode": 1,
+      "assertions": 0
+    },
+    {
+      "name": "damaged-bundle",
+      "exitCode": 1,
+      "expectedExitCode": 1,
+      "assertions": 0
+    },
+    {
+      "name": "extra-bundle-file",
+      "exitCode": 1,
+      "expectedExitCode": 1,
+      "assertions": 0
+    },
+    {
+      "name": "install",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "assertions": 0
+    },
+    {
+      "name": "doctor",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "assertions": 1
+    },
+    {
+      "name": "incomplete-installation",
+      "exitCode": 1,
+      "expectedExitCode": 1,
+      "assertions": 0
+    },
+    {
+      "name": "damaged-installed-host",
+      "exitCode": 1,
+      "expectedExitCode": 1,
+      "assertions": 0
+    },
+    {
+      "name": "verify-decision-room",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "assertions": 33
+    },
+    {
+      "name": "verify-document-workshop",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "assertions": 43
+    },
+    {
+      "name": "verify-appointment-desk",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "assertions": 68
+    },
+    {
+      "name": "normal-decision",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "assertions": 0
+    },
+    {
+      "name": "normal-document",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "assertions": 0
+    },
+    {
+      "name": "normal-appointment",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "assertions": 0
+    },
+    {
+      "name": "used-destination-refused",
+      "exitCode": 1,
+      "expectedExitCode": 1,
+      "assertions": 0
+    },
+    {
+      "name": "doctor-after-use",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "assertions": 1
+    },
+    {
+      "name": "build-DecisionRoom-Host",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "assertions": 0
+    },
+    {
+      "name": "build-DecisionRoom-Plugin",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "assertions": 0
+    },
+    {
+      "name": "build-DocumentWorkshop-Host",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "assertions": 0
+    },
+    {
+      "name": "build-DocumentWorkshop-Worker",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "assertions": 0
+    },
+    {
+      "name": "build-AppointmentDesk-Host",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "assertions": 0
+    },
+    {
+      "name": "build-AppointmentDesk-Worker",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "assertions": 0
+    },
+    {
+      "name": "doctor-after-template-builds",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "assertions": 1
+    }
+  ],
+  "applicationAssertions": 144,
+  "statePreserved": true,
+  "externalConsumerBuilds": 6
+}

@@ -1,0 +1,18 @@
+schema: spec-driven
+context: |
+  WeavePort is an embedded .NET backend plugin platform for owner-controlled plugins.
+  Product specifications describe verified behavior; open changes describe planned work.
+  Native execution is trusted and is not a hostile-plugin sandbox.
+  See docs/status.md, docs/architecture.md and docs/package-compatibility.md for support limits.
+  Use the globally installed OpenSpec CLI; do not add it as a repository dependency.
+
+rules:
+  proposal:
+    - 'Describe the problem, observable impact and non-goals.'
+  specs:
+    - 'Write observable requirements with concrete scenarios and explicit support limits.'
+    - 'Keep proposed behavior in change deltas until verified.'
+  design:
+    - 'Record technical decisions, alternatives, evidence and limitations.'
+  tasks:
+    - 'Make tasks verifiable and mark them complete only after verification.'

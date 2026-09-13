@@ -1,0 +1,7 @@
+<Project>
+  <Import Project="../../Directory.Build.props" />
+  <PropertyGroup>
+    <IsPackable>false</IsPackable>
+    <RestorePackagesPath>$(MSBuildThisFileDirectory)../../artifacts/appointment-desk/packages</RestorePackagesPath>
+  </PropertyGroup>
+</Project>

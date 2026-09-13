@@ -1,0 +1,154 @@
+using WeavePort.Internal;
+using System.Text.Json;
+using Google.Protobuf;
+using Grpc.Core;
+using WeavePort.Sdk.Client;
+using WeavePort.Sdk.Gateway.Protocol;
+
+namespace WeavePort.Sdk.Gateway;
+/// <summary>Shared worker-host transport. Register the registry and map this gRPC service in the trusted application.</summary>
+public sealed class GatewayService(GatewayRegistry registry) : WorkerGateway.WorkerGatewayBase
+{
+    /// <summary>Binding-scoped sequential exchanges on a persistent HTTP/2 stream.</summary>
+    public override async Task Session(IAsyncStreamReader<Request> input, IServerStreamWriter<Reply> output, ServerCallContext context)
+    {
+        while (await input.MoveNext(context.CancellationToken))
+        {
+            Reply terminal;
+            try
+            {
+                Request request = input.Current;
+                // Re-authorize every exchange, including on sessions opened before revocation.
+                _ = Authorize(context);
+                switch (request.Mode)
+                {
+                    case Mode.Call:
+                        terminal = await CallAsync(request, context);
+                        break;
+                    case Mode.Stream:
+                        await StreamAsync(request, output, context);
+                        terminal = new Reply();
+                        break;
+                    case Mode.Cancel:
+                        terminal = await CancelAsync(request, context);
+                        break;
+                    default:
+                        throw new PluginCallException("invalid-mode", false);
+                }
+            }
+            catch (Exception error) when (!context.CancellationToken.IsCancellationRequested)
+            {
+                RpcException mapped = error as RpcException ?? Map(error);
+                terminal = new Reply
+                {
+                    Error = mapped.Status.Detail,
+                    MayHaveExecuted = mapped.StatusCode != StatusCode.Unauthenticated && mapped.Trailers.GetValue("may-have-executed") != "false",
+                    Cancelled = mapped.StatusCode == StatusCode.Cancelled
+                };
+            }
+
+            terminal.Complete = true;
+            await output.WriteAsync(terminal, context.CancellationToken);
+        }
+    }
+
+    private async Task<Reply> CallAsync(Request request, ServerCallContext context)
+    {
+        try
+        {
+            var client = Authorize(context);
+            return Encode(await client.CallAsync(request.Operation, Decode(request), context.CancellationToken));
+        }
+        catch (Exception error)
+        {
+            throw Map(error);
+        }
+    }
+
+    private async Task StreamAsync(Request request, IServerStreamWriter<Reply> output, ServerCallContext context)
+    {
+        string credential = context.RequestHeaders.GetValue("x-weaveport-binding") ?? "";
+        GatewayRegistry.ActiveStream? active = null;
+        try
+        {
+            var client = Authorize(context);
+            active = registry.Begin(credential, request.StreamId, context.CancellationToken);
+            CancellationToken token = active.Stop.Token;
+            var items = new List<JsonElement>();
+            long bytes = 2;
+            long total = 0;
+            await foreach (JsonElement item in client.StreamAsync(request.Operation, Decode(request), token))
+            {
+                long size = JsonSize.Measure(item);
+                total += size;
+                if (size > 128 << 10 || total > 64 << 20)
+                {
+                    throw new PluginCallException("stream-limit");
+                }
+
+                if (items.Count == 16 || bytes + size + 1 > 256 << 10)
+                {
+                    await output.WriteAsync(Encode(items), token);
+                    items.Clear();
+                    bytes = 2;
+                }
+
+                items.Add(item);
+                bytes += size + 1;
+            }
+
+            if (items.Count > 0)
+            {
+                await output.WriteAsync(Encode(items), token);
+            }
+        }
+        catch (Exception error)
+        {
+            throw Map(error);
+        }
+        finally
+        {
+            if (active is not null)
+            {
+                registry.End(credential, active);
+            }
+        }
+    }
+
+    private async Task<Reply> CancelAsync(Request request, ServerCallContext context)
+    {
+        try
+        {
+            _ = Authorize(context);
+            await registry.CancelAsync(context.RequestHeaders.GetValue("x-weaveport-binding")!, request.StreamId, context.CancellationToken);
+            return Encode(JsonSerializer.SerializeToElement(new { }));
+        }
+        catch (Exception error)
+        {
+            throw Map(error);
+        }
+    }
+
+    private IPluginClient Authorize(ServerCallContext context) => registry.Get(context.RequestHeaders.GetValue("x-weaveport-binding"));
+    private static JsonElement Decode(Request request)
+    {
+        if (request.Input.Length > 512 << 10)
+        {
+            throw new PluginCallException("input-limit", false);
+        }
+
+        return JsonElement.Parse(request.Input.Span);
+    }
+
+    private static Reply Encode<T>(T value) => new()
+    {
+        // Fresh exclusive array; never pooled, exposed for mutation or reused.
+        Json = UnsafeByteOperations.UnsafeWrap(JsonSerializer.SerializeToUtf8Bytes(value))
+    };
+    private static RpcException Map(Exception error) => error switch
+    {
+        UnauthorizedAccessException => new(new Status(StatusCode.Unauthenticated, "binding-denied")),
+        OperationCanceledException => new(new Status(StatusCode.Cancelled, "cancelled")),
+        PluginCallException call => new(new Status(StatusCode.FailedPrecondition, call.Status), new Metadata { { "may-have-executed", call.MayHaveExecuted ? "true" : "false" } }),
+        _ => new(new Status(StatusCode.Internal, "gateway-failed"))};
+}

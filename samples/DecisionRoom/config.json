@@ -1,0 +1,57 @@
+{
+  "tenant": "demo",
+  "proposals": [
+    {
+      "id": "A",
+      "title": "Improve documentation",
+      "cost": 2,
+      "benefit": 3
+    },
+    {
+      "id": "B",
+      "title": "Automate support",
+      "cost": 5,
+      "benefit": 8
+    },
+    {
+      "id": "C",
+      "title": "Build analytics",
+      "cost": 9,
+      "benefit": 10
+    }
+  ],
+  "participants": [
+    {
+      "id": "Alice",
+      "language": "csharp",
+      "profile": "economy",
+      "priorities": {
+        "benefit": 1,
+        "cost": 4,
+        "risk": 1
+      }
+    },
+    {
+      "id": "Bob",
+      "language": "python",
+      "profile": "impact",
+      "priorities": {
+        "benefit": 4,
+        "cost": 1,
+        "risk": 1
+      }
+    }
+  ],
+  "knowledge": {
+    "economy": {
+      "A": 1,
+      "B": 2,
+      "C": 4
+    },
+    "impact": {
+      "A": 1,
+      "B": 2,
+      "C": 4
+    }
+  }
+}

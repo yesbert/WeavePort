@@ -1,0 +1,28 @@
+namespace WeavePort.Hosting;
+/// <summary>Requested operating-system restrictions, not proof against kernel/runtime exploits.</summary>
+[Flags]
+public enum ExecutionProtection
+{
+    /// <summary>No sandbox restriction is required.</summary>
+    None = 0,
+    /// <summary>Restrict the worker filesystem view.</summary>
+    RestrictedFileSystem = 1,
+    /// <summary>Disable worker network access.</summary>
+    DisabledNetwork = 2,
+    /// <summary>Enforce worker CPU/memory/process limits through the execution environment.</summary>
+    HardResourceLimits = 4
+}
+
+/// <summary>Common policy for the built-in execution adapters. Local reservations are not hard memory limits.</summary>
+/// <param name = "MemoryMiB">Memory reservation for admission; enforcement depends on the adapter.</param>
+/// <param name = "Timeout">Total invocation deadline.</param>
+/// <param name = "IdleTimeout">Optional idle release policy.</param>
+public abstract record ExecutionProfile(int MemoryMiB, TimeSpan? Timeout, TimeSpan? IdleTimeout)
+{
+    /// <summary>Restrictions requested by this adapter. Effective deployment policy must still be verified.</summary>
+    public abstract ExecutionProtection Protection { get; }
+
+    internal abstract Task<ExecutionProfile> ResolveAsync(CancellationToken token);
+    internal abstract ExecutionProfile Normalize();
+    internal abstract Worker CreateWorker(string version, TimeProvider clock);
+}

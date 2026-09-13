@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <IsPackable>true</IsPackable>
+    <PackageReadmeFile>PACKAGE.md</PackageReadmeFile>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <WarningsAsErrors>$(WarningsAsErrors);CS1591</WarningsAsErrors>
+    <Description>Embedded WeavePort plugin hosting, worker lifecycle and installed artifact resolution.</Description>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../WeavePort.Abstractions/WeavePort.Abstractions.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="../../docs/package.md" Pack="true" PackagePath="PACKAGE.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="../../compatibility/local-v1.json" LogicalName="WeavePort.LocalCompatibility" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="../Shared/Cleanup.cs" Link="Internal/Cleanup.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.11" />
+  </ItemGroup>
+</Project>

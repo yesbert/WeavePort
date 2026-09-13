@@ -1,0 +1,7 @@
+FROM python:3.14-slim@sha256:cad9a2c871761c413caa6fdd6441c783451e740a48aaeba60ae62a8b53525ef6
+ARG PLUGIN_VERSION=1
+ENV PLUGIN_VERSION=$PLUGIN_VERSION
+WORKDIR /plugin
+COPY plugins/python/worker.py .
+ENV PYTHONDONTWRITEBYTECODE=1
+ENTRYPOINT ["python", "-u", "/plugin/worker.py"]

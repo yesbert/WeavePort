@@ -1,0 +1,10 @@
+{
+  "samples/DecisionRoom/Host/packages.lock.json": {
+    "before": "2c62d7d3289315401fd71dcbe4596bdf0572db2cd1e2f2467113daa271d04387",
+    "after": "1e6beed52c60e0367c66c68aaa440790ab04c7bb20d18ee3a7540a73e9390799"
+  },
+  "samples/DecisionRoom/Plugin/packages.lock.json": {
+    "before": "a3aa0a8cbbacb3c51d0c090ce092c9e252d5251053fec28561bf3bc0b028599e",
+    "after": "a8a5e7144412f44a00c241f0cc95edb62a2db38eafa876a9108a1cd1a226675b"
+  }
+}
