@@ -19,9 +19,11 @@ Clean candidate qualification has passed 866 assertion executions and retained 1
 
 The reviewed API snapshot includes the already implemented OldestQuarantineSeconds property. Hosting test fixtures use the selected dotnet host instead of relying on a globally installed apphost runtime. These are verification corrections, not new runtime behavior.
 
-## Remaining release work
+## Release outcome
 
-Qualify the MIT-licensed 0.1.0 package set and deliberately tag the release. Trusted Publishing policy configuration does not prove a successful OIDC exchange or package publication.
+The first MIT-licensed public release is [v0.1.0](https://github.com/yesbert/WeavePort/releases/tag/v0.1.0), commit `98b22648620478cb2d28a7d5eb4cbebb948fdac6`. The [release workflow](https://github.com/yesbert/WeavePort/actions/runs/34770638886) passed all qualification, publication and announcement jobs. It qualified 866 assertions and 139 frozen artifacts, validated package license/source/hash metadata, and published the four allowlisted NuGet packages and symbols through OIDC. Original packages, symbols, qualification evidence and checksums are attached to the release for durable retrieval.
+
+No runtime/API surface was changed for release. Historical internal distribution and measurements retain their original versions. Windows and optional package publication remain outside this release.
 
 ## Sources
 
