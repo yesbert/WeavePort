@@ -18,7 +18,7 @@ Source: https://raw.githubusercontent.com/yesbert/WeavePort/main/README.md
 
 An embedded backend plugin platform for owner-controlled applications and plugins. Applications own their domain contracts, authorization and durable state; WeavePort owns bound execution, callbacks, admission and worker lifecycle.
 
-The current internal distribution is **0.1.0-internal.2**, qualified for native macOS arm64. It is not a public stable release or a hostile-plugin sandbox. See [current status and open work](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/status.md), [architecture](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/architecture.md) and the [integration contract](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/v1-integration-contract.md).
+The first public NuGet version is **0.1.0**, licensed under [MIT](https://raw.githubusercontent.com/yesbert/WeavePort/main/LICENSE). Functional qualification covers native macOS arm64. The API is evolving and native execution is not a hostile-plugin sandbox. See [current status and open work](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/status.md), [architecture](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/architecture.md) and the [integration contract](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/v1-integration-contract.md).
 
 ## Start here
 
@@ -74,7 +74,7 @@ Source: https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/status.md
 
 # Product status
 
-Current internal delivery: **0.1.0-internal.2**. The release includes four core NuGet packages, their exact offline dependency closure, Python/TypeScript author SDKs and three reference applications. It is an internal integration foundation, not a stable public release.
+Public NuGet version: **0.1.0**, under MIT, with four core packages: Abstractions, Hosting, Sdk and Sdk.Client. Native macOS arm64 is the qualified platform. This pre-1.0 API remains subject to evolution. Python/TypeScript registry publication and a new offline distribution are outside this release. The historical internal distribution remains **0.1.0-internal.2**.
 
 Implemented and checked: immutable installed-artifact selection, exact compatibility/API gates, shared coordinator template, guarded native recovery, optional safe diagnostics and standalone offline installation. The [candidate evidence](https://raw.githubusercontent.com/yesbert/WeavePort/main/reports/release/0.1.0-internal.2/candidate/report.md) records 398 assertion executions; the [distribution evidence](https://raw.githubusercontent.com/yesbert/WeavePort/main/reports/release/0.1.0-internal.2/distribution/report.md) records 144 application assertions and six offline template builds. These records identify their exact source and artifacts.
 
@@ -92,7 +92,7 @@ This qualifies the recorded native macOS arm64 profile. Individual latency reach
 
 The remaining platform change is [qualify-native-capacity-and-platform-comparison](https://raw.githubusercontent.com/yesbert/WeavePort/main/openspec/changes/qualify-native-capacity-and-platform-comparison/tasks.md): native Windows functional/performance qualification is not executed because no local Windows VM was available at the recorded check. Source support and compilation do not qualify Windows. See [platform requirements](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/platform-qualification.md).
 
-HiveWeaver, TreeWeaver and NextPA integration remains separate application work. Public package publication, signing/notarization, stronger sandboxing and automatic deployment/migration are separate release decisions, not hidden tasks needed to run the current internal examples.
+HiveWeaver, TreeWeaver and NextPA integration remains separate application work. Signing/notarization, stronger sandboxing and automatic deployment/migration are separate release decisions, not hidden tasks needed to run the current internal examples.
 
 The [repository cleanup qualification](https://raw.githubusercontent.com/yesbert/WeavePort/main/reports/verification/current/README.md) adds a maintained-link check (399 assertion executions), moved adapter checks and a packaging regression. It does not replace the exact current release evidence above.
 
@@ -104,7 +104,7 @@ Source: https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/v1-integra
 
 # V1 integration agreement
 
-**Status: candidate for the first internal product release, derived on 2026-09-12.** This guide defines how our applications should integrate WeavePort. It introduces no new runtime API or released compatibility promise. Existing [baseline specifications](https://github.com/yesbert/WeavePort/tree/main/openspec/specs) define verified behavior; the [release plan](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/status.md) separates remaining work from that behavior. Packages are still experimental `0.1.0-internal.2` artifacts.
+**Status: integration contract for public packages 0.1.0, reviewed on 2026-09-13.** This guide defines how our applications should integrate WeavePort. It introduces no new runtime API or released compatibility promise. Existing [baseline specifications](https://github.com/yesbert/WeavePort/tree/main/openspec/specs) define verified behavior; the [release plan](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/status.md) separates remaining work from that behavior. Packages use version `0.1.0`; API evolution remains subject to the exact compatibility matrix.
 
 ## Product boundary
 
@@ -449,7 +449,7 @@ Source: https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/package-co
 
 # Local package and contract compatibility
 
-**Internal candidate policy, reviewed 2026-09-12.** The [machine-readable matrix](https://raw.githubusercontent.com/yesbert/WeavePort/main/compatibility/local-v1.json) defines one exact combination. It is embedded in `WeavePort.Hosting` and consumed by the offline installation sealer. The current internal distribution uses this exact matrix; no general SemVer range is accepted.
+**Public package policy for 0.1.0, reviewed 2026-09-13.** The [machine-readable matrix](https://raw.githubusercontent.com/yesbert/WeavePort/main/compatibility/local-v1.json) defines one exact combination. It is embedded in `WeavePort.Hosting` and consumed by the offline installation sealer. The public NuGet package set uses this exact matrix; no general SemVer range is accepted.
 
 ## Separate compatibility identities
 
@@ -457,8 +457,8 @@ Source: https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/package-co
 |---|---|---|
 | Local host API level | `1` | Installation compatibility declaration against the embedded matrix |
 | Transport protocol | `1` | Compatibility declaration and existing worker startup protocol checks |
-| Core host packages | Abstractions, Hosting, Sdk.Client, each `0.1.0-internal.2` | Exact declaration plus actual packed/loaded metadata checks |
-| C# author SDK (`dotnet`) | `WeavePort.Sdk` `0.1.0-internal.2` | Entry-specific declaration, packed metadata and native startup/call checks |
+| Core host packages | Abstractions, Hosting, Sdk.Client, each `0.1.0` | Exact declaration plus actual packed/loaded metadata checks |
+| C# author SDK (`dotnet`) | `WeavePort.Sdk` `0.1.0` | Entry-specific declaration, packed metadata and native startup/call checks |
 | Python author SDK (`python`) | `weaveport-sdk` `0.1.0` | Entry-specific declaration, wheel/installed metadata and native startup/call checks |
 | TypeScript author SDK (`node`) | `@weaveport/sdk` `0.1.0` | Entry-specific declaration, npm/installed metadata and native startup/call checks |
 | Plugin artifact release | Exact chosen installation, e.g. `1` or `2` | Manifest identity/content pin and worker's advertised release |
@@ -472,9 +472,9 @@ Every `installation.json` now contains `Compatibility` with `HostApi`, `Protocol
 
 The sealer generates this block from the reviewed matrix; plugins do not choose runtime authority through it. Resolution and activation validate it before returning an installation. Domain-contract mismatch is a separate refusal. A refused activation keeps its prior selector; failed recovery leaves application state unchanged.
 
-The metadata is a trusted deployment declaration, not runtime package attestation. The gate inspects real packed package metadata and loaded assembly versions; the installation resolver validates declarations and file hashes. It does not interrogate every transitive runtime dependency inside a running worker. Same `0.1.0-internal.2` labels across different development builds do not prove identical bytes or behavior. Keep one coherent tested deployment and its pinned content; stable-file requirements in [installed-plugin resolution](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/installed-plugins.md) still apply.
+The metadata is a trusted deployment declaration, not runtime package attestation. The gate inspects real packed package metadata and loaded assembly versions; the installation resolver validates declarations and file hashes. It does not interrogate every transitive runtime dependency inside a running worker. Same `0.1.0` labels across different development builds do not prove identical bytes or behavior. Keep one coherent tested deployment and its pinned content; stable-file requirements in [installed-plugin resolution](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/installed-plugins.md) still apply.
 
-Old manifests without `Compatibility` fail closed. Rebuild/reseal only offline. This changes manifest identity, so existing pins require the original deployment or new application state; recovery never upgrades a pin automatically. Manifest schema remains 1 during this unreleased evolution. A released-format evolution will need an explicit migration/format decision rather than relying on this development convention.
+Old manifests without `Compatibility` fail closed. Rebuild/reseal only offline. This changes manifest identity, so existing pins require the original deployment or new application state; recovery never upgrades a pin automatically. Manifest schema is 1 for the first public release. Future format evolution requires an explicit migration/format decision.
 
 ## Reviewed package/API surface
 
@@ -513,7 +513,7 @@ From the repository root:
 ./scripts/verify-compatibility.sh
 ```
 
-The final script checks actual NuGet identity/dependency closure/target libraries, installed and packed author SDK metadata, loaded versions, embedded policy, the API baseline and installation compatibility/refusal cases. Negative checks use copies to prove that real package dependency drift and an API mismatch fail. Separate sample processes verify state preservation. See the [retained report](https://raw.githubusercontent.com/yesbert/WeavePort/main/reports/release/0.1.0-internal.2/candidate/report.md).
+The final script checks actual NuGet identity/dependency closure/target libraries, installed and packed author SDK metadata, loaded versions, embedded policy, the API baseline and installation compatibility/refusal cases. Negative checks use copies to prove that real package dependency drift and an API mismatch fail. Separate sample processes verify state preservation. Historical internal-candidate evidence is in the [retained report](https://raw.githubusercontent.com/yesbert/WeavePort/main/reports/release/0.1.0-internal.2/candidate/report.md).
 
 ---
 
@@ -810,7 +810,7 @@ The GitHub delivery target is [yesbert/WeavePort](https://github.com/yesbert/Wea
 
 The release allowlist in `build/release-packages.json` contains `WeavePort.Abstractions`, `WeavePort.Hosting`, `WeavePort.Sdk` and `WeavePort.Sdk.Client`. Gateway, Composition and Testing remain optional/experimental; adding them requires appropriate package-consumer evidence. Python and TypeScript author SDK publication is separate from NuGet delivery.
 
-The current version `0.1.0-internal.2` is an internal candidate and is deliberately rejected by the public release gate. Setting up Actions does not publish it or allocate a public version. Before the first public prerelease, review the version change across `Directory.Build.props`, the exact compatibility matrix, package references, example installation metadata, API expectations and documentation. Requalify the complete candidate. A simple tag override would leave incompatible declarations and is therefore refused.
+The first public version is `0.1.0`, licensed under [MIT](https://raw.githubusercontent.com/yesbert/WeavePort/main/LICENSE). The four core package references and exact compatibility matrix use this version; host API and wire protocol remain 1. Python/TypeScript SDK versions remain 0.1.0 without registry publication. Historical internal distribution and measurement evidence retain their original identities. Public releases require a complete clean candidate qualification; a tag override cannot substitute for updating compatibility inputs.
 
 ## Trusted Publishing setup
 
