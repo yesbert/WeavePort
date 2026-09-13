@@ -14,4 +14,4 @@
 
 - [x] 3.1 Confirm the repository/package license and add matching metadata.
 - [x] 3.2 Select the public version and reconcile exact compatibility inputs and documentation.
-- [ ] 3.3 Qualify, tag and verify publication of the first public release.
+- [x] 3.3 Qualify, tag and verify publication of the first public release.

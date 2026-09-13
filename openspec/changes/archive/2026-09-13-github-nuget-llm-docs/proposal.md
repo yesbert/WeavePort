@@ -1,4 +1,4 @@
-> **Status:** implementation in progress.
+> **Status:** completed; public 0.1.0 release published.
 
 ## Why
 
