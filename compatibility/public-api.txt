@@ -101,11 +101,13 @@ type WeavePort.Hosting.DockerProfile : WeavePort.Hosting.ExecutionProfile [Publi
   Method Int32 GetHashCode() [Public, Virtual] ()
   Method System.String ToString() [Public, Virtual] ()
   Method System.String get_Context() [Public] ()
+  Method System.String get_DockerExecutable() [Public] ()
   Method System.String get_Image() [Public] ()
   Method System.Type get_EqualityContract() [Family, Virtual] ()
   Method Void Deconstruct(System.String ByRef, System.String ByRef, Int32 ByRef, Double ByRef, System.Nullable`1[System.TimeSpan] ByRef, System.Nullable`1[System.TimeSpan] ByRef, WeavePort.Hosting.UnixSocketTransport ByRef) [Public] (Image, Context, MemoryMiB, CpuCount, Timeout, IdleTimeout, SocketTransport)
   Method Void set_Context(System.String) [Public] (value)
   Method Void set_CpuCount(Double) [Public] (value)
+  Method Void set_DockerExecutable(System.String) [Public] (value)
   Method Void set_Image(System.String) [Public] (value)
   Method Void set_SocketTransport(WeavePort.Hosting.UnixSocketTransport) [Public] (value)
   Method WeavePort.Hosting.DockerProfile <Clone>$() [Public, Virtual] ()
@@ -113,6 +115,7 @@ type WeavePort.Hosting.DockerProfile : WeavePort.Hosting.ExecutionProfile [Publi
   Method WeavePort.Hosting.UnixSocketTransport get_SocketTransport() [Public] ()
   Property Double CpuCount
   Property System.String Context
+  Property System.String DockerExecutable
   Property System.String Image
   Property System.Type EqualityContract
   Property WeavePort.Hosting.ExecutionProtection Protection
