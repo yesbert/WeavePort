@@ -3,6 +3,7 @@ using System.Text.Json;
 namespace WeavePort.Hosting;
 internal static class WorkerEnvelope
 {
+    private static readonly string[] ReservedNames = ["type", "id", "callbackId", "operation", "payload", "value", "protocol", "pluginVersion", "code"];
     internal static void Validate(JsonElement frame)
     {
         if (frame.ValueKind != JsonValueKind.Object)
@@ -26,49 +27,12 @@ internal static class WorkerEnvelope
 
     private static int ReservedField(JsonProperty property)
     {
-        if (property.NameEquals("type"u8))
+        for (int index = 0; index < ReservedNames.Length; index++)
         {
-            return 1;
-        }
-
-        if (property.NameEquals("id"u8))
-        {
-            return 2;
-        }
-
-        if (property.NameEquals("callbackId"u8))
-        {
-            return 4;
-        }
-
-        if (property.NameEquals("operation"u8))
-        {
-            return 8;
-        }
-
-        if (property.NameEquals("payload"u8))
-        {
-            return 16;
-        }
-
-        if (property.NameEquals("value"u8))
-        {
-            return 32;
-        }
-
-        if (property.NameEquals("protocol"u8))
-        {
-            return 64;
-        }
-
-        if (property.NameEquals("pluginVersion"u8))
-        {
-            return 128;
-        }
-
-        if (property.NameEquals("code"u8))
-        {
-            return 256;
+            if (property.NameEquals(ReservedNames[index]))
+            {
+                return 1 << index;
+            }
         }
 
         return 0;

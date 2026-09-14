@@ -34,3 +34,9 @@ Worker startup admission and drainage live in a cohesive partial WorkerPool file
 The packed API drift gate correctly failed for the additive DockerExecutable property. Reviewed actual-vs-baseline output contains only its property, getter and init setter; the DockerProfile constructor and all existing signatures remain unchanged. Updated those three baseline entries explicitly. The negative API/package drift controls remain enabled.
 
 Revision 8b4ef00 passed the isolated native candidate qualification: 874 assertions and 139 frozen files, including source/packed hosting, gateway, all three applications, SDK versions, recovery, installations and negative API/package drift controls. Subsequent changes synchronize verified specifications and refresh generated documentation only. The generated-documentation check identified the API baseline update and was rerun after regeneration.
+
+### Fresh server follow-up
+
+Main analysis fdead8e (GitHub run 34844345261) confirmed that 34 original issues and both security hotspots disappeared. Three public API convention issues remain unchanged. It also detected a newly repeated disabled-status literal, duplication across the repetitive reserved-field guards, and 77.9% new-code coverage below the existing 80% threshold. The follow-up centralizes the status constant, uses a shared reserved-name table with ordinal JsonProperty.NameEquals comparisons (including escaped spellings), and adds source-suite manifest rejection and identity checks so the changed parser is included in collected coverage. Existing quality thresholds and exclusions remain unchanged.
+
+Reference: https://learn.microsoft.com/dotnet/api/system.text.json.jsonproperty.nameequals?view=net-10.0 — string comparison avoids materializing the property's decoded Name string. Existing hostile-envelope tests verify escaped duplicates remain rejected.

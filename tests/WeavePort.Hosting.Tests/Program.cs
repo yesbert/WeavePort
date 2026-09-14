@@ -8,6 +8,7 @@ if (args.Contains("--lifecycle-worker"))
     await LifecycleChecks.WorkerAsync();
     return;
 }
+ManifestChecks.Run();
 await DisposalChecks.RunAsync();
 await ShutdownRaceChecks.RunAsync();
 await DockerCommandChecks.RunAsync();
