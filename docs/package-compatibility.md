@@ -2,7 +2,7 @@
 
 Keep the host, SDKs and plugin artifacts on a known-compatible combination. This guide defines the exact identities checked during installation and startup.
 
-**Public package policy for 0.2.0, reviewed 2026-09-14.** The [machine-readable matrix](../compatibility/local-v1.json) defines one exact combination. It is embedded in `WeavePort.Hosting` and consumed by the offline installation sealer. The public NuGet package set uses this exact matrix; no general SemVer range is accepted.
+**Public package policy for 0.2.1, reviewed 2026-09-14.** The [machine-readable matrix](../compatibility/local-v1.json) defines one exact combination. It is embedded in `WeavePort.Hosting` and consumed by the offline installation sealer. The public NuGet package set uses this exact matrix; no general SemVer range is accepted.
 
 ## Separate compatibility identities
 
@@ -10,8 +10,8 @@ Keep the host, SDKs and plugin artifacts on a known-compatible combination. This
 |---|---|---|
 | Local host API level | `1` | Installation compatibility declaration against the embedded matrix |
 | Transport protocol | `1` | Compatibility declaration and existing worker startup protocol checks |
-| Core host packages | Abstractions, Hosting, Sdk.Client, each `0.2.0` | Exact declaration plus actual packed/loaded metadata checks |
-| C# author SDK (`dotnet`) | `WeavePort.Sdk` `0.2.0` | Entry-specific declaration, packed metadata and native startup/call checks |
+| Core host packages | Abstractions, Hosting, Sdk.Client, each `0.2.1` | Exact declaration plus actual packed/loaded metadata checks |
+| C# author SDK (`dotnet`) | `WeavePort.Sdk` `0.2.1` | Entry-specific declaration, packed metadata and native startup/call checks |
 | Python author SDK (`python`) | `weaveport-sdk` `0.1.0` | Entry-specific declaration, wheel/installed metadata and native startup/call checks |
 | TypeScript author SDK (`node`) | `@weaveport/sdk` `0.1.0` | Entry-specific declaration, npm/installed metadata and native startup/call checks |
 | Plugin artifact release | Exact chosen installation, e.g. `1` or `2` | Manifest identity/content pin and worker's advertised release |

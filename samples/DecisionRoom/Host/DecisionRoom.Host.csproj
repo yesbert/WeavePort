@@ -4,7 +4,7 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="../Contracts/DecisionRoom.Contracts.csproj" />
-    <PackageReference Include="WeavePort.Hosting" Version="0.2.0" />
-    <PackageReference Include="WeavePort.Sdk.Client" Version="0.2.0" />
+    <PackageReference Include="WeavePort.Hosting" Version="0.2.1" />
+    <PackageReference Include="WeavePort.Sdk.Client" Version="0.2.1" />
   </ItemGroup>
 </Project>

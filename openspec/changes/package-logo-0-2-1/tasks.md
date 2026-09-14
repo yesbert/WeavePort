@@ -1,0 +1,4 @@
+- [x] 1. Embed the existing logo and synchronize 0.2.1 compatibility inputs.
+- [ ] 2. Verify release rejection for missing or different icons and qualify packed consumers.
+- [ ] 3. Merge green checks and publish the tagged four-package release.
+- [ ] 4. Verify public package icons and retain release evidence; archive the change.

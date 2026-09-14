@@ -10,7 +10,7 @@ Build document readers, evaluation strategies or customer-specific scheduling ru
 
 [Get started](website/getting-started.md) · [Why WeavePort?](website/introduction.md) · [Write a plugin](docs/plugin-sdk.md) · [NuGet packages](website/packages.md)
 
-**MIT · .NET 10 · Windows, Linux & macOS · Public release 0.2.0**
+**MIT · .NET 10 · Windows, Linux & macOS · Public release 0.2.1**
 
 Built for .NET. Designed for Windows, Linux and macOS. The supported cross-platform execution path uses standard input/output (stdio) for owner-controlled plugins. Current release validation covers macOS arm64; Windows and Linux release validation is pending. See the [platform support and validation matrix](docs/platform-qualification.md). The pre-1.0 API is evolving; native processes are not a sandbox for hostile code.
 
@@ -62,8 +62,8 @@ The same SDK supports asynchronous result streams and granted host callbacks. Py
 In the .NET application project:
 
 ```sh
-dotnet add package WeavePort.Hosting --version 0.2.0
-dotnet add package WeavePort.Sdk.Client --version 0.2.0
+dotnet add package WeavePort.Hosting --version 0.2.1
+dotnet add package WeavePort.Sdk.Client --version 0.2.1
 ```
 
 For a C# plugin, reference `WeavePort.Sdk` at the same version. `WeavePort.Abstractions` contains the shared contracts. These are the four public packages; optional Gateway, Composition and Testing are outside this release.
