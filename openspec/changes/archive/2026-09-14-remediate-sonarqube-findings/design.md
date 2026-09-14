@@ -44,3 +44,7 @@ Reference: https://learn.microsoft.com/dotnet/api/system.text.json.jsonproperty.
 ### API convention completion
 
 Rename the flags enum to ExecutionProtections and put requiredProtection before cancellationToken in both host methods. Update repository consumers, documentation and the reviewed packed API snapshot together; preserve enum numeric values and default behavior. Microsoft CA1068 requires cancellation tokens last: https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1068.
+
+### Final qualification
+
+Public API migration revision 36fc446 passed the isolated source/packed qualification with 874 assertions and 139 frozen files. PR #12 passed all required macOS, Linux, Windows, documentation and CodeQL checks and merged as 07c5115f9a53ebc769561738def7c59ab681381f. The complete GitHub-exported Sonar report from run 34848239965 matches that exact revision: zero issues, zero hotspots, zero new violations, 82.9% new-code coverage and 0.0% new duplication; the unchanged quality gate passed. All 37 original issues and both original hotspots are resolved. Verified worker-lifecycle and plugin-sdk requirements are synchronized. No package release or Docker service reconfiguration was performed.
