@@ -2191,6 +2191,21 @@ Gateway disposal SHALL atomically close new registration and stream admission, r
 - **WHEN** registration or stream admission races disposal
 - **THEN** it is either admitted before shutdown and included in cleanup or rejected
 
+### Requirement: Safe local client shutdown
+Local client disposal SHALL reject new operations, cancel outstanding work and attempt owned binding cleanup once. It SHALL release owned cancellation resources safely without requiring a suspended stream consumer to resume enumeration. Concurrent and repeated disposal SHALL observe the same cleanup outcome; late enumeration SHALL observe cancellation without dispatching further plugin work.
+
+#### Scenario: Active local call during disposal
+- **WHEN** a local call races disposal
+- **THEN** it is either admitted before shutdown and cancelled or refused without dispatch, without accessing a disposed cancellation source
+
+#### Scenario: Suspended stream consumer
+- **WHEN** disposal starts while a consumer is suspended after receiving a stream item
+- **THEN** owned binding cleanup can complete without consumer resumption and later enumeration observes cancellation without further dispatch
+
+#### Scenario: Binding cleanup throws
+- **WHEN** the owned binding fails during disposal
+- **THEN** the failure remains observable to repeated disposal callers and independent cancellation resource release is still attempted
+
 ---
 
 ## runtime-diagnostics
@@ -2359,6 +2374,32 @@ Invocation setup failures SHALL release acquired admission. Unsupported invocati
 - **WHEN** disposal encounters a throwing cancellation callback
 - **THEN** worker cleanup and deregistration are attempted and cleanup errors are reported after those attempts
 
+### Requirement: Safe shutdown resource release
+Coordinator and binding shutdown SHALL close admission before releasing owned cancellation resources, request cancellation of admitted work and release those resources after operations using them finish. Concurrent and repeated disposal SHALL observe one shutdown outcome. Cleanup failures SHALL remain observable and SHALL NOT skip independent release attempts or erase uncertain worker reservations.
+
+#### Scenario: Worker startup races shutdown
+- **WHEN** shutdown begins while an admitted worker is starting
+- **THEN** startup is cancelled and accounted for before its owned cancellation resources are released, and no worker is published for subsequent use
+
+#### Scenario: Repeated disposal after a cleanup error
+- **WHEN** concurrent disposal callers encounter a throwing cancellation callback or failed worker cleanup
+- **THEN** callers observe the same completed shutdown outcome, independent release attempts still run and uncertain worker reservations remain visible
+
+#### Scenario: Another binding remains usable
+- **WHEN** tenant A disposes a binding while tenant B uses the same plugin artifact and version
+- **THEN** B retains its independent execution and callback authority, and A's detached callbacks retain admission until actual completion
+
+### Requirement: Trusted adapter setup
+Native Unix sockets SHALL use exclusively created owner-only temporary directories. Docker execution SHALL use an absolute executable selected by the trusted deployment, without resolving it through the process PATH.
+
+#### Scenario: Private socket allocation
+- **WHEN** multiple native Unix endpoints are created
+- **THEN** each owns a distinct private directory and releases it when disposed, including before listening
+
+#### Scenario: Docker executable override
+- **WHEN** a deployment supplies a relative Docker executable path
+- **THEN** setup rejects it before executing any command
+
 ---
 
 ## Reviewed .NET public API
@@ -2469,11 +2510,13 @@ type WeavePort.Hosting.DockerProfile : WeavePort.Hosting.ExecutionProfile [Publi
   Method Int32 GetHashCode() [Public, Virtual] ()
   Method System.String ToString() [Public, Virtual] ()
   Method System.String get_Context() [Public] ()
+  Method System.String get_DockerExecutable() [Public] ()
   Method System.String get_Image() [Public] ()
   Method System.Type get_EqualityContract() [Family, Virtual] ()
   Method Void Deconstruct(System.String ByRef, System.String ByRef, Int32 ByRef, Double ByRef, System.Nullable`1[System.TimeSpan] ByRef, System.Nullable`1[System.TimeSpan] ByRef, WeavePort.Hosting.UnixSocketTransport ByRef) [Public] (Image, Context, MemoryMiB, CpuCount, Timeout, IdleTimeout, SocketTransport)
   Method Void set_Context(System.String) [Public] (value)
   Method Void set_CpuCount(Double) [Public] (value)
+  Method Void set_DockerExecutable(System.String) [Public] (value)
   Method Void set_Image(System.String) [Public] (value)
   Method Void set_SocketTransport(WeavePort.Hosting.UnixSocketTransport) [Public] (value)
   Method WeavePort.Hosting.DockerProfile <Clone>$() [Public, Virtual] ()
@@ -2481,6 +2524,7 @@ type WeavePort.Hosting.DockerProfile : WeavePort.Hosting.ExecutionProfile [Publi
   Method WeavePort.Hosting.UnixSocketTransport get_SocketTransport() [Public] ()
   Property Double CpuCount
   Property System.String Context
+  Property System.String DockerExecutable
   Property System.String Image
   Property System.Type EqualityContract
   Property WeavePort.Hosting.ExecutionProtection Protection

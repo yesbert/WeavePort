@@ -7,10 +7,12 @@
 ## 2. Maintainability
 
 - [x] 2.1 Simplify framing, envelope validation, manifest validation and SDK streaming without changing accepted data.
-- [ ] 2.2 Fix internal parameter, assignment, cancellation and diagnostic conventions; resolve public API convention decisions explicitly.
+- [x] 2.2 Fix internal parameter, assignment, cancellation and diagnostic conventions.
+- [ ] 2.3 Resolve the three public API convention findings after the compatibility decision.
 
 ## 3. Qualification
 
-- [ ] 3.1 Run affected and packed-consumer checks, code style, OpenSpec and documentation checks.
+- [x] 3.1 Run affected and packed-consumer checks, code style, OpenSpec and documentation checks.
 - [ ] 3.2 Publish protected PR, inspect fresh GitHub SonarQube findings and resolve remaining findings with evidence.
-- [ ] 3.3 Sync verified specifications and archive the completed change.
+- [x] 3.3 Sync verified shutdown and adapter specifications.
+- [ ] 3.4 Archive after the remaining findings are resolved.

@@ -32,3 +32,5 @@ New lifetime-source checks failed before the fix for host, session, pool and cli
 Worker startup admission and drainage live in a cohesive partial WorkerPool file so the shutdown lifecycle remains reviewable within the enforced method/file size limits.
 
 The packed API drift gate correctly failed for the additive DockerExecutable property. Reviewed actual-vs-baseline output contains only its property, getter and init setter; the DockerProfile constructor and all existing signatures remain unchanged. Updated those three baseline entries explicitly. The negative API/package drift controls remain enabled.
+
+Revision 8b4ef00 passed the isolated native candidate qualification: 874 assertions and 139 frozen files, including source/packed hosting, gateway, all three applications, SDK versions, recovery, installations and negative API/package drift controls. Subsequent changes synchronize verified specifications and refresh generated documentation only. The generated-documentation check identified the API baseline update and was rerun after regeneration.
