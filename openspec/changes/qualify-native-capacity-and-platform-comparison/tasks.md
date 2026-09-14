@@ -21,4 +21,4 @@
 - [x] 3.1 Document measured conclusions, resource accounting, platform status and reproduction commands.
 - [x] 3.2 Run applicable functional/tooling checks, strict OpenSpec validation and diff review; retain unfinished platform work explicitly.
 
-Windows task 2.3 remains open because no registered local Windows VM is available. The change is intentionally not archived.
+Windows task 2.3 remains open for capacity/performance qualification. Native functional adapter checks passed on a GitHub-hosted Windows runner in run 34828099259 (38 checks); this does not complete the remaining performance work. The change is intentionally not archived.

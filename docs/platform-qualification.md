@@ -8,7 +8,8 @@ WeavePort's contracts, tenant binding and protocol are shared .NET code. Process
 | --- | --- | --- |
 | macOS arm64 | Trusted process stdio/socket; qualified packaged multilingual checks; current benchmarks are linked from [status](status.md) | No hostile-code sandbox; unsigned developer bundle; system-wide memory/swap includes background applications |
 | Linux arm64, Docker Desktop VM | Historical container and trusted-process comparisons; no current delivered-package qualification | Ordinary children still live inside the trusted coordinator container; not bare metal or independent hardware |
-| Windows | Source includes trusted stdio process support; optimized Unix socket profile explicitly rejects Windows | Native functional, installation, performance and security qualification not executed |
+| Windows x64, GitHub-hosted Windows Server 2025 | Native stdio adapter fixtures passed: 38 checks across C#, Python and TypeScript | Current public-package installation, performance and stronger security qualification remain separate |
+| Linux x64, GitHub-hosted Ubuntu 24.04 | Native adapter fixtures passed: 38 stdio and 39 socket checks | Current release installation, other distributions/architectures and performance remain separate |
 | Other CPU architectures/distributions | Intended platform targets where .NET and required plugin runtimes are available | Not implied by arm64 results |
 
 ## Transport and tooling
@@ -17,7 +18,7 @@ Stdio is the default on all three operating systems. The optional `UseUnixSocket
 
 The NuGet libraries are distinct from the example launch scripts and historical offline distribution. Repository Bash runners assume Unix executable and virtual-environment paths; native Windows needs equivalent build steps and Windows interpreter paths. The historical offline bundle targets macOS arm64 and cannot be installed unchanged on Windows or Linux.
 
-Windows functional and performance qualification remains an open OpenSpec task. No native Windows test run is claimed.
+The [first native CI run](https://github.com/yesbert/WeavePort/actions/runs/34828099259) passed on Windows x64 and Ubuntu x64 with Python 3.14.7 and Node 24.20.0, using freshly packed source libraries and the existing multilingual adapter fixtures. This is source functional evidence, not installation qualification of every public package or an OS sandbox. [Continuous integration](continuous-integration.md) describes the recurring jobs and retained reports. Windows performance qualification remains open.
 
 ## Common acceptance matrix
 
@@ -40,6 +41,6 @@ Remove-Item Env:WEAVEPORT_LOCAL_SOCKET_BUFFER_BYTES -ErrorAction SilentlyContinu
 dotnet tests/WeavePort.Local.Tests/bin/Release/net10.0/WeavePort.LocalDemo.dll verify artifacts/local/config.json artifacts/runs/windows-functional
 ```
 
-These are reproduction instructions, not a claim they have run. Before Windows capacity qualification, add and validate a Windows system memory/commit observer: the current native observer returns unavailable system headroom outside macOS/Linux. A conservative summed-RSS ceiling does not replace that qualification. Evaluate a Windows transport adapter separately if stdio is insufficient; preserve common contracts and multilingual compatibility.
+The CI runner uses equivalent build/verification steps with explicit interpreter paths; the PowerShell sequence above has not been independently qualified. Before Windows capacity qualification, add and validate a Windows system memory/commit observer: the current native observer returns unavailable system headroom outside macOS/Linux. A conservative summed-RSS ceiling does not replace that qualification. Evaluate a Windows transport adapter separately if stdio is insufficient; preserve common contracts and multilingual compatibility.
 
 See [local installation](internal-distribution.md), [execution boundaries](local-execution.md) and [platform comparison results (historical) — pre-public record](history.md).

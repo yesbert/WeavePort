@@ -5,6 +5,7 @@
 | Scope | Command |
 | --- | --- |
 | Host regressions | `dotnet run --project tests/WeavePort.Hosting.Tests -c Release` |
+| Windows/Linux CI fixtures | `python scripts/ci/native.py` |
 | Native adapter fixtures | `./scripts/verify-local.sh` |
 | Composition fixtures | `./scripts/build-bulk.sh`, then `./scripts/bulk.sh verify artifacts/runs/composition` |
 | Multilingual SDK fixtures | `./scripts/build-sdk.sh`, then `./scripts/sdk.sh artifacts/runs/sdk verify` |

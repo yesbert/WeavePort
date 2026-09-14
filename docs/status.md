@@ -16,7 +16,7 @@ This qualifies the recorded native macOS arm64 profile. Individual latency reach
 
 ## Open work
 
-The remaining platform change is [qualify-native-capacity-and-platform-comparison](../openspec/changes/qualify-native-capacity-and-platform-comparison/tasks.md): native Windows functional/performance qualification is not executed because no local Windows VM was available at the recorded check. Source support and compilation do not qualify Windows. See [platform requirements](platform-qualification.md).
+The remaining platform change is [qualify-native-capacity-and-platform-comparison](../openspec/changes/qualify-native-capacity-and-platform-comparison/tasks.md): Windows capacity/performance qualification remains outstanding. Native source adapter checks now pass in [Windows/Linux CI](continuous-integration.md), including 38 Windows stdio assertions and 38/39 Linux stdio/socket assertions. Those source checks do not replace current public-package installation qualification. See [platform requirements](platform-qualification.md).
 
 HiveWeaver, TreeWeaver and NextPA integration remains separate application work. Signing/notarization, stronger sandboxing and automatic deployment/migration are separate release decisions, not hidden tasks needed to run the current internal examples.
 

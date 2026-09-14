@@ -1,0 +1,62 @@
+name: Deploy site
+on:
+  workflow_call:
+permissions:
+  contents: read
+concurrency:
+  group: weaveport-documentation-production
+  cancel-in-progress: false
+jobs:
+  deploy:
+    name: Publish validated site
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    environment:
+      name: documentation-production
+      url: https://weaveport.dev
+    steps:
+      - uses: actions/download-artifact@v8.0.1
+        with:
+          name: documentation-site
+          path: site
+      - name: Publish the validated artifact
+        env:
+          DEPLOY_KEY: ${{ secrets.DOCS_DEPLOY_KEY }}
+          KNOWN_HOSTS: ${{ secrets.DOCS_KNOWN_HOSTS }}
+          DEPLOY_HOST: ${{ vars.DOCS_DEPLOY_HOST }}
+          DEPLOY_USER: ${{ vars.DOCS_DEPLOY_USER }}
+          REVISION: ${{ github.sha }}
+          RUN_NUMBER: ${{ github.run_number }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          umask 077
+          mkdir -p "$RUNNER_TEMP/wp-ssh"
+          trap 'rm -rf "$RUNNER_TEMP/wp-ssh"' EXIT
+          printf '%s\n' "$DEPLOY_KEY" > "$RUNNER_TEMP/wp-ssh/key"
+          printf '%s\n' "$KNOWN_HOSTS" > "$RUNNER_TEMP/wp-ssh/known_hosts"
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          Path('site/deployment.json').write_text(json.dumps({
+              'revision': os.environ['REVISION'], 'run': int(os.environ['RUN_NUMBER'])}))
+          PY
+          tar -czf "$RUNNER_TEMP/site.tar.gz" -C site .
+          ssh -T -o BatchMode=yes -o StrictHostKeyChecking=yes \
+            -o UserKnownHostsFile="$RUNNER_TEMP/wp-ssh/known_hosts" \
+            -i "$RUNNER_TEMP/wp-ssh/key" "$DEPLOY_USER@$DEPLOY_HOST" < "$RUNNER_TEMP/site.tar.gz"
+      - name: Verify public revision and AI documentation
+        env:
+          REVISION: ${{ github.sha }}
+        run: |
+          python - <<'PY'
+          import json, os
+          from urllib.request import urlopen
+          from pathlib import Path
+          with urlopen('https://weaveport.dev/deployment.json', timeout=30) as response:
+              assert json.load(response)['revision'] == os.environ['REVISION']
+          for path in ('index.html', 'llms.txt', 'llms-full.txt', 'docs/ai-documentation.md'):
+              with urlopen('https://weaveport.dev/' + path, timeout=30) as response:
+                  assert response.read() == (Path('site') / path).read_bytes(), path
+          PY
