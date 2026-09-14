@@ -1,10 +1,10 @@
 # Authoring plugins with WeavePort
 
-The author writes functions and asynchronous result streams. WeavePort supplies dispatch, JSON conversion, local transport selection, callback framing, stream batching and lifecycle. The same provider artifact runs directly under a product's PluginHost or under the separate worker-host gateway. The gateway is one shared ASP.NET Core process, not a server inside every plugin.
+Write a plugin as ordinary asynchronous functions and result streams in C#, Python or TypeScript. Your application defines the contract; the SDK takes care of communicating with the host. WeavePort supplies dispatch, JSON conversion, local transport selection, callback framing, stream batching and lifecycle. The same provider artifact runs directly under a product's PluginHost or under the separate worker-host gateway. The gateway is one shared ASP.NET Core process, not a server inside every plugin.
 
 ## C#
 
-Reference the locally packed `WeavePort.Sdk` NuGet package. Register ordinary async handlers; the delegate return uses ValueTask, so an async lambda needs no wrapper. Asynchronous iterators use normal `IAsyncEnumerable<T>` and cancellation tokens.
+Reference the public `WeavePort.Sdk` NuGet package at version 0.1.0, or the matching locally packed package when working from source. Register ordinary async handlers; the delegate return uses ValueTask, so an async lambda needs no wrapper. Asynchronous iterators use normal `IAsyncEnumerable<T>` and cancellation tokens.
 
 ```csharp
 var plugin = new PluginApplication();
@@ -103,7 +103,7 @@ Callbacks execute **where PluginHost is hosted**. Supply the application's `IHos
 - Callback IDs and grants remain host-owned. Invocation scopes reject late detached callbacks, and SDKs serialize callback exchanges. The host's callback budget applies per internal invocation/batch; a generator doing many callbacks must respect the configured host policy. SDK context identity is information, not permission to access arbitrary customers.
 - Normal console logging is redirected to stderr after the SDK runtime starts. Do not write raw protocol streams or emit stdout before runtime initialization. Logging, custom schemas, discovery/manifests and stronger sandbox adapters need further productization; ordinary provider functions never select sockets, gRPC or batch sizes.
 
-The [compatibility policy](package-compatibility.md) defines the exact internal core surface; optional Gateway deployment remains separate. Native SDK workers remain explicitly trusted same-user processes. Windows/Linux and remote production deployment still require qualification. Build and verification instructions are in [the SDK harness guide](../tests/README.md); earlier measurements remain in [the SDK result report (historical) — pre-public record](history.md).
+The [compatibility policy](package-compatibility.md) defines the exact core package surface; optional Gateway deployment remains separate. Native SDK workers remain explicitly trusted same-user processes. Windows/Linux and remote production deployment still require qualification. Build and verification instructions are in [the SDK harness guide](../tests/README.md); earlier measurements remain in [the SDK result report (historical) — pre-public record](history.md).
 
 The gateway packages must be updated together: the unreleased wire protocol now uses duplex exchanges. Session lease waits count against the operation timeout. An incomplete exchange is discarded, not returned to the session pool; every exchange rechecks the binding credential. Idle transport sessions remain until client disposal.
 

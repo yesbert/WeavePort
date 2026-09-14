@@ -1,6 +1,6 @@
 # Product status
 
-Public NuGet version: **0.1.0**, under MIT, with four core packages: Abstractions, Hosting, Sdk and Sdk.Client. Native macOS arm64 is the qualified platform. This pre-1.0 API remains subject to evolution. Python/TypeScript registry publication and a new offline distribution are outside this release. The historical internal distribution remains **0.1.0-internal.2**.
+Public NuGet version: **0.1.0**, under MIT, with four core packages: Abstractions, Hosting, Sdk and Sdk.Client. Windows, Linux and macOS are supported targets for trusted stdio execution. Current release validation covers macOS arm64; Windows and Linux release validation is pending. See [platform support and validation](platform-qualification.md). This pre-1.0 API remains subject to evolution. Python/TypeScript registry publication and a new offline distribution are outside this release. The historical internal distribution remains **0.1.0-internal.2**.
 
 Implemented and checked: immutable installed-artifact selection, exact compatibility/API gates, shared coordinator template, guarded native recovery, optional safe diagnostics and standalone offline installation. The [candidate evidence](../reports/release/0.1.0-internal.2/candidate/report.md) records 398 assertion executions; the [distribution evidence](../reports/release/0.1.0-internal.2/distribution/report.md) records 144 application assertions and six offline template builds. These records identify their exact source and artifacts.
 

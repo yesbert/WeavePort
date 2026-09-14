@@ -1,6 +1,6 @@
 # Native deployment and recovery runbook
 
-This runbook qualifies a **guarded, manually supervised local macOS reference deployment** of Appointment Desk. Automatic recovery of arbitrary native descendants and power-loss durability are not qualified. The [run guard](../samples/Shared/NativeRunGuard.cs) is application-owned source; the core runtime has no persistent orphan registry. Other applications must adopt an equivalent deployment gate before inheriting this procedure.
+Use this runbook to start, stop and recover the native Appointment Desk deployment while preserving evidence about interrupted work. Its qualified scope is a **guarded, manually supervised local macOS reference deployment**. Automatic recovery of arbitrary native descendants and power-loss durability are not qualified. The [run guard](../samples/Shared/NativeRunGuard.cs) is application-owned source; the core runtime has no persistent orphan registry. Other applications must adopt an equivalent deployment gate before inheriting this procedure.
 
 ## Deployment acceptance
 

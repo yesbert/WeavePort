@@ -1,6 +1,6 @@
 # Architecture and decisions
 
-WeavePort is a library embedded in each application. One `PluginHost` owns one explicit shared worker budget; creating multiple hosts creates independent budgets. It is not a distributed scheduler or a machine-wide singleton.
+WeavePort adds plugin execution to the application you already own. It is a library embedded in each application, with domain contracts, authorization and durable state supplied by that application. One `PluginHost` owns one explicit shared worker budget; creating multiple hosts creates independent budgets. It is not a distributed scheduler or a machine-wide singleton.
 
 ## Ownership
 
@@ -29,6 +29,6 @@ Cancellation means that the caller stopped waiting, not that an external action 
 
 ## Deferred work
 
-Windows qualification, stronger native containment, distributed scheduling, public publication/signing and automatic updates/migrations are not implemented release guarantees. Integrations with the owner's applications follow their own development schedule.
+The four core packages are publicly available at 0.1.0. Windows qualification, stronger native containment, distributed scheduling, application signing/notarization and automatic updates/migrations remain separate work. Integrations with the owner's applications follow their own development schedule.
 
-The original design alternatives, dates, measurements and rejected experiments remain at the pinned revision in [Git history](history.md). This guide retains the decisions that still govern current code.
+The [historical evidence guide](history.md) explains where earlier design alternatives, measurements and rejected experiments are retained, including the limits of public access to pre-baseline history. This guide retains the decisions that still govern current code.

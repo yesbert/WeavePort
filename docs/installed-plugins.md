@@ -1,6 +1,6 @@
 # Installed plugin resolution
 
-`WeavePort.Hosting` now exposes `InstalledPluginCatalog`, `InstalledPlugin` and `InstallationIdentity`. All three reference applications consume this API through packed NuGet artifacts. This is local integrity validation for owner-controlled deployments; it is not a downloader, signature verifier or hostile-code sandbox.
+Choose a known plugin artifact and keep its identity stable throughout an operation. `WeavePort.Hosting` provides `InstalledPluginCatalog`, `InstalledPlugin` and `InstallationIdentity` for that selection. All three reference applications consume this API through packed NuGet artifacts. This is local integrity validation for owner-controlled deployments; it is not a downloader, signature verifier or hostile-code sandbox.
 
 ## Host integration
 

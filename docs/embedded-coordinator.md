@@ -1,6 +1,6 @@
 # Embedded coordinator template
 
-Appointment Desk now owns one `EmbeddedCoordinator` at its composition root. All its admitted booking operations share that coordinator's `PluginHost`, worker limits and tenant admission. The copyable [consumer source](../samples/Shared/EmbeddedCoordinator.cs) is linked into the host project; it adds no public NuGet API or service dependency. [Desk](../samples/AppointmentDesk/Host/Desk.cs) demonstrates passing the shared host into operation code and disposing only the operation's client/session.
+Use one coordinator to share worker and operation budgets across your application. Appointment Desk demonstrates this with one `EmbeddedCoordinator` at its composition root. All its admitted booking operations share that coordinator's `PluginHost`, worker limits and tenant admission. The copyable [consumer source](../samples/Shared/EmbeddedCoordinator.cs) is linked into the host project; it adds no public NuGet API or service dependency. [Desk](../samples/AppointmentDesk/Host/Desk.cs) demonstrates passing the shared host into operation code and disposing only the operation's client/session.
 
 ## Compose an application
 

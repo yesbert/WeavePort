@@ -1,6 +1,6 @@
 # Large results and external composition
 
-`WeavePort.Composition` is an optional .NET package depending on Abstractions. The product owns domain contracts, authentication, selected sessions, order and merge semantics. Plugins do not get peer addresses, result paths or authority to resolve arbitrary result handles. Existing invocation messages remain limited to 1 MiB; a logical result can span many bounded invocations.
+Combine bounded plugin results under your application’s ordering and merge rules. `WeavePort.Composition` is an optional .NET package depending on Abstractions and is outside the four-package public 0.1.0 release. The product owns domain contracts, authentication, selected sessions, order and merge semantics. Plugins do not get peer addresses, result paths or authority to resolve arbitrary result handles. Existing invocation messages remain limited to 1 MiB; a logical result can span many bounded invocations.
 
 ## Request-owned results
 
