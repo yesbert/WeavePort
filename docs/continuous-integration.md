@@ -24,11 +24,13 @@ The CodeQL workflow analyzes C#, JavaScript/TypeScript, Python and GitHub Action
 
 ## SonarQube and coverage
 
-The `SonarQube` workflow complements CodeQL with a .NET analysis on the operator-managed [SonarQube server](https://sonar.stratara.tech). It targets the project key `weaveport`, using the repository variable `SONAR_HOST_URL` and dedicated project-analysis secret `SONAR_TOKEN`. The project and credential must be provisioned before server analysis can succeed.
+The `SonarQube` workflow complements CodeQL with a .NET analysis on the operator-managed [SonarQube server](https://sonar.stratara.tech). It targets the project key `weaveport`, using the repository variable `SONAR_HOST_URL` and dedicated project-analysis secret `SONAR_TOKEN`. The hosted project uses the instance-default **Sonar way** quality gate. For another installation, provision the project and credential before running server analysis. Rotate the project-analysis token in SonarQube and replace the GitHub secret before its expiration; the initial hosted credential expires on September 14, 2027. Never commit tokens or include them in workflow arguments as literal values.
 
 Pull requests execute the Hosting and Gateway console regression suites under pinned `dotnet-coverage` tooling, without server credentials. The job checks both the recorded test-process exit codes and the presence of covered ranges; it uploads `sonar-coverage` containing the XML report and execution logs. Coverage currently comes from these two .NET suites. It does not measure Python/TypeScript tests, plugin subprocesses that clear profiler settings, or every integration path.
 
 After a main push, nightly at 05:00 UTC, or manual dispatch on main, a separate job builds all source-library projects inside the SonarScanner analysis and imports that run's coverage report. It waits for the server's quality gate and fails if the gate rejects the analysis. PR jobs never receive the analysis token or contact this server. Coverage is kept separate from the existing native platform tests. Uncovered source-library code remains in scope; no coverage threshold or exclusion is added merely to make a first scan green.
+
+The [first server analysis](https://github.com/yesbert/WeavePort/actions/runs/34831996671) on September 14, 2026 imported coverage for 32 main-source files and passed the default quality gate. Its overall baseline was 45.3% coverage, 37 issues (5 reliability and 32 maintainability) and 2 security hotspots awaiting review. A passing new-code quality gate does not mean the existing code is free of findings. Current results are available in the [WeavePort dashboard](https://sonar.stratara.tech/dashboard?id=weaveport).
 
 The scanner and collector are development tools installed at pinned versions; neither is shipped in the WeavePort NuGet packages. CodeQL continues to analyze C#, JavaScript/TypeScript, Python and Actions independently.
 
