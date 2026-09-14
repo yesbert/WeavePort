@@ -5,7 +5,7 @@ description: Decide whether WeavePort fits your .NET application, understand plu
 
 # Is WeavePort right for my product?
 
-Start here if you are deciding how to make your .NET backend extensible. These answers describe the current 0.1.0 release and link to the detailed contracts.
+Start here if you are deciding how to make your .NET backend extensible. These answers describe the current 0.2.0 release and link to the detailed contracts.
 
 ## What would I use it for?
 
@@ -45,7 +45,7 @@ The host observes worker failure and manages restart and cleanup under its lifec
 
 ## Is it free to use?
 
-The four public core NuGet packages are released under the [MIT license](../LICENSE). The current version is 0.1.0. Review [packages and compatibility](packages.md) before adopting or upgrading the evolving API.
+The four public core NuGet packages are released under the [MIT license](../LICENSE). The current version is 0.2.0. Review [packages and compatibility](packages.md) before adopting or upgrading the evolving API.
 
 ## Where should I start?
 

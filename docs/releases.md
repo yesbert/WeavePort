@@ -6,7 +6,7 @@ The GitHub delivery target is [yesbert/WeavePort](https://github.com/yesbert/Wea
 
 The release allowlist in `build/release-packages.json` contains `WeavePort.Abstractions`, `WeavePort.Hosting`, `WeavePort.Sdk` and `WeavePort.Sdk.Client`. Gateway, Composition and Testing remain optional/experimental; adding them requires appropriate package-consumer evidence. Python and TypeScript author SDK publication is separate from NuGet delivery.
 
-The first public version is `0.1.0`, licensed under [MIT](../LICENSE). The four core package references and exact compatibility matrix use this version; host API and wire protocol remain 1. Python/TypeScript SDK versions remain 0.1.0 without registry publication. Historical internal distribution and measurement evidence retain their original identities. Public releases require a complete clean candidate qualification; a tag override cannot substitute for updating compatibility inputs.
+The current release version is `0.2.0`, licensed under [MIT](../LICENSE). The four core package references and exact compatibility matrix use 0.2.0; host API and wire protocol remain 1. Python/TypeScript SDK versions remain 0.1.0 without registry publication. Historical internal distribution and measurement evidence retain their original identities. Public releases require a complete clean candidate qualification; a tag override cannot substitute for updating compatibility inputs.
 
 ## Trusted Publishing setup
 
@@ -39,3 +39,9 @@ Create the matching policy in the authenticated NuGet.org account. Scope it to t
 Branch pushes and pull requests never publish packages. Publication cannot be undone by deleting a Git tag: NuGet versions remain allocated. A partial publish is resumed with the same tested artifacts and `--skip-duplicate`; investigate any mismatch before rerunning. Never move a released tag to different source.
 
 CI retains qualification logs and manifests for 14 days. Preserve release evidence durably when qualifying a public release. GitHub-hosted runner SDK/runtime identities are recorded by the candidate harness. Docker Desktop on a developer machine is not touched by these workflows.
+
+## 0.2.0 migration
+
+The pre-1.0 minor release includes breaking host API cleanup: rename `ExecutionProtection` to `ExecutionProtections`, and pass `requiredProtection` before the final `cancellationToken` in `BindAsync` and `PrewarmAsync` (named arguments are recommended). Rebuild consumers and regenerate installation declarations for the exact 0.2.0 core package matrix; the wire protocol and host compatibility level remain 1. Python and TypeScript author SDKs remain 0.1.0.
+
+This release fixes cancellation-source ownership and shutdown/startup races, uses exclusive private native-socket directories, and selects Docker by an absolute trusted CLI path. Set `DockerProfile.DockerExecutable` for nonstandard CLI installations; PATH lookup is no longer used. All 37 original Sonar issues and both security hotspots were resolved before preparing this release. Platform validation limits remain documented in [platform qualification](platform-qualification.md).
