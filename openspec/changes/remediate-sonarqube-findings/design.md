@@ -10,7 +10,7 @@ Use Directory.CreateTempSubdirectory for exclusive 0700 Unix directory creation.
 
 Keep serialization in the bounded memory stream until complete before transport output, using SerializeAsync with the invocation token. Refactor protocol field detection into cohesive helpers preserving escaped-name and duplicate-field semantics. Move manifest Compatibility into its deserialization constructor; do not remove this security/compatibility input as allegedly unused.
 
-Public API convention changes await the owner's compatibility choice; default is compatibility. No rules, gates or exclusions are weakened. Read-only/static analyzer review findings must be justified individually with code/test evidence.
+Public API conventions now use ExecutionProtections and a final cancellation token in BindAsync/PrewarmAsync. Existing enum member values, optional defaults and protection enforcement remain unchanged. The development API is migrated directly without legacy overloads. No rules, gates or exclusions are weakened. Read-only/static analyzer review findings must be justified individually with code/test evidence.
 
 ## References
 
@@ -40,3 +40,7 @@ Revision 8b4ef00 passed the isolated native candidate qualification: 874 asserti
 Main analysis fdead8e (GitHub run 34844345261) confirmed that 34 original issues and both security hotspots disappeared. Three public API convention issues remain unchanged. It also detected a newly repeated disabled-status literal, duplication across the repetitive reserved-field guards, and 77.9% new-code coverage below the existing 80% threshold. The follow-up centralizes the status constant, uses a shared reserved-name table with ordinal JsonProperty.NameEquals comparisons (including escaped spellings), and adds source-suite manifest rejection and identity checks so the changed parser is included in collected coverage. Existing quality thresholds and exclusions remain unchanged.
 
 Reference: https://learn.microsoft.com/dotnet/api/system.text.json.jsonproperty.nameequals?view=net-10.0 — string comparison avoids materializing the property's decoded Name string. Existing hostile-envelope tests verify escaped duplicates remain rejected.
+
+### API convention completion
+
+Rename the flags enum to ExecutionProtections and put requiredProtection before cancellationToken in both host methods. Update repository consumers, documentation and the reviewed packed API snapshot together; preserve enum numeric values and default behavior. Microsoft CA1068 requires cancellation tokens last: https://learn.microsoft.com/dotnet/fundamentals/code-analysis/quality-rules/ca1068.

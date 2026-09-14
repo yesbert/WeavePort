@@ -62,7 +62,7 @@ public sealed class PluginHost : IAsyncDisposable
     }
 
     /// <summary>Sets a shared pristine target for a resolved execution profile/version. Zero removes the target. Contains no customer context.</summary>
-    public async Task PrewarmAsync(ExecutionProfile profile, string version, int count, CancellationToken cancellationToken = default, ExecutionProtection requiredProtection = ExecutionProtection.None)
+    public async Task PrewarmAsync(ExecutionProfile profile, string version, int count, ExecutionProtections requiredProtection = ExecutionProtections.None, CancellationToken cancellationToken = default)
     {
         lock (_sync)
         {
@@ -74,7 +74,7 @@ public sealed class PluginHost : IAsyncDisposable
     }
 
     /// <summary>Resolves an execution profile and creates an independent binding with explicit callback grants. Idle release is opt-in.</summary>
-    public async Task<IPluginSession> BindAsync(PluginContext context, ExecutionProfile profile, IHostCallbacks callbacks, IEnumerable<string> grants, CancellationToken cancellationToken = default, ExecutionProtection requiredProtection = ExecutionProtection.None)
+    public async Task<IPluginSession> BindAsync(PluginContext context, ExecutionProfile profile, IHostCallbacks callbacks, IEnumerable<string> grants, ExecutionProtections requiredProtection = ExecutionProtections.None, CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(context.Tenant);
         ExecutionProfile resolved = await ResolveAsync(profile, requiredProtection, cancellationToken);
@@ -99,7 +99,7 @@ public sealed class PluginHost : IAsyncDisposable
         }
     }
 
-    private static async Task<ExecutionProfile> ResolveAsync(ExecutionProfile profile, ExecutionProtection required, CancellationToken token)
+    private static async Task<ExecutionProfile> ResolveAsync(ExecutionProfile profile, ExecutionProtections required, CancellationToken token)
     {
         ArgumentNullException.ThrowIfNull(profile);
         if ((profile.Protection & required) != required)

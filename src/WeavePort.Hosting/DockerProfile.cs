@@ -12,7 +12,7 @@ public sealed record DockerProfile(string Image, string? Context = null, int Mem
     /// <summary>Absolute trusted Docker CLI path; null selects a conventional system installation without searching PATH.</summary>
     public string? DockerExecutable { get; init; }
     /// <inheritdoc/>
-    public override ExecutionProtection Protection => ExecutionProtection.RestrictedFileSystem | ExecutionProtection.DisabledNetwork | ExecutionProtection.HardResourceLimits;
+    public override ExecutionProtections Protection => ExecutionProtections.RestrictedFileSystem | ExecutionProtections.DisabledNetwork | ExecutionProtections.HardResourceLimits;
 
     internal override ExecutionProfile Normalize() => this with
     {

@@ -18,7 +18,7 @@ public sealed record ProcessProfile : ExecutionProfile
     /// <summary>Optional host socket buffer request, 4 KiB–1 MiB per direction. OS accounting/limits apply; not a worker memory ceiling.</summary>
     public int? SocketBufferBytes { get; init; }
     /// <inheritdoc/>
-    public override ExecutionProtection Protection => ExecutionProtection.None;
+    public override ExecutionProtections Protection => ExecutionProtections.None;
 
     /// <summary>Freezes arguments and declares scheduling reservations; does not enforce memory or CPU limits.</summary>
     /// <param name = "executable">Absolute executable path.</param>

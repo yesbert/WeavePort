@@ -1,7 +1,7 @@
 namespace WeavePort.Hosting;
 /// <summary>Requested operating-system restrictions, not proof against kernel/runtime exploits.</summary>
 [Flags]
-public enum ExecutionProtection
+public enum ExecutionProtections
 {
     /// <summary>No sandbox restriction is required.</summary>
     None = 0,
@@ -20,7 +20,7 @@ public enum ExecutionProtection
 public abstract record ExecutionProfile(int MemoryMiB, TimeSpan? Timeout, TimeSpan? IdleTimeout)
 {
     /// <summary>Restrictions requested by this adapter. Effective deployment policy must still be verified.</summary>
-    public abstract ExecutionProtection Protection { get; }
+    public abstract ExecutionProtections Protection { get; }
 
     internal abstract Task<ExecutionProfile> ResolveAsync(CancellationToken token);
     internal abstract ExecutionProfile Normalize();

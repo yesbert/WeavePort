@@ -7,7 +7,7 @@ The verified GitHub SonarQube report for e9a0f491e487b5729975618077d3bfeddf13bdb
 - Dispose host/session/pool/client cancellation sources safely, preserving concurrent shutdown and detached callbacks.
 - Use exclusive private socket directory creation and explicit absolute Docker executable resolution.
 - Refactor complex validation and stream code, preserve manifest compatibility deserialization, improve diagnostics and internal conventions.
-- Retain public API compatibility unless an explicit API migration is selected; record justified analyzer exceptions rather than silently changing public contracts.
+- Migrate the development API to the plural ExecutionProtections enum and final cancellation-token arguments; update all consumers and the reviewed API baseline.
 
 ## Capabilities
 

@@ -52,7 +52,7 @@ internal static class QuarantineChecks
 
     private sealed record ControlledProfile() : ExecutionProfile(256, TimeSpan.FromSeconds(5), null)
     {
-        public override ExecutionProtection Protection => ExecutionProtection.None;
+        public override ExecutionProtections Protection => ExecutionProtections.None;
         internal override Task<ExecutionProfile> ResolveAsync(CancellationToken token) => Task.FromResult<ExecutionProfile>(this);
         internal override ExecutionProfile Normalize() => this;
         internal override Worker CreateWorker(string version, TimeProvider clock) => new ControlledWorker(this, version);

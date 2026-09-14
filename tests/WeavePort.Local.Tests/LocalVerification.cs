@@ -105,7 +105,7 @@ internal static class LocalVerification
                 catch (NotSupportedException) { return; }
                 throw new Exception("Untrusted execution accepted");
             });
-            foreach (ExecutionProtection requirement in new[] { ExecutionProtection.RestrictedFileSystem, ExecutionProtection.DisabledNetwork, ExecutionProtection.HardResourceLimits })
+            foreach (ExecutionProtections requirement in new[] { ExecutionProtections.RestrictedFileSystem, ExecutionProtections.DisabledNetwork, ExecutionProtections.HardResourceLimits })
                 await CheckAsync("unmet protection rejected for bind and prewarm: " + requirement, async () =>
                 {
                     int denied = 0;
