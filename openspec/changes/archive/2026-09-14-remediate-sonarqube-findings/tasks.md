@@ -13,6 +13,6 @@
 ## 3. Qualification
 
 - [x] 3.1 Run affected and packed-consumer checks, code style, OpenSpec and documentation checks.
-- [ ] 3.2 Publish protected PR, inspect fresh GitHub SonarQube findings and resolve remaining findings with evidence.
+- [x] 3.2 Publish protected PR, inspect fresh GitHub SonarQube findings and resolve remaining findings with evidence.
 - [x] 3.3 Sync verified shutdown and adapter specifications.
-- [ ] 3.4 Archive after the remaining findings are resolved.
+- [x] 3.4 Archive after the remaining findings are resolved.
