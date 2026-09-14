@@ -30,8 +30,8 @@ def collect():
         subprocess.run(['dotnet', 'build', str(ROOT / 'tests' / name), '-c', 'Debug', '--nologo'], check=True)
     report = OUTPUT / 'coverage.xml'
     tool = ROOT / 'artifacts/analysis-tools/dotnet-coverage'
-    command = f'"{sys.executable}" "{Path(__file__).resolve()}" --execute'
-    subprocess.run([str(tool), 'collect', command, '-f', 'xml', '-o', str(report)], check=True)
+    subprocess.run([str(tool), 'collect', '-f', 'xml', '-o', str(report), '--',
+                    sys.executable, str(Path(__file__).resolve()), '--execute'], check=True)
     results = json.loads((OUTPUT / 'tests.json').read_text())
     if len(results) != len(SUITES) or any(item['exitCode'] != 0 for item in results):
         raise SystemExit('Regression execution failed')
