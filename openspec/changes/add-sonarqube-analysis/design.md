@@ -9,3 +9,7 @@ Only main jobs receive the server token; pull requests collect coverage without 
 ## Tool license review
 
 Exact NuGet artifacts inspected: dotnet-sonarscanner 11.3.0 (licenses/LICENSE.txt, LGPL-3.0, with bundled third-party notices) and dotnet-coverage 18.11.2 (License.txt, Microsoft .NET Library terms, plus ThirdPartyNotices.txt including Mono.Cecil MIT notices). Their original license files were retained with downloaded inspection artifacts. These are unmodified CI/developer executables downloaded from NuGet, not linked into or redistributed with WeavePort's MIT packages or website. Microsoft terms permit installation/use for application development and testing. No redistribution rights beyond the inspected terms are claimed; retain notices and reassess obligations if tooling is later bundled. They are not added to the shipped package dependency closure.
+
+## Coverage verification
+
+GitHub run 34831159354 executed both Hosting.Tests and Gateway.Tests with exit code zero and produced 1,908 covered ranges. The report includes actual product modules (Hosting, Abstractions, Sdk.Client and Sdk.Gateway), not only test code. The initial collector invocation rejected embedded command quoting; passing target arguments separately fixed it. The collector can return success for a failed target, so the recorded suite exit codes are checked independently. This is partial regression coverage, not a whole-product coverage claim. Server import and the quality gate remain pending project/token provisioning.

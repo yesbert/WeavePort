@@ -37,8 +37,9 @@ def collect():
         raise SystemExit('Regression execution failed')
     tree = ET.parse(report)
     covered = sum(1 for element in tree.iter() if element.get('covered') == 'yes')
-    if covered == 0:
-        raise SystemExit('Coverage report has no covered ranges')
+    hosting = [module for module in tree.iter('module') if module.get('name') == 'WeavePort.Hosting.dll']
+    if covered == 0 or not hosting or not any(int(module.get('lines_covered', '0')) > 0 for module in hosting):
+        raise SystemExit('Coverage report has no covered host implementation')
     print(f'PASS: {len(results)} executable suites, {covered} covered ranges')
 
 
