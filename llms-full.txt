@@ -410,6 +410,8 @@ Source: https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/status.md
 
 Public NuGet version: **0.2.0**, under MIT, with four core packages: Abstractions, Hosting, Sdk and Sdk.Client. Windows, Linux and macOS are supported targets for trusted stdio execution. Current release validation covers macOS arm64; Windows and Linux release validation is pending. See [platform support and validation](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/platform-qualification.md). This pre-1.0 API remains subject to evolution. Python/TypeScript registry publication and a new offline distribution are outside this release. The historical internal distribution remains **0.1.0-internal.2**.
 
+The [0.2.0 public release evidence](https://raw.githubusercontent.com/yesbert/WeavePort/main/reports/release/0.2.0/README.md) records 874 assertion executions, exact tested package/symbol provenance, successful Trusted Publishing and matching public NuGet package payloads.
+
 Implemented and checked: immutable installed-artifact selection, exact compatibility/API gates, shared coordinator template, guarded native recovery, optional safe diagnostics and standalone offline installation. The [candidate evidence](https://raw.githubusercontent.com/yesbert/WeavePort/main/reports/release/0.1.0-internal.2/candidate/report.md) records 398 assertion executions; the [distribution evidence](https://raw.githubusercontent.com/yesbert/WeavePort/main/reports/release/0.1.0-internal.2/distribution/report.md) records 144 application assertions and six offline template builds. These records identify their exact source and artifacts.
 
 Current measurement methodology and results are in [benchmarking](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/benchmarking.md). The full historical comparison collection is described in [historical evidence](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/history.md), not a competing current status summary.
@@ -1199,6 +1201,8 @@ CI retains qualification logs and manifests for 14 days. Preserve release eviden
 The pre-1.0 minor release includes breaking host API cleanup: rename `ExecutionProtection` to `ExecutionProtections`, and pass `requiredProtection` before the final `cancellationToken` in `BindAsync` and `PrewarmAsync` (named arguments are recommended). Rebuild consumers and regenerate installation declarations for the exact 0.2.0 core package matrix; the wire protocol and host compatibility level remain 1. Python and TypeScript author SDKs remain 0.1.0.
 
 This release fixes cancellation-source ownership and shutdown/startup races, uses exclusive private native-socket directories, and selects Docker by an absolute trusted CLI path. Set `DockerProfile.DockerExecutable` for nonstandard CLI installations; PATH lookup is no longer used. All 37 original Sonar issues and both security hotspots were resolved before preparing this release. Platform validation limits remain documented in [platform qualification](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/platform-qualification.md).
+
+The [0.2.0 release report](https://raw.githubusercontent.com/yesbert/WeavePort/main/reports/release/0.2.0/README.md) retains publication verification and links to durable package, symbol and qualification assets.
 
 ---
 
