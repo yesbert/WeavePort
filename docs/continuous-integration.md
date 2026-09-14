@@ -47,3 +47,11 @@ The [first automatic main deployment](https://github.com/yesbert/WeavePort/actio
 The public `deployment.json` identifies the deployed commit and CI run number. CI verifies it and compares public entry/AI files with its artifact after upload. Rollback is an administrator operation that restores the previous `current` symlink target; retained releases are not automatically deleted. Re-running a successful main CI run republishes an identical artifact, while a new main commit creates a new release.
 
 Website publication is independent of NuGet releases. The existing `Release` workflow and its package-publication approvals remain unchanged.
+
+### Read findings in GitHub
+
+Open the latest main [SonarQube workflow run](https://github.com/yesbert/WeavePort/actions/workflows/sonar.yml). The analysis job summary lists every exported open issue and unreviewed security hotspot, with messages, impact or priority, rules and source locations. Download its `sonar-report` artifact for `summary.md`, complete issue data (including flows), hotspots, quality gate, coverage measures, duplication files and export metadata. Reports are retained for 30 days. This follows Stratara's Actions report workflow; it does not create GitHub issue tickets or Code Scanning alerts.
+
+The export runs even when the quality gate fails. An incomplete export fails visibly and missing responses are never reported as zero findings. Source links target the analyzed commit only when the submitted and current server analysis identities match. If the project changes during export, links are omitted and the report is marked incomplete. Oversized job summaries point to the complete artifact.
+
+The exporter tries the existing analysis credential. If its project-analysis scope cannot read report endpoints, provision a dedicated account with Browse permission only on this project and store its user token as `SONAR_REPORT_TOKEN`; keep `SONAR_TOKEN` for analysis. Both remain confined to the trusted main analysis job. An HTTP 401/403 requires credential or permission correction, not a weaker quality gate. See [SonarQube token scopes](https://docs.sonarsource.com/sonarqube-server/user-guide/managing-tokens).

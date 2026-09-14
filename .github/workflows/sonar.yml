@@ -57,6 +57,9 @@ jobs:
         with:
           name: sonar-coverage
           path: artifacts/analysis
+      - uses: actions/setup-python@v7.0.0
+        with:
+          python-version: '3.13'
       - run: dotnet tool install dotnet-sonarscanner --version 11.3.0 --tool-path artifacts/analysis-tools
       - name: Begin analysis
         env:
@@ -87,3 +90,18 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: artifacts/analysis-tools/dotnet-sonarscanner end /d:sonar.token="$SONAR_TOKEN"
+      - name: Export findings to GitHub summary
+        if: always()
+        env:
+          SONAR_HOST_URL: ${{ vars.SONAR_HOST_URL }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_REPORT_TOKEN: ${{ secrets.SONAR_REPORT_TOKEN }}
+        run: python scripts/ci/sonar/export.py
+      - name: Retain complete SonarQube findings
+        if: always()
+        uses: actions/upload-artifact@v7.0.1
+        with:
+          name: sonar-report
+          path: artifacts/sonar-report
+          if-no-files-found: error
+          retention-days: 30
