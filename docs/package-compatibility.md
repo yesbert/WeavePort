@@ -1,5 +1,7 @@
 # Local package and contract compatibility
 
+Keep the host, SDKs and plugin artifacts on a known-compatible combination. This guide defines the exact identities checked during installation and startup.
+
 **Public package policy for 0.1.0, reviewed 2026-09-13.** The [machine-readable matrix](../compatibility/local-v1.json) defines one exact combination. It is embedded in `WeavePort.Hosting` and consumed by the offline installation sealer. The public NuGet package set uses this exact matrix; no general SemVer range is accepted.
 
 ## Separate compatibility identities

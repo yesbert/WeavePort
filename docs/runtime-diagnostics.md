@@ -1,5 +1,7 @@
 # Runtime diagnostics
 
+Observe worker startup, invocation, callback and cleanup failures through your application’s existing logging. Diagnostic events expose lifecycle context while excluding plugin payloads and secrets.
+
 Pass an application-owned `ILogger<PluginHost>` to `new PluginHost(logger, options: limits)`. The existing constructor uses a null logger; the library does not configure global logging or own the logger's lifetime. Hosting references Microsoft.Extensions.Logging.Abstractions 10.0.11 (MIT), whose net10.0 dependency is Microsoft.Extensions.DependencyInjection.Abstractions 10.0.11 (MIT). The internal offline feed includes both original packages with license metadata.
 
 | Event ID | Level | Meaning | Structured fields |

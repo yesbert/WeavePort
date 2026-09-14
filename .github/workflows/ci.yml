@@ -38,6 +38,18 @@ jobs:
       - run: python3 scripts/generate-llms.py --check
       - run: python3 tests/documentation/check-links.py
       - run: python3 tests/release/test_release.py
+      - uses: actions/setup-dotnet@v6.0.0
+        with:
+          global-json-file: global.json
+      - run: dotnet tool restore
+      - run: python3 tests/documentation/test-website.py
+      - run: python3 scripts/build-website.py
+      - name: Retain static documentation
+        uses: actions/upload-artifact@v7.0.1
+        with:
+          name: documentation-site
+          path: artifacts/documentation/site
+          retention-days: 14
       - run: git diff --check
 
   qualify:

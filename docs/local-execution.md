@@ -1,6 +1,11 @@
 # Trusted local process execution
 
-WeavePort's common `ExecutionProfile` feeds one shared binding, invocation, callback, admission and worker-pool implementation. `DockerProfile` and `ProcessProfile` select built-in lifecycle adapters. Choosing a process profile does not resolve an image or execute Docker. Both adapters currently ship in `WeavePort.Hosting`; a separate adapter package/public third-party runtime SDK is not implemented yet.
+Windows, Linux and macOS are supported targets for this trusted process execution path over stdio. Current release validation covers macOS arm64; Windows and Linux release validation is pending. See [platform support and validation](platform-qualification.md) for transport, tooling and evidence limits.
+
+
+Run your approved plugin as a local process and keep execution policy in the host. Native workers are trusted code with the host OS user’s rights.
+
+The common `ExecutionProfile` feeds one shared binding, invocation, callback, admission and worker-pool implementation. `DockerProfile` and `ProcessProfile` select built-in lifecycle adapters. Choosing a process profile does not resolve an image or execute Docker. Both adapters currently ship in `WeavePort.Hosting`; a separate adapter package/public third-party runtime SDK is not implemented yet.
 
 ```csharp
 await using var host = new PluginHost();

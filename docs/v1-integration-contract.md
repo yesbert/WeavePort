@@ -1,6 +1,6 @@
 # V1 integration agreement
 
-**Status: integration contract for public packages 0.1.0, reviewed on 2026-09-13.** This guide defines how our applications should integrate WeavePort. It introduces no new runtime API or released compatibility promise. Existing [baseline specifications](../openspec/specs) define verified behavior; the [release plan](status.md) separates remaining work from that behavior. Packages use version `0.1.0`; API evolution remains subject to the exact compatibility matrix.
+**Status: integration contract for public packages 0.1.0, reviewed on 2026-09-13.** This guide defines how our applications should integrate WeavePort. It introduces no new runtime API or released compatibility promise. Existing [baseline specifications](../openspec/specs) define verified behavior; the [current status](status.md) separates remaining work from that behavior. Packages use version `0.1.0`; API evolution remains subject to the exact compatibility matrix.
 
 ## Product boundary
 
@@ -69,7 +69,7 @@ A `busy` result is an admission outcome, not permission for unbounded retries. T
 
 Keep four identities distinct: host/SDK package version, plugin artifact release, domain contract/schema version and transport protocol version. The required installation compatibility declaration now checks host API/protocol and package/SDK identities separately. Domain contracts still require exact equality rather than range negotiation; content pins and the startup release check remain independent guards.
 
-All three examples now consume the [shared installed-plugin resolver](installed-plugins.md), with manifest/content validation and retained release identity. Decision Room and Appointment Desk re-resolve persisted pins; Document Workshop records a pin per complete import. This requires stable deployment bytes and trusted metadata; it is not an enforcing immutable filesystem or a general package manager. The remaining compatibility/release work is tracked in the [release plan](status.md).
+All three examples now consume the [shared installed-plugin resolver](installed-plugins.md), with manifest/content validation and retained release identity. Decision Room and Appointment Desk re-resolve persisted pins; Document Workshop records a pin per complete import. This requires stable deployment bytes and trusted metadata; it is not an enforcing immutable filesystem or a general package manager. Current support limits and outstanding qualification are tracked in the [current status](status.md).
 
 ## Consumer acceptance evidence
 

@@ -1,5 +1,7 @@
 # Current product benchmarks
 
+Use the retained measurements to evaluate a specific workload and reproduce it against the exact delivered artifacts. Results identify their platform and topology; they are not universal throughput or capacity promises.
+
 Run one complete suite against the current delivered core:
 
 ```sh

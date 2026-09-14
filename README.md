@@ -1,51 +1,97 @@
-# WeavePort
+<p align="center">
+  <img src="website/assets/logo.png" alt="WeavePort" width="180">
+</p>
 
-An embedded backend plugin platform for owner-controlled applications and plugins. Applications own their domain contracts, authorization and durable state; WeavePort owns bound execution, callbacks, admission and worker lifecycle.
+# Turn your .NET app into a platform.
 
-The first public NuGet version is **0.1.0**, licensed under [MIT](LICENSE). Functional qualification covers native macOS arm64. The API is evolving and native execution is not a hostile-plugin sandbox. See [current status and open work](docs/status.md), [architecture](docs/architecture.md) and the [integration contract](docs/v1-integration-contract.md).
+**Add C#, Python and TypeScript plugins to your product.** WeavePort runs them, connects them to approved application services and manages their workers. Your application owns the data, permissions and business rules.
 
-## Start here
+Build document readers, evaluation strategies or customer-specific scheduling rules as plugins. Give each one the access it needs and call it through the same .NET client contract.
 
-- [GitHub and NuGet delivery](docs/releases.md) and [AI/MCP documentation retrieval](docs/ai-documentation.md).
-- [Install the internal distribution](docs/internal-distribution.md): offline packages, executable examples and copyable templates.
-- [Author plugins in C#, Python or TypeScript](docs/plugin-sdk.md).
-- [Embed one coordinator](docs/embedded-coordinator.md), [select installed artifacts](docs/installed-plugins.md) and [handle recovery](docs/native-operations.md).
-- [Exact package/API compatibility](docs/package-compatibility.md) and [operational diagnostics](docs/runtime-diagnostics.md).
+[Get started](website/getting-started.md) · [Why WeavePort?](website/introduction.md) · [Write a plugin](docs/plugin-sdk.md) · [NuGet packages](website/packages.md)
 
-## Reference applications
+**MIT · .NET 10 · Windows, Linux & macOS · Public release 0.1.0**
 
-| Application | Demonstrates | Build and verify |
-|---|---|---|
-| [Decision Room](samples/DecisionRoom/README.md) | C#/Python strategies, scoped knowledge and journal replay | `./scripts/decision-room.sh --build --verify` |
-| [Document Workshop](samples/DocumentWorkshop/README.md) | Interchangeable readers, bounded source access and staged commits | `./scripts/document-workshop.sh --build --verify` |
-| [Appointment Desk](samples/AppointmentDesk/README.md) | Scheduling strategies, idempotent actions and recovery | `./scripts/appointment-desk.sh --build --verify` |
+Built for .NET. Designed for Windows, Linux and macOS. The supported cross-platform execution path uses standard input/output (stdio) for owner-controlled plugins. Current release validation covers macOS arm64; Windows and Linux release validation is pending. See the [platform support and validation matrix](docs/platform-qualification.md). The pre-1.0 API is evolving; native processes are not a sandbox for hostile code.
 
-HiveWeaver, TreeWeaver and NextPA remain independent consumers; they are not dependencies and are not modified by these examples.
+## Build with your AI assistant
 
-## Development commands
+Point your assistant at [llms.txt](https://weaveport.dev/llms.txt), or load the [full reference](https://weaveport.dev/llms-full.txt). [Connect GitHub MCP](docs/ai-documentation.md#connect-the-official-github-mcp-server) to retrieve matching source, examples and API contracts directly from the repository.
 
-Use the SDK pinned in `global.json`, Python, Node and the globally installed OpenSpec CLI. The default product workflow needs no Docker service changes.
+## Why WeavePort?
+
+- **Let each extension use the right language.** Write plugins in C#, Python or TypeScript and invoke them through one .NET client interface. Function names and JSON schemas remain your application's contract.
+- **Keep data access in your application.** Give plugins explicit callback capabilities. Your host supplies the authenticated context and checks access to individual objects.
+- **Share the runtime work.** One host manages worker startup, deadlines, admission and cleanup. The coordinator template shares those budgets across application operations.
+- **Keep your product's architecture.** Your application chooses its database, workflows and recovery policy. WeavePort arrives as NuGet libraries you embed in your backend.
+
+## See it working
+
+Decision Room runs C# and Python strategies against the same proposals. The application grants knowledge access and saves the resulting evaluations. With the default configuration, **B — Automate support** wins with a score of **11**.
+
+This Bash walkthrough is validated on macOS arm64. Linux can use the same source workflow, with release validation pending; native Windows needs equivalent build steps and Windows interpreter paths (the script assumes a Unix virtual environment). Install the .NET SDK in [global.json](global.json) and Python 3.11+ with `venv` and `pip`, then run:
 
 ```sh
-./scripts/build.sh                       # Build the three current examples
-./scripts/verify.sh                      # Qualify committed HEAD in a fresh checkout
-./scripts/benchmark.sh --distribution /absolute/path/to/installed/payload
+git clone https://github.com/yesbert/WeavePort.git
+cd WeavePort
+./scripts/decision-room.sh --build
 ```
 
-Benchmarking requires the extracted internal.2 bundle or its installed `payload` directory and verifies the exact delivered core packages. See [measurement scope and results](docs/benchmarking.md). Individual working-tree checks and opt-in adapter suites are documented in [tests](tests/README.md).
+The first build restores packages and creates a private Python environment. The example needs no external database, account or Docker service. [Follow the walkthrough](website/getting-started.md) to change a strategy, resume a journal and run verification.
 
-## Repository map
+## A plugin is an ordinary function
 
-| Directory | Maintained contents |
-|---|---|
-| `src/`, `sdks/` | .NET platform packages and language author SDKs |
-| `samples/` | Three product applications and shared integration templates |
-| `examples/sdk/` | Minimal multilingual SDK providers |
-| `tests/` | Regression fixtures, compatibility and deployment checks |
-| `benchmarks/` | One multilingual SDK performance suite |
-| `tools/`, `scripts/` | Build, qualification, packaging and measurement entry points |
-| `docs/`, `openspec/` | Current guidance, contracts and unfinished changes |
-| `reports/` | Current release evidence and compact current benchmark results |
-| `artifacts/` | Ignored generated binaries, caches and raw runs |
+This minimal Python provider exposes an `echo` function to an authorized host binding:
 
-Historical PoC experiments, reports and completed plans are available through the [historical evidence guide](docs/history.md). They are not duplicated in the current tree. Development rules: [CONTRIBUTING.md](CONTRIBUTING.md) and [engineering guidelines](docs/engineering.md).
+```python
+from weaveport_sdk import PluginApplication
+
+app = PluginApplication()
+
+@app.function("echo")
+async def echo(value, context):
+    return value
+
+app.run()
+```
+
+The same SDK supports asynchronous result streams and granted host callbacks. Python and TypeScript SDKs are built from the repository; they are not yet published to PyPI or npm. See the complete [Python](examples/sdk/python/plugin.py), [C#](examples/sdk/csharp/Program.cs) and [TypeScript](examples/sdk/typescript/plugin.ts) examples and the [authoring guide](docs/plugin-sdk.md).
+
+## Add WeavePort to your application
+
+In the .NET application project:
+
+```sh
+dotnet add package WeavePort.Hosting --version 0.1.0
+dotnet add package WeavePort.Sdk.Client --version 0.1.0
+```
+
+For a C# plugin, reference `WeavePort.Sdk` at the same version. `WeavePort.Abstractions` contains the shared contracts. These are the four public packages; optional Gateway, Composition and Testing are outside this release.
+
+[Compose one host](docs/embedded-coordinator.md), [select approved plugin artifacts](docs/installed-plugins.md) and [check exact compatibility](docs/package-compatibility.md). Package installation supplies the libraries; the runnable examples show the complete integration.
+
+## Start from a real use case
+
+| You want to… | Start here | What you will learn |
+|---|---|---|
+| Let customers choose an evaluation strategy | [Decision Room](samples/DecisionRoom/README.md) | C#/Python strategies, scoped knowledge and replay |
+| Add readers for different document sources | [Document Workshop](samples/DocumentWorkshop/README.md) | Interchangeable readers, bounded access and staged commits |
+| Make scheduling rules replaceable | [Appointment Desk](samples/AppointmentDesk/README.md) | Shared admission, idempotent actions and recovery |
+
+Each example includes a `--build --verify` runner under `scripts/`. Its domain contracts and storage belong to the application, so you can study the integration independently of a particular database or sibling framework.
+
+## Choose with the full picture
+
+WeavePort is a fit when you control the plugin code and want an extensible .NET backend. Native workers have the application's OS-user rights. If you need to execute arbitrary untrusted uploads, that requires a stronger, separately qualified execution boundary.
+
+Worker memory is temporary; applications own durable state and the handling of uncertain external effects. Windows, Linux and macOS are supported targets for trusted stdio execution; platform-specific release validation and remote production qualification are separate. See the [platform matrix](docs/platform-qualification.md). Read [current status](docs/status.md), [security boundaries](docs/security-architecture.md) and [recovery guidance](docs/native-operations.md) before deployment.
+
+## Documentation, help and contributions
+
+- [Introduction](website/introduction.md), [first example](website/getting-started.md) and [FAQ](website/faq.md).
+- [Architecture](docs/architecture.md), [worker lifecycle](docs/worker-lifecycle.md) and [diagnostics](docs/runtime-diagnostics.md).
+- [AI documentation](docs/ai-documentation.md) and the [llms.txt index](llms.txt).
+- [Report an issue or suggest an improvement](https://github.com/yesbert/WeavePort/issues).
+- [Contribute](CONTRIBUTING.md), [run focused checks](tests/README.md) or [build the documentation website](website/README.md).
+
+Maintained by [Norbert Rosenwinkel](https://github.com/yesbert). Released under the [MIT license](LICENSE).

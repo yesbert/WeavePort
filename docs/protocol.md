@@ -1,5 +1,7 @@
 # Invocation protocol
 
+This reference explains the messages exchanged by the host and workers. Plugin authors normally use the [language SDKs](plugin-sdk.md), which handle these envelopes for them.
+
 The executable reference implementations are `plugins/csharp`, `plugins/python` and `plugins/typescript`. These intentionally include fault operations and must be run inside the resource-limited test containers.
 
 ## Wire contract

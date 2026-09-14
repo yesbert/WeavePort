@@ -1,4 +1,6 @@
-# Platform qualification
+# Platform support and validation
+
+**Windows, Linux and macOS are supported targets for trusted plugin execution over standard input/output (stdio).** Install .NET 10 and the runtimes required by your plugins on an OS/architecture supported by those runtimes. Support here identifies the implemented execution path; it does not claim that the current release has passed validation on every target. Current release validation covers macOS arm64; Windows and Linux release validation is pending.
 
 WeavePort's contracts, tenant binding and protocol are shared .NET code. Process launch, communication, filesystem permissions and resource enforcement are platform-specific concerns. Successful compilation is not runtime, security or performance qualification.
 
@@ -9,7 +11,13 @@ WeavePort's contracts, tenant binding and protocol are shared .NET code. Process
 | Windows | Source includes trusted stdio process support; optimized Unix socket profile explicitly rejects Windows | Native functional, installation, performance and security qualification not executed |
 | Other CPU architectures/distributions | Intended platform targets where .NET and required plugin runtimes are available | Not implied by arm64 results |
 
-The local machine has Parallels Desktop installed, but `prlctl list -a -o name,status,ostemplate` returned no registered virtual machines on 2026-09-11. No Windows guest or additional runtime was installed for this work. Windows qualification remains an open OpenSpec task.
+## Transport and tooling
+
+Stdio is the default on all three operating systems. The optional `UseUnixSocket` profile is supported on Linux and macOS and explicitly rejected on Windows. Windows startup handles its system directory, path separator and workspace creation explicitly. Native workers run with the application's OS-user rights on every platform.
+
+The NuGet libraries are distinct from the example launch scripts and historical offline distribution. Repository Bash runners assume Unix executable and virtual-environment paths; native Windows needs equivalent build steps and Windows interpreter paths. The historical offline bundle targets macOS arm64 and cannot be installed unchanged on Windows or Linux.
+
+Windows functional and performance qualification remains an open OpenSpec task. No native Windows test run is claimed.
 
 ## Common acceptance matrix
 

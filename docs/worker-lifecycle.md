@@ -1,6 +1,6 @@
 # Shared worker lifecycle
 
-The hosting package provides one shared, bounded pristine reserve per `PluginHost`. Use one coordinator for each intended node budget. Several hosts have independent budgets; this is not a distributed allocator or an automatic machine-wide singleton.
+Control how workers start, stay available and get cleaned up through one `PluginHost`. The hosting package provides one shared, bounded pristine reserve per host. Use one coordinator for each intended node budget. Several hosts have independent budgets; this is not a distributed allocator or an automatic machine-wide singleton.
 
 ```csharp
 await using var host = new PluginHost(
