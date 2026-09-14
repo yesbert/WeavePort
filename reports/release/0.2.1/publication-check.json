@@ -1,0 +1,58 @@
+[
+  {
+    "package": "WeavePort.Abstractions",
+    "version": "0.2.1",
+    "status": "verified",
+    "sourceSha256": "79105ee330328740ec1020abee02014cfffb6f35a46146f0c6f35af3fdc29144",
+    "nugetSha256": "8b2f357926c6fe5329939775721b7b396aacfa0d72af37f49ed3c344cbc10813",
+    "url": "https://api.nuget.org/v3-flatcontainer/weaveport.abstractions/0.2.1/weaveport.abstractions.0.2.1.nupkg",
+    "payloadMatches": true,
+    "iconMatches": true,
+    "iconSha256": "e116008bac50a4ff4f964397af3f1e69ba6aabf6a294ce89b8f0d3425378f8fe",
+    "galleryUrl": "https://www.nuget.org/packages/WeavePort.Abstractions/0.2.1",
+    "galleryIconUrl": "https://api.nuget.org/v3-flatcontainer/weaveport.abstractions/0.2.1/icon",
+    "galleryIconMatches": true
+  },
+  {
+    "package": "WeavePort.Hosting",
+    "version": "0.2.1",
+    "status": "verified",
+    "sourceSha256": "0bea0b6eb1fee6d15ec16262b95857cc168a8f6a001085b3f9f4e57130547250",
+    "nugetSha256": "6154472e0f36b7c66731503daac5a9e944e7b256e5951270b76c55d47003e635",
+    "url": "https://api.nuget.org/v3-flatcontainer/weaveport.hosting/0.2.1/weaveport.hosting.0.2.1.nupkg",
+    "payloadMatches": true,
+    "iconMatches": true,
+    "iconSha256": "e116008bac50a4ff4f964397af3f1e69ba6aabf6a294ce89b8f0d3425378f8fe",
+    "galleryUrl": "https://www.nuget.org/packages/WeavePort.Hosting/0.2.1",
+    "galleryIconUrl": "https://api.nuget.org/v3-flatcontainer/weaveport.hosting/0.2.1/icon",
+    "galleryIconMatches": true
+  },
+  {
+    "package": "WeavePort.Sdk",
+    "version": "0.2.1",
+    "status": "verified",
+    "sourceSha256": "9fbd92ec33b0e54a70c3cf7df52d6089b33c87363b525becb7386a24a3ec3ac0",
+    "nugetSha256": "04c1838dd426084a52fad0c6bd4628842554ff35e2a2302c9805c7f73c0542c7",
+    "url": "https://api.nuget.org/v3-flatcontainer/weaveport.sdk/0.2.1/weaveport.sdk.0.2.1.nupkg",
+    "payloadMatches": true,
+    "iconMatches": true,
+    "iconSha256": "e116008bac50a4ff4f964397af3f1e69ba6aabf6a294ce89b8f0d3425378f8fe",
+    "galleryUrl": "https://www.nuget.org/packages/WeavePort.Sdk/0.2.1",
+    "galleryIconUrl": "https://api.nuget.org/v3-flatcontainer/weaveport.sdk/0.2.1/icon",
+    "galleryIconMatches": true
+  },
+  {
+    "package": "WeavePort.Sdk.Client",
+    "version": "0.2.1",
+    "status": "verified",
+    "sourceSha256": "7f69c61d4373299d4067d0f8620341d1baea3de30e635e976f2f78ef98fbb133",
+    "nugetSha256": "6afbd7e331572d216d508329cedbd7b57ae8fd69917a0b070ed2f5903fe56d00",
+    "url": "https://api.nuget.org/v3-flatcontainer/weaveport.sdk.client/0.2.1/weaveport.sdk.client.0.2.1.nupkg",
+    "payloadMatches": true,
+    "iconMatches": true,
+    "iconSha256": "e116008bac50a4ff4f964397af3f1e69ba6aabf6a294ce89b8f0d3425378f8fe",
+    "galleryUrl": "https://www.nuget.org/packages/WeavePort.Sdk.Client/0.2.1",
+    "galleryIconUrl": "https://api.nuget.org/v3-flatcontainer/weaveport.sdk.client/0.2.1/icon",
+    "galleryIconMatches": true
+  }
+]
