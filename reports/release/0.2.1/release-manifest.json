@@ -1,0 +1,21 @@
+{
+  "version": "0.2.1",
+  "tag": "v0.2.1",
+  "commit": "006eb99046d863ca201dbb7adfdb6fd58ed32b3d",
+  "workflowRun": 34855701684,
+  "iconSha256": "e116008bac50a4ff4f964397af3f1e69ba6aabf6a294ce89b8f0d3425378f8fe",
+  "packages": {
+    "WeavePort.Abstractions.0.2.1.nupkg": "79105ee330328740ec1020abee02014cfffb6f35a46146f0c6f35af3fdc29144",
+    "WeavePort.Abstractions.0.2.1.snupkg": "6fdd2ee3c96f9bc3db9f85e73c62e75972c27e79ebccdc1ae7ed9a510d01ffc1",
+    "WeavePort.Hosting.0.2.1.nupkg": "0bea0b6eb1fee6d15ec16262b95857cc168a8f6a001085b3f9f4e57130547250",
+    "WeavePort.Hosting.0.2.1.snupkg": "c302ca3a986cf750c855e5f6e6cfa70c518d7b8780275938c072a762af3cfdbf",
+    "WeavePort.Sdk.0.2.1.nupkg": "9fbd92ec33b0e54a70c3cf7df52d6089b33c87363b525becb7386a24a3ec3ac0",
+    "WeavePort.Sdk.0.2.1.snupkg": "12a731415f514ccfe93c07088818d610196f2de5282f09afaf1c692aea79f2e0",
+    "WeavePort.Sdk.Client.0.2.1.nupkg": "7f69c61d4373299d4067d0f8620341d1baea3de30e635e976f2f78ef98fbb133",
+    "WeavePort.Sdk.Client.0.2.1.snupkg": "e406680b58717106e06bc580d35b71c6dc50358a1933df54be8b110daf00f2e1"
+  },
+  "assets": {
+    "weaveport-0.2.1-evidence.zip": "6478f14728b3e9f5a8ed300e23432478c3bf7487a35142789c0ceb3fd9ebb980",
+    "weaveport-0.2.1-packages.zip": "8ac8b7a07d52df6544f26680ae779cbeb642ba498243483ffddfd68aaabbc2c4"
+  }
+}

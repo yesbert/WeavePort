@@ -51,3 +51,5 @@ The [0.2.0 release report](../reports/release/0.2.0/README.md) retains publicati
 ## 0.2.1 package branding
 
 All core packages embed the existing website logo as their NuGet icon. Release export requires the embedded image to match the repository asset byte for byte. This patch changes package branding and exact compatibility versions; runtime APIs remain unchanged from 0.2.0.
+
+The [0.2.1 release report](../reports/release/0.2.1/README.md) records exact public package and gallery icon verification, with durable qualification artifacts.

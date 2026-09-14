@@ -410,7 +410,7 @@ Source: https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/status.md
 
 Public NuGet version: **0.2.1**, under MIT, with four core packages: Abstractions, Hosting, Sdk and Sdk.Client. Windows, Linux and macOS are supported targets for trusted stdio execution. Current release validation covers macOS arm64; Windows and Linux release validation is pending. See [platform support and validation](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/platform-qualification.md). This pre-1.0 API remains subject to evolution. Python/TypeScript registry publication and a new offline distribution are outside this release. The historical internal distribution remains **0.1.0-internal.2**.
 
-The [0.2.0 public release evidence](https://raw.githubusercontent.com/yesbert/WeavePort/main/reports/release/0.2.0/README.md) records 874 assertion executions, exact tested package/symbol provenance, successful Trusted Publishing and matching public NuGet package payloads.
+The [0.2.1 public release evidence](https://raw.githubusercontent.com/yesbert/WeavePort/main/reports/release/0.2.1/README.md) records 874 assertion executions, exact tested package/symbol provenance, successful Trusted Publishing and matching public NuGet package payloads and project icons.
 
 Implemented and checked: immutable installed-artifact selection, exact compatibility/API gates, shared coordinator template, guarded native recovery, optional safe diagnostics and standalone offline installation. The [candidate evidence](https://raw.githubusercontent.com/yesbert/WeavePort/main/reports/release/0.1.0-internal.2/candidate/report.md) records 398 assertion executions; the [distribution evidence](https://raw.githubusercontent.com/yesbert/WeavePort/main/reports/release/0.1.0-internal.2/distribution/report.md) records 144 application assertions and six offline template builds. These records identify their exact source and artifacts.
 
@@ -1207,6 +1207,8 @@ The [0.2.0 release report](https://raw.githubusercontent.com/yesbert/WeavePort/m
 ## 0.2.1 package branding
 
 All core packages embed the existing website logo as their NuGet icon. Release export requires the embedded image to match the repository asset byte for byte. This patch changes package branding and exact compatibility versions; runtime APIs remain unchanged from 0.2.0.
+
+The [0.2.1 release report](https://raw.githubusercontent.com/yesbert/WeavePort/main/reports/release/0.2.1/README.md) records exact public package and gallery icon verification, with durable qualification artifacts.
 
 ---
 
