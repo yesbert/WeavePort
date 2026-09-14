@@ -7,6 +7,7 @@ using WeavePort.Abstractions;
 namespace WeavePort.Hosting;
 internal sealed class PluginSession(SessionBinding binding, TenantAdmission admission, WorkerPool pool, TimeProvider clock, Action<PluginSession, TenantAdmission> removed, ILogger logger) : IPluginSession
 {
+    private const string Disabled = "disabled";
     private static readonly ActivitySource Traces = new("WeavePort.Hosting");
     private readonly SemaphoreSlim _gate = new(1);
     private Worker? _worker;
@@ -26,7 +27,7 @@ internal sealed class PluginSession(SessionBinding binding, TenantAdmission admi
         long started = Stopwatch.GetTimestamp();
         if (_disposed)
         {
-            return Result("disabled", started, false);
+            return Result(Disabled, started, false);
         }
 
         InvocationScope? parent = InvocationScope.Current.Value;
@@ -67,7 +68,7 @@ internal sealed class PluginSession(SessionBinding binding, TenantAdmission admi
         {
             if (_disposed)
             {
-                return Result("disabled", started, false);
+                return Result(Disabled, started, false);
             }
 
             id = Guid.NewGuid().ToString("N");
@@ -76,7 +77,7 @@ internal sealed class PluginSession(SessionBinding binding, TenantAdmission admi
             using Activity? activity = Traces.StartActivity("plugin.invoke");
             if (_disposed)
             {
-                return Result("disabled", started);
+                return Result(Disabled, started);
             }
 
             admitted = await admission.Calls.WaitAsync(0, CancellationToken.None);
@@ -100,7 +101,7 @@ internal sealed class PluginSession(SessionBinding binding, TenantAdmission admi
         {
             await StopAsync();
             string status = cancellationToken.IsCancellationRequested ? "cancelled" : "timeout";
-            return Result(_disposed ? "disabled" : status, started);
+            return Result(_disposed ? Disabled : status, started);
         }
         catch (Exception error) when (FailureStatus(error)is not null)
         {
