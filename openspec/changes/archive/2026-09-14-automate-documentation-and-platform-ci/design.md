@@ -9,3 +9,7 @@ A reusable deployment workflow runs only for main pushes after documentation, ma
 ## Initial verification
 
 GitHub CI run 34828099259 passed 38 Windows stdio, 38 Linux stdio and 39 Linux socket assertions with freshly packed libraries. Python 3.14.7 and Node 24.20.0 were used on x64 runners. Local deployment tests verify path/link/server-config rejection, release preservation, idempotent retries and stale-run refusal. The forced SSH command rejected a malformed archive and ignored a requested shell command on the actual host. Copilot was automatically requested but reported exhausted quota; no Copilot code review occurred.
+
+## Delivery
+
+PR #4 merged after all eight required checks passed. Main CI run 34828692638 passed all native/documentation checks; deployment initially refused activation because the server releases parent was root-owned. Correcting that provisioning ownership and rerunning only the failed job produced a successful automatic deployment of commit 09f4456545257ea63126dcdd3febe6dbc88ac5eb (run 11). Public deployment.json and the entry/AI artifact comparisons passed. The failure preserved the prior current release. All four CodeQL analyses passed and no open code-scanning alerts were reported at this check.
