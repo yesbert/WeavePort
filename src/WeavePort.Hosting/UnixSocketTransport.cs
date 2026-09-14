@@ -12,23 +12,19 @@ public sealed record UnixSocketTransport(string LocalDirectory, string DockerDir
             throw new PlatformNotSupportedException("Unix worker transport requires a Linux coordinator.");
         }
 
-        foreach (string path in new[]
-        {
-            LocalDirectory,
-            DockerDirectory
-        }
-
-        )
-        {
-            if (string.IsNullOrWhiteSpace(path) || !Path.IsPathFullyQualified(path) || path.Contains(',') || path.Contains('\n') || path.Contains('\0'))
-            {
-                throw new ArgumentException("Socket directories must be absolute paths without mount separators.");
-            }
-        }
-
+        ValidatePath(LocalDirectory);
+        ValidatePath(DockerDirectory);
         if (System.Text.Encoding.UTF8.GetByteCount(Path.Combine(LocalDirectory, "weaveport-" + new string ('0', 32), "p.sock")) > 100)
         {
             throw new ArgumentException("Coordinator socket directory is too long for a Unix endpoint.");
+        }
+    }
+
+    private static void ValidatePath(string path)
+    {
+        if (string.IsNullOrWhiteSpace(path) || !Path.IsPathFullyQualified(path) || path.Contains(',') || path.Contains('\n') || path.Contains('\0'))
+        {
+            throw new ArgumentException("Socket directories must be absolute paths without mount separators.");
         }
     }
 }

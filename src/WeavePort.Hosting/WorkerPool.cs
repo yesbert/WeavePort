@@ -4,7 +4,7 @@ using System.Text.Json;
 
 namespace WeavePort.Hosting;
 internal sealed class WorkerCapacityException : IOException;
-internal sealed class WorkerPool(WorkerPoolOptions options, TimeProvider clock, ILogger logger) : IAsyncDisposable
+internal sealed partial class WorkerPool(WorkerPoolOptions options, TimeProvider clock, ILogger logger) : IAsyncDisposable
 {
     private readonly object _sync = new();
     private readonly HashSet<Worker> _workers = [];
@@ -12,6 +12,9 @@ internal sealed class WorkerPool(WorkerPoolOptions options, TimeProvider clock, 
     private readonly SemaphoreSlim _starts = new(options.MaximumConcurrentStarts);
     private readonly SemaphoreSlim _sweep = new(1);
     private readonly CancellationTokenSource _lifetime = new();
+    private Task? _disposal;
+    private int _pendingStarts;
+    private TaskCompletionSource? _startsDrained;
     private long _memory;
     private bool _disposed;
     internal WorkerPoolSnapshot Snapshot(int bindings, int tenants, string? failure)
@@ -111,66 +114,6 @@ internal sealed class WorkerPool(WorkerPoolOptions options, TimeProvider clock, 
             }
 
             throw;
-        }
-    }
-
-    private async Task<Worker> StartAsync(ExecutionProfile profile, string version, bool pristine, CancellationToken token, string? tenant = null)
-    {
-        if (!await _starts.WaitAsync(0, token))
-        {
-            throw Reject("concurrent-starts");
-        }
-
-        Worker? worker = null;
-        try
-        {
-            lock (_sync)
-            {
-                ObjectDisposedException.ThrowIf(_disposed, this);
-                if (_workers.Count >= options.MaximumWorkers || profile.MemoryMiB > options.MemoryBudgetMiB - _memory || (pristine && _workers.Count(w => w.Pristine || w.Starting) >= options.MaximumPristineWorkers))
-                {
-                    throw Reject("pool-reservations");
-                }
-
-                if (tenant is not null)
-                {
-                    CheckTenantBudget(tenant, profile.MemoryMiB);
-                }
-
-                worker = Normalize(profile).CreateWorker(version, clock);
-                worker.Tenant = tenant;
-                _workers.Add(worker);
-                _memory += profile.MemoryMiB;
-            }
-
-            using var deadline = CancellationTokenSource.CreateLinkedTokenSource(token, _lifetime.Token);
-            deadline.CancelAfter(TimeSpan.FromSeconds(10));
-            await worker.StartAsync(deadline.Token);
-            lock (_sync)
-            {
-                worker.Starting = false;
-                worker.Pristine = pristine;
-            }
-
-            return worker;
-        }
-        catch (Exception error)
-        {
-            if (error is not OperationCanceledException and not WorkerCapacityException)
-            {
-                RuntimeLog.StartupFailed(logger, worker?.Instance ?? "", error.GetType().Name);
-            }
-
-            if (worker is not null)
-            {
-                await DestroyAsync(worker);
-            }
-
-            throw;
-        }
-        finally
-        {
-            _starts.Release();
         }
     }
 
@@ -289,18 +232,36 @@ internal sealed class WorkerPool(WorkerPoolOptions options, TimeProvider clock, 
     private bool Expired(Worker worker) => clock.GetElapsedTime(worker.ReadyAt) >= (options.PristineLifetime ?? TimeSpan.FromSeconds(30));
     private static ExecutionProfile Normalize(ExecutionProfile profile) => profile.Normalize();
     private static bool Matches(Worker worker, ExecutionProfile profile, string version) => worker.Profile == Normalize(profile) && worker.Version == version;
-    public async ValueTask DisposeAsync()
+    public ValueTask DisposeAsync()
     {
         lock (_sync)
         {
             _disposed = true;
+            return new ValueTask(_disposal ??= DisposeCoreAsync());
         }
+    }
 
-        await Cleanup.RunAsync(() => _lifetime.CancelAsync(), ReleaseWorkersAsync);
+    private async Task DisposeCoreAsync()
+    {
+        try
+        {
+            await Cleanup.RunAsync(() => _lifetime.CancelAsync(), ReleaseWorkersAsync);
+        }
+        finally
+        {
+            _lifetime.Dispose();
+        }
     }
 
     private async Task ReleaseWorkersAsync()
     {
+        Task starts;
+        lock (_sync)
+        {
+            starts = _startsDrained?.Task ?? Task.CompletedTask;
+        }
+
+        await starts;
         await _sweep.WaitAsync();
         try
         {

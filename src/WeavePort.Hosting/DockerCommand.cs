@@ -4,9 +4,25 @@ using System.Text;
 namespace WeavePort.Hosting;
 internal static class DockerCommand
 {
-    internal static Process Start(string? context, IEnumerable<string> arguments)
+    internal static string ResolveExecutable(string? executable)
     {
-        var info = new ProcessStartInfo("docker")
+        if (executable is not null)
+        {
+            if (!Path.IsPathFullyQualified(executable))
+            {
+                throw new ArgumentException("Docker executable must be an absolute path.", nameof(executable));
+            }
+
+            return File.Exists(executable) ? executable : throw new FileNotFoundException("Docker executable does not exist.", executable);
+        }
+
+        string[] candidates = OperatingSystem.IsWindows() ? [Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "Docker", "Docker", "resources", "bin", "docker.exe")] : ["/usr/bin/docker", "/usr/local/bin/docker", "/Applications/Docker.app/Contents/Resources/bin/docker"];
+        return candidates.FirstOrDefault(File.Exists) ?? throw new FileNotFoundException("Set DockerProfile.DockerExecutable to the absolute path of a trusted Docker CLI.");
+    }
+
+    internal static Process Start(DockerProfile profile, IEnumerable<string> arguments)
+    {
+        var info = new ProcessStartInfo(ResolveExecutable(profile.DockerExecutable))
         {
             RedirectStandardInput = true,
             RedirectStandardOutput = true,
@@ -14,10 +30,10 @@ internal static class DockerCommand
             UseShellExecute = false,
             StandardOutputEncoding = Encoding.UTF8
         };
-        if (context is not null)
+        if (profile.Context is not null)
         {
             info.ArgumentList.Add("--context");
-            info.ArgumentList.Add(context);
+            info.ArgumentList.Add(profile.Context);
         }
 
         foreach (string argument in arguments)
@@ -28,9 +44,9 @@ internal static class DockerCommand
         return Process.Start(info) ?? throw new IOException("Docker did not start.");
     }
 
-    internal static async Task<string> RunAsync(string? context, string[] arguments, CancellationToken token)
+    internal static async Task<string> RunAsync(DockerProfile profile, string[] arguments, CancellationToken token)
     {
-        using Process process = Start(context, arguments);
+        using Process process = Start(profile, arguments);
         Task<string> output = process.StandardOutput.ReadToEndAsync(token);
         Task<string> error = process.StandardError.ReadToEndAsync(token);
         try

@@ -9,6 +9,8 @@ namespace WeavePort.Hosting;
 /// <param name = "SocketTransport">Optional private Linux Unix-socket transport; null retains Docker CLI stdio.</param>
 public sealed record DockerProfile(string Image, string? Context = null, int MemoryMiB = 256, double CpuCount = 0.5, TimeSpan? Timeout = null, TimeSpan? IdleTimeout = null, UnixSocketTransport? SocketTransport = null) : ExecutionProfile(MemoryMiB, Timeout, IdleTimeout)
 {
+    /// <summary>Absolute trusted Docker CLI path; null selects a conventional system installation without searching PATH.</summary>
+    public string? DockerExecutable { get; init; }
     /// <inheritdoc/>
     public override ExecutionProtection Protection => ExecutionProtection.RestrictedFileSystem | ExecutionProtection.DisabledNetwork | ExecutionProtection.HardResourceLimits;
 
@@ -21,20 +23,28 @@ public sealed record DockerProfile(string Image, string? Context = null, int Mem
     internal override async Task<ExecutionProfile> ResolveAsync(CancellationToken token)
     {
         SocketTransport?.Validate();
-        if (CpuCount <= 0 || !double.IsFinite(CpuCount))
+        ValidateCpuCount(CpuCount);
+        var resolved = this with
         {
-            throw new ArgumentOutOfRangeException(nameof(CpuCount));
-        }
-
-        string image = await DockerCommand.RunAsync(Context, ["image", "inspect", "--format", "{{.Id}}", Image], token);
+            DockerExecutable = DockerCommand.ResolveExecutable(DockerExecutable)
+        };
+        string image = await DockerCommand.RunAsync(resolved, ["image", "inspect", "--format", "{{.Id}}", Image], token);
         if (!image.StartsWith("sha256:", StringComparison.Ordinal))
         {
             throw new IOException("Image resolution failed.");
         }
 
-        return this with
+        return resolved with
         {
             Image = image
         };
+    }
+
+    private static void ValidateCpuCount(double cpuCount)
+    {
+        if (cpuCount <= 0 || !double.IsFinite(cpuCount))
+        {
+            throw new ArgumentOutOfRangeException(nameof(cpuCount));
+        }
     }
 }

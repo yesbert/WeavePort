@@ -8,6 +8,9 @@ if (args.Contains("--lifecycle-worker"))
     await LifecycleChecks.WorkerAsync();
     return;
 }
+await DisposalChecks.RunAsync();
+await ShutdownRaceChecks.RunAsync();
+await DockerCommandChecks.RunAsync();
 Console.WriteLine($"PASS {await QuarantineChecks.RunAsync()} quarantine age and reservation assertions");
 Console.WriteLine($"PASS {await AdmissionChecks.RunAsync()} concurrent-start admission assertions");
 JsonSizeChecks.Run();

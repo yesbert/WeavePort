@@ -4,17 +4,29 @@ namespace WeavePort.Hosting;
 internal sealed class ProcessSocket : IDisposable
 {
     private readonly string _directory;
-    private readonly Socket _listener = new(AddressFamily.Unix, SocketType.Stream, ProtocolType.Unspecified);
-    private bool _ownsDirectory;
+    private readonly Socket _listener;
     private int? _bufferBytes;
     internal string Path { get; }
     internal NetworkStream? Stream { get; private set; }
 
     internal ProcessSocket()
     {
-        // macOS user temp paths plus UUID can exceed sockaddr_un's path capacity.
-        string root = OperatingSystem.IsMacOS() ? "/tmp" : System.IO.Path.GetTempPath();
-        _directory = System.IO.Path.Combine(root, "wp-" + Guid.NewGuid().ToString("N"));
+        if (!OperatingSystem.IsMacOS() && !OperatingSystem.IsLinux())
+        {
+            throw new PlatformNotSupportedException();
+        }
+
+        _listener = new(AddressFamily.Unix, SocketType.Stream, ProtocolType.Unspecified);
+        try
+        {
+            _directory = Directory.CreateTempSubdirectory("wp-").FullName;
+        }
+        catch
+        {
+            _listener.Dispose();
+            throw;
+        }
+
         Path = System.IO.Path.Combine(_directory, "p.sock");
     }
 
@@ -25,18 +37,6 @@ internal sealed class ProcessSocket : IDisposable
             throw new PlatformNotSupportedException();
         }
 
-        if (!OperatingSystem.IsMacOS() && !OperatingSystem.IsLinux())
-        {
-            throw new PlatformNotSupportedException();
-        }
-
-        if (Directory.Exists(_directory))
-        {
-            throw new IOException("Native socket directory already exists.");
-        }
-
-        Directory.CreateDirectory(_directory, UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.UserExecute);
-        _ownsDirectory = true;
         _bufferBytes = bufferBytes;
         Configure(_listener);
         _listener.Bind(new UnixDomainSocketEndPoint(Path));
@@ -67,7 +67,7 @@ internal sealed class ProcessSocket : IDisposable
     {
         _listener.Dispose();
         Stream?.Dispose();
-        if (_ownsDirectory && Directory.Exists(_directory))
+        if (Directory.Exists(_directory))
         {
             File.Delete(Path);
             Directory.Delete(_directory);

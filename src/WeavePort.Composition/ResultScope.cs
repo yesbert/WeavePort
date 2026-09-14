@@ -64,7 +64,7 @@ public sealed class ResultScope : IAsyncDisposable
         }
     }
 
-    private IDisposable Enter()
+    private Operation Enter()
     {
         lock (_sync)
         {
@@ -123,7 +123,7 @@ public sealed class ResultScope : IAsyncDisposable
         {
             await using (FileStream file = Open(id, true))
             {
-                using var limited = new BoundedOutput(file, linked.Token, count =>
+                using var limited = new BoundedOutput(file, count =>
                 {
                     lock (_sync)
                     {
@@ -135,7 +135,7 @@ public sealed class ResultScope : IAsyncDisposable
                         reserved += count;
                         _bytes += count;
                     }
-                });
+                }, linked.Token);
                 await producer(limited, linked.Token);
                 linked.Token.ThrowIfCancellationRequested();
                 await file.FlushAsync(linked.Token);
@@ -226,7 +226,8 @@ public sealed class ResultScope : IAsyncDisposable
                 _idle.TrySetResult();
             }
 
-            return new(_disposal = DisposeCoreAsync());
+            _disposal = DisposeCoreAsync();
+            return new(_disposal);
         }
     }
 

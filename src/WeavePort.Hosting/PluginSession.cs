@@ -65,6 +65,11 @@ internal sealed class PluginSession(SessionBinding binding, TenantAdmission admi
         string id = "";
         try
         {
+            if (_disposed)
+            {
+                return Result("disabled", started, false);
+            }
+
             id = Guid.NewGuid().ToString("N");
             using var deadline = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, _lifetime.Token);
             deadline.CancelAfter(binding.Profile.Timeout ?? TimeSpan.FromSeconds(5));
@@ -94,7 +99,8 @@ internal sealed class PluginSession(SessionBinding binding, TenantAdmission admi
         catch (OperationCanceledException)
         {
             await StopAsync();
-            return Result(_lifetime.IsCancellationRequested ? "disabled" : cancellationToken.IsCancellationRequested ? "cancelled" : "timeout", started);
+            string status = cancellationToken.IsCancellationRequested ? "cancelled" : "timeout";
+            return Result(_disposed ? "disabled" : status, started);
         }
         catch (Exception error) when (FailureStatus(error)is not null)
         {
@@ -124,7 +130,12 @@ internal sealed class PluginSession(SessionBinding binding, TenantAdmission admi
         try
         {
             _termination = JsonSerializer.SerializeToElement(new { });
-            InvocationScope.Current.Value = parent ?? (ownedScope = new InvocationScope(binding.Context.Tenant, frame.TraceId, binding.Grants, token));
+            if (parent is null)
+            {
+                ownedScope = new InvocationScope(binding.Context.Tenant, frame.TraceId, binding.Grants, token);
+            }
+
+            InvocationScope.Current.Value = parent ?? ownedScope;
             _dispatched = true;
             await Frames.WriteAsync(_worker!.Input, frame, WireJson.Default.InvokeFrame, token);
             return await ExchangeAsync(frame.Id, frame.TraceId, token);
@@ -297,6 +308,10 @@ internal sealed class PluginSession(SessionBinding binding, TenantAdmission admi
         {
             RuntimeLog.CleanupFailed(logger, Instance, error.GetType().Name);
             throw;
+        }
+        finally
+        {
+            _lifetime.Dispose();
         }
     }
 

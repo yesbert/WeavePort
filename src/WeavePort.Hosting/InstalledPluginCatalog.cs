@@ -23,39 +23,14 @@ public sealed class InstalledPlugin
 /// <summary>Validates trusted local release manifests; does not install code or provide an OS sandbox.</summary>
 public sealed class InstalledPluginCatalog(string releases, IReadOnlyDictionary<string, string> runtimeFiles)
 {
-    private sealed record Manifest(int Schema, string Plugin, string Version, string Contract, Dictionary<string, string> EntryPoints, Dictionary<string, string> Files, Dictionary<string, string> RuntimeFiles)
-    {
-        public CompatibilityDeclaration? Compatibility { get; init; }
-    }
-
+    private sealed record Manifest(int Schema, string Plugin, string Version, string Contract, Dictionary<string, string> EntryPoints, Dictionary<string, string> Files, Dictionary<string, string> RuntimeFiles, CompatibilityDeclaration? Compatibility = null);
     /// <summary>Resolves an exact release and optionally requires a previously persisted manifest identity.</summary>
     public InstalledPlugin Resolve(string plugin, string version, string contract, InstallationIdentity? pinned = null)
     {
         ValidateSegment(version);
         string root = Path.GetFullPath(Path.Combine(releases, version));
         string path = Path.Combine(root, "installation.json");
-        if (!File.Exists(path) || new FileInfo(path).Length > 1024 * 1024)
-        {
-            throw new InvalidDataException("Installation manifest missing or oversized.");
-        }
-
-        if ((File.GetAttributes(root) & FileAttributes.ReparsePoint) != 0 || (File.GetAttributes(path) & FileAttributes.ReparsePoint) != 0)
-        {
-            throw new InvalidDataException("Linked installation roots/manifests are unsupported.");
-        }
-
-        byte[] bytes = File.ReadAllBytes(path);
-        Manifest manifest;
-        try
-        {
-            RejectDuplicateFields(bytes);
-            manifest = JsonSerializer.Deserialize<Manifest>(bytes) ?? throw new InvalidDataException("Empty installation.");
-        }
-        catch (JsonException error)
-        {
-            throw new InvalidDataException("Malformed installation.", error);
-        }
-
+        (Manifest manifest, byte[] bytes) = ReadManifest(root, path);
         var identity = new InstallationIdentity(plugin, version, contract, Convert.ToHexString(SHA256.HashData(bytes)));
         if (manifest.Schema != 1 || manifest.Plugin != plugin || manifest.Version != version || manifest.Contract != contract || (pinned is not null && identity != pinned) || manifest.Files is null || manifest.EntryPoints is null || manifest.RuntimeFiles is null || manifest.Files.Count is < 1 or > 4096 || manifest.EntryPoints.Count is < 1 or > 32 || !manifest.RuntimeFiles.Keys.ToHashSet(StringComparer.Ordinal).SetEquals(runtimeFiles.Keys))
         {
@@ -91,6 +66,33 @@ public sealed class InstalledPluginCatalog(string releases, IReadOnlyDictionary<
         }
 
         return new InstalledPlugin(identity, entries);
+    }
+
+    private static (Manifest Manifest, byte[] Bytes) ReadManifest(string root, string path)
+    {
+        if (!File.Exists(path) || new FileInfo(path).Length > 1024 * 1024)
+        {
+            throw new InvalidDataException("Installation manifest missing or oversized.");
+        }
+
+        if ((File.GetAttributes(root) & FileAttributes.ReparsePoint) != 0 || (File.GetAttributes(path) & FileAttributes.ReparsePoint) != 0)
+        {
+            throw new InvalidDataException("Linked installation roots/manifests are unsupported.");
+        }
+
+        byte[] bytes = File.ReadAllBytes(path);
+        Manifest manifest;
+        try
+        {
+            RejectDuplicateFields(bytes);
+            manifest = JsonSerializer.Deserialize<Manifest>(bytes) ?? throw new InvalidDataException("Empty installation.");
+        }
+        catch (JsonException error)
+        {
+            throw new InvalidDataException("Malformed installation.", error);
+        }
+
+        return (manifest, bytes);
     }
 
     /// <summary>Reads a trusted default selector. This is only for new logical operations.</summary>

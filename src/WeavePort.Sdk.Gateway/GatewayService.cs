@@ -10,14 +10,14 @@ namespace WeavePort.Sdk.Gateway;
 public sealed class GatewayService(GatewayRegistry registry) : WorkerGateway.WorkerGatewayBase
 {
     /// <summary>Binding-scoped sequential exchanges on a persistent HTTP/2 stream.</summary>
-    public override async Task Session(IAsyncStreamReader<Request> input, IServerStreamWriter<Reply> output, ServerCallContext context)
+    public override async Task Session(IAsyncStreamReader<Request> requestStream, IServerStreamWriter<Reply> responseStream, ServerCallContext context)
     {
-        while (await input.MoveNext(context.CancellationToken))
+        while (await requestStream.MoveNext(context.CancellationToken))
         {
             Reply terminal;
             try
             {
-                Request request = input.Current;
+                Request request = requestStream.Current;
                 // Re-authorize every exchange, including on sessions opened before revocation.
                 _ = Authorize(context);
                 switch (request.Mode)
@@ -26,7 +26,7 @@ public sealed class GatewayService(GatewayRegistry registry) : WorkerGateway.Wor
                         terminal = await CallAsync(request, context);
                         break;
                     case Mode.Stream:
-                        await StreamAsync(request, output, context);
+                        await StreamAsync(request, responseStream, context);
                         terminal = new Reply();
                         break;
                     case Mode.Cancel:
@@ -48,7 +48,7 @@ public sealed class GatewayService(GatewayRegistry registry) : WorkerGateway.Wor
             }
 
             terminal.Complete = true;
-            await output.WriteAsync(terminal, context.CancellationToken);
+            await responseStream.WriteAsync(terminal, context.CancellationToken);
         }
     }
 
