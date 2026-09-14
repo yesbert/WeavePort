@@ -4,7 +4,7 @@ Write a plugin as ordinary asynchronous functions and result streams in C#, Pyth
 
 ## C#
 
-Reference the public `WeavePort.Sdk` NuGet package at version 0.2.0, or the matching locally packed package when working from source. Register ordinary async handlers; the delegate return uses ValueTask, so an async lambda needs no wrapper. Asynchronous iterators use normal `IAsyncEnumerable<T>` and cancellation tokens.
+Reference the public `WeavePort.Sdk` NuGet package at version 0.2.1, or the matching locally packed package when working from source. Register ordinary async handlers; the delegate return uses ValueTask, so an async lambda needs no wrapper. Asynchronous iterators use normal `IAsyncEnumerable<T>` and cancellation tokens.
 
 ```csharp
 var plugin = new PluginApplication();

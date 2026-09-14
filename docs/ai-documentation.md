@@ -49,14 +49,14 @@ Use GitHub MCP to inspect owner "yesbert", repository "WeavePort".
 Read docs/status.md, docs/package-compatibility.md,
 docs/platform-qualification.md and compatibility/public-api.txt.
 For a package-based integration, use the tag matching my installed package
-version (for 0.2.0: v0.2.0), and keep all source reads on that revision.
+version (for 0.2.1: v0.2.1), and keep all source reads on that revision.
 Use get_file_contents to inspect docs/plugin-sdk.md,
 docs/embedded-coordinator.md and samples/DecisionRoom/README.md.
 Find the corresponding host and plugin implementations before writing code.
 Build a minimal integration for my application using these exact contracts.
 ```
 
-Verify the connection by requesting `get_file_contents` with `owner: yesbert`, `repo: WeavePort`, `path: docs/status.md` and `ref: refs/tags/v0.2.0`. The result should contain the file from that revision. Tool prefixes vary by client. A missing tool usually means the server is not started or its repository tools are disabled; authentication failures need the client's sign-in or token setup. These setup instructions are based on GitHub's documentation; they are not a recorded authenticated client test.
+Verify the connection by requesting `get_file_contents` with `owner: yesbert`, `repo: WeavePort`, `path: docs/status.md` and `ref: refs/tags/v0.2.1`. The result should contain the file from that revision. Tool prefixes vary by client. A missing tool usually means the server is not started or its repository tools are disabled; authentication failures need the client's sign-in or token setup. These setup instructions are based on GitHub's documentation; they are not a recorded authenticated client test.
 
 GitHub MCP supplies repository context. To build or run an integration, your assistant additionally needs a local checkout, .NET and the required plugin runtimes, plus terminal access you authorize. WeavePort does not expose a plugin-execution MCP endpoint through this setup.
 

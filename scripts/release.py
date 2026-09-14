@@ -63,6 +63,10 @@ def export(candidate, destination, version, root=ROOT):
             require(expected_license and value("license") == expected_license
                     and license_element.get("type") == "expression", "Packed license must match the confirmed package license")
             require(value("readme") in archive.namelist(), "Missing packaged readme")
+            require(value("icon") == "logo.png" and "logo.png" in archive.namelist(),
+                    "Missing packaged project icon")
+            require(archive.read("logo.png") == (root / "website/assets/logo.png").read_bytes(),
+                    "Packaged icon differs from the project logo")
             repository = spec.find(".//{*}repository")
             require(repository is not None and repository.get("url") == "https://github.com/yesbert/WeavePort"
                     and repository.get("commit") == commit, "Missing exact GitHub source provenance")

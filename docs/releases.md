@@ -6,7 +6,7 @@ The GitHub delivery target is [yesbert/WeavePort](https://github.com/yesbert/Wea
 
 The release allowlist in `build/release-packages.json` contains `WeavePort.Abstractions`, `WeavePort.Hosting`, `WeavePort.Sdk` and `WeavePort.Sdk.Client`. Gateway, Composition and Testing remain optional/experimental; adding them requires appropriate package-consumer evidence. Python and TypeScript author SDK publication is separate from NuGet delivery.
 
-The current release version is `0.2.0`, licensed under [MIT](../LICENSE). The four core package references and exact compatibility matrix use 0.2.0; host API and wire protocol remain 1. Python/TypeScript SDK versions remain 0.1.0 without registry publication. Historical internal distribution and measurement evidence retain their original identities. Public releases require a complete clean candidate qualification; a tag override cannot substitute for updating compatibility inputs.
+The current release version is `0.2.1`, licensed under [MIT](../LICENSE). The four core package references and exact compatibility matrix use 0.2.1; host API and wire protocol remain 1. Python/TypeScript SDK versions remain 0.1.0 without registry publication. Historical internal distribution and measurement evidence retain their original identities. Public releases require a complete clean candidate qualification; a tag override cannot substitute for updating compatibility inputs.
 
 ## Trusted Publishing setup
 
@@ -47,3 +47,7 @@ The pre-1.0 minor release includes breaking host API cleanup: rename `ExecutionP
 This release fixes cancellation-source ownership and shutdown/startup races, uses exclusive private native-socket directories, and selects Docker by an absolute trusted CLI path. Set `DockerProfile.DockerExecutable` for nonstandard CLI installations; PATH lookup is no longer used. All 37 original Sonar issues and both security hotspots were resolved before preparing this release. Platform validation limits remain documented in [platform qualification](platform-qualification.md).
 
 The [0.2.0 release report](../reports/release/0.2.0/README.md) retains publication verification and links to durable package, symbol and qualification assets.
+
+## 0.2.1 package branding
+
+All core packages embed the existing website logo as their NuGet icon. Release export requires the embedded image to match the repository asset byte for byte. This patch changes package branding and exact compatibility versions; runtime APIs remain unchanged from 0.2.0.

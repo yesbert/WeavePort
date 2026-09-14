@@ -20,6 +20,8 @@ class ReleaseTests(unittest.TestCase):
         (self.root / "Directory.Build.props").write_text("<Project><PropertyGroup><Version>0.1.0-preview.1</Version></PropertyGroup></Project>")
         (self.root / "LICENSE").write_text("MIT")
         (self.root / "src").mkdir()
+        (self.root / "website/assets").mkdir(parents=True)
+        (self.root / "website/assets/logo.png").write_bytes(b"fixture logo")
         (self.root / "src/Directory.Build.props").write_text(
             "<Project><PropertyGroup><PackageLicenseExpression>MIT</PackageLicenseExpression></PropertyGroup></Project>")
 
@@ -34,7 +36,7 @@ class ReleaseTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "license"):
             release.validate_tag("v0.1.0-preview.1", self.root)
 
-    def candidate(self):
+    def candidate(self, icon=b"fixture logo", include_icon=True):
         subprocess.run(["git", "init", "-q", str(self.root)], check=True)
         subprocess.run(["git", "-c", "user.name=Test", "-c", "user.email=test@example.invalid",
                         "commit", "--allow-empty", "-qm", "fixture"], cwd=self.root, check=True)
@@ -47,9 +49,11 @@ class ReleaseTests(unittest.TestCase):
         package = feed / "WeavePort.Sdk.0.1.0-preview.1.nupkg"
         with zipfile.ZipFile(package, "w") as archive:
             archive.writestr("WeavePort.Sdk.nuspec", '<package><metadata><id>WeavePort.Sdk</id><version>0.1.0-preview.1</version>'
-                             '<license type="expression">MIT</license><readme>PACKAGE.md</readme>'
+                             '<license type="expression">MIT</license><readme>PACKAGE.md</readme><icon>logo.png</icon>'
                              f'<repository url="https://github.com/yesbert/WeavePort" commit="{commit}"/></metadata></package>')
             archive.writestr("PACKAGE.md", "Fixture")
+            if include_icon:
+                archive.writestr("logo.png", icon)
         symbols = package.with_suffix(".snupkg")
         symbols.write_bytes(b"fixture symbols")
         manifest = {f"artifacts/packages/{p.name}": release.digest(p) for p in [package, symbols]}
@@ -71,6 +75,18 @@ class ReleaseTests(unittest.TestCase):
         candidate, package = self.candidate()
         package.write_bytes(package.read_bytes() + b"changed")
         with self.assertRaisesRegex(ValueError, "Package changed"):
+            release.export(candidate, self.root / "output", "0.1.0-preview.1", self.root)
+        self.assertFalse((self.root / "output").exists())
+
+    def test_missing_icon_refused(self):
+        candidate, _ = self.candidate(include_icon=False)
+        with self.assertRaisesRegex(ValueError, "Missing packaged project icon"):
+            release.export(candidate, self.root / "output", "0.1.0-preview.1", self.root)
+        self.assertFalse((self.root / "output").exists())
+
+    def test_different_icon_refused(self):
+        candidate, _ = self.candidate(icon=b"old logo")
+        with self.assertRaisesRegex(ValueError, "differs from the project logo"):
             release.export(candidate, self.root / "output", "0.1.0-preview.1", self.root)
         self.assertFalse((self.root / "output").exists())
 
