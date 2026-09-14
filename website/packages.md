@@ -1,25 +1,25 @@
 # Packages and support
 
-Install the runtime in your .NET application and the author SDK in each C# plugin project. The first public NuGet release is **0.1.0**, licensed under MIT. Use the same exact version across the four core packages.
+Install the runtime in your .NET application and the author SDK in each C# plugin project. The current public NuGet release is **0.2.0**, licensed under MIT. Use the same exact version across the four core packages.
 
 | Package | Use it for |
 |---|---|
-| [WeavePort.Abstractions](https://www.nuget.org/packages/WeavePort.Abstractions/0.1.0) | Shared host, session and execution contracts |
-| [WeavePort.Hosting](https://www.nuget.org/packages/WeavePort.Hosting/0.1.0) | Binding, execution profiles, callbacks, admission and worker lifecycle |
-| [WeavePort.Sdk](https://www.nuget.org/packages/WeavePort.Sdk/0.1.0) | Authoring C# plugin functions and streams |
-| [WeavePort.Sdk.Client](https://www.nuget.org/packages/WeavePort.Sdk.Client/0.1.0) | Typed application calls over an authorized local session |
+| [WeavePort.Abstractions](https://www.nuget.org/packages/WeavePort.Abstractions/0.2.0) | Shared host, session and execution contracts |
+| [WeavePort.Hosting](https://www.nuget.org/packages/WeavePort.Hosting/0.2.0) | Binding, execution profiles, callbacks, admission and worker lifecycle |
+| [WeavePort.Sdk](https://www.nuget.org/packages/WeavePort.Sdk/0.2.0) | Authoring C# plugin functions and streams |
+| [WeavePort.Sdk.Client](https://www.nuget.org/packages/WeavePort.Sdk.Client/0.2.0) | Typed application calls over an authorized local session |
 
 In the application project:
 
 ```sh
-dotnet add package WeavePort.Hosting --version 0.1.0
-dotnet add package WeavePort.Sdk.Client --version 0.1.0
+dotnet add package WeavePort.Hosting --version 0.2.0
+dotnet add package WeavePort.Sdk.Client --version 0.2.0
 ```
 
 In a C# plugin project:
 
 ```sh
-dotnet add package WeavePort.Sdk --version 0.1.0
+dotnet add package WeavePort.Sdk --version 0.2.0
 ```
 
 Package installation supplies libraries. The application still composes a host, selects installed artifacts and binds authorized contexts. The [first example](getting-started.md) shows the complete wiring.

@@ -1,0 +1,4 @@
+- [x] 1. Update exact package versions, consumers and release guidance.
+- [ ] 2. Pass clean source/packed qualification and required PR checks.
+- [ ] 3. Tag the reviewed revision and publish original tested packages and symbols.
+- [ ] 4. Verify NuGet/GitHub publication, retain durable evidence and archive the change.

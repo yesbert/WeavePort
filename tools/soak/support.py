@@ -19,7 +19,7 @@ def digest(path):
 
 
 def verify_package(feed, name, checksum):
-    package = feed / f'{name}.0.1.0.nupkg'
+    package = feed / f'{name}.0.2.0.nupkg'
     with zipfile.ZipFile(package) as archive:
         actual = hashlib.sha256(archive.read(f'lib/net10.0/{name}.dll')).hexdigest()
     if actual != checksum:

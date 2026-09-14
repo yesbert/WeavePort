@@ -4,6 +4,6 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="../Contracts/AppointmentDesk.Contracts.csproj" />
-    <PackageReference Include="WeavePort.Sdk" Version="0.1.0" />
+    <PackageReference Include="WeavePort.Sdk" Version="0.2.0" />
   </ItemGroup>
 </Project>
