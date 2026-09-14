@@ -111,14 +111,14 @@ type WeavePort.Hosting.DockerProfile : WeavePort.Hosting.ExecutionProfile [Publi
   Method Void set_Image(System.String) [Public] (value)
   Method Void set_SocketTransport(WeavePort.Hosting.UnixSocketTransport) [Public] (value)
   Method WeavePort.Hosting.DockerProfile <Clone>$() [Public, Virtual] ()
-  Method WeavePort.Hosting.ExecutionProtection get_Protection() [Public, Virtual] ()
+  Method WeavePort.Hosting.ExecutionProtections get_Protection() [Public, Virtual] ()
   Method WeavePort.Hosting.UnixSocketTransport get_SocketTransport() [Public] ()
   Property Double CpuCount
   Property System.String Context
   Property System.String DockerExecutable
   Property System.String Image
   Property System.Type EqualityContract
-  Property WeavePort.Hosting.ExecutionProtection Protection
+  Property WeavePort.Hosting.ExecutionProtections Protection
   Property WeavePort.Hosting.UnixSocketTransport SocketTransport
 type WeavePort.Hosting.ExecutionProfile : System.Object [Public, Abstract]
   implements System.IEquatable`1[WeavePort.Hosting.ExecutionProfile]
@@ -140,22 +140,22 @@ type WeavePort.Hosting.ExecutionProfile : System.Object [Public, Abstract]
   Method Void set_MemoryMiB(Int32) [Public] (value)
   Method Void set_Timeout(System.Nullable`1[System.TimeSpan]) [Public] (value)
   Method WeavePort.Hosting.ExecutionProfile <Clone>$() [Public, Virtual, Abstract] ()
-  Method WeavePort.Hosting.ExecutionProtection get_Protection() [Public, Virtual, Abstract] ()
+  Method WeavePort.Hosting.ExecutionProtections get_Protection() [Public, Virtual, Abstract] ()
   Property Int32 MemoryMiB
   Property System.Nullable`1[System.TimeSpan] IdleTimeout
   Property System.Nullable`1[System.TimeSpan] Timeout
   Property System.Type EqualityContract
-  Property WeavePort.Hosting.ExecutionProtection Protection
-type WeavePort.Hosting.ExecutionProtection : System.Enum [Public, Sealed]
+  Property WeavePort.Hosting.ExecutionProtections Protection
+type WeavePort.Hosting.ExecutionProtections : System.Enum [Public, Sealed]
   implements System.IComparable
   implements System.IConvertible
   implements System.IFormattable
   implements System.ISpanFormattable
   Field Int32 value__
-  Field WeavePort.Hosting.ExecutionProtection DisabledNetwork=2
-  Field WeavePort.Hosting.ExecutionProtection HardResourceLimits=4
-  Field WeavePort.Hosting.ExecutionProtection None=0
-  Field WeavePort.Hosting.ExecutionProtection RestrictedFileSystem=1
+  Field WeavePort.Hosting.ExecutionProtections DisabledNetwork=2
+  Field WeavePort.Hosting.ExecutionProtections HardResourceLimits=4
+  Field WeavePort.Hosting.ExecutionProtections None=0
+  Field WeavePort.Hosting.ExecutionProtections RestrictedFileSystem=1
 type WeavePort.Hosting.InstallationIdentity : System.Object [Public, Sealed]
   implements System.IEquatable`1[WeavePort.Hosting.InstallationIdentity]
   Constructor Void .ctor(System.String, System.String, System.String, System.String) [Public] (Plugin, Version, Contract, Digest)
@@ -194,8 +194,8 @@ type WeavePort.Hosting.PluginHost : System.Object [Public, Sealed]
   Constructor Void .ctor(Int32, WeavePort.Hosting.WorkerPoolOptions, System.TimeProvider) [Public] (maximumCallsPerTenant=4, options=null, timeProvider=null)
   Constructor Void .ctor(Microsoft.Extensions.Logging.ILogger`1[WeavePort.Hosting.PluginHost], Int32, WeavePort.Hosting.WorkerPoolOptions, System.TimeProvider) [Public] (logger, maximumCallsPerTenant=4, options=null, timeProvider=null)
   Method System.Threading.Tasks.Task MaintainAsync(System.Threading.CancellationToken) [Public] (cancellationToken=null)
-  Method System.Threading.Tasks.Task PrewarmAsync(WeavePort.Hosting.ExecutionProfile, System.String, Int32, System.Threading.CancellationToken, WeavePort.Hosting.ExecutionProtection) [Public] (profile, version, count, cancellationToken=null, requiredProtection=0)
-  Method System.Threading.Tasks.Task`1[WeavePort.Abstractions.IPluginSession] BindAsync(WeavePort.Abstractions.PluginContext, WeavePort.Hosting.ExecutionProfile, WeavePort.Abstractions.IHostCallbacks, System.Collections.Generic.IEnumerable`1[System.String], System.Threading.CancellationToken, WeavePort.Hosting.ExecutionProtection) [Public] (context, profile, callbacks, grants, cancellationToken=null, requiredProtection=0)
+  Method System.Threading.Tasks.Task PrewarmAsync(WeavePort.Hosting.ExecutionProfile, System.String, Int32, WeavePort.Hosting.ExecutionProtections, System.Threading.CancellationToken) [Public] (profile, version, count, requiredProtection=0, cancellationToken=null)
+  Method System.Threading.Tasks.Task`1[WeavePort.Abstractions.IPluginSession] BindAsync(WeavePort.Abstractions.PluginContext, WeavePort.Hosting.ExecutionProfile, WeavePort.Abstractions.IHostCallbacks, System.Collections.Generic.IEnumerable`1[System.String], WeavePort.Hosting.ExecutionProtections, System.Threading.CancellationToken) [Public] (context, profile, callbacks, grants, requiredProtection=0, cancellationToken=null)
   Method System.Threading.Tasks.ValueTask DisposeAsync() [Public, Final, Virtual] ()
   Method WeavePort.Hosting.WorkerPoolSnapshot get_Snapshot() [Public] ()
   Property WeavePort.Hosting.WorkerPoolSnapshot Snapshot
@@ -223,7 +223,7 @@ type WeavePort.Hosting.ProcessProfile : WeavePort.Hosting.ExecutionProfile [Publ
   Method Void set_TrustedCode(Boolean) [Public] (value)
   Method Void set_UseUnixSocket(Boolean) [Public] (value)
   Method Void set_WorkspaceRoot(System.String) [Public] (value)
-  Method WeavePort.Hosting.ExecutionProtection get_Protection() [Public, Virtual] ()
+  Method WeavePort.Hosting.ExecutionProtections get_Protection() [Public, Virtual] ()
   Method WeavePort.Hosting.ProcessProfile <Clone>$() [Public, Virtual] ()
   Property Boolean TrustedCode
   Property Boolean UseUnixSocket
@@ -232,7 +232,7 @@ type WeavePort.Hosting.ProcessProfile : WeavePort.Hosting.ExecutionProfile [Publ
   Property System.String WorkspaceRoot
   Property System.String[] Arguments
   Property System.Type EqualityContract
-  Property WeavePort.Hosting.ExecutionProtection Protection
+  Property WeavePort.Hosting.ExecutionProtections Protection
 type WeavePort.Hosting.UnixSocketTransport : System.Object [Public, Sealed]
   implements System.IEquatable`1[WeavePort.Hosting.UnixSocketTransport]
   Constructor Void .ctor(System.String, System.String) [Public] (LocalDirectory, DockerDirectory)

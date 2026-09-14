@@ -22,7 +22,7 @@ internal sealed class BulkScenario : IAsyncDisposable
             string[] languages = ["csharp", "python", "typescript"];
             for (int i = 0; i < 3; i++)
             {
-                scenario._sessions[i] = await scenario._host.BindAsync(new PluginContext(tenant, languages[i], "1", "bulk", JsonSerializer.SerializeToElement(new { })), config.Profile(languages[i], TimeSpan.FromSeconds(30)), new NoCallbacks(), [], token);
+                scenario._sessions[i] = await scenario._host.BindAsync(new PluginContext(tenant, languages[i], "1", "bulk", JsonSerializer.SerializeToElement(new { })), config.Profile(languages[i], TimeSpan.FromSeconds(30)), new NoCallbacks(), [], cancellationToken: token);
                 if (scenario._sessions[i].Tenant != tenant) throw new InvalidOperationException("Host binding identity mismatch.");
                 InvocationResult warm = await scenario._sessions[i].InvokeAsync("echo", JsonSerializer.SerializeToElement(new { }), token);
                 if (warm.Status != "ok") throw new IOException("Warmup failed.");

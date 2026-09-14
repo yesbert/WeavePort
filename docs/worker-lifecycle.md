@@ -64,3 +64,7 @@ The [trusted local adapter](local-execution.md) shares these lifecycle rules. It
 Native Unix socket endpoints use an exclusively allocated temporary directory with owner-only permissions. Configure the deployment temporary directory to keep the complete socket path within the operating system's Unix socket path limit. Disposal also removes a directory allocated for an endpoint that never started listening.
 
 Host, session, worker-pool and local-client shutdown release their owned cancellation sources after cancellation and dependent cleanup, including failure paths. A pool drains admitted startups before final worker removal. A local client can finish shutdown while a consumer is paused between stream items; resuming that iterator observes cancellation without dispatching another operation. Repeated disposal observes the same completion or failure.
+
+### Protection and cancellation arguments
+
+Use `ExecutionProtections` to combine required restrictions. `BindAsync` and `PrewarmAsync` take optional `requiredProtection` before their final optional `cancellationToken`. Prefer named arguments when supplying either option, for example `requiredProtection: ExecutionProtections.DisabledNetwork, cancellationToken: token`. Consumers of the earlier development API must rename `ExecutionProtection` references and update positional cancellation arguments; no legacy overloads are retained.

@@ -34,7 +34,7 @@ internal sealed class Desk(RuntimePaths runtime, CalendarStore store, EmbeddedCo
         var installed = runtime.Resolve(entry?.Installation);
         var callbacks = new BookingCallbacks(store, request, installed.Identity.Version);
         var process = new ProcessProfile(runtime.Dotnet, [installed.EntryPoints["dotnet"], request.Strategy], trustedCode: true, workspaceRoot: runtime.WorkerRoot ?? Path.Combine(runtime.Root, "workers"), timeout: TimeSpan.FromSeconds(10));
-        var session = await host.BindAsync(new PluginContext(request.Scope.Tenant, request.Strategy, installed.Identity.Version, request.Scope.Profile, JsonSerializer.SerializeToElement(new { })), process, callbacks, hooks?.DenyBook == true ? ["calendar.available"] : ["calendar.available", "calendar.book"], token);
+        var session = await host.BindAsync(new PluginContext(request.Scope.Tenant, request.Strategy, installed.Identity.Version, request.Scope.Profile, JsonSerializer.SerializeToElement(new { })), process, callbacks, hooks?.DenyBook == true ? ["calendar.available"] : ["calendar.available", "calendar.book"], cancellationToken: token);
         await using var client = new LocalPluginClient(session);
         if (hooks?.Bound is not null)
         {

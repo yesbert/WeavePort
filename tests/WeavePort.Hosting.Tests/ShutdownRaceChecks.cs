@@ -32,7 +32,7 @@ internal static class ShutdownRaceChecks
         internal TaskCompletionSource Cancelled { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
         internal bool Started { get; set; }
         internal int Destroyed { get; set; }
-        public override ExecutionProtection Protection => ExecutionProtection.None;
+        public override ExecutionProtections Protection => ExecutionProtections.None;
         internal override ExecutionProfile Normalize() => this;
         internal override Task<ExecutionProfile> ResolveAsync(CancellationToken token) => Task.FromResult<ExecutionProfile>(this);
         internal override Worker CreateWorker(string version, TimeProvider clock) => new DelayedWorker(this, version);

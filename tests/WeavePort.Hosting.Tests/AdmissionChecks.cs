@@ -45,7 +45,7 @@ internal static class AdmissionChecks
     {
         internal TaskCompletionSource Ready { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
         internal int Created { get; private set; }
-        public override ExecutionProtection Protection => ExecutionProtection.None;
+        public override ExecutionProtections Protection => ExecutionProtections.None;
         internal override Task<ExecutionProfile> ResolveAsync(CancellationToken token) => Task.FromResult<ExecutionProfile>(this);
         internal override ExecutionProfile Normalize() => this;
         internal override Worker CreateWorker(string version, TimeProvider clock)

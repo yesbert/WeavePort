@@ -8,7 +8,7 @@
 
 - [x] 2.1 Simplify framing, envelope validation, manifest validation and SDK streaming without changing accepted data.
 - [x] 2.2 Fix internal parameter, assignment, cancellation and diagnostic conventions.
-- [ ] 2.3 Resolve the three public API convention findings after the compatibility decision.
+- [x] 2.3 Resolve the three public API convention findings after the compatibility decision.
 
 ## 3. Qualification
 
