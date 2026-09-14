@@ -13,3 +13,9 @@ Exact NuGet artifacts inspected: dotnet-sonarscanner 11.3.0 (licenses/LICENSE.tx
 ## Coverage verification
 
 GitHub run 34831159354 executed both Hosting.Tests and Gateway.Tests with exit code zero and produced 1,908 covered ranges. The report includes actual product modules (Hosting, Abstractions, Sdk.Client and Sdk.Gateway), not only test code. The initial collector invocation rejected embedded command quoting; passing target arguments separately fixed it. The collector can return success for a failed target, so the recorded suite exit codes are checked independently. This is partial regression coverage, not a whole-product coverage claim. Server import and the quality gate remain pending project/token provisioning.
+
+## Provisioning and server verification
+
+The hosted project `weaveport` uses branch `main`, the instance-default previous-version new-code definition and the built-in Sonar way quality gate. A dedicated project-analysis token is stored in the GitHub repository secret; its initial expiration is September 14, 2027. The host URL is a repository variable.
+
+PR #6 merged as `095d4cc109cd6d831dedc525b0b9f4a4eeee2618` after documentation, all native platform tests, all four CodeQL languages and executable coverage passed. Main run [34831996671](https://github.com/yesbert/WeavePort/actions/runs/34831996671) successfully submitted the analysis and received `QUALITY GATE STATUS: PASSED`. The scanner indexed 60 files and imported the coverage report for 32 main files and 11 test files. The server reported 45.3% overall coverage across 2,186 lines to cover, 37 issues (5 reliability, 32 maintainability), 2 security hotspots and 0.0% duplication. No quality threshold was reduced and no existing finding was accepted or suppressed. The initial passing new-code gate is not a clean-bill-of-health claim for the overall baseline. Remediation of baseline findings is separate product work.
