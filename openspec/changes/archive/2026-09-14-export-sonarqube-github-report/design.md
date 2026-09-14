@@ -11,3 +11,9 @@ Use SONAR_REPORT_TOKEN when explicitly provisioned for Browse access, otherwise 
 ## Verification
 
 Test pagination, partial failure, hostile Markdown, source links, MQR impact severities, and failed quality gate reporting without live credentials. Verify the actual main Actions summary and artifact after protected PR merge. No Docker service changes are needed.
+
+## Verified completion
+
+PR #8 merged as `75fb20e86ec6f91aeb86059d22ce60080be1e932` after all checks passed. The initial export exposed HTTP 403 for analysis history, hotspots and duplication detail while retaining 37 issues. A separate report user token on the existing account resolved these read restrictions; no additional account was required. User tokens inherit the account's permissions and are not intrinsically read-only.
+
+Main run 34835041463 attempt 2 succeeded. Artifact 10345999038 contains all six JSON/metadata reports and summary.md: complete=true, no errors, 37 issues, 2 hotspots and 39 source links pinned to the verified revision. Report token expiration: September 14, 2027. Seven exporter regression tests and repository validation pass. No product code or SonarQube findings were modified.

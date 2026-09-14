@@ -7,5 +7,5 @@
 ## 2. Verification
 
 - [x] 2.1 Run exporter tests and repository documentation/OpenSpec checks.
-- [ ] 2.2 Merge through a protected PR after required checks pass.
-- [ ] 2.3 Verify live GitHub findings and archive the completed change.
+- [x] 2.2 Merge through a protected PR after required checks pass.
+- [x] 2.3 Verify live GitHub findings and archive the completed change.
