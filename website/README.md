@@ -33,6 +33,6 @@ The public API page comes from `compatibility/public-api.txt`; it is a signature
 5. Extract to a new release directory, verify the entry page and assets, then point the dedicated document root at that release. Retain the previous release and document-root target for rollback.
 6. Check HTTPS, a nested guide, logo, search index, sitemap and both AI files through the public origin. Confirm HTTP redirects to HTTPS.
 
-Rollback restores the previous document-root target through the same hosting control plane. No runtime, NuGet publication, Docker changes or modification of sibling websites is needed. The repository does not contain credentials, server-specific paths or an automatic publication workflow.
+Rollback restores the previous document-root target through the same hosting control plane. No runtime, NuGet publication, Docker changes or modification of sibling websites is needed. The repository contains no credentials or server-specific deployment paths. The [automatic CI deployment](../docs/continuous-integration.md) publishes a validated main-run artifact through a dedicated restricted SSH account.
 
 DocFX references: [configuration](https://dotnet.github.io/docfx/docs/config.html) and [modern template customization](https://dotnet.github.io/docfx/docs/template.html).
