@@ -1,6 +1,6 @@
 # Continuous integration and documentation delivery
 
-All changes to `main` go through pull requests. The repository rules require successful documentation and native macOS checks, an up-to-date branch and resolved review threads. Automatic Copilot review runs for ready PRs and new pushes. Rules are repository settings; workflow files alone do not enforce branch protection.
+All changes to `main` go through pull requests. The repository rules require successful documentation, macOS, Windows/Linux and all four CodeQL checks, an up-to-date branch and resolved review threads. Automatic Copilot review runs for ready PRs and new pushes. Rules are repository settings; workflow files alone do not enforce branch protection.
 
 ## Functional checks
 
@@ -28,7 +28,9 @@ A successful **main push** CI run invokes the reusable `deploy-site.yml` workflo
 
 The `documentation-production` environment permits the `main` branch only. It contains `DOCS_DEPLOY_KEY` and `DOCS_KNOWN_HOSTS` secrets and the `DOCS_DEPLOY_HOST` and `DOCS_DEPLOY_USER` variables. The host key must be obtained over a trusted administrative connection. No general server-management credential is stored in GitHub.
 
-The dedicated SSH account is restricted to the administrator-installed archive receiver from `scripts/ci/receive-site.py`. Install that file root-owned outside the account's writable directories, and configure its output root through the forced command. The key cannot open an interactive shell, forward ports or choose a remote command. The receiver accepts static files only, rejects unsafe archive paths and links, limits upload size and retains previous releases. It selects a new release atomically, refuses older workflow runs, and accepts an identical retry. Changes to this server-installed receiver require a separate administrative installation.
+The dedicated SSH account is restricted to the administrator-installed archive receiver from `scripts/ci/receive-site.py`. Install that file root-owned outside the account's writable directories, and configure its output root through the forced command. Both the output root and its `releases` directory must be owned and writable by the deployment account; verify this as that account before the first publication. The key cannot open an interactive shell, forward ports or choose a remote command. The receiver accepts static files only, rejects unsafe archive paths and links, limits upload size and retains previous releases. It selects a new release atomically, refuses older workflow runs, and accepts an identical retry. Changes to this server-installed receiver require a separate administrative installation.
+
+The [first automatic main deployment](https://github.com/yesbert/WeavePort/actions/runs/34828692638) passed after correcting the initial server release-directory ownership and rerunning the failed deploy job. The earlier site remained active during that failure.
 
 The public `deployment.json` identifies the deployed commit and CI run number. CI verifies it and compares public entry/AI files with its artifact after upload. Rollback is an administrator operation that restores the previous `current` symlink target; retained releases are not automatically deleted. Re-running a successful main CI run republishes an identical artifact, while a new main commit creates a new release.
 
