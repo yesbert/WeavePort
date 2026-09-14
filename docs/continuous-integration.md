@@ -22,6 +22,16 @@ Use a clean checkout: the runner creates a new evidence directory and consumes f
 
 The CodeQL workflow analyzes C#, JavaScript/TypeScript, Python and GitHub Actions on PRs, main pushes, weekly schedules and manual dispatch. It uses GitHub's `none` build mode. This mode does not fully cover C# generated code; the CI build and functional tests remain separate checks. Findings appear in GitHub code scanning. See [CodeQL action documentation](https://github.com/github/codeql-action).
 
+## SonarQube and coverage
+
+The `SonarQube` workflow complements CodeQL with a .NET analysis on the operator-managed [SonarQube server](https://sonar.stratara.tech). It targets the project key `weaveport`, using the repository variable `SONAR_HOST_URL` and dedicated project-analysis secret `SONAR_TOKEN`. The project and credential must be provisioned before server analysis can succeed.
+
+Pull requests execute the Hosting and Gateway console regression suites under pinned `dotnet-coverage` tooling, without server credentials. The job checks both the recorded test-process exit codes and the presence of covered ranges; it uploads `sonar-coverage` containing the XML report and execution logs. Coverage currently comes from these two .NET suites. It does not measure Python/TypeScript tests, plugin subprocesses that clear profiler settings, or every integration path.
+
+After a main push, nightly at 05:00 UTC, or manual dispatch on main, a separate job builds all source-library projects inside the SonarScanner analysis and imports that run's coverage report. It waits for the server's quality gate and fails if the gate rejects the analysis. PR jobs never receive the analysis token or contact this server. Coverage is kept separate from the existing native platform tests. Uncovered source-library code remains in scope; no coverage threshold or exclusion is added merely to make a first scan green.
+
+The scanner and collector are development tools installed at pinned versions; neither is shipped in the WeavePort NuGet packages. CodeQL continues to analyze C#, JavaScript/TypeScript, Python and Actions independently.
+
 ## Automatic website publication
 
 A successful **main push** CI run invokes the reusable `deploy-site.yml` workflow after documentation, macOS and Windows/Linux checks pass. The deployment downloads that run's validated `documentation-site` artifact, including the generated Markdown, `llms.txt` and `llms-full.txt`. PR and scheduled runs do not deploy.
