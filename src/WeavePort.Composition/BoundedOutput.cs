@@ -1,5 +1,5 @@
 namespace WeavePort.Composition;
-internal sealed class BoundedOutput(Stream target, CancellationToken lifetime, Action<int> reserve) : Stream
+internal sealed class BoundedOutput(Stream target, Action<int> reserve, CancellationToken lifetime) : Stream
 {
     private bool _disposed;
     private void Check(int count)

@@ -53,8 +53,8 @@ internal static class LifecycleChecks
             timeout: timeout ?? TimeSpan.FromSeconds(10));
     }
 
-    private static Task<IPluginSession> BindAsync(PluginHost host, ExecutionProfile profile, IHostCallbacks? callbacks = null) =>
-        host.BindAsync(new PluginContext("tenant", "quality", "1", "test", Empty), profile,
+    private static Task<IPluginSession> BindAsync(PluginHost host, ExecutionProfile profile, IHostCallbacks? callbacks = null, string tenant = "tenant") =>
+        host.BindAsync(new PluginContext(tenant, "quality", "1", "test", Empty), profile,
             callbacks ?? new ThrowingCallbacks(), ["probe"]);
 
     private static async Task<int> SetupAsync(string root)
@@ -87,12 +87,21 @@ internal static class LifecycleChecks
         var host = new PluginHost(log);
         var callbacks = new CancellationCallbacks();
         var session = await BindAsync(host, Profile(root), callbacks);
+        await using var other = await BindAsync(host, Profile(root), tenant: "tenant-b");
+        Check((await other.InvokeAsync("echo", Empty)).Status == "ok", "tenant B starts independently");
+        string otherInstance = other.Instance;
+        var source = DisposalChecks.Source(session);
         Task<InvocationResult> invocation = session.InvokeAsync("callback", Empty);
         await callbacks.Entered.Task.WaitAsync(TimeSpan.FromSeconds(5));
         await ExpectAsync<AggregateException>(() => session.DisposeAsync().AsTask().WaitAsync(TimeSpan.FromSeconds(5)));
+        DisposalChecks.AssertDisposed(source);
+        await ExpectAsync<AggregateException>(() => session.DisposeAsync().AsTask());
         Check((await invocation).Status == "disabled", "cancelled invocation disabled");
-        Check(host.Snapshot.Bindings == 0 && host.Snapshot.Workers == 0 && host.Snapshot.Tenants == 1,
+        Check(host.Snapshot.Bindings == 1 && host.Snapshot.Workers == 1 && host.Snapshot.Tenants == 2,
             "callback retains admission after binding and worker removal");
+        Check((await other.InvokeAsync("echo", Empty)).Status == "ok" && other.Instance == otherInstance,
+            "tenant B retains the same working instance after tenant A shutdown failure");
+        await other.DisposeAsync();
         callbacks.Release.TrySetResult();
         await callbacks.Completed.Task.WaitAsync(TimeSpan.FromSeconds(5));
         for (int i = 0; i < 100 && host.Snapshot.Tenants != 0; i++) await Task.Delay(10);
@@ -100,7 +109,7 @@ internal static class LifecycleChecks
         await host.DisposeAsync();
         Check(log.Events.Any(item => item.Id == 1004), "cancellation cleanup failure logged");
         log.AssertSafe();
-        return 6;
+        return 10;
     }
 
     private static async Task<int> CallbackFailureAsync(string root)
@@ -125,6 +134,9 @@ internal static class LifecycleChecks
         Check(host.Snapshot.Quarantined == 1, "uncertain cleanup retains reservation");
         for (int i = 0; i < 100 && !log.Events.Any(item => item.Id == 1005); i++) await Task.Delay(20);
         Check(log.Events.Any(item => item.Id == 1005), "maintenance failure logged");
+        var source = DisposalChecks.Source(host);
+        await ExpectAsync<AggregateException>(() => host.DisposeAsync().AsTask());
+        DisposalChecks.AssertDisposed(source);
         await ExpectAsync<AggregateException>(() => host.DisposeAsync().AsTask());
         Check(log.Events.Any(item => item.Id == 1001) && log.Events.Any(item => item.Id == 1004), "startup and cleanup stages logged");
         log.AssertSafe();

@@ -9,6 +9,7 @@ public sealed class LocalPluginClient(IPluginSession session, TimeSpan? streamTi
 {
     private readonly object _disposeSync = new();
     private Task? _disposal;
+    private bool _disposed;
     private readonly SemaphoreSlim _gate = new(1);
     private readonly CancellationTokenSource _lifetime = new();
     private readonly TimeSpan _streamTimeout = streamTimeout ?? TimeSpan.FromSeconds(30);
@@ -20,7 +21,7 @@ public sealed class LocalPluginClient(IPluginSession session, TimeSpan? streamTi
     /// <inheritdoc/>
     public async Task<JsonElement> CallAsync(string operation, JsonElement input, CancellationToken cancellationToken = default)
     {
-        using var stop = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, _lifetime.Token);
+        using var stop = CreateOperationSource(cancellationToken);
         if (!await _gate.WaitAsync(0, stop.Token))
         {
             throw new PluginCallException("busy", false);
@@ -46,7 +47,7 @@ public sealed class LocalPluginClient(IPluginSession session, TimeSpan? streamTi
     /// <inheritdoc/>
     public async IAsyncEnumerable<JsonElement> StreamAsync(string operation, JsonElement input, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        using var stop = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, _lifetime.Token);
+        using var stop = CreateOperationSource(cancellationToken);
         stop.CancelAfter(_streamTimeout);
         if (!await _gate.WaitAsync(0, stop.Token))
         {
@@ -69,35 +70,22 @@ public sealed class LocalPluginClient(IPluginSession session, TimeSpan? streamTi
                 healthy = true;
                 JsonElement items = batch.GetProperty("items");
                 done = batch.GetProperty("done").GetBoolean();
-                if (items.GetArrayLength() > 16 || Size(items) > 256 << 10)
-                {
-                    throw new InvalidDataException("Invalid batch.");
-                }
-
+                ValidateBatch(items, done);
                 foreach (JsonElement item in items.EnumerateArray())
                 {
                     stop.Token.ThrowIfCancellationRequested();
-                    long bytes = Size(item);
-                    total += bytes;
-                    if (bytes > 128 << 10 || total > 64 << 20)
-                    {
-                        throw new InvalidDataException("Stream limit.");
-                    }
-
+                    ValidateItem(item, ref total);
                     yield return item;
                 }
 
-                if (!done && items.GetArrayLength() == 0)
-                {
-                    throw new InvalidDataException("Empty unfinished batch.");
-                }
+                stop.Token.ThrowIfCancellationRequested();
             }
         }
         finally
         {
             try
             {
-                if (!done && stream is not null)
+                if (!done && stream is not null && !IsDisposed())
                 {
                     await CloseStreamAsync(stream, healthy && !stop.IsCancellationRequested);
                 }
@@ -106,6 +94,29 @@ public sealed class LocalPluginClient(IPluginSession session, TimeSpan? streamTi
             {
                 _gate.Release();
             }
+        }
+    }
+
+    private static void ValidateBatch(JsonElement items, bool done)
+    {
+        if (items.GetArrayLength() > 16 || Size(items) > 256 << 10)
+        {
+            throw new InvalidDataException("Invalid batch.");
+        }
+
+        if (!done && items.GetArrayLength() == 0)
+        {
+            throw new InvalidDataException("Empty unfinished batch.");
+        }
+    }
+
+    private static void ValidateItem(JsonElement item, ref long total)
+    {
+        long bytes = Size(item);
+        total += bytes;
+        if (bytes > 128 << 10 || total > 64 << 20)
+        {
+            throw new InvalidDataException("Stream limit.");
         }
     }
 
@@ -130,6 +141,7 @@ public sealed class LocalPluginClient(IPluginSession session, TimeSpan? streamTi
 
     private async Task<JsonElement> ExchangeAsync(string operation, object input, CancellationToken token)
     {
+        token.ThrowIfCancellationRequested();
         InvocationResult reply = await session.InvokeAsync(operation, JsonSerializer.SerializeToElement(input), token);
         if (reply.Status == "cancelled")
         {
@@ -158,7 +170,37 @@ public sealed class LocalPluginClient(IPluginSession session, TimeSpan? streamTi
     {
         lock (_disposeSync)
         {
-            return new ValueTask(_disposal ??= Cleanup.RunAsync(() => _lifetime.CancelAsync(), () => session.DisposeAsync().AsTask()));
+            _disposed = true;
+            return new ValueTask(_disposal ??= DisposeCoreAsync());
+        }
+    }
+
+    private CancellationTokenSource CreateOperationSource(CancellationToken token)
+    {
+        lock (_disposeSync)
+        {
+            ObjectDisposedException.ThrowIf(_disposed, this);
+            return CancellationTokenSource.CreateLinkedTokenSource(token, _lifetime.Token);
+        }
+    }
+
+    private bool IsDisposed()
+    {
+        lock (_disposeSync)
+        {
+            return _disposed;
+        }
+    }
+
+    private async Task DisposeCoreAsync()
+    {
+        try
+        {
+            await Cleanup.RunAsync(() => _lifetime.CancelAsync(), () => session.DisposeAsync().AsTask());
+        }
+        finally
+        {
+            _lifetime.Dispose();
         }
     }
 }

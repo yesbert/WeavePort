@@ -8,6 +8,14 @@ internal static class ProcessSocketChecks
         if (OperatingSystem.IsWindows() || (!OperatingSystem.IsMacOS() && !OperatingSystem.IsLinux())) return 0;
         int checks = 0;
         using var endpoint = new ProcessSocket();
+        if (!Directory.Exists(Path.GetDirectoryName(endpoint.Path))) throw new Exception("Endpoint directory was not exclusively allocated during construction");
+        using (var unused = new ProcessSocket())
+        {
+            if (unused.Path == endpoint.Path) throw new Exception("Shared endpoint directory");
+            string unusedDirectory = Path.GetDirectoryName(unused.Path)!;
+            unused.Dispose();
+            if (Directory.Exists(unusedDirectory)) throw new Exception("Unstarted endpoint retained");
+        }
         endpoint.Listen();
         string directory = Path.GetDirectoryName(endpoint.Path)!;
         if (File.GetUnixFileMode(directory) != (UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.UserExecute)) throw new Exception("Private directory mode");

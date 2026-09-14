@@ -56,3 +56,11 @@ Worker removal attempts `docker rm --force` and confirms absence if Docker repor
 The current runtime does not implement predictive pool sizing, distributed placement/fencing, checkpoint storage or safe cross-tenant reuse of a used process. The default stdio transport retains one Docker CLI process per running worker; the opt-in [Linux socket transport (historical) — pre-public record](history.md) uses short-lived CLI commands for lifecycle operations. Container isolation does not establish protection against kernel/engine failure or zero latency interference from another customer.
 
 The [trusted local adapter](local-execution.md) shares these lifecycle rules. Its memory reservations are admission estimates, not OS-enforced ceilings; root-process cleanup does not attest termination of escaped descendants. Docker-specific enforcement statements above apply only to Docker profiles.
+
+### Adapter executable and endpoint ownership
+
+`DockerProfile.DockerExecutable` selects an absolute path to a trusted Docker CLI. When omitted, the adapter checks conventional system installation locations (`/usr/bin/docker`, `/usr/local/bin/docker`, the macOS Docker application bundle, or the Windows Program Files Docker installation). It never searches `PATH`; custom installations must set this property. Image resolution retains the selected executable for worker startup and cleanup.
+
+Native Unix socket endpoints use an exclusively allocated temporary directory with owner-only permissions. Configure the deployment temporary directory to keep the complete socket path within the operating system's Unix socket path limit. Disposal also removes a directory allocated for an endpoint that never started listening.
+
+Host, session, worker-pool and local-client shutdown release their owned cancellation sources after cancellation and dependent cleanup, including failure paths. A pool drains admitted startups before final worker removal. A local client can finish shutdown while a consumer is paused between stream items; resuming that iterator observes cancellation without dispatching another operation. Repeated disposal observes the same completion or failure.

@@ -162,6 +162,7 @@ internal sealed class ProcessWorker(ProcessProfile profile, string version, Time
         var buffer = new char[4096];
         while (await reader.ReadAsync(buffer) > 0)
         {
+        // Consume stderr without retaining plugin-controlled diagnostic content.
         }
     }
 }

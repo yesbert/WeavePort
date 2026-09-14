@@ -23,14 +23,14 @@ internal sealed class DockerWorker(DockerProfile profile, string version, TimePr
         {
             _socket = new WorkerSocket(transport, Instance);
             arguments.AddRange(["--detach", "--env", "WEAVEPORT_SOCKET=/run/weaveport/p.sock", "--mount", "type=bind,source=" + Path.Combine(transport.DockerDirectory, Instance) + ",target=/run/weaveport,readonly", Deployment.Image]);
-            await DockerCommand.RunAsync(Deployment.Context, arguments.ToArray(), token);
+            await DockerCommand.RunAsync(Deployment, arguments.ToArray(), token);
             await _socket.AcceptAsync(token);
             Reader = new Frames(_socket.Stream);
         }
         else
         {
             arguments.AddRange(["--interactive", Deployment.Image]);
-            _process = DockerCommand.Start(Deployment.Context, arguments);
+            _process = DockerCommand.Start(Deployment, arguments);
             _drain = DrainAsync(_process.StandardError);
             Reader = new Frames(_process.StandardOutput.BaseStream);
         }
@@ -56,8 +56,8 @@ internal sealed class DockerWorker(DockerProfile profile, string version, TimePr
             // Capture diagnostics when possible; removal must still run when inspection fails.
             try
             {
-                JsonElement state = JsonElement.Parse(await DockerCommand.RunAsync(Deployment.Context, ["inspect", "--format", "{{json .State}}", Instance], deadline.Token));
-                result = JsonSerializer.SerializeToElement(new { exitCode = state.GetProperty("ExitCode").GetInt32(), oomKilled = state.GetProperty("OOMKilled").GetBoolean(), runningAtTermination = state.GetProperty("Running").GetBoolean() });
+                JsonElement state = JsonElement.Parse(await DockerCommand.RunAsync(Deployment, ["inspect", "--format", "{{json .State}}", Instance], deadline.Token));
+                result = JsonSerializer.SerializeToElement(new { exitCode = state.GetProperty("ExitCode").GetInt32(), oomKilled = state.GetProperty("OOMKilled").GetBoolean(), runningAtTermination = state.GetProperty(nameof(Running)).GetBoolean() });
             }
             catch (IOException)
             { /* Startup may fail before a container exists; absence is checked below. */
@@ -65,11 +65,11 @@ internal sealed class DockerWorker(DockerProfile profile, string version, TimePr
 
             try
             {
-                await DockerCommand.RunAsync(Deployment.Context, ["rm", "--force", Instance], deadline.Token);
+                await DockerCommand.RunAsync(Deployment, ["rm", "--force", Instance], deadline.Token);
             }
             catch (IOException)
             {
-                string remaining = await DockerCommand.RunAsync(Deployment.Context, ["ps", "--all", "--quiet", "--filter", "name=^/" + Instance + "$"], deadline.Token);
+                string remaining = await DockerCommand.RunAsync(Deployment, ["ps", "--all", "--quiet", "--filter", "name=^/" + Instance + "$"], deadline.Token);
                 if (remaining.Length != 0)
                 {
                     throw;
@@ -125,6 +125,7 @@ internal sealed class DockerWorker(DockerProfile profile, string version, TimePr
         var buffer = new char[4096];
         while (await reader.ReadAsync(buffer) > 0)
         {
+        // Consume stderr without retaining plugin-controlled diagnostic content.
         }
     }
 }

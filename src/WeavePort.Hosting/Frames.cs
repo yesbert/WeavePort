@@ -19,7 +19,7 @@ internal sealed class Frames(Stream input) : IDisposable
         using Activity? activity = Diagnostics.StartActivity("frame.write");
         long started = activity is null ? 0 : Stopwatch.GetTimestamp();
         using var buffer = new FrameBuffer();
-        JsonSerializer.Serialize(buffer, value, type);
+        await JsonSerializer.SerializeAsync(buffer, value, type, token);
         activity?.SetTag("serialize.ms", Stopwatch.GetElapsedTime(started).TotalMilliseconds);
         activity?.SetTag("bytes", buffer.WrittenMemory.Length + 1);
         await output.WriteAsync(buffer.WrittenMemory, token);
@@ -59,19 +59,7 @@ internal sealed class Frames(Stream input) : IDisposable
                 throw new InvalidDataException("Frame exceeds limit.");
             }
 
-            if (_start != 0)
-            {
-                _buffer.AsSpan(_start, remaining).CopyTo(_buffer);
-                CryptographicOperations.ZeroMemory(_buffer.AsSpan(remaining, _end - remaining));
-                _start = 0;
-                _end = remaining;
-            }
-
-            if (_end == _buffer.Length)
-            {
-                Resize(Math.Min(_buffer.Length * 2, MaximumBytes + 1));
-            }
-
+            PrepareReadBuffer(remaining);
             int available = Math.Min(_buffer.Length - _end, MaximumBytes + 1 - _end);
             int count = await input.ReadAsync(_buffer.AsMemory(_end, available), token);
             if (count == 0)
@@ -85,6 +73,22 @@ internal sealed class Frames(Stream input) : IDisposable
             }
 
             _end += count;
+        }
+    }
+
+    private void PrepareReadBuffer(int remaining)
+    {
+        if (_start != 0)
+        {
+            _buffer.AsSpan(_start, remaining).CopyTo(_buffer);
+            CryptographicOperations.ZeroMemory(_buffer.AsSpan(remaining, _end - remaining));
+            _start = 0;
+            _end = remaining;
+        }
+
+        if (_end == _buffer.Length)
+        {
+            Resize(Math.Min(_buffer.Length * 2, MaximumBytes + 1));
         }
     }
 

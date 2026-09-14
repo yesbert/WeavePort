@@ -15,14 +15,14 @@ internal sealed class FrameBuffer : Stream
     public override long Position { get => _length; set => throw new NotSupportedException(); }
 
     public override void Write(byte[] buffer, int offset, int count) => Write(buffer.AsSpan(offset, count));
-    public override void Write(ReadOnlySpan<byte> source)
+    public override void Write(ReadOnlySpan<byte> buffer)
     {
-        if (source.Length > Frames.MaximumBytes - _length)
+        if (buffer.Length > Frames.MaximumBytes - _length)
         {
             throw new InvalidDataException("Frame exceeds limit.");
         }
 
-        int needed = _length + source.Length;
+        int needed = _length + buffer.Length;
         if (needed > _buffer.Length)
         {
             byte[] next = ArrayPool<byte>.Shared.Rent(Math.Max(needed, Math.Min(_buffer.Length * 2, Frames.MaximumBytes)));
@@ -32,7 +32,7 @@ internal sealed class FrameBuffer : Stream
             _buffer = next;
         }
 
-        source.CopyTo(_buffer.AsSpan(_length));
+        buffer.CopyTo(_buffer.AsSpan(_length));
         _length = needed;
     }
 

@@ -192,6 +192,7 @@ public sealed class PluginHost : IAsyncDisposable
         }
         catch (OperationCanceledException) when (_lifetime.IsCancellationRequested)
         {
+        // Cancellation is the normal end of the owned maintenance loop.
         }
     }
 
@@ -213,7 +214,14 @@ public sealed class PluginHost : IAsyncDisposable
             sessions = _sessions.ToArray();
         }
 
-        await Cleanup.RunAsync(() => _lifetime.CancelAsync(), () => ReleaseResourcesAsync(sessions));
+        try
+        {
+            await Cleanup.RunAsync(() => _lifetime.CancelAsync(), () => ReleaseResourcesAsync(sessions));
+        }
+        finally
+        {
+            _lifetime.Dispose();
+        }
     }
 
     private async Task ReleaseResourcesAsync(PluginSession[] sessions)

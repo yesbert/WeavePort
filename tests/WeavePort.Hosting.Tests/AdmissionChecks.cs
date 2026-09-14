@@ -4,6 +4,7 @@ using WeavePort.Hosting;
 
 internal static class AdmissionChecks
 {
+    private static readonly string[] RejectionReasons = ["Admission rejected: concurrent-starts"];
     internal static async Task<int> RunAsync()
     {
         foreach (int limit in new[] { 8, 24 })
@@ -22,7 +23,7 @@ internal static class AdmissionChecks
                 }
                 catch (WorkerCapacityException) { }
                 Check(profile.Created == limit, "refused request never creates a worker");
-                Check(logger.Reasons.SequenceEqual(new[] { "Admission rejected: concurrent-starts" }), "fixed safe rejection reason");
+                Check(logger.Reasons.SequenceEqual(RejectionReasons), "fixed safe rejection reason");
             }
             finally
             {
