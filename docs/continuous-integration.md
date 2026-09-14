@@ -8,6 +8,8 @@ CI retains the existing full macOS candidate qualification and adds `scripts/ci/
 
 Windows uses stdio. Linux tests stdio and Unix sockets. Checks cover tenant-bound callbacks, workspace/state separation, environment handling, failure/cancellation, lifecycle and cleanup. Results, runtime details and the source revision are uploaded as `native-<runner>` artifacts, even when verification fails. These jobs verify source revisions; they do not qualify every Linux distribution, CPU architecture, installer, public package version or performance profile.
 
+The [initial CI run](https://github.com/yesbert/WeavePort/actions/runs/34828099259) passed 38 Windows stdio checks, 38 Linux stdio checks and 39 Linux socket checks. All reported zero failures. The source test environments were Windows x64 and Ubuntu 24.04 x64, with Python 3.14.7 and Node 24.20.0.
+
 To reproduce with the pinned .NET SDK, Python 3.14 and Node 24 installed:
 
 ```sh
