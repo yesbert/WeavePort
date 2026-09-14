@@ -110,9 +110,15 @@ internal static class RegistryChecks
         public string Instance => "fixture";
         public async Task<InvocationResult> InvokeAsync(string operation, JsonElement payload, CancellationToken cancellationToken = default)
         {
-            using var registration = cancellationToken.Register(() => throw new IOException("cancel fixture"));
+            var cancelled = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
+            // One callback owns both signals so a cancelled delay cannot unregister the throwing callback first.
+            using var registration = cancellationToken.Register(() =>
+            {
+                cancelled.TrySetCanceled(cancellationToken);
+                throw new IOException("cancel fixture");
+            });
             Entered.TrySetResult();
-            await Task.Delay(Timeout.Infinite, cancellationToken);
+            await cancelled.Task;
             throw new InvalidOperationException("Unreachable");
         }
         public Task RestartAsync(CancellationToken cancellationToken = default) => Task.CompletedTask;
