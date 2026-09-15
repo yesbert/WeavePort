@@ -14,12 +14,12 @@ Values below are medians of the five per-run statistics. A median of per-run p99
 
 | Protocol | Text characters | Mean ms | p99 ms | First call ms | Caller allocated B/call |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| Native | 16 | 0.0623 | 0.1411 | 53.79 | 4,663 |
-| Mcp20251125 | 16 | 0.0831 | 0.3003 | 109.56 | 6,208 |
-| Mcp20260728 | 16 | 0.0894 | 0.3045 | 105.16 | 6,744 |
-| Native | 65,536 | 0.3823 | 0.7375 | 53.79 | 267,741 |
-| Mcp20251125 | 65,536 | 0.3412 | 1.2617 | 109.56 | 269,112 |
-| Mcp20260728 | 65,536 | 0.3305 | 1.1509 | 105.16 | 269,820 |
+| Native | 16 | 0.0575 | 0.1420 | 50.83 | 4,663 |
+| Mcp20251125 | 16 | 0.0842 | 0.2908 | 101.50 | 6,224 |
+| Mcp20260728 | 16 | 0.1053 | 0.3460 | 101.46 | 6,760 |
+| Native | 65,536 | 0.3557 | 0.7626 | 50.83 | 267,713 |
+| Mcp20251125 | 65,536 | 0.3619 | 1.2453 | 101.50 | 269,153 |
+| Mcp20260728 | 65,536 | 0.3669 | 1.1279 | 101.46 | 269,672 |
 
 This fixture shows additional small-call/startup cost and higher tails with MCP. The large-payload means do not establish that either protocol is universally faster. SDK implementations, validation and envelopes differ; this is not pure wire cost. Sequential calls are not maximum throughput, multi-tenant load interference or memory-containment evidence. The earlier Node-only spike is not used as evidence of C# integration performance.
 
@@ -37,7 +37,7 @@ MCP 2.0.0 package metadata declares MIT. The exact LICENSE files instead describ
 
 ## Native before/after and follow-up controls
 
-The standard source-built suite completed 24 warm timing cells and 382 SDK checks both before and after the change. Existing host transport, hostile-envelope, lifecycle and authority checks passed before runtime edits. The new host suite adds 101 MCP protocol/lifecycle/authority assertions. `native-comparison.json` retains all original means, deviations and allocation statistics, including slower observations rather than discarding them.
+The standard source-built suite completed 24 warm timing cells and 382 SDK checks both before and after the change. Existing host transport, hostile-envelope, lifecycle and authority checks passed before runtime edits. The new host suite adds 103 MCP protocol/lifecycle/authority assertions. `native-comparison.json` retains all original means, deviations and allocation statistics, including slower observations rather than discarding them.
 
 The first short after-run showed notably higher C# callback means and strong within-run settling. A separate isolated in-process callback control used ten warmups and ten measured iterations, reversed order (after then before), copied runner/gateway directories and the original Hosting DLL retained from the baseline. All six cases passed in each control run. C#/Python changes ranged from -3.2% to +2.0%; TypeScript was not slower. `callback-control.json` retains the full iteration values and DLL hashes. This control does not use the same toolchain as the original suite; compare its paired values only. It does not demonstrate a universal optimization or exact performance equality.
 

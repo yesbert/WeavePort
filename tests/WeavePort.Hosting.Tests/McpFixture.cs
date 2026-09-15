@@ -26,6 +26,14 @@ internal static class McpFixture
             string operation = request.GetProperty("params").GetProperty("name").GetString()!;
             if (operation == "hang") { await Task.Delay(Timeout.Infinite); return; }
             if (operation == "crash") Environment.Exit(7);
+            if (fault == "ping")
+            {
+                Console.WriteLine("{\"jsonrpc\":\"2.0\",\"id\":\"server-ping\",\"method\":\"ping\"}");
+                string? reply = await Console.In.ReadLineAsync();
+                if (reply is null) return;
+                var response = JsonSerializer.Deserialize<JsonElement>(reply);
+                if (response.GetProperty("id").GetString() != "server-ping" || response.GetProperty("result").EnumerateObject().Any()) throw new Exception("Invalid ping response");
+            }
             if (fault == "stderr") { for (int i = 0; i < 1024; i++) Console.Error.Write(new string('x', 4096)); }
             string rawId = id.GetRawText();
             string? corrupt = fault switch

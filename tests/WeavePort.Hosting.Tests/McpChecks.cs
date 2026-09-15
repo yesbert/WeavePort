@@ -63,6 +63,9 @@ internal static class McpChecks
             Check(result.Status == (fault == "eof" ? "failed" : "protocol-error"), "fault " + fault + ": " + result.Status);
             Check(host.Snapshot.Workers == 0, "fault cleanup " + fault);
         }
+        await using var pingHost = new PluginHost();
+        await using var ping = await Bind(pingHost, Profile(protocol, "ping"));
+        Check((await Call(ping, "echo")).Status == (protocol == ProcessProtocol.Mcp20251125 ? "ok" : "protocol-error"), "legacy ping only; no modern server requests");
         await using var noisyHost = new PluginHost();
         await using var noisy = await Bind(noisyHost, Profile(protocol, "stderr"));
         Check((await Call(noisy, "echo")).Status == "ok", "stderr drained without deadlock");

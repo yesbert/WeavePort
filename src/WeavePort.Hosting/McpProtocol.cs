@@ -5,6 +5,7 @@ internal sealed class McpProtocol(ProcessProtocol protocol)
 {
     private static readonly JsonElement Empty = JsonSerializer.SerializeToElement(new { });
     private readonly string _revision = protocol == ProcessProtocol.Mcp20251125 ? "2025-11-25" : "2026-07-28";
+    private bool _writingResponse;
     private bool Modern => protocol == ProcessProtocol.Mcp20260728;
 
     internal async Task InitializeAsync(Worker worker, CancellationToken token)
@@ -78,9 +79,9 @@ internal sealed class McpProtocol(ProcessProtocol protocol)
         {
             await McpMessages.WriteAsync(worker.Input, id, method, parameters, Modern ? _revision : null, token);
             sent = true;
-            return await ReceiveAsync(worker.Reader, id, token);
+            return await ReceiveAsync(worker, id, token);
         }
-        catch (OperationCanceledException) when (sent && method != "initialize")
+        catch (OperationCanceledException) when (sent && !_writingResponse && method != "initialize")
         {
             await CancelAsync(worker.Input, id);
             throw;
@@ -100,11 +101,28 @@ internal sealed class McpProtocol(ProcessProtocol protocol)
         }
     }
 
-    private static async Task<JsonElement> ReceiveAsync(Frames reader, string id, CancellationToken token)
+    private async Task RespondToPingAsync(Worker worker, JsonElement frame, CancellationToken token)
+    {
+        if (!frame.TryGetProperty("id", out JsonElement id) || id.ValueKind is not (JsonValueKind.String or JsonValueKind.Number) || frame.TryGetProperty("result", out _) || frame.TryGetProperty("error", out _))
+        {
+            throw new InvalidDataException("Invalid MCP ping request.");
+        }
+
+        if (frame.TryGetProperty("params", out JsonElement parameters))
+        {
+            McpMessages.Object(parameters);
+        }
+
+        _writingResponse = true;
+        await Frames.WriteAsync(worker.Input, new McpResponse("2.0", id, Empty), McpWireJson.Default.McpResponse, token);
+        _writingResponse = false;
+    }
+
+    private async Task<JsonElement> ReceiveAsync(Worker worker, string id, CancellationToken token)
     {
         for (int notifications = 0; notifications <= 32; notifications++)
         {
-            JsonElement frame = await reader.ReadAsync(token);
+            JsonElement frame = await worker.Reader.ReadAsync(token);
             McpMessages.Object(frame);
             if (McpMessages.String(frame, "jsonrpc") != "2.0")
             {
@@ -113,7 +131,18 @@ internal sealed class McpProtocol(ProcessProtocol protocol)
 
             if (frame.TryGetProperty("method", out _))
             {
+                if (notifications == 32)
+                {
+                    throw new InvalidDataException("MCP notification budget exceeded.");
+                }
+
                 string method = McpMessages.String(frame, "method");
+                if (!Modern && method == "ping")
+                {
+                    await RespondToPingAsync(worker, frame, token);
+                    continue;
+                }
+
                 if (frame.TryGetProperty("id", out _) || frame.TryGetProperty("result", out _) || frame.TryGetProperty("error", out _) || method is not ("notifications/message" or "notifications/progress" or "notifications/tools/list_changed"))
                 {
                     throw new InvalidDataException("Unsupported MCP server interaction.");
