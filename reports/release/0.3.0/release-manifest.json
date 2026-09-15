@@ -1,0 +1,20 @@
+{
+  "sourceCommit": "9081441f183d6bbdae0812f4ad3a738ec3712cae",
+  "version": "0.3.0",
+  "releaseRun": 34946992867,
+  "sha256": {
+    "WeavePort.Abstractions.0.3.0.nupkg": "b624a6a95bb0c28df003573ebcb46710166c885ceb6b5bf5babe09178115b774",
+    "WeavePort.Abstractions.0.3.0.snupkg": "044f647ee51d92d26d9538cd0329ec9296f4fac7285745b3a0e9801addbca36b",
+    "WeavePort.Hosting.0.3.0.nupkg": "72845bac681ff4721b6f5af78b766235ecd552db08a3eda417b828ab4f2bd4a0",
+    "WeavePort.Hosting.0.3.0.snupkg": "80159707519b462f8d157399a9437e692aca2e5dcb5969dc67d2722dacda22ab",
+    "WeavePort.Sdk.0.3.0.nupkg": "5475e60f8a310caeb71386b312220507f2eef11446703d998336e1ceb13511fe",
+    "WeavePort.Sdk.0.3.0.snupkg": "a3b3856f5f8d5a63bb046ed32831bada3a71c389bc32b9c23c295b5f1234b2fb",
+    "WeavePort.Sdk.Client.0.3.0.nupkg": "aa96ff07347fa6afe3810c9c0270cddd2f46662e3a4959c522c3ee40b9583b83",
+    "WeavePort.Sdk.Client.0.3.0.snupkg": "36db14b9637c61eb984a54446d926b3b49f7f4b9f774ab4a13605a8c6a6a9757"
+  },
+  "archives": {
+    "weaveport-0.3.0-benchmarks.zip": "a003d8f2b5f76352c55cbd99333a703b8334d3da133e51eb2aa77a797f5b0ee4",
+    "weaveport-0.3.0-evidence.zip": "39b01912025bad45ab7bcfa27ff222ae9c5b5893e5971f881f30ab2c8d22d2df",
+    "weaveport-0.3.0-packages.zip": "84e9cdf0c23660a5a418c69368b1c7b0ed3a33459a0fc369f73424d406fec329"
+  }
+}

@@ -59,3 +59,5 @@ The [0.2.1 release report](../reports/release/0.2.1/README.md) records exact pub
 Hosting adds explicitly selected local MCP 2025-11-25 and 2026-07-28 tools alongside native plugins. Discovery and calls share worker admission, tenant ownership, deadlines and cleanup. Native remains the default; there is no new MCP runtime dependency. Unsupported result continuations are rejected even if a server also supplies content. See the [MCP guide](mcp-plugins.md) and [executable example](../examples/mcp/README.md).
 
 Update all four core packages and exact installation declarations together. Native author SDKs remain 0.1.0 and are still source-built. Hosting uses Microsoft logging/DI abstractions 10.0.12; the optional gateway's build-only Grpc.Tools is 2.84.0. Remote MCP, arbitrary server SDKs and additional platform qualifications are outside this release.
+
+The [0.3.0 release report](../reports/release/0.3.0/README.md) links the original qualified packages, symbols, test evidence and measurements of the released Hosting assembly.

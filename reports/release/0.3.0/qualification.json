@@ -1,0 +1,209 @@
+{
+  "sourceCommit": "9081441f183d6bbdae0812f4ad3a738ec3712cae",
+  "status": "passed",
+  "platform": "macOS-15.7.9-arm64-arm-64bit-Mach-O",
+  "architecture": "arm64",
+  "node": "v24.21.0",
+  "dotnet": "10.0.401",
+  "assertions": 1088,
+  "artifactFiles": 139,
+  "artifactManifestSha256": "3cb6b0f77a571639e636006a49839cedb15fdce9355b14cf9e0ea3fe5db50c16",
+  "stages": [
+    {
+      "name": "checkout",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 0.071,
+      "assertions": 0
+    },
+    {
+      "name": "tool-dotnet",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 0.32,
+      "assertions": 0
+    },
+    {
+      "name": "tool-python",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 0.011,
+      "assertions": 0
+    },
+    {
+      "name": "tool-node",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 0.018,
+      "assertions": 0
+    },
+    {
+      "name": "tool-npm",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 0.078,
+      "assertions": 0
+    },
+    {
+      "name": "dotnet-runtimes",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 0.021,
+      "assertions": 0
+    },
+    {
+      "name": "hosting-regressions",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 13.947,
+      "assertions": 422
+    },
+    {
+      "name": "gateway-regressions",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 3.662,
+      "assertions": 6
+    },
+    {
+      "name": "code-style",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 1.621,
+      "assertions": 0
+    },
+    {
+      "name": "documentation-regressions",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 0.108,
+      "assertions": 4
+    },
+    {
+      "name": "core-packages",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 4.223,
+      "assertions": 0
+    },
+    {
+      "name": "packed-hosting-regressions",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 8.812,
+      "assertions": 422
+    },
+    {
+      "name": "mcp-fixture-install",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 1.137,
+      "assertions": 0
+    },
+    {
+      "name": "packed-mcp-interop",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 0.352,
+      "assertions": 0
+    },
+    {
+      "name": "mcp-example-restore",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 1.232,
+      "assertions": 0
+    },
+    {
+      "name": "packed-mcp-example",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 1.325,
+      "assertions": 0
+    },
+    {
+      "name": "sdk-build",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 6.318,
+      "assertions": 0
+    },
+    {
+      "name": "decision-room-build",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 6.219,
+      "assertions": 0
+    },
+    {
+      "name": "document-workshop-build",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 4.596,
+      "assertions": 0
+    },
+    {
+      "name": "appointment-desk-build",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 4.148,
+      "assertions": 0
+    },
+    {
+      "name": "fixed-package-set",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 0.031,
+      "assertions": 0
+    },
+    {
+      "name": "decision-room-verify",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 6.634,
+      "assertions": 33
+    },
+    {
+      "name": "document-workshop-verify",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 3.549,
+      "assertions": 43
+    },
+    {
+      "name": "appointment-desk-verify",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 3.465,
+      "assertions": 68
+    },
+    {
+      "name": "sdk-verify",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 2.318,
+      "assertions": 12
+    },
+    {
+      "name": "recovery-verify",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 0.995,
+      "assertions": 12
+    },
+    {
+      "name": "compatibility-verify",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 7.157,
+      "assertions": 66
+    },
+    {
+      "name": "changed-package-refused",
+      "exitCode": 1,
+      "expectedExitCode": 1,
+      "seconds": 0.036,
+      "assertions": 0
+    }
+  ]
+}
