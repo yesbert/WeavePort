@@ -83,6 +83,11 @@ public sealed class PluginHost : IAsyncDisposable
             Configuration = context.Configuration.Clone()
         };
         HashSet<string> authority = grants.ToHashSet(StringComparer.Ordinal);
+        if (resolved is ProcessProfile { Protocol: not ProcessProtocol.Native } && authority.Count != 0)
+        {
+            throw new NotSupportedException("MCP tool bindings do not support native host callbacks.");
+        }
+
         lock (_sync)
         {
             ObjectDisposedException.ThrowIf(_disposed, this);

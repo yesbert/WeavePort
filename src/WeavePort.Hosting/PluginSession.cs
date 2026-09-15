@@ -138,7 +138,12 @@ internal sealed class PluginSession(SessionBinding binding, TenantAdmission admi
 
             InvocationScope.Current.Value = parent ?? ownedScope;
             _dispatched = true;
-            await Frames.WriteAsync(_worker!.Input, frame, WireJson.Default.InvokeFrame, token);
+            if (_worker!.Mcp is { } mcp)
+            {
+                return await mcp.InvokeAsync(_worker, frame.Id, frame.Operation, frame.Payload, token);
+            }
+
+            await Frames.WriteAsync(_worker.Input, frame, WireJson.Default.InvokeFrame, token);
             return await ExchangeAsync(frame.Id, frame.TraceId, token);
         }
         finally

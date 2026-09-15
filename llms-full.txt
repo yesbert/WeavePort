@@ -432,6 +432,10 @@ HiveWeaver, TreeWeaver and NextPA integration remains separate application work.
 
 The [repository cleanup qualification](https://raw.githubusercontent.com/yesbert/WeavePort/main/reports/verification/current/README.md) adds a maintained-link check (399 assertion executions), moved adapter checks and a packaging regression. It does not replace the exact current release evidence above.
 
+## Unreleased source capability
+
+The current source adds [optional local MCP tools](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/mcp-plugins.md) alongside the native protocol, with explicit 2025-11-25/2026-07-28 selection. This is not part of published 0.2.1. The guide and [measurement report](https://raw.githubusercontent.com/yesbert/WeavePort/main/reports/mcp/local-stdio/README.md) identify the tested subset and platform limits.
+
 ---
 
 ## Integration contract
@@ -518,6 +522,100 @@ Before an application integration is accepted, its own domain tests should show:
 Historical example assertions are development evidence, not a new combined release run: Decision Room 33, Document Workshop 41, Appointment Desk 30, plus 12 multilingual SDK version checks. The [qualified internal candidate (historical) — pre-public record](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/history.md) now records a combined 234-assertion run against one fixed package/artifact set.
 
 The [native operations runbook](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/native-operations.md) qualifies guarded manual recovery for Appointment Desk. Other integrations must adopt equivalent run ownership and restart gates; automatic descendant cleanup and power-loss durability are not implied.
+
+---
+
+## MCP plugins
+
+Source: https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/mcp-plugins.md
+
+# Optional local MCP plugins
+
+This source implementation adds MCP tools alongside the default WeavePort protocol. It is not included in the published 0.2.1 packages; build the current source to evaluate it. No extra runtime package dependency is required by Hosting.
+
+A local MCP server is a child process offering functions over stdin/stdout. One process can offer many tools. It needs neither a network listener nor an AI model. Existing native plugins remain native. Consuming MCP servers is separate from exposing WeavePort functions through an external MCP gateway; this implementation only consumes local servers.
+
+## Bind and call
+
+Use an absolute runtime executable and server entry-point path selected by the trusted application. Deploy dependencies beforehand: the host does not download servers or run package managers.
+
+```csharp
+using System.Text.Json;
+using WeavePort.Abstractions;
+using WeavePort.Hosting;
+
+await using var host = new PluginHost();
+var profile = new ProcessProfile(
+    "/absolute/path/to/node",
+    ["/absolute/path/to/server.mjs"],
+    trustedCode: true,
+    timeout: TimeSpan.FromSeconds(5))
+{
+    Protocol = ProcessProtocol.Mcp20260728
+};
+
+var context = new PluginContext("department-a", "document-tools", "1",
+    "local-mcp", JsonSerializer.SerializeToElement(new { }));
+await using var session = await host.BindAsync(
+    context, profile, new NoCallbacks(), []);
+
+InvocationResult discovery = await session.InvokeAsync(
+    "tools/list", JsonSerializer.SerializeToElement(new { }));
+InvocationResult result = await session.InvokeAsync(
+    "tools/call", JsonSerializer.SerializeToElement(new
+    {
+        name = "normalize",
+        arguments = new { text = " hello   world " }
+    }));
+
+if (result.Status != "ok")
+    throw new InvalidOperationException($"Host exchange failed: {result.Status}");
+if (result.Value.TryGetProperty("isError", out var error) && error.GetBoolean())
+    throw new InvalidOperationException("The tool reported an application error.");
+Console.WriteLine(result.Value.GetProperty("structuredContent"));
+
+sealed class NoCallbacks : IHostCallbacks
+{
+    public ValueTask<JsonElement> InvokeAsync(HostCall call, CancellationToken token)
+        => throw new NotSupportedException("This binding has no callbacks.");
+}
+```
+
+The [official-SDK fixture](https://raw.githubusercontent.com/yesbert/WeavePort/main/tests/mcp/server.mjs) implements normalize and echo as ordinary text functions. [Fixture instructions](https://raw.githubusercontent.com/yesbert/WeavePort/main/tests/mcp/README.md) include an executable interoperability check.
+
+`InvokeAsync` is the low-level host contract. MCP bindings accept only `tools/list` and `tools/call`. The native author SDK and `LocalPluginClient` operations/streaming are a different protocol and are not transparently translated.
+
+## Versions and results
+
+| Selection | Startup | Scope |
+| --- | --- | --- |
+| `Native` (default) | Native ready frame | Existing WeavePort protocol |
+| `Mcp20251125` | initialize, exact revision check, initialized notification | MCP 2025-11-25 tools subset |
+| `Mcp20260728` | server/discover, supported revision check | MCP 2026-07-28 tools subset, metadata on every request |
+
+There is no automatic fallback, sibling probe process, or Unix-socket MCP mode. Unknown enum values and MCP/socket combinations are rejected before startup. The configured plugin artifact version remains a host deployment identity. MCP revision and server-reported implementation metadata do not attest the plugin artifact's integrity or establish equality with that version.
+
+Discovery returns one page. If present, pass `nextCursor` as `{ cursor = value }` in a subsequent tools/list call; the application bounds its own pagination. A tools/call payload contains a nonempty `name` and optional object `arguments`. Other parameters, including caller-supplied protocol `_meta`, are rejected.
+
+The complete result object is preserved, including content, structuredContent and isError. Host status `ok` means the MCP exchange completed, not that the tool succeeded. A valid isError result keeps the worker alive. A JSON-RPC error becomes host status `failed`; malformed or unsupported traffic becomes `protocol-error`. These failures remove the worker. No call is automatically replayed. `MayHaveExecuted` remains conservative: an unsuccessful call can already have caused effects.
+
+## Lifecycle and trust
+
+The existing host owns every process launch and reservation. Global/tenant admission, pristine assignment, state retention, idle release, explicit restart and quarantine accounting apply to MCP as to native workers. A used process is never reassigned to another tenant. Multiple bindings can create multiple instances of the same server.
+
+The host sends neither bound tenant/configuration data nor native callback grants implicitly. MCP bindings reject nonempty native callback grants before registration. The application authorizes which server and tools it calls; discovery names, descriptions, annotations and output are untrusted data, not authority. Content is not executed, and resource links are not fetched automatically.
+
+Local execution still requires trusted code. The cleared environment, private cooperative workspace and separate process do not enforce filesystem/network confinement, hard memory ceilings or containment of escaped descendants. See [local execution](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/local-execution.md) and [worker lifecycle](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/worker-lifecycle.md). Requiring unavailable OS protection still rejects binding.
+
+Messages reuse the host's 1 MiB frame limit and depth-32 reader; MCP serialization also limits depth to 32. Oversized output is rejected before sending any part of the message. Response IDs and duplicate envelope fields are checked. At most 32 recognized notifications are discarded per exchange; the total deadline does not reset. stderr is drained without retaining plugin-controlled text.
+
+Cancellation after a complete request write attempts a cancellation notification for at most 100 ms, then existing cleanup terminates the worker. An interrupted partial write does not append a notification. Legacy initialization is not cancelled with a protocol notification. MCP shutdown first closes stdin and allows up to 100 ms for exit, then uses existing forced termination and cleanup accounting. Cancellation does not roll back external actions.
+
+## Supported boundary and evidence
+
+Resources, prompts, sampling, roots, elicitation, tasks, subscriptions, remote HTTP and multi-round-trip host interactions are not implemented. Unsolicited server requests cannot invoke callbacks. Servers requiring these features need a separate integration change. The tools subset has been exercised against the official TypeScript SDK 2.0.0 and protocol/failure fixtures on macOS; other SDKs and operating systems are not qualified by that result.
+
+[Host regressions](https://raw.githubusercontent.com/yesbert/WeavePort/main/tests/README.md) cover malformed JSON/UTF-8, size/depth limits, duplicate IDs, wrong correlation, notification flooding, authority, admission, failure recovery and state retention. These are bounded protocol/lifecycle checks, not a penetration-test certification or an OS sandbox qualification. [Benchmark guidance](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/benchmarking.md) distinguishes native regression timing from MCP SDK comparisons.
 
 ---
 
@@ -930,6 +1028,10 @@ Host, session, worker-pool and local-client shutdown release their owned cancell
 
 Use `ExecutionProtections` to combine required restrictions. `BindAsync` and `PrewarmAsync` take optional `requiredProtection` before their final optional `cancellationToken`. Prefer named arguments when supplying either option, for example `requiredProtection: ExecutionProtections.DisabledNetwork, cancellationToken: token`. Consumers of the earlier development API must rename `ExecutionProtection` references and update positional cancellation arguments; no legacy overloads are retained.
 
+### Optional MCP workers
+
+The source MCP integration shares these local lifecycle policies, with explicit protocol selection and no additional SDK-owned process launcher. [MCP plugins](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/mcp-plugins.md) documents cancellation, result semantics and the tools-only boundary; this feature is not in published 0.2.1.
+
 ---
 
 ## Operations
@@ -1066,6 +1168,10 @@ Cancellation means that the caller stopped waiting, not that an external action 
 The four core packages are publicly available at 0.2.1. Windows qualification, stronger native containment, distributed scheduling, application signing/notarization and automatic updates/migrations remain separate work. Integrations with the owner's applications follow their own development schedule.
 
 The [historical evidence guide](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/history.md) explains where earlier design alternatives, measurements and rejected experiments are retained, including the limits of public access to pre-baseline history. This guide retains the decisions that still govern current code.
+
+## Optional MCP protocol
+
+Current source also supports explicitly selected local MCP tools through the same process lifecycle; native remains the default. This is not part of the published 0.2.1 packages. See [MCP plugins](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/mcp-plugins.md) for exact revisions, result semantics and support limits. MCP does not introduce AI concepts or implicit host authority into native plugins.
 
 ---
 
@@ -1277,6 +1383,8 @@ Build a minimal integration for my application using these exact contracts.
 Verify the connection by requesting `get_file_contents` with `owner: yesbert`, `repo: WeavePort`, `path: docs/status.md` and `ref: refs/tags/v0.2.1`. The result should contain the file from that revision. Tool prefixes vary by client. A missing tool usually means the server is not started or its repository tools are disabled; authentication failures need the client's sign-in or token setup. These setup instructions are based on GitHub's documentation; they are not a recorded authenticated client test.
 
 GitHub MCP supplies repository context. To build or run an integration, your assistant additionally needs a local checkout, .NET and the required plugin runtimes, plus terminal access you authorize. WeavePort does not expose a plugin-execution MCP endpoint through this setup.
+
+The separate [local MCP plugin integration](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/mcp-plugins.md) lets current source consume MCP tools inside an application. It is not a documentation retrieval service or an exported MCP gateway, and it is not included in the published 0.2.1 packages.
 
 ## Keep the context current
 
@@ -1975,6 +2083,66 @@ Adding compatibility metadata SHALL NOT implicitly migrate existing application 
 
 ---
 
+## mcp-plugins
+
+Source: https://raw.githubusercontent.com/yesbert/WeavePort/main/openspec/specs/mcp-plugins/spec.md
+
+## Purpose
+
+Allow applications to consume ordinary MCP tools through explicitly selected local plugins while retaining native contracts and host-owned lifecycle policies.
+
+## Requirements
+
+### Requirement: Optional explicit MCP protocol
+Local process bindings SHALL retain the native protocol by default and SHALL support explicitly selected MCP 2025-11-25 or 2026-07-28 over stdio. Unsupported configuration or a mismatched server SHALL fail boundedly without fallback or additional unaccounted processes.
+
+#### Scenario: Mixed plugin protocols
+- **WHEN** a host binds a native plugin and a supported MCP plugin
+- **THEN** both use their configured protocol and independent worker instance under the same host budget
+
+#### Scenario: Incompatible server
+- **WHEN** the server does not support the configured revision or tools capability
+- **THEN** startup fails within the deadline and cleanup completes or remains accounted for
+
+### Requirement: Bounded tool discovery and invocation
+MCP bindings SHALL support tools/list with explicit caller-controlled pagination and tools/call with caller-supplied object arguments. Successful exchanges SHALL preserve complete MCP results, including tool-level isError, without executing content or following returned URLs. Unsupported methods or interaction continuations SHALL be refused explicitly.
+
+#### Scenario: Multiple tools in one process
+- **WHEN** a supported server advertises multiple tools and the caller invokes two of them
+- **THEN** both execute in the same retained binding process and return their MCP results
+
+#### Scenario: Tool-level failure
+- **WHEN** a valid tool result reports isError
+- **THEN** that flag and its content remain observable independently of host exchange success
+
+### Requirement: MCP authority and traffic limits
+MCP bindings SHALL NOT grant native callbacks, transmit bound context implicitly, or interpret tool metadata as authority. MCP messages SHALL obey a 1 MiB frame limit, depth 32, exact response correlation and unambiguous reserved fields. Notification processing SHALL be bounded per exchange; unsolicited server requests SHALL NOT execute host actions.
+
+#### Scenario: Forged or excessive traffic
+- **WHEN** a server sends repeated envelope fields, a wrong response ID, malformed UTF-8, excessive depth, oversized frames or excessive notifications
+- **THEN** the invocation fails boundedly and the worker is removed or retained in cleanup accounting
+
+#### Scenario: Attempted host interaction
+- **WHEN** an MCP server asks for host sampling, roots, elicitation or native callbacks
+- **THEN** no host action or secret disclosure occurs and the unsupported interaction is reported as failure
+
+### Requirement: Shared MCP worker lifecycle
+MCP workers SHALL obey existing global and tenant capacity, state retention, pristine assignment, restart, deadline and cleanup policies. Failed or cancelled calls SHALL NOT be replayed automatically. Trusted local execution SHALL NOT be described as a hostile-code sandbox.
+
+#### Scenario: Tenant failure and recovery
+- **WHEN** tenant A crashes or hangs while B uses the identical MCP artifact
+- **THEN** A fails boundedly, B retains its instance and state, and a subsequent A call uses a fresh worker without replaying the failed call
+
+#### Scenario: Capacity exhaustion
+- **WHEN** an MCP binding requires a worker beyond the host or tenant allowance
+- **THEN** it receives busy without dispatch and native bindings remain subject to the same shared accounting
+
+#### Scenario: Callback grants supplied
+- **WHEN** a consumer attempts to bind an MCP profile with native callback grants
+- **THEN** binding fails before registration or process startup
+
+---
+
 ## operational-recovery
 
 Source: https://raw.githubusercontent.com/yesbert/WeavePort/main/openspec/specs/operational-recovery/spec.md
@@ -2648,12 +2816,14 @@ type WeavePort.Hosting.ProcessProfile : WeavePort.Hosting.ExecutionProfile [Publ
   Method System.String[] get_Arguments() [Public] ()
   Method System.Type get_EqualityContract() [Family, Virtual] ()
   Method Void set_Executable(System.String) [Public] (value)
+  Method Void set_Protocol(WeavePort.Hosting.ProcessProtocol) [Public] (value)
   Method Void set_SocketBufferBytes(System.Nullable`1[System.Int32]) [Public] (value)
   Method Void set_TrustedCode(Boolean) [Public] (value)
   Method Void set_UseUnixSocket(Boolean) [Public] (value)
   Method Void set_WorkspaceRoot(System.String) [Public] (value)
   Method WeavePort.Hosting.ExecutionProtections get_Protection() [Public, Virtual] ()
   Method WeavePort.Hosting.ProcessProfile <Clone>$() [Public, Virtual] ()
+  Method WeavePort.Hosting.ProcessProtocol get_Protocol() [Public] ()
   Property Boolean TrustedCode
   Property Boolean UseUnixSocket
   Property System.Nullable`1[System.Int32] SocketBufferBytes
@@ -2662,6 +2832,16 @@ type WeavePort.Hosting.ProcessProfile : WeavePort.Hosting.ExecutionProfile [Publ
   Property System.String[] Arguments
   Property System.Type EqualityContract
   Property WeavePort.Hosting.ExecutionProtections Protection
+  Property WeavePort.Hosting.ProcessProtocol Protocol
+type WeavePort.Hosting.ProcessProtocol : System.Enum [Public, Sealed]
+  implements System.IComparable
+  implements System.IConvertible
+  implements System.IFormattable
+  implements System.ISpanFormattable
+  Field Int32 value__
+  Field WeavePort.Hosting.ProcessProtocol Mcp20251125=1
+  Field WeavePort.Hosting.ProcessProtocol Mcp20260728=2
+  Field WeavePort.Hosting.ProcessProtocol Native=0
 type WeavePort.Hosting.UnixSocketTransport : System.Object [Public, Sealed]
   implements System.IEquatable`1[WeavePort.Hosting.UnixSocketTransport]
   Constructor Void .ctor(System.String, System.String) [Public] (LocalDirectory, DockerDirectory)

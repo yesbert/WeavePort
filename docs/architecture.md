@@ -32,3 +32,7 @@ Cancellation means that the caller stopped waiting, not that an external action 
 The four core packages are publicly available at 0.2.1. Windows qualification, stronger native containment, distributed scheduling, application signing/notarization and automatic updates/migrations remain separate work. Integrations with the owner's applications follow their own development schedule.
 
 The [historical evidence guide](history.md) explains where earlier design alternatives, measurements and rejected experiments are retained, including the limits of public access to pre-baseline history. This guide retains the decisions that still govern current code.
+
+## Optional MCP protocol
+
+Current source also supports explicitly selected local MCP tools through the same process lifecycle; native remains the default. This is not part of the published 0.2.1 packages. See [MCP plugins](mcp-plugins.md) for exact revisions, result semantics and support limits. MCP does not introduce AI concepts or implicit host authority into native plugins.

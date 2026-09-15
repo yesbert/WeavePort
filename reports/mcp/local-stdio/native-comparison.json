@@ -1,0 +1,530 @@
+[
+  {
+    "parameters": "Language=csharp&Topology=gateway&Case=callback",
+    "beforeMeanNs": 266519.52032520325,
+    "afterMeanNs": 545816.0987903225,
+    "changePercent": 104.79404214907997,
+    "beforeStdDevNs": 23595.648821763927,
+    "afterStdDevNs": 287777.21349266113,
+    "beforeAllocated": {
+      "Gen0Collections": 0,
+      "Gen1Collections": 0,
+      "Gen2Collections": 0,
+      "TotalOperations": 656,
+      "BytesAllocatedPerOperation": 4426
+    },
+    "afterAllocated": {
+      "Gen0Collections": 0,
+      "Gen1Collections": 0,
+      "Gen2Collections": 0,
+      "TotalOperations": 496,
+      "BytesAllocatedPerOperation": 4426
+    }
+  },
+  {
+    "parameters": "Language=csharp&Topology=gateway&Case=list-64k",
+    "beforeMeanNs": 726293.2209429825,
+    "afterMeanNs": 764422.3541666666,
+    "changePercent": 5.249826395760548,
+    "beforeStdDevNs": 24048.118537946117,
+    "afterStdDevNs": 99219.70040987236,
+    "beforeAllocated": {
+      "Gen0Collections": 9,
+      "Gen1Collections": 2,
+      "Gen2Collections": 0,
+      "TotalOperations": 304,
+      "BytesAllocatedPerOperation": 269546
+    },
+    "afterAllocated": {
+      "Gen0Collections": 9,
+      "Gen1Collections": 2,
+      "Gen2Collections": 0,
+      "TotalOperations": 304,
+      "BytesAllocatedPerOperation": 269567
+    }
+  },
+  {
+    "parameters": "Language=csharp&Topology=gateway&Case=list-8m",
+    "beforeMeanNs": 48605078.125,
+    "afterMeanNs": 53514713.583333336,
+    "changePercent": 10.101075129859872,
+    "beforeStdDevNs": 2590381.626690036,
+    "afterStdDevNs": 3769046.348007486,
+    "beforeAllocated": {
+      "Gen0Collections": 12,
+      "Gen1Collections": 5,
+      "Gen2Collections": 4,
+      "TotalOperations": 4,
+      "BytesAllocatedPerOperation": 34040050
+    },
+    "afterAllocated": {
+      "Gen0Collections": 14,
+      "Gen1Collections": 7,
+      "Gen2Collections": 6,
+      "TotalOperations": 4,
+      "BytesAllocatedPerOperation": 34050826
+    }
+  },
+  {
+    "parameters": "Language=csharp&Topology=gateway&Case=tiny",
+    "beforeMeanNs": 215973.35348360657,
+    "afterMeanNs": 226121.21942204304,
+    "changePercent": 4.698665726467377,
+    "beforeStdDevNs": 16901.999741258478,
+    "afterStdDevNs": 4802.472702850383,
+    "beforeAllocated": {
+      "Gen0Collections": 0,
+      "Gen1Collections": 0,
+      "Gen2Collections": 0,
+      "TotalOperations": 976,
+      "BytesAllocatedPerOperation": 3697
+    },
+    "afterAllocated": {
+      "Gen0Collections": 0,
+      "Gen1Collections": 0,
+      "Gen2Collections": 0,
+      "TotalOperations": 992,
+      "BytesAllocatedPerOperation": 3697
+    }
+  },
+  {
+    "parameters": "Language=csharp&Topology=local&Case=callback",
+    "beforeMeanNs": 90788.90581232491,
+    "afterMeanNs": 115273.41666666666,
+    "changePercent": 26.9686154219714,
+    "beforeStdDevNs": 16396.67378209064,
+    "afterStdDevNs": 15186.631767557383,
+    "beforeAllocated": {
+      "Gen0Collections": 2,
+      "Gen1Collections": 0,
+      "Gen2Collections": 0,
+      "TotalOperations": 1904,
+      "BytesAllocatedPerOperation": 8899
+    },
+    "afterAllocated": {
+      "Gen0Collections": 1,
+      "Gen1Collections": 0,
+      "Gen2Collections": 0,
+      "TotalOperations": 1632,
+      "BytesAllocatedPerOperation": 8902
+    }
+  },
+  {
+    "parameters": "Language=csharp&Topology=local&Case=list-64k",
+    "beforeMeanNs": 319237.01101190475,
+    "afterMeanNs": 334007.1078125,
+    "changePercent": 4.626686847423356,
+    "beforeStdDevNs": 57530.62305123019,
+    "afterStdDevNs": 88147.5980477957,
+    "beforeAllocated": {
+      "Gen0Collections": 16,
+      "Gen1Collections": 2,
+      "Gen2Collections": 0,
+      "TotalOperations": 672,
+      "BytesAllocatedPerOperation": 208260
+    },
+    "afterAllocated": {
+      "Gen0Collections": 16,
+      "Gen1Collections": 2,
+      "Gen2Collections": 0,
+      "TotalOperations": 640,
+      "BytesAllocatedPerOperation": 208274
+    }
+  },
+  {
+    "parameters": "Language=csharp&Topology=local&Case=list-8m",
+    "beforeMeanNs": 31352920.228571426,
+    "afterMeanNs": 38604668.375,
+    "changePercent": 23.12941854717625,
+    "beforeStdDevNs": 1780267.672069232,
+    "afterStdDevNs": 1639459.056007017,
+    "beforeAllocated": {
+      "Gen0Collections": 18,
+      "Gen1Collections": 5,
+      "Gen2Collections": 4,
+      "TotalOperations": 7,
+      "BytesAllocatedPerOperation": 25719800
+    },
+    "afterAllocated": {
+      "Gen0Collections": 10,
+      "Gen1Collections": 3,
+      "Gen2Collections": 2,
+      "TotalOperations": 4,
+      "BytesAllocatedPerOperation": 25712200
+    }
+  },
+  {
+    "parameters": "Language=csharp&Topology=local&Case=tiny",
+    "beforeMeanNs": 43565.74633561644,
+    "afterMeanNs": 46506.26847345133,
+    "changePercent": 6.749619563916243,
+    "beforeStdDevNs": 558.3735392639717,
+    "afterStdDevNs": 1159.7523762152896,
+    "beforeAllocated": {
+      "Gen0Collections": 3,
+      "Gen1Collections": 0,
+      "Gen2Collections": 0,
+      "TotalOperations": 5840,
+      "BytesAllocatedPerOperation": 4905
+    },
+    "afterAllocated": {
+      "Gen0Collections": 3,
+      "Gen1Collections": 0,
+      "Gen2Collections": 0,
+      "TotalOperations": 5424,
+      "BytesAllocatedPerOperation": 4904
+    }
+  },
+  {
+    "parameters": "Language=python&Topology=gateway&Case=callback",
+    "beforeMeanNs": 379872.51838235295,
+    "afterMeanNs": 408805.1203703704,
+    "changePercent": 7.616397761865978,
+    "beforeStdDevNs": 11764.622165672316,
+    "afterStdDevNs": 32455.045688592505,
+    "beforeAllocated": {
+      "Gen0Collections": 0,
+      "Gen1Collections": 0,
+      "Gen2Collections": 0,
+      "TotalOperations": 544,
+      "BytesAllocatedPerOperation": 4426
+    },
+    "afterAllocated": {
+      "Gen0Collections": 0,
+      "Gen1Collections": 0,
+      "Gen2Collections": 0,
+      "TotalOperations": 576,
+      "BytesAllocatedPerOperation": 4426
+    }
+  },
+  {
+    "parameters": "Language=python&Topology=gateway&Case=list-64k",
+    "beforeMeanNs": 1125293.7141666668,
+    "afterMeanNs": 1090436.6324999998,
+    "changePercent": -3.097598540526847,
+    "beforeStdDevNs": 32375.523180842432,
+    "afterStdDevNs": 29773.165132881084,
+    "beforeAllocated": {
+      "Gen0Collections": 7,
+      "Gen1Collections": 1,
+      "Gen2Collections": 0,
+      "TotalOperations": 240,
+      "BytesAllocatedPerOperation": 269556
+    },
+    "afterAllocated": {
+      "Gen0Collections": 7,
+      "Gen1Collections": 1,
+      "Gen2Collections": 0,
+      "TotalOperations": 240,
+      "BytesAllocatedPerOperation": 269554
+    }
+  },
+  {
+    "parameters": "Language=python&Topology=gateway&Case=list-8m",
+    "beforeMeanNs": 78756706.25,
+    "afterMeanNs": 79014248.25,
+    "changePercent": 0.3270096125941091,
+    "beforeStdDevNs": 1481606.248728481,
+    "afterStdDevNs": 2133363.7871475355,
+    "beforeAllocated": {
+      "Gen0Collections": 12,
+      "Gen1Collections": 5,
+      "Gen2Collections": 4,
+      "TotalOperations": 4,
+      "BytesAllocatedPerOperation": 34032664
+    },
+    "afterAllocated": {
+      "Gen0Collections": 12,
+      "Gen1Collections": 5,
+      "Gen2Collections": 4,
+      "TotalOperations": 4,
+      "BytesAllocatedPerOperation": 34039948
+    }
+  },
+  {
+    "parameters": "Language=python&Topology=gateway&Case=tiny",
+    "beforeMeanNs": 231702.4373263889,
+    "afterMeanNs": 248342.0074519231,
+    "changePercent": 7.181439400266121,
+    "beforeStdDevNs": 22005.42375747128,
+    "afterStdDevNs": 8136.502866281921,
+    "beforeAllocated": {
+      "Gen0Collections": 0,
+      "Gen1Collections": 0,
+      "Gen2Collections": 0,
+      "TotalOperations": 960,
+      "BytesAllocatedPerOperation": 3696
+    },
+    "afterAllocated": {
+      "Gen0Collections": 0,
+      "Gen1Collections": 0,
+      "Gen2Collections": 0,
+      "TotalOperations": 832,
+      "BytesAllocatedPerOperation": 3697
+    }
+  },
+  {
+    "parameters": "Language=python&Topology=local&Case=callback",
+    "beforeMeanNs": 156578.040546595,
+    "afterMeanNs": 167518.23498376625,
+    "changePercent": 6.987055399965625,
+    "beforeStdDevNs": 9568.652736760969,
+    "afterStdDevNs": 5809.329368837887,
+    "beforeAllocated": {
+      "Gen0Collections": 1,
+      "Gen1Collections": 0,
+      "Gen2Collections": 0,
+      "TotalOperations": 1488,
+      "BytesAllocatedPerOperation": 8896
+    },
+    "afterAllocated": {
+      "Gen0Collections": 1,
+      "Gen1Collections": 0,
+      "Gen2Collections": 0,
+      "TotalOperations": 1232,
+      "BytesAllocatedPerOperation": 8896
+    }
+  },
+  {
+    "parameters": "Language=python&Topology=local&Case=list-64k",
+    "beforeMeanNs": 739781.5030381945,
+    "afterMeanNs": 721630.347064394,
+    "changePercent": -2.4535833755312653,
+    "beforeStdDevNs": 39936.63310023968,
+    "afterStdDevNs": 58093.73811093157,
+    "beforeAllocated": {
+      "Gen0Collections": 9,
+      "Gen1Collections": 1,
+      "Gen2Collections": 0,
+      "TotalOperations": 384,
+      "BytesAllocatedPerOperation": 208251
+    },
+    "afterAllocated": {
+      "Gen0Collections": 8,
+      "Gen1Collections": 1,
+      "Gen2Collections": 0,
+      "TotalOperations": 352,
+      "BytesAllocatedPerOperation": 208249
+    }
+  },
+  {
+    "parameters": "Language=python&Topology=local&Case=list-8m",
+    "beforeMeanNs": 66406108.35,
+    "afterMeanNs": 66601163.208333336,
+    "changePercent": 0.29373029557051566,
+    "beforeStdDevNs": 2322078.728576655,
+    "afterStdDevNs": 1225531.9010562252,
+    "beforeAllocated": {
+      "Gen0Collections": 10,
+      "Gen1Collections": 3,
+      "Gen2Collections": 2,
+      "TotalOperations": 4,
+      "BytesAllocatedPerOperation": 25714024
+    },
+    "afterAllocated": {
+      "Gen0Collections": 10,
+      "Gen1Collections": 3,
+      "Gen2Collections": 2,
+      "TotalOperations": 4,
+      "BytesAllocatedPerOperation": 25714246
+    }
+  },
+  {
+    "parameters": "Language=python&Topology=local&Case=tiny",
+    "beforeMeanNs": 89665.84315814394,
+    "afterMeanNs": 89356.89642018778,
+    "changePercent": -0.3445534297951802,
+    "beforeStdDevNs": 824.1547165233268,
+    "afterStdDevNs": 4203.695879084506,
+    "beforeAllocated": {
+      "Gen0Collections": 1,
+      "Gen1Collections": 0,
+      "Gen2Collections": 0,
+      "TotalOperations": 2816,
+      "BytesAllocatedPerOperation": 4911
+    },
+    "afterAllocated": {
+      "Gen0Collections": 1,
+      "Gen1Collections": 0,
+      "Gen2Collections": 0,
+      "TotalOperations": 2272,
+      "BytesAllocatedPerOperation": 4911
+    }
+  },
+  {
+    "parameters": "Language=typescript&Topology=gateway&Case=callback",
+    "beforeMeanNs": 252869.31213450292,
+    "afterMeanNs": 265716.50569968554,
+    "changePercent": 5.080566501620054,
+    "beforeStdDevNs": 23402.525069763724,
+    "afterStdDevNs": 12989.356493608866,
+    "beforeAllocated": {
+      "Gen0Collections": 0,
+      "Gen1Collections": 0,
+      "Gen2Collections": 0,
+      "TotalOperations": 912,
+      "BytesAllocatedPerOperation": 4426
+    },
+    "afterAllocated": {
+      "Gen0Collections": 0,
+      "Gen1Collections": 0,
+      "Gen2Collections": 0,
+      "TotalOperations": 848,
+      "BytesAllocatedPerOperation": 4424
+    }
+  },
+  {
+    "parameters": "Language=typescript&Topology=gateway&Case=list-64k",
+    "beforeMeanNs": 779022.4100877192,
+    "afterMeanNs": 840449.4928728071,
+    "changePercent": 7.885149642636224,
+    "beforeStdDevNs": 18274.13413795622,
+    "afterStdDevNs": 35312.285786378314,
+    "beforeAllocated": {
+      "Gen0Collections": 9,
+      "Gen1Collections": 2,
+      "Gen2Collections": 0,
+      "TotalOperations": 304,
+      "BytesAllocatedPerOperation": 269554
+    },
+    "afterAllocated": {
+      "Gen0Collections": 9,
+      "Gen1Collections": 2,
+      "Gen2Collections": 0,
+      "TotalOperations": 304,
+      "BytesAllocatedPerOperation": 269561
+    }
+  },
+  {
+    "parameters": "Language=typescript&Topology=gateway&Case=list-8m",
+    "beforeMeanNs": 61011068.7,
+    "afterMeanNs": 54873354.15,
+    "changePercent": -10.060001702609089,
+    "beforeStdDevNs": 3236259.4610588453,
+    "afterStdDevNs": 909627.1706459019,
+    "beforeAllocated": {
+      "Gen0Collections": 14,
+      "Gen1Collections": 7,
+      "Gen2Collections": 6,
+      "TotalOperations": 4,
+      "BytesAllocatedPerOperation": 34081382
+    },
+    "afterAllocated": {
+      "Gen0Collections": 14,
+      "Gen1Collections": 7,
+      "Gen2Collections": 6,
+      "TotalOperations": 4,
+      "BytesAllocatedPerOperation": 34049294
+    }
+  },
+  {
+    "parameters": "Language=typescript&Topology=gateway&Case=tiny",
+    "beforeMeanNs": 167157.55787037036,
+    "afterMeanNs": 177466.45410628014,
+    "changePercent": 6.167173274871751,
+    "beforeStdDevNs": 15085.21484302534,
+    "afterStdDevNs": 11033.349640433938,
+    "beforeAllocated": {
+      "Gen0Collections": 0,
+      "Gen1Collections": 0,
+      "Gen2Collections": 0,
+      "TotalOperations": 1152,
+      "BytesAllocatedPerOperation": 3697
+    },
+    "afterAllocated": {
+      "Gen0Collections": 0,
+      "Gen1Collections": 0,
+      "Gen2Collections": 0,
+      "TotalOperations": 1104,
+      "BytesAllocatedPerOperation": 3696
+    }
+  },
+  {
+    "parameters": "Language=typescript&Topology=local&Case=callback",
+    "beforeMeanNs": 81133.78520299146,
+    "afterMeanNs": 92793.62475775194,
+    "changePercent": 14.371127299913722,
+    "beforeStdDevNs": 1375.2682858796056,
+    "afterStdDevNs": 7309.982655994548,
+    "beforeAllocated": {
+      "Gen0Collections": 3,
+      "Gen1Collections": 0,
+      "Gen2Collections": 0,
+      "TotalOperations": 3120,
+      "BytesAllocatedPerOperation": 8902
+    },
+    "afterAllocated": {
+      "Gen0Collections": 2,
+      "Gen1Collections": 0,
+      "Gen2Collections": 0,
+      "TotalOperations": 2064,
+      "BytesAllocatedPerOperation": 8902
+    }
+  },
+  {
+    "parameters": "Language=typescript&Topology=local&Case=list-64k",
+    "beforeMeanNs": 406000.9714912281,
+    "afterMeanNs": 393343.55039414414,
+    "changePercent": -3.117583943356994,
+    "beforeStdDevNs": 35053.68092254051,
+    "afterStdDevNs": 34229.46891454643,
+    "beforeAllocated": {
+      "Gen0Collections": 15,
+      "Gen1Collections": 2,
+      "Gen2Collections": 0,
+      "TotalOperations": 608,
+      "BytesAllocatedPerOperation": 208271
+    },
+    "afterAllocated": {
+      "Gen0Collections": 14,
+      "Gen1Collections": 2,
+      "Gen2Collections": 0,
+      "TotalOperations": 592,
+      "BytesAllocatedPerOperation": 208269
+    }
+  },
+  {
+    "parameters": "Language=typescript&Topology=local&Case=list-8m",
+    "beforeMeanNs": 42361729.166666664,
+    "afterMeanNs": 43829100.69444444,
+    "changePercent": 3.463908477400901,
+    "beforeStdDevNs": 3172853.9770203223,
+    "afterStdDevNs": 2192174.4782835534,
+    "beforeAllocated": {
+      "Gen0Collections": 16,
+      "Gen1Collections": 5,
+      "Gen2Collections": 4,
+      "TotalOperations": 6,
+      "BytesAllocatedPerOperation": 25720289
+    },
+    "afterAllocated": {
+      "Gen0Collections": 16,
+      "Gen1Collections": 5,
+      "Gen2Collections": 4,
+      "TotalOperations": 6,
+      "BytesAllocatedPerOperation": 25716709
+    }
+  },
+  {
+    "parameters": "Language=typescript&Topology=local&Case=tiny",
+    "beforeMeanNs": 48895.17930871212,
+    "afterMeanNs": 51583.379988825036,
+    "changePercent": 5.497884900145844,
+    "beforeStdDevNs": 1104.35318353619,
+    "afterStdDevNs": 2823.7338907076073,
+    "beforeAllocated": {
+      "Gen0Collections": 2,
+      "Gen1Collections": 0,
+      "Gen2Collections": 0,
+      "TotalOperations": 4224,
+      "BytesAllocatedPerOperation": 4911
+    },
+    "afterAllocated": {
+      "Gen0Collections": 2,
+      "Gen1Collections": 0,
+      "Gen2Collections": 0,
+      "TotalOperations": 4176,
+      "BytesAllocatedPerOperation": 4910
+    }
+  }
+]

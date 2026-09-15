@@ -17,6 +17,7 @@ GUIDES = [
     ("website/packages.md", "Packages", "Public package installation and support"),
     ("docs/status.md", "Status", "Implemented behavior and outstanding qualification"),
     ("docs/v1-integration-contract.md", "Integration contract", "Ownership and integration boundaries"),
+    ("docs/mcp-plugins.md", "MCP plugins", "Optional local tools, explicit revisions and trust limits (unreleased source)"),
     ("docs/plugin-sdk.md", "Author SDKs", "C#, Python and TypeScript plugins"),
     ("docs/embedded-coordinator.md", "Coordinator", "Embedding and shared worker ownership"),
     ("docs/installed-plugins.md", "Installed plugins", "Artifact identity, pinning and activation"),

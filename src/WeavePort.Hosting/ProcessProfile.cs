@@ -5,6 +5,8 @@ namespace WeavePort.Hosting;
 public sealed record ProcessProfile : ExecutionProfile
 {
     private readonly string _arguments;
+    /// <summary>Explicit wire protocol. Native is the default; MCP revisions require stdio.</summary>
+    public ProcessProtocol Protocol { get; init; }
     /// <summary>Absolute executable path; no PATH lookup or shell interpolation.</summary>
     public string Executable { get; init; }
     /// <summary>A fresh copy of the frozen command arguments.</summary>
@@ -42,6 +44,11 @@ public sealed record ProcessProfile : ExecutionProfile
         if (!TrustedCode)
         {
             throw new NotSupportedException("Local execution requires explicit trusted-code acknowledgement; it is not a sandbox.");
+        }
+
+        if (!Enum.IsDefined(Protocol) || Protocol != ProcessProtocol.Native && UseUnixSocket)
+        {
+            throw new ArgumentException("Unsupported process protocol or MCP channel.");
         }
 
         if (SocketBufferBytes is < 4096 or > 1048576 || SocketBufferBytes is not null && !UseUnixSocket)

@@ -68,3 +68,7 @@ Host, session, worker-pool and local-client shutdown release their owned cancell
 ### Protection and cancellation arguments
 
 Use `ExecutionProtections` to combine required restrictions. `BindAsync` and `PrewarmAsync` take optional `requiredProtection` before their final optional `cancellationToken`. Prefer named arguments when supplying either option, for example `requiredProtection: ExecutionProtections.DisabledNetwork, cancellationToken: token`. Consumers of the earlier development API must rename `ExecutionProtection` references and update positional cancellation arguments; no legacy overloads are retained.
+
+### Optional MCP workers
+
+The source MCP integration shares these local lifecycle policies, with explicit protocol selection and no additional SDK-owned process launcher. [MCP plugins](mcp-plugins.md) documents cancellation, result semantics and the tools-only boundary; this feature is not in published 0.2.1.

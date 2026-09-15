@@ -60,6 +60,8 @@ Verify the connection by requesting `get_file_contents` with `owner: yesbert`, `
 
 GitHub MCP supplies repository context. To build or run an integration, your assistant additionally needs a local checkout, .NET and the required plugin runtimes, plus terminal access you authorize. WeavePort does not expose a plugin-execution MCP endpoint through this setup.
 
+The separate [local MCP plugin integration](mcp-plugins.md) lets current source consume MCP tools inside an application. It is not a documentation retrieval service or an exported MCP gateway, and it is not included in the published 0.2.1 packages.
+
 ## Keep the context current
 
 Edit canonical Markdown or the reviewed API baseline, then regenerate the repository copies:

@@ -12,6 +12,7 @@ internal abstract class Worker(ExecutionProfile profile, string version)
     internal bool Pristine { get; set; }
     internal bool Quarantined => QuarantinedAt is not null;
     internal long? QuarantinedAt { get; set; }
+    internal McpProtocol? Mcp { get; } = profile is ProcessProfile { Protocol: not ProcessProtocol.Native } local ? new McpProtocol(local.Protocol) : null;
     internal Frames Reader { get; set; } = null!;
     internal abstract Stream Input { get; }
     internal abstract bool Running { get; }
