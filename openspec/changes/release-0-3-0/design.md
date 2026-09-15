@@ -21,3 +21,7 @@ Python packaging backend setuptools updated from 80.9.0 to stable 84.0.0 (PyPI m
 The official Node distribution index identifies 24.21.0 as current LTS and 26.8.2 as current non-LTS. Qualify with 24.21.0 locally from a SHA-256-verified official archive and pin CI/release to the same version. Do not change the user's global Node installation. Historical timings retain their measured Node 24.18.0 identity. The author SDK's Node 22 type definitions remain intentional compatibility input rather than a requirement to run Node 22.
 
 Setuptools itself is MIT; its wheel also retains vendored Apache-2.0 and dual Apache/BSD components and their notices. The build tool is not bundled into the WeavePort SDK wheel or the four NuGet packages.
+
+## Post-merge quality review
+
+The main-branch Sonar gate found five maintainability findings, no security hotspots, 84% new-code coverage and no duplication. Separate bounded receive-loop orchestration, unsolicited-message handling and response validation; name repeated envelope fields; cache report serialization options. Keep duplicate-field validation on the existing explicit loop with a small throwing helper to avoid adding a capturing LINQ predicate on every received object. These are behavior-preserving changes, checked by the existing malformed-traffic and lifecycle suite before release.
