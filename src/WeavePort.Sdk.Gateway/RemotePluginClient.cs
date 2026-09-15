@@ -26,7 +26,7 @@ public sealed class RemotePluginClient : IPluginClient
             throw new ArgumentOutOfRangeException(nameof(callTimeout));
         }
 
-        _sessions = new(endpoint, new() { { "x-weaveport-binding", bindingCredential } });
+        _sessions = new(endpoint, new() { { GatewayMetadata.BindingCredential, bindingCredential } });
     }
 
     /// <inheritdoc/>
@@ -188,7 +188,7 @@ public sealed class RemotePluginClient : IPluginClient
         };
     }
 
-    private static Exception Translate(RpcException error, CancellationToken token) => error.StatusCode == StatusCode.Cancelled ? new OperationCanceledException("Gateway call cancelled.", error, token) : new PluginCallException(error.Status.Detail, error.Trailers.GetValue("may-have-executed") != "false");
+    private static Exception Translate(RpcException error, CancellationToken token) => error.StatusCode == StatusCode.Cancelled ? new OperationCanceledException("Gateway call cancelled.", error, token) : new PluginCallException(error.Status.Detail, error.Trailers.GetValue(GatewayMetadata.MayHaveExecuted) != "false");
     /// <summary>Cancels outstanding calls and disposes binding-scoped transport sessions; server binding lifetime remains owned by the trusted worker-host application.</summary>
     public ValueTask DisposeAsync()
     {

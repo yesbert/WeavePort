@@ -42,7 +42,7 @@ public sealed class GatewayService(GatewayRegistry registry) : WorkerGateway.Wor
                 terminal = new Reply
                 {
                     Error = mapped.Status.Detail,
-                    MayHaveExecuted = mapped.StatusCode != StatusCode.Unauthenticated && mapped.Trailers.GetValue("may-have-executed") != "false",
+                    MayHaveExecuted = mapped.StatusCode != StatusCode.Unauthenticated && mapped.Trailers.GetValue(GatewayMetadata.MayHaveExecuted) != "false",
                     Cancelled = mapped.StatusCode == StatusCode.Cancelled
                 };
             }
@@ -67,7 +67,7 @@ public sealed class GatewayService(GatewayRegistry registry) : WorkerGateway.Wor
 
     private async Task StreamAsync(Request request, IServerStreamWriter<Reply> output, ServerCallContext context)
     {
-        string credential = context.RequestHeaders.GetValue("x-weaveport-binding") ?? "";
+        string credential = context.RequestHeaders.GetValue(GatewayMetadata.BindingCredential) ?? "";
         GatewayRegistry.ActiveStream? active = null;
         try
         {
@@ -120,7 +120,7 @@ public sealed class GatewayService(GatewayRegistry registry) : WorkerGateway.Wor
         try
         {
             _ = Authorize(context);
-            await registry.CancelAsync(context.RequestHeaders.GetValue("x-weaveport-binding")!, request.StreamId, context.CancellationToken);
+            await registry.CancelAsync(context.RequestHeaders.GetValue(GatewayMetadata.BindingCredential)!, request.StreamId, context.CancellationToken);
             return Encode(JsonSerializer.SerializeToElement(new { }));
         }
         catch (Exception error)
@@ -129,7 +129,7 @@ public sealed class GatewayService(GatewayRegistry registry) : WorkerGateway.Wor
         }
     }
 
-    private IPluginClient Authorize(ServerCallContext context) => registry.Get(context.RequestHeaders.GetValue("x-weaveport-binding"));
+    private IPluginClient Authorize(ServerCallContext context) => registry.Get(context.RequestHeaders.GetValue(GatewayMetadata.BindingCredential));
     private static JsonElement Decode(Request request)
     {
         if (request.Input.Length > 512 << 10)
@@ -149,6 +149,6 @@ public sealed class GatewayService(GatewayRegistry registry) : WorkerGateway.Wor
     {
         UnauthorizedAccessException => new(new Status(StatusCode.Unauthenticated, "binding-denied")),
         OperationCanceledException => new(new Status(StatusCode.Cancelled, "cancelled")),
-        PluginCallException call => new(new Status(StatusCode.FailedPrecondition, call.Status), new Metadata { { "may-have-executed", call.MayHaveExecuted ? "true" : "false" } }),
+        PluginCallException call => new(new Status(StatusCode.FailedPrecondition, call.Status), new Metadata { { GatewayMetadata.MayHaveExecuted, call.MayHaveExecuted ? "true" : "false" } }),
         _ => new(new Status(StatusCode.Internal, "gateway-failed"))};
 }

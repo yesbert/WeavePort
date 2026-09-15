@@ -3,7 +3,7 @@ using System.Text.Json;
 namespace WeavePort.Hosting;
 internal static class McpMessages
 {
-    private static readonly JsonElement ModernMetadata = JsonSerializer.SerializeToElement(new Dictionary<string, object> { ["io.modelcontextprotocol/protocolVersion"] = "2026-07-28", ["io.modelcontextprotocol/clientCapabilities"] = new { } });
+    private static readonly JsonElement ModernMetadata = JsonSerializer.SerializeToElement(new Dictionary<string, object> { [McpNames.ProtocolVersionMetadata] = McpNames.Revision20260728, [McpNames.ClientCapabilitiesMetadata] = new { } });
     internal static Task WriteAsync(Stream stream, string? id, string method, JsonElement parameters, string? revision, CancellationToken token)
     {
         var fields = new Dictionary<string, JsonElement>(StringComparer.Ordinal);
@@ -14,10 +14,10 @@ internal static class McpMessages
 
         if (revision is not null)
         {
-            fields.Add("_meta", ModernMetadata);
+            fields.Add(McpFields.Metadata, ModernMetadata);
         }
 
-        return Frames.WriteAsync(stream, new McpRequest("2.0", id, method, fields), McpWireJson.Default.McpRequest, token);
+        return Frames.WriteAsync(stream, new McpRequest(McpNames.JsonRpcVersion, id, method, fields), McpWireJson.Default.McpRequest, token);
     }
 
     internal static void Object(JsonElement value)
@@ -59,8 +59,8 @@ internal static class McpMessages
         {
             bool valid = method switch
             {
-                "tools/list" => property.NameEquals("cursor") && property.Value.ValueKind == JsonValueKind.String,
-                "tools/call" => property.NameEquals("name") && property.Value.ValueKind == JsonValueKind.String || property.NameEquals("arguments") && property.Value.ValueKind == JsonValueKind.Object,
+                McpNames.ListTools => property.NameEquals(McpFields.Cursor) && property.Value.ValueKind == JsonValueKind.String,
+                McpNames.CallTool => property.NameEquals(McpFields.Name) && property.Value.ValueKind == JsonValueKind.String || property.NameEquals(McpFields.Arguments) && property.Value.ValueKind == JsonValueKind.Object,
                 _ => false
             };
             if (!valid)
@@ -69,7 +69,7 @@ internal static class McpMessages
             }
         }
 
-        if (method is not ("tools/list" or "tools/call") || method == "tools/call" && string.IsNullOrWhiteSpace(String(parameters, "name")))
+        if (method is not (McpNames.ListTools or McpNames.CallTool) || method == McpNames.CallTool && string.IsNullOrWhiteSpace(String(parameters, McpFields.Name)))
         {
             throw new InvalidDataException("Unsupported MCP method or tool name.");
         }

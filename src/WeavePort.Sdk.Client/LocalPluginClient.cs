@@ -30,7 +30,7 @@ public sealed class LocalPluginClient(IPluginSession session, TimeSpan? streamTi
         try
         {
             CheckInput(input);
-            JsonElement output = await ExchangeAsync("$sdk.call", new { operation, input }, stop.Token);
+            JsonElement output = await ExchangeAsync(SdkOperations.Call, new { operation, input }, stop.Token);
             if (Size(output) > 512 << 10)
             {
                 throw new PluginCallException("value-limit");
@@ -61,12 +61,12 @@ public sealed class LocalPluginClient(IPluginSession session, TimeSpan? streamTi
         try
         {
             CheckInput(input);
-            JsonElement opened = await ExchangeAsync("$sdk.start", new { operation, input }, stop.Token);
+            JsonElement opened = await ExchangeAsync(SdkOperations.Start, new { operation, input }, stop.Token);
             stream = opened.GetProperty("stream").GetString() ?? throw new InvalidDataException("Missing stream.");
             while (!done)
             {
                 healthy = false;
-                JsonElement batch = await ExchangeAsync("$sdk.next", new { stream }, stop.Token);
+                JsonElement batch = await ExchangeAsync(SdkOperations.Next, new { stream }, stop.Token);
                 healthy = true;
                 JsonElement items = batch.GetProperty("items");
                 done = batch.GetProperty("done").GetBoolean();
@@ -131,7 +131,7 @@ public sealed class LocalPluginClient(IPluginSession session, TimeSpan? streamTi
         using var cleanup = new CancellationTokenSource(TimeSpan.FromSeconds(2));
         try
         {
-            await ExchangeAsync("$sdk.close", new { stream }, cleanup.Token);
+            await ExchangeAsync(SdkOperations.Close, new { stream }, cleanup.Token);
         }
         catch (Exception error) when (error is IOException or OperationCanceledException)
         {
