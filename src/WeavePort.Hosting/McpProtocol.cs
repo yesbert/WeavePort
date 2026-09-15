@@ -37,7 +37,7 @@ internal sealed class McpProtocol(ProcessProtocol protocol)
     {
         McpMessages.Parameters(method, parameters);
         JsonElement result = await RequestAsync(worker, id, method, parameters, token);
-        if (method == McpNames.ListTools)
+        if (method == McpMethods.ListTools)
         {
             ValidateList(result);
         }

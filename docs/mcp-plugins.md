@@ -8,6 +8,8 @@ A local MCP server is a child process offering functions over stdin/stdout. One 
 
 ## Bind and call
 
+The snippet uses the public `McpMethods` constants from the current source build. They are not in published NuGet 0.3.0; follow the local-package build in the example, or use `"tools/list"` and `"tools/call"` with that release. The wire protocol is unchanged.
+
 Use an absolute runtime executable and server entry-point path selected by the trusted application. Deploy dependencies beforehand: the host does not download servers or run package managers.
 
 ```csharp
@@ -31,9 +33,9 @@ await using var session = await host.BindAsync(
     context, profile, new NoCallbacks(), []);
 
 InvocationResult discovery = await session.InvokeAsync(
-    "tools/list", JsonSerializer.SerializeToElement(new { }));
+    McpMethods.ListTools, JsonSerializer.SerializeToElement(new { }));
 InvocationResult result = await session.InvokeAsync(
-    "tools/call", JsonSerializer.SerializeToElement(new
+    McpMethods.CallTool, JsonSerializer.SerializeToElement(new
     {
         name = "normalize",
         arguments = new { text = " hello   world " }

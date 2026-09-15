@@ -6,8 +6,6 @@ internal static class McpNames
     internal const string Revision20260728 = "2026-07-28";
     internal const string Initialize = "initialize";
     internal const string Discover = "server/discover";
-    internal const string ListTools = "tools/list";
-    internal const string CallTool = "tools/call";
     internal const string Ping = "ping";
     internal const string Initialized = "notifications/initialized";
     internal const string Cancelled = "notifications/cancelled";

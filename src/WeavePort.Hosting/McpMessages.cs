@@ -59,8 +59,8 @@ internal static class McpMessages
         {
             bool valid = method switch
             {
-                McpNames.ListTools => property.NameEquals(McpFields.Cursor) && property.Value.ValueKind == JsonValueKind.String,
-                McpNames.CallTool => property.NameEquals(McpFields.Name) && property.Value.ValueKind == JsonValueKind.String || property.NameEquals(McpFields.Arguments) && property.Value.ValueKind == JsonValueKind.Object,
+                McpMethods.ListTools => property.NameEquals(McpFields.Cursor) && property.Value.ValueKind == JsonValueKind.String,
+                McpMethods.CallTool => property.NameEquals(McpFields.Name) && property.Value.ValueKind == JsonValueKind.String || property.NameEquals(McpFields.Arguments) && property.Value.ValueKind == JsonValueKind.Object,
                 _ => false
             };
             if (!valid)
@@ -69,7 +69,7 @@ internal static class McpMessages
             }
         }
 
-        if (method is not (McpNames.ListTools or McpNames.CallTool) || method == McpNames.CallTool && string.IsNullOrWhiteSpace(String(parameters, McpFields.Name)))
+        if (method is not (McpMethods.ListTools or McpMethods.CallTool) || method == McpMethods.CallTool && string.IsNullOrWhiteSpace(String(parameters, McpFields.Name)))
         {
             throw new InvalidDataException("Unsupported MCP method or tool name.");
         }

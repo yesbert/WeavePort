@@ -563,6 +563,8 @@ A local MCP server is a child process offering functions over stdin/stdout. One 
 
 ## Bind and call
 
+The snippet uses the public `McpMethods` constants from the current source build. They are not in published NuGet 0.3.0; follow the local-package build in the example, or use `"tools/list"` and `"tools/call"` with that release. The wire protocol is unchanged.
+
 Use an absolute runtime executable and server entry-point path selected by the trusted application. Deploy dependencies beforehand: the host does not download servers or run package managers.
 
 ```csharp
@@ -586,9 +588,9 @@ await using var session = await host.BindAsync(
     context, profile, new NoCallbacks(), []);
 
 InvocationResult discovery = await session.InvokeAsync(
-    "tools/list", JsonSerializer.SerializeToElement(new { }));
+    McpMethods.ListTools, JsonSerializer.SerializeToElement(new { }));
 InvocationResult result = await session.InvokeAsync(
-    "tools/call", JsonSerializer.SerializeToElement(new
+    McpMethods.CallTool, JsonSerializer.SerializeToElement(new
     {
         name = "normalize",
         arguments = new { text = " hello   world " }
@@ -2174,6 +2176,13 @@ MCP workers SHALL obey existing global and tenant capacity, state retention, pri
 #### Scenario: Callback grants supplied
 - **WHEN** a consumer attempts to bind an MCP profile with native callback grants
 - **THEN** binding fails before registration or process startup
+
+### Requirement: Named MCP invocation methods
+Hosting SHALL expose `McpMethods.ListTools` and `McpMethods.CallTool` for callers of `IPluginSession.InvokeAsync`. Their values SHALL remain `tools/list` and `tools/call`; literal-string callers SHALL remain compatible.
+
+#### Scenario: Packed consumer discovers and calls tools
+- **WHEN** a consumer uses the named methods from the packed Hosting library
+- **THEN** discovery and invocation use the same wire methods and result semantics as literal-string calls
 
 ---
 
