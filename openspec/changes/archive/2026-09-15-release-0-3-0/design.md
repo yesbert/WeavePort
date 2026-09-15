@@ -25,3 +25,7 @@ Setuptools itself is MIT; its wheel also retains vendored Apache-2.0 and dual Ap
 ## Post-merge quality review
 
 The main-branch Sonar gate found five maintainability findings, no security hotspots, 84% new-code coverage and no duplication. Separate bounded receive-loop orchestration, unsolicited-message handling and response validation; name repeated envelope fields; cache report serialization options. Keep duplicate-field validation on the existing explicit loop with a small throwing helper to avoid adding a capturing LINQ predicate on every received object. These are behavior-preserving changes, checked by the existing malformed-traffic and lifecycle suite before release.
+
+## Final publication verification
+
+All four public NuGet 0.3.0 payloads match the qualified originals, excluding the added NuGet repository signature. Package icons and MCP readmes match. The public website deployment and MCP documentation were checked. Evidence is retained in reports/release/0.3.0/publication-check.json and the GitHub release assets.
