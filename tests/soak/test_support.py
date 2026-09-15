@@ -59,7 +59,7 @@ class SupervisorTests(unittest.TestCase):
         import zipfile
         with tempfile.TemporaryDirectory() as directory:
             feed = Path(directory)
-            with zipfile.ZipFile(feed / 'WeavePort.Sdk.0.2.1.nupkg', 'w') as archive:
+            with zipfile.ZipFile(feed / 'WeavePort.Sdk.0.3.0.nupkg', 'w') as archive:
                 archive.writestr('lib/net10.0/WeavePort.Sdk.dll', b'expected')
             verify_package(feed, 'WeavePort.Sdk', hashlib.sha256(b'expected').hexdigest())
             with self.assertRaises(RuntimeError):

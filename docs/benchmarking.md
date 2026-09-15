@@ -47,3 +47,7 @@ The summarizer refuses missing cells, missing author SDK verification, changed f
 For a multi-hour fault/recovery workload with early-stop controls and chronological resource evidence, see [supervised k6 soak testing](soak-testing.md). Optimization comparisons of source-built candidates are separate from the exact delivered release baseline.
 
 The [runtime optimization comparison](../reports/optimization/runtime-and-soak/README.md) records source-built before/after measurements separately from the delivered baseline.
+
+## MCP comparisons
+
+The [MCP fixture measurement](../tests/mcp/README.md) compares complete C# host calls to a native TypeScript plugin and an official MCP server. Keep these measurements separate from native before/after regressions and exact-release qualification. They include SDK and envelope differences and do not isolate wire-protocol cost.

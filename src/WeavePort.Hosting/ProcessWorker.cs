@@ -45,7 +45,15 @@ internal sealed class ProcessWorker(ProcessProfile profile, string version, Time
         }
 
         Reader = new Frames(_socket?.Stream ?? _process.StandardOutput.BaseStream);
-        WorkerEnvelope.ValidateReady(await Reader.ReadAsync(token), Version);
+        if (Mcp is null)
+        {
+            WorkerEnvelope.ValidateReady(await Reader.ReadAsync(token), Version);
+        }
+        else
+        {
+            await Mcp.InitializeAsync(this, token);
+        }
+
         ReadyAt = clock.GetTimestamp();
     }
 
@@ -125,6 +133,11 @@ internal sealed class ProcessWorker(ProcessProfile profile, string version, Time
             using var deadline = new CancellationTokenSource(TimeSpan.FromSeconds(5));
             if (_process is not null)
             {
+                if (Mcp is not null && !_process.HasExited)
+                {
+                    await CloseMcpInputAsync();
+                }
+
                 bool running = !_process.HasExited;
                 if (running)
                 {
@@ -154,6 +167,20 @@ internal sealed class ProcessWorker(ProcessProfile profile, string version, Time
         finally
         {
             _cleanup.Release();
+        }
+    }
+
+    private async Task CloseMcpInputAsync()
+    {
+        using var grace = new CancellationTokenSource(TimeSpan.FromMilliseconds(100));
+        try
+        {
+            _process!.StandardInput.Close();
+            await _process.WaitForExitAsync(grace.Token);
+        }
+        catch (Exception error) when (error is IOException or OperationCanceledException)
+        {
+        // The existing forced termination path follows when graceful shutdown cannot finish.
         }
     }
 

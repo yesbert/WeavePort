@@ -18,3 +18,7 @@
 Capacity, lifecycle, security, installations and load fixtures remain for focused adapter regressions. They do not redefine the current release's platform support or replace its current benchmark protocol. Historical comparator harnesses are available through [Git history](../docs/history.md).
 
 Local-only Docker/capacity/lifecycle/security consumers use `adapter-nuget.config` against the prepared feed, including its reviewed external dependency closure. Prepare core packages and Testing before building those fixtures; this is separate from restoring source-based core regressions.
+
+## MCP checks
+
+Host regressions include optional-MCP malformed-traffic, authority, quotas, cancellation and state-lifecycle checks. [Official SDK interoperability and comparative measurements](mcp/README.md) use an isolated development-only npm fixture. The full candidate verifier exercises its two protocol revisions against the packed host.

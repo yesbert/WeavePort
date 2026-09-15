@@ -35,8 +35,14 @@ The [core concepts](concepts.md) explain bindings, callbacks and ownership. The 
 
 ## Start with the right expectations
 
-WeavePort's native execution is for **owner-controlled code**. Workers run with the application's OS-user rights; separate processes are not a hostile-plugin sandbox. The current public release is 0.2.1 under MIT, with an evolving API. Windows, Linux and macOS are supported targets for trusted stdio execution. Current release validation covers macOS arm64; Windows and Linux release validation is pending. See [platform support and validation](../docs/platform-qualification.md) for transport and tooling differences.
+WeavePort's native execution is for **owner-controlled code**. Workers run with the application's OS-user rights; separate processes are not a hostile-plugin sandbox. The current public release is 0.3.0 under MIT, with an evolving API. Windows, Linux and macOS are supported targets for trusted stdio execution. Current release validation covers macOS arm64; Windows and Linux release validation is pending. See [platform support and validation](../docs/platform-qualification.md) for transport and tooling differences.
 
 Your application keeps its database and workflow architecture. It also keeps responsibility for durable state, retries and the meaning of external effects. A cancelled call does not prove an action never happened.
 
 See [packages and support](packages.md) and the [FAQ](faq.md), then choose a [running example](getting-started.md).
+
+## Bring existing MCP tools into the same host
+
+If a team already maintains an MCP server, you can reuse its local tools from C# instead of writing another protocol wrapper. WeavePort owns startup, deadlines, capacity and cleanup; your application chooses which tools it may invoke. Ordinary strategies can keep using native plugins with granted callbacks and streams.
+
+The optional integration supports `tools/list` and `tools/call` over local stdio, with explicitly selected 2025-11-25 and 2026-07-28 revisions. It requires trusted code and does not add a network endpoint or AI runtime. [Try the MCP example](../examples/mcp/README.md).

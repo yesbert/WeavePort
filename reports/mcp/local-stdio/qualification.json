@@ -1,0 +1,195 @@
+{
+  "sourceCommit": "c5685206a101fad5ebf519c56e4b3d55f0b17775",
+  "status": "passed",
+  "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+  "architecture": "arm64",
+  "dotnet": "10.0.401",
+  "node": "v24.18.0",
+  "assertions": 1080,
+  "artifactFiles": 139,
+  "artifactManifestSha256": "1e4945a6438d617ca27cac9048439d3c8757be1ccc0bd58888662893ccd0b9e3",
+  "stages": [
+    {
+      "name": "checkout",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 0.116,
+      "assertions": 0
+    },
+    {
+      "name": "tool-dotnet",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 0.1,
+      "assertions": 0
+    },
+    {
+      "name": "tool-python",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 0.014,
+      "assertions": 0
+    },
+    {
+      "name": "tool-node",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 0.021,
+      "assertions": 0
+    },
+    {
+      "name": "tool-npm",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 0.08,
+      "assertions": 0
+    },
+    {
+      "name": "dotnet-runtimes",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 0.005,
+      "assertions": 0
+    },
+    {
+      "name": "hosting-regressions",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 9.403,
+      "assertions": 418
+    },
+    {
+      "name": "gateway-regressions",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 4.353,
+      "assertions": 6
+    },
+    {
+      "name": "code-style",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 1.625,
+      "assertions": 0
+    },
+    {
+      "name": "documentation-regressions",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 0.083,
+      "assertions": 4
+    },
+    {
+      "name": "core-packages",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 3.885,
+      "assertions": 0
+    },
+    {
+      "name": "packed-hosting-regressions",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 8.897,
+      "assertions": 418
+    },
+    {
+      "name": "mcp-fixture-install",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 0.477,
+      "assertions": 0
+    },
+    {
+      "name": "packed-mcp-interop",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 0.304,
+      "assertions": 0
+    },
+    {
+      "name": "sdk-build",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 6.536,
+      "assertions": 0
+    },
+    {
+      "name": "decision-room-build",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 5.861,
+      "assertions": 0
+    },
+    {
+      "name": "document-workshop-build",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 3.891,
+      "assertions": 0
+    },
+    {
+      "name": "appointment-desk-build",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 4.148,
+      "assertions": 0
+    },
+    {
+      "name": "fixed-package-set",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 0.036,
+      "assertions": 0
+    },
+    {
+      "name": "decision-room-verify",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 7.578,
+      "assertions": 33
+    },
+    {
+      "name": "document-workshop-verify",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 3.797,
+      "assertions": 43
+    },
+    {
+      "name": "appointment-desk-verify",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 3.704,
+      "assertions": 68
+    },
+    {
+      "name": "sdk-verify",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 1.829,
+      "assertions": 12
+    },
+    {
+      "name": "recovery-verify",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 1.079,
+      "assertions": 12
+    },
+    {
+      "name": "compatibility-verify",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 6.543,
+      "assertions": 66
+    },
+    {
+      "name": "changed-package-refused",
+      "exitCode": 1,
+      "expectedExitCode": 1,
+      "seconds": 0.035,
+      "assertions": 0
+    }
+  ]
+}

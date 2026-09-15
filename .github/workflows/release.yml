@@ -29,7 +29,7 @@ jobs:
           python-version: '3.13'
       - uses: actions/setup-node@v7.0.0
         with:
-          node-version: '22'
+          node-version: '24.21.0'
       - name: Verify deliberate release identity
         env:
           TAG: ${{ github.ref_name }}

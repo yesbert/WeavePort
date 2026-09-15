@@ -6,7 +6,7 @@ The GitHub delivery target is [yesbert/WeavePort](https://github.com/yesbert/Wea
 
 The release allowlist in `build/release-packages.json` contains `WeavePort.Abstractions`, `WeavePort.Hosting`, `WeavePort.Sdk` and `WeavePort.Sdk.Client`. Gateway, Composition and Testing remain optional/experimental; adding them requires appropriate package-consumer evidence. Python and TypeScript author SDK publication is separate from NuGet delivery.
 
-The current release version is `0.2.1`, licensed under [MIT](../LICENSE). The four core package references and exact compatibility matrix use 0.2.1; host API and wire protocol remain 1. Python/TypeScript SDK versions remain 0.1.0 without registry publication. Historical internal distribution and measurement evidence retain their original identities. Public releases require a complete clean candidate qualification; a tag override cannot substitute for updating compatibility inputs.
+The current release version is `0.3.0`, licensed under [MIT](../LICENSE). The four core package references and exact compatibility matrix use 0.3.0; host API and wire protocol remain 1. Python/TypeScript SDK versions remain 0.1.0 without registry publication. Historical internal distribution and measurement evidence retain their original identities. Public releases require a complete clean candidate qualification; a tag override cannot substitute for updating compatibility inputs.
 
 ## Trusted Publishing setup
 
@@ -53,3 +53,9 @@ The [0.2.0 release report](../reports/release/0.2.0/README.md) retains publicati
 All core packages embed the existing website logo as their NuGet icon. Release export requires the embedded image to match the repository asset byte for byte. This patch changes package branding and exact compatibility versions; runtime APIs remain unchanged from 0.2.0.
 
 The [0.2.1 release report](../reports/release/0.2.1/README.md) records exact public package and gallery icon verification, with durable qualification artifacts.
+
+## 0.3.0 optional MCP tools
+
+Hosting adds explicitly selected local MCP 2025-11-25 and 2026-07-28 tools alongside native plugins. Discovery and calls share worker admission, tenant ownership, deadlines and cleanup. Native remains the default; there is no new MCP runtime dependency. Unsupported result continuations are rejected even if a server also supplies content. See the [MCP guide](mcp-plugins.md) and [executable example](../examples/mcp/README.md).
+
+Update all four core packages and exact installation declarations together. Native author SDKs remain 0.1.0 and are still source-built. Hosting uses Microsoft logging/DI abstractions 10.0.12; the optional gateway's build-only Grpc.Tools is 2.84.0. Remote MCP, arbitrary server SDKs and additional platform qualifications are outside this release.

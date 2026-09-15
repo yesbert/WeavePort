@@ -30,7 +30,7 @@ jobs:
           python-version: '3.13'
       - uses: actions/setup-node@v7.0.0
         with:
-          node-version: '22'
+          node-version: '24.21.0'
       - run: npm install --global @fission-ai/openspec@1.9.0
       - run: openspec validate --all --strict
       - run: python3 scripts/check-public-tree.py
@@ -71,7 +71,7 @@ jobs:
           python-version: '3.13'
       - uses: actions/setup-node@v7.0.0
         with:
-          node-version: '22'
+          node-version: '24.21.0'
       - name: Qualify committed source and packed consumers
         run: ./scripts/verify.sh
       - name: Retain qualification evidence
@@ -107,7 +107,7 @@ jobs:
           python-version: '3.14'
       - uses: actions/setup-node@v7.0.0
         with:
-          node-version: '24'
+          node-version: '24.21.0'
       - run: python scripts/ci/native.py
       - name: Retain native evidence
         if: always()

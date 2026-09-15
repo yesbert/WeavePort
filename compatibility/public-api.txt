@@ -219,12 +219,14 @@ type WeavePort.Hosting.ProcessProfile : WeavePort.Hosting.ExecutionProfile [Publ
   Method System.String[] get_Arguments() [Public] ()
   Method System.Type get_EqualityContract() [Family, Virtual] ()
   Method Void set_Executable(System.String) [Public] (value)
+  Method Void set_Protocol(WeavePort.Hosting.ProcessProtocol) [Public] (value)
   Method Void set_SocketBufferBytes(System.Nullable`1[System.Int32]) [Public] (value)
   Method Void set_TrustedCode(Boolean) [Public] (value)
   Method Void set_UseUnixSocket(Boolean) [Public] (value)
   Method Void set_WorkspaceRoot(System.String) [Public] (value)
   Method WeavePort.Hosting.ExecutionProtections get_Protection() [Public, Virtual] ()
   Method WeavePort.Hosting.ProcessProfile <Clone>$() [Public, Virtual] ()
+  Method WeavePort.Hosting.ProcessProtocol get_Protocol() [Public] ()
   Property Boolean TrustedCode
   Property Boolean UseUnixSocket
   Property System.Nullable`1[System.Int32] SocketBufferBytes
@@ -233,6 +235,16 @@ type WeavePort.Hosting.ProcessProfile : WeavePort.Hosting.ExecutionProfile [Publ
   Property System.String[] Arguments
   Property System.Type EqualityContract
   Property WeavePort.Hosting.ExecutionProtections Protection
+  Property WeavePort.Hosting.ProcessProtocol Protocol
+type WeavePort.Hosting.ProcessProtocol : System.Enum [Public, Sealed]
+  implements System.IComparable
+  implements System.IConvertible
+  implements System.IFormattable
+  implements System.ISpanFormattable
+  Field Int32 value__
+  Field WeavePort.Hosting.ProcessProtocol Mcp20251125=1
+  Field WeavePort.Hosting.ProcessProtocol Mcp20260728=2
+  Field WeavePort.Hosting.ProcessProtocol Native=0
 type WeavePort.Hosting.UnixSocketTransport : System.Object [Public, Sealed]
   implements System.IEquatable`1[WeavePort.Hosting.UnixSocketTransport]
   Constructor Void .ctor(System.String, System.String) [Public] (LocalDirectory, DockerDirectory)
