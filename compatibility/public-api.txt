@@ -189,6 +189,9 @@ type WeavePort.Hosting.InstalledPluginCatalog : System.Object [Public, Sealed]
   Method System.String ReadSelection(System.String) [Public, Static] (path)
   Method Void Activate(System.String, System.String, System.String, System.String) [Public] (selector, plugin, version, contract)
   Method WeavePort.Hosting.InstalledPlugin Resolve(System.String, System.String, System.String, WeavePort.Hosting.InstallationIdentity) [Public] (plugin, version, contract, pinned=null)
+type WeavePort.Hosting.McpMethods : System.Object [Public, Abstract, Sealed]
+  Field System.String CallTool="tools/call"
+  Field System.String ListTools="tools/list"
 type WeavePort.Hosting.PluginHost : System.Object [Public, Sealed]
   implements System.IAsyncDisposable
   Constructor Void .ctor(Int32, WeavePort.Hosting.WorkerPoolOptions, System.TimeProvider) [Public] (maximumCallsPerTenant=4, options=null, timeProvider=null)
