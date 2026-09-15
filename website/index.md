@@ -7,7 +7,7 @@ description: Add C#, Python and TypeScript plugins to your .NET product. WeavePo
 <section class="wp-hero">
 <a class="wp-release" href="packages.md"><span class="wp-dot" aria-hidden="true"></span> Meet WeavePort 0.3.0 <span aria-hidden="true">↗</span></a>
 <h1>Turn your .NET app<br> <em>into a platform.</em></h1>
-<p class="wp-lead">Add document readers, scoring strategies and customer-specific rules in <strong>C#, Python or TypeScript.</strong> WeavePort runs the plugins. Your application keeps control of data and permissions.</p>
+<p class="wp-lead">Add document readers, scoring strategies and customer-specific rules in <strong>C#, Python or TypeScript.</strong> Reuse local MCP tools too. WeavePort manages the workers. Your application keeps control of data and permissions.</p>
 <div class="wp-actions"><a class="btn btn-primary" href="getting-started.md">Run your first example <span aria-hidden="true">→</span></a><a class="wp-text-link" href="introduction.md">Discover WeavePort <span aria-hidden="true">↗</span></a></div>
 <p class="wp-hero-note">Open source · MIT licensed · Built for .NET 10</p>
 </section>
@@ -76,7 +76,7 @@ await app.run();
 <div class="wp-section-heading"><p class="wp-eyebrow">BUILD WHAT MAKES YOUR PRODUCT DIFFERENT</p><h2 id="benefits-heading">More room for ideas.<br> Less runtime plumbing.</h2><p>A new reader. A different algorithm. A customer’s own rules. Give each one a defined place in your application.</p></div>
 <div class="wp-benefits">
 <div class="wp-benefit"><span class="wp-feature-icon" aria-hidden="true">{ }</span><h3>Let the language fit the job.</h3><p>Use Python for a strategy, TypeScript for a rule or C# for a reader. Your .NET application calls them through the same client interface.</p><a href="../docs/plugin-sdk.md">Functions and streams →</a></div>
-<div class="wp-benefit"><span class="wp-feature-icon" aria-hidden="true">↗</span><h3>Open the right doors.</h3><p>Plugins reach your services through explicit callback grants. The application supplies the tenant identity and checks access to each object.</p><a href="../docs/security-architecture.md">How access works →</a></div>
+<div class="wp-benefit"><span class="wp-feature-icon" aria-hidden="true">↗</span><h3>Open the right doors.</h3><p>Native plugins reach your services through explicit callback grants. The application supplies the tenant identity and checks access to each object.</p><a href="../docs/security-architecture.md">How access works →</a></div>
 <div class="wp-benefit"><span class="wp-feature-icon" aria-hidden="true">⌘</span><h3>Give workers one home.</h3><p>Share startup, deadlines, worker budgets and cleanup through one host. The coordinator template connects that budget to application operations.</p><a href="../docs/embedded-coordinator.md">Embed the runtime →</a></div>
 <div class="wp-benefit"><span class="wp-feature-icon" aria-hidden="true">≡</span><h3>Keep your application's architecture.</h3><p>Your contracts, database and workflows stay yours. WeavePort is a set of NuGet libraries embedded in your backend.</p><a href="introduction.md">Where WeavePort fits →</a></div>
 </div>

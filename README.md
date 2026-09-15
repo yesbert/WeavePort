@@ -21,7 +21,7 @@ Point your assistant at [llms.txt](https://weaveport.dev/llms.txt), or load the 
 ## Why WeavePort?
 
 - **Let each extension use the right language.** Write plugins in C#, Python or TypeScript and invoke them through one .NET client interface. Function names and JSON schemas remain your application's contract.
-- **Keep data access in your application.** Give plugins explicit callback capabilities. Your host supplies the authenticated context and checks access to individual objects.
+- **Keep data access in your application.** Give native plugins explicit callback capabilities. Your host supplies the authenticated context and checks access to individual objects.
 - **Share the runtime work.** One host manages worker startup, deadlines, admission and cleanup. The coordinator template shares those budgets across application operations.
 - **Keep your product's architecture.** Your application chooses its database, workflows and recovery policy. WeavePort arrives as NuGet libraries you embed in your backend.
 
