@@ -6,6 +6,7 @@ using WeavePort.Hosting;
 
 internal static class McpMeasurements
 {
+    private static readonly JsonSerializerOptions ReportOptions = new() { WriteIndented = true };
     internal static async Task RunAsync(string executable, string fixtureRoot, string output)
     {
         string workspace = Path.Combine(Path.GetTempPath(), "wp-mcp-measure-" + Guid.NewGuid().ToString("N"));
@@ -51,7 +52,7 @@ internal static class McpMeasurements
                 hostingSha256 = Convert.ToHexString(SHA256.HashData(File.ReadAllBytes(typeof(PluginHost).Assembly.Location))),
                 nodeSha256 = Convert.ToHexString(SHA256.HashData(File.ReadAllBytes(executable))),
                 passed = true, runs
-            }, new JsonSerializerOptions { WriteIndented = true }));
+            }, ReportOptions));
             Console.WriteLine("PASS 18000 measured complete calls across native and two MCP revisions");
         }
         finally { if (Directory.Exists(workspace)) Directory.Delete(workspace, true); }

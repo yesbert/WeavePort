@@ -30,10 +30,15 @@ internal static class McpMessages
         var names = new HashSet<string>(StringComparer.Ordinal);
         foreach (JsonProperty property in value.EnumerateObject())
         {
-            if (!names.Add(property.Name))
-            {
-                throw new InvalidDataException("Repeated MCP field.");
-            }
+            AddUniqueName(names, property.Name);
+        }
+    }
+
+    private static void AddUniqueName(HashSet<string> names, string name)
+    {
+        if (!names.Add(name))
+        {
+            throw new InvalidDataException("Repeated MCP field.");
         }
     }
 

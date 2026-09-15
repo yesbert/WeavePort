@@ -3,6 +3,8 @@ using System.Text.Json;
 namespace WeavePort.Hosting;
 internal sealed class McpProtocol(ProcessProtocol protocol)
 {
+    private const string ResultField = "result";
+    private const string ErrorField = "error";
     private static readonly JsonElement Empty = JsonSerializer.SerializeToElement(new { });
     private readonly string _revision = protocol == ProcessProtocol.Mcp20251125 ? "2025-11-25" : "2026-07-28";
     private bool _writingResponse;
@@ -103,7 +105,7 @@ internal sealed class McpProtocol(ProcessProtocol protocol)
 
     private async Task RespondToPingAsync(Worker worker, JsonElement frame, CancellationToken token)
     {
-        if (!frame.TryGetProperty("id", out JsonElement id) || id.ValueKind is not (JsonValueKind.String or JsonValueKind.Number) || frame.TryGetProperty("result", out _) || frame.TryGetProperty("error", out _))
+        if (!frame.TryGetProperty("id", out JsonElement id) || id.ValueKind is not (JsonValueKind.String or JsonValueKind.Number) || frame.TryGetProperty(ResultField, out _) || frame.TryGetProperty(ErrorField, out _))
         {
             throw new InvalidDataException("Invalid MCP ping request.");
         }
@@ -136,53 +138,62 @@ internal sealed class McpProtocol(ProcessProtocol protocol)
                     throw new InvalidDataException("MCP notification budget exceeded.");
                 }
 
-                string method = McpMessages.String(frame, "method");
-                if (!Modern && method == "ping")
-                {
-                    await RespondToPingAsync(worker, frame, token);
-                    continue;
-                }
-
-                if (frame.TryGetProperty("id", out _) || frame.TryGetProperty("result", out _) || frame.TryGetProperty("error", out _) || method is not ("notifications/message" or "notifications/progress" or "notifications/tools/list_changed"))
-                {
-                    throw new InvalidDataException("Unsupported MCP server interaction.");
-                }
-
-                if (frame.TryGetProperty("params", out JsonElement parameters))
-                {
-                    McpMessages.Object(parameters);
-                }
-
+                await HandleServerMessageAsync(worker, frame, token);
                 continue;
             }
 
-            if (McpMessages.String(frame, "id") != id || frame.TryGetProperty("params", out _) || frame.TryGetProperty("result", out _) == frame.TryGetProperty("error", out _))
-            {
-                throw new InvalidDataException("MCP response correlation or envelope violation.");
-            }
-
-            if (frame.TryGetProperty("error", out JsonElement error))
-            {
-                McpMessages.Object(error);
-                if (!error.TryGetProperty("code", out JsonElement code) || code.ValueKind != JsonValueKind.Number || !code.TryGetInt32(out _))
-                {
-                    throw new InvalidDataException("Invalid MCP error code.");
-                }
-
-                _ = McpMessages.String(error, "message");
-                throw new IOException("MCP server reported a request error.");
-            }
-
-            JsonElement result = frame.GetProperty("result");
-            McpMessages.Object(result);
-            if (result.TryGetProperty("resultType", out JsonElement resultType) && (resultType.ValueKind != JsonValueKind.String || resultType.GetString() != "complete"))
-            {
-                throw new InvalidDataException("Unsupported MCP result continuation.");
-            }
-
-            return result;
+            return ReadResponse(frame, id);
         }
 
         throw new InvalidDataException("MCP notification budget exceeded.");
+    }
+
+    private async Task HandleServerMessageAsync(Worker worker, JsonElement frame, CancellationToken token)
+    {
+        string method = McpMessages.String(frame, "method");
+        if (!Modern && method == "ping")
+        {
+            await RespondToPingAsync(worker, frame, token);
+            return;
+        }
+
+        if (frame.TryGetProperty("id", out _) || frame.TryGetProperty(ResultField, out _) || frame.TryGetProperty(ErrorField, out _) || method is not ("notifications/message" or "notifications/progress" or "notifications/tools/list_changed"))
+        {
+            throw new InvalidDataException("Unsupported MCP server interaction.");
+        }
+
+        if (frame.TryGetProperty("params", out JsonElement parameters))
+        {
+            McpMessages.Object(parameters);
+        }
+    }
+
+    private static JsonElement ReadResponse(JsonElement frame, string id)
+    {
+        if (McpMessages.String(frame, "id") != id || frame.TryGetProperty("params", out _) || frame.TryGetProperty(ResultField, out _) == frame.TryGetProperty(ErrorField, out _))
+        {
+            throw new InvalidDataException("MCP response correlation or envelope violation.");
+        }
+
+        if (frame.TryGetProperty(ErrorField, out JsonElement error))
+        {
+            McpMessages.Object(error);
+            if (!error.TryGetProperty("code", out JsonElement code) || code.ValueKind != JsonValueKind.Number || !code.TryGetInt32(out _))
+            {
+                throw new InvalidDataException("Invalid MCP error code.");
+            }
+
+            _ = McpMessages.String(error, "message");
+            throw new IOException("MCP server reported a request error.");
+        }
+
+        JsonElement result = frame.GetProperty(ResultField);
+        McpMessages.Object(result);
+        if (result.TryGetProperty("resultType", out JsonElement resultType) && (resultType.ValueKind != JsonValueKind.String || resultType.GetString() != "complete"))
+        {
+            throw new InvalidDataException("Unsupported MCP result continuation.");
+        }
+
+        return result;
     }
 }
