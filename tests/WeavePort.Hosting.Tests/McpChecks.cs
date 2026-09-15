@@ -55,7 +55,7 @@ internal static class McpChecks
     }
     private static async Task Faults(ProcessProtocol protocol)
     {
-        foreach (string fault in new[] { "duplicate", "wrong-id", "both", "request", "depth", "oversize", "malformed", "utf8", "flood", "interaction", "version", "eof" })
+        foreach (string fault in new[] { "duplicate", "wrong-id", "both", "request", "depth", "oversize", "malformed", "utf8", "flood", "interaction", "interaction-content", "version", "eof" })
         {
             await using var host = new PluginHost();
             await using var a = await Bind(host, Profile(protocol, fault));

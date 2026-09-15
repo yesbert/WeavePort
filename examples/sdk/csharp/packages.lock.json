@@ -4,9 +4,9 @@
     "net10.0": {
       "WeavePort.Sdk": {
         "type": "Direct",
-        "requested": "[0.2.1, )",
-        "resolved": "0.2.1",
-        "contentHash": "OtI2UhjUm9GgrZtUfBe1SHuDwgbdpzuZqWQQZU0kaQRznlBF86CrNnpGqp/n3XMlYUaM+svAW4hCnakS9P4oJQ=="
+        "requested": "[0.3.0, )",
+        "resolved": "0.3.0",
+        "contentHash": "N3ja4/sA1qAoSQDwKxBq/8ccqUb9SA2yBP3EJuiPv7pRZLui+00z7DPZlt7NXG0KHbKhPSca+Yo85hnM7CFzzQ=="
       }
     }
   }

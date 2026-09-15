@@ -12,15 +12,6 @@
           "WeavePort.Abstractions": "0.3.0"
         }
       },
-      "WeavePort.Sdk.Client": {
-        "type": "Direct",
-        "requested": "[0.3.0, )",
-        "resolved": "0.3.0",
-        "contentHash": "IQbXGpuRw6W4lEZCrF1bI3YkZG7Gir4kZ8KDKDpDJZGKeaeBO8hTy3VwUd7uYWLePtl6yzGYO38E5alY9pbWJQ==",
-        "dependencies": {
-          "WeavePort.Abstractions": "0.3.0"
-        }
-      },
       "Microsoft.Extensions.DependencyInjection.Abstractions": {
         "type": "Transitive",
         "resolved": "10.0.12",
@@ -38,9 +29,6 @@
         "type": "Transitive",
         "resolved": "0.3.0",
         "contentHash": "85q7hEabz0JDlSD8x8sQqG0grHySYnrbtGsPIuNCg4GFO77NAifYI4DTsmExsNXz6n3NZPyqdVWoNZ+3FU/nNA=="
-      },
-      "decisionroom.contracts": {
-        "type": "Project"
       }
     }
   }

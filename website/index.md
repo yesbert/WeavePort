@@ -5,11 +5,19 @@ description: Add C#, Python and TypeScript plugins to your .NET product. WeavePo
 ---
 
 <section class="wp-hero">
-<a class="wp-release" href="packages.md"><span class="wp-dot" aria-hidden="true"></span> Meet WeavePort 0.2.1 <span aria-hidden="true">↗</span></a>
+<a class="wp-release" href="packages.md"><span class="wp-dot" aria-hidden="true"></span> Meet WeavePort 0.3.0 <span aria-hidden="true">↗</span></a>
 <h1>Turn your .NET app<br> <em>into a platform.</em></h1>
 <p class="wp-lead">Add document readers, scoring strategies and customer-specific rules in <strong>C#, Python or TypeScript.</strong> WeavePort runs the plugins. Your application keeps control of data and permissions.</p>
 <div class="wp-actions"><a class="btn btn-primary" href="getting-started.md">Run your first example <span aria-hidden="true">→</span></a><a class="wp-text-link" href="introduction.md">Discover WeavePort <span aria-hidden="true">↗</span></a></div>
 <p class="wp-hero-note">Open source · MIT licensed · Built for .NET 10</p>
+</section>
+
+<section class="wp-section">
+<p class="wp-eyebrow">MCP tools, managed by your .NET host</p>
+<h2>Reuse the tool. Keep control of its lifecycle.</h2>
+<p>Bring trusted local MCP servers into the same host as your C#, Python and TypeScript plugins. Discover tools, call them from C#, and share worker budgets, deadlines and cleanup. One server can offer many capabilities. No AI model required.</p>
+<p><a href="../docs/mcp-plugins.md">Use MCP tools →</a> · <a href="../examples/mcp/README.md">Run the C# example →</a></p>
+<p>Local stdio · MCP 2025-11-25 and 2026-07-28 · tools/list and tools/call. Native plugins remain the default. Remote HTTP and interactive continuations are outside this release; local code must be trusted.</p>
 </section>
 
 <section class="wp-showcase" aria-labelledby="language-heading">
@@ -61,7 +69,7 @@ await app.run();
 </div>
 <div class="wp-contract"><p class="wp-eyebrow">YOUR .NET APPLICATION</p><h3>The same call.<br> Whichever language you choose.</h3><div class="wp-contract-row"><span>Function</span><code>echo</code></div><div class="wp-contract-row"><span>Input</span><code>{ "message": "hello" }</code></div><div class="wp-contract-row"><span>Result</span><code>{ "message": "hello" }</code></div><p class="wp-caption">Illustrative contract. Your host selects the artifact and authorizes the binding before calling it.</p><a href="getting-started.md">Run the complete integration <span aria-hidden="true">→</span></a></div>
 </div>
-<p class="wp-support-line">Windows, Linux and macOS. Trusted plugins over standard input/output. Release validation: macOS arm64; Windows and Linux validation pending. The 0.2.1 API is evolving; native execution is not a hostile-code sandbox. <a href="packages.md">See support details.</a></p>
+<p class="wp-support-line">Windows, Linux and macOS. Trusted plugins over standard input/output. Release validation: macOS arm64; Windows and Linux validation pending. The 0.3.0 API is evolving; native execution is not a hostile-code sandbox. <a href="packages.md">See support details.</a></p>
 </section>
 
 <section class="wp-section" aria-labelledby="benefits-heading">
@@ -99,5 +107,5 @@ cd WeavePort
 
 <section class="wp-section wp-faq" aria-labelledby="faq-heading">
 <div><p class="wp-eyebrow">BEFORE YOU BUILD</p><h2 id="faq-heading">A few useful answers.</h2><a href="faq.md">Read the full FAQ →</a></div>
-<div><details><summary>Is this a good fit for my application?</summary><p>WeavePort fits a .NET backend that needs owner-approved extension code: strategies, readers and domain rules. You define each contract, choose the artifacts and decide which application services they can call.</p></details><details><summary>Can I run untrusted plugins?</summary><p>The native execution path runs with your application’s OS-user rights. It is for trusted code. Running arbitrary untrusted uploads needs a stronger, separately qualified execution boundary.</p></details><details><summary>What can I install today?</summary><p>The four core NuGet packages are public at 0.2.1 under MIT. Python and TypeScript author SDKs are built from this repository. The API is evolving. Trusted stdio execution supports Windows, Linux and macOS; Windows and Linux release validation is pending. Remote production deployment is not qualified by this release.</p></details><details><summary>Do I need to change my database or workflows?</summary><p>Your application keeps its own domain contracts, durable state and recovery policy. WeavePort manages the execution layer; callbacks connect plugins to services you already own.</p></details></div>
+<div><details><summary>Is this a good fit for my application?</summary><p>WeavePort fits a .NET backend that needs owner-approved extension code: strategies, readers and domain rules. You define each contract, choose the artifacts and decide which application services they can call.</p></details><details><summary>Can I run untrusted plugins?</summary><p>The native execution path runs with your application’s OS-user rights. It is for trusted code. Running arbitrary untrusted uploads needs a stronger, separately qualified execution boundary.</p></details><details><summary>What can I install today?</summary><p>The four core NuGet packages are public at 0.3.0 under MIT. Python and TypeScript author SDKs are built from this repository. The API is evolving. Trusted stdio execution supports Windows, Linux and macOS; Windows and Linux release validation is pending. Remote production deployment is not qualified by this release.</p></details><details><summary>Do I need to change my database or workflows?</summary><p>Your application keeps its own domain contracts, durable state and recovery policy. WeavePort manages the execution layer; callbacks connect plugins to services you already own.</p></details></div>
 </section>

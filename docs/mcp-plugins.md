@@ -1,8 +1,10 @@
 # Optional local MCP plugins
 
-This source implementation adds MCP tools alongside the default WeavePort protocol. It is not included in the published 0.2.1 packages; build the current source to evaluate it. No extra runtime package dependency is required by Hosting.
+Reuse local MCP tools from your .NET application while keeping native plugins for application-specific contracts. The 0.3.0 package line adds MCP tools alongside the default WeavePort protocol. No extra runtime package dependency is required by Hosting.
 
 A local MCP server is a child process offering functions over stdin/stdout. One process can offer many tools. It needs neither a network listener nor an AI model. Existing native plugins remain native. Consuming MCP servers is separate from exposing WeavePort functions through an external MCP gateway; this implementation only consumes local servers.
+
+[Run the complete C# example](../examples/mcp/README.md) to discover and call the same server using both supported revisions.
 
 ## Bind and call
 

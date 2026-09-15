@@ -1,11 +1,10 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <IsPackable>false</IsPackable>
-    <ServerGarbageCollection>false</ServerGarbageCollection>
     <RestoreSources>../../artifacts/packages;https://api.nuget.org/v3/index.json</RestoreSources>
-    <RestorePackagesPath>../../artifacts/sdk-packages</RestorePackagesPath>
+    <RestorePackagesPath>../../artifacts/mcp-example-packages</RestorePackagesPath>
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
   </PropertyGroup>
-  <ItemGroup><PackageReference Include="WeavePort.Sdk.Gateway" Version="0.3.0" /></ItemGroup>
+  <ItemGroup><PackageReference Include="WeavePort.Hosting" Version="0.3.0" /></ItemGroup>
 </Project>

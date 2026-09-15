@@ -64,6 +64,7 @@ def build_candidate(checkout, env, run, stage):
     stage("packed-hosting-regressions", ["dotnet", "run", "--project", "tests/WeavePort.Hosting.Tests", "-c", "Release", "-p:UsePackedCore=true"])
     stage("mcp-fixture-install", ["npm", "ci", "--prefix", "tests/mcp", "--ignore-scripts"])
     stage("packed-mcp-interop", ["dotnet", "tests/WeavePort.Hosting.Tests/bin/Release/net10.0/WeavePort.Hosting.Tests.dll", "--mcp-interop", shutil.which("node"), str(checkout / "tests/mcp/server.mjs")])
+    stage("packed-mcp-example", ["dotnet", "run", "--project", "examples/mcp", "-c", "Release", "--", shutil.which("node"), str(checkout / "tests/mcp/server.mjs")])
     packages = {p.name: sha(p) for p in sorted((checkout / "artifacts/packages").glob("*.nupkg"))}
     package_set = run / "package-set.json"
     package_set.write_text(json.dumps(packages, indent=2))

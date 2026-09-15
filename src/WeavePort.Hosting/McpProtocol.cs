@@ -175,6 +175,11 @@ internal sealed class McpProtocol(ProcessProtocol protocol)
 
             JsonElement result = frame.GetProperty("result");
             McpMessages.Object(result);
+            if (result.TryGetProperty("resultType", out JsonElement resultType) && (resultType.ValueKind != JsonValueKind.String || resultType.GetString() != "complete"))
+            {
+                throw new InvalidDataException("Unsupported MCP result continuation.");
+            }
+
             return result;
         }
 

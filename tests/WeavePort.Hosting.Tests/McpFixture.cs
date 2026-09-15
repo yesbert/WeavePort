@@ -52,6 +52,7 @@ internal static class McpFixture
             if (fault == "eof") return;
             if (fault == "flood") { for (int i = 0; i < 34; i++) Console.WriteLine("{\"jsonrpc\":\"2.0\",\"method\":\"notifications/message\",\"params\":{}}"); }
             if (fault == "interaction") { Reply(id, new { resultType = "input_required", inputRequests = new[] { new { method = "sampling/createMessage" } } }); continue; }
+            if (fault == "interaction-content") { Reply(id, new { resultType = "input_required", content = Array.Empty<object>(), inputRequests = new { } }); continue; }
             var parameters = request.GetProperty("params");
             object value = operation == "counter" ? new { counter = ++counter, pid = Environment.ProcessId } : (object)parameters.GetProperty("arguments");
             Reply(id, new { content = Array.Empty<object>(), structuredContent = value, isError = operation == "fail", received = request });

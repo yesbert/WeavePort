@@ -4,13 +4,13 @@
 
 # Turn your .NET app into a platform.
 
-**Add C#, Python and TypeScript plugins to your product.** WeavePort runs them, connects them to approved application services and manages their workers. Your application owns the data, permissions and business rules.
+**Add C#, Python and TypeScript plugins—and reuse local MCP tools—in your .NET product.** WeavePort runs them, connects them to approved application services and manages their workers. Your application owns the data, permissions and business rules.
 
 Build document readers, evaluation strategies or customer-specific scheduling rules as plugins. Give each one the access it needs and call it through the same .NET client contract.
 
-[Get started](website/getting-started.md) · [Why WeavePort?](website/introduction.md) · [Write a plugin](docs/plugin-sdk.md) · [NuGet packages](website/packages.md)
+[Get started](website/getting-started.md) · [Why WeavePort?](website/introduction.md) · [Write a plugin](docs/plugin-sdk.md) · [NuGet packages](website/packages.md) · [Use MCP tools](docs/mcp-plugins.md)
 
-**MIT · .NET 10 · Windows, Linux & macOS · Public release 0.2.1**
+**MIT · .NET 10 · Windows, Linux & macOS · Public release 0.3.0**
 
 Built for .NET. Designed for Windows, Linux and macOS. The supported cross-platform execution path uses standard input/output (stdio) for owner-controlled plugins. Current release validation covers macOS arm64; Windows and Linux release validation is pending. See the [platform support and validation matrix](docs/platform-qualification.md). The pre-1.0 API is evolving; native processes are not a sandbox for hostile code.
 
@@ -24,6 +24,14 @@ Point your assistant at [llms.txt](https://weaveport.dev/llms.txt), or load the 
 - **Keep data access in your application.** Give plugins explicit callback capabilities. Your host supplies the authenticated context and checks access to individual objects.
 - **Share the runtime work.** One host manages worker startup, deadlines, admission and cleanup. The coordinator template shares those budgets across application operations.
 - **Keep your product's architecture.** Your application chooses its database, workflows and recovery policy. WeavePort arrives as NuGet libraries you embed in your backend.
+
+## Reuse tools your team already has
+
+A capability may already have an MCP server. Hosting can launch that trusted local server, discover its tools and call them from C# under the same lifecycle and tenant budgets as native plugins. One server can expose many ordinary functions; no AI model is required.
+
+Choose native plugins for application-specific contracts, granted callbacks and result streams. Choose the optional MCP tools subset for existing local servers. Native remains the default; MCP adds no runtime package dependency to Hosting.
+
+[Run the C# MCP example](examples/mcp/README.md) or [follow the integration guide](docs/mcp-plugins.md). Supported revisions: **2025-11-25 and 2026-07-28**, over **local stdio**, with `tools/list` and `tools/call`. Remote HTTP, interactive continuations and an exported MCP gateway are outside this release. Local servers still require trusted code.
 
 ## See it working
 
@@ -62,8 +70,8 @@ The same SDK supports asynchronous result streams and granted host callbacks. Py
 In the .NET application project:
 
 ```sh
-dotnet add package WeavePort.Hosting --version 0.2.1
-dotnet add package WeavePort.Sdk.Client --version 0.2.1
+dotnet add package WeavePort.Hosting --version 0.3.0
+dotnet add package WeavePort.Sdk.Client --version 0.3.0
 ```
 
 For a C# plugin, reference `WeavePort.Sdk` at the same version. `WeavePort.Abstractions` contains the shared contracts. These are the four public packages; optional Gateway, Composition and Testing are outside this release.

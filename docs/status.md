@@ -1,6 +1,6 @@
 # Product status
 
-Public NuGet version: **0.2.1**, under MIT, with four core packages: Abstractions, Hosting, Sdk and Sdk.Client. Windows, Linux and macOS are supported targets for trusted stdio execution. Current release validation covers macOS arm64; Windows and Linux release validation is pending. See [platform support and validation](platform-qualification.md). This pre-1.0 API remains subject to evolution. Python/TypeScript registry publication and a new offline distribution are outside this release. The historical internal distribution remains **0.1.0-internal.2**.
+Public NuGet version: **0.3.0**, under MIT, with four core packages: Abstractions, Hosting, Sdk and Sdk.Client. Windows, Linux and macOS are supported targets for trusted stdio execution. Current release validation covers macOS arm64; Windows and Linux release validation is pending. See [platform support and validation](platform-qualification.md). This pre-1.0 API remains subject to evolution. Python/TypeScript registry publication and a new offline distribution are outside this release. The historical internal distribution remains **0.1.0-internal.2**.
 
 The [0.2.1 public release evidence](../reports/release/0.2.1/README.md) records 874 assertion executions, exact tested package/symbol provenance, successful Trusted Publishing and matching public NuGet package payloads and project icons.
 
@@ -26,4 +26,4 @@ The [repository cleanup qualification](../reports/verification/current/README.md
 
 ## Unreleased source capability
 
-The current source adds [optional local MCP tools](mcp-plugins.md) alongside the native protocol, with explicit 2025-11-25/2026-07-28 selection. This is not part of published 0.2.1. The guide and [measurement report](../reports/mcp/local-stdio/README.md) identify the tested subset and platform limits.
+The 0.3.0 release adds [optional local MCP tools](mcp-plugins.md) alongside the native protocol, with explicit 2025-11-25/2026-07-28 selection. Included in the 0.3.0 package line. The guide and [measurement report](../reports/mcp/local-stdio/README.md) identify the tested subset and platform limits.
