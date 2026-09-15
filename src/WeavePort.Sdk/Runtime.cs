@@ -58,14 +58,14 @@ internal sealed class Runtime(PluginApplication application)
 
     private async Task<object> DispatchAsync(string operation, JsonElement payload, CancellationToken token)
     {
-        if (operation is "$sdk.next" or "$sdk.close")
+        if (operation is SdkOperations.Next or SdkOperations.Close)
         {
             if (_streamId is null || payload.GetProperty("stream").GetString() != _streamId)
             {
                 throw new InvalidDataException("Stream ownership.");
             }
 
-            if (operation == "$sdk.close")
+            if (operation == SdkOperations.Close)
             {
                 await CloseAsync();
                 return new
@@ -84,12 +84,12 @@ internal sealed class Runtime(PluginApplication application)
         string name = payload.GetProperty("operation").GetString()!;
         JsonElement input = payload.GetProperty("input");
         var context = new PluginCallContext(_request.GetProperty("context"), CallbackAsync);
-        if (operation == "$sdk.call")
+        if (operation == SdkOperations.Call)
         {
             return await application.Functions[name](input, context, token);
         }
 
-        if (operation != "$sdk.start")
+        if (operation != SdkOperations.Start)
         {
             throw new InvalidDataException("Unknown SDK operation.");
         }

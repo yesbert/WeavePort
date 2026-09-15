@@ -51,7 +51,7 @@
       "weaveport.sdk.client": {
         "type": "Project",
         "dependencies": {
-          "WeavePort.Abstractions": "[0.3.0, )"
+          "WeavePort.Abstractions": "[0.3.1, )"
         }
       }
     }

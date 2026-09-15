@@ -51,3 +51,10 @@ MCP workers SHALL obey existing global and tenant capacity, state retention, pri
 #### Scenario: Callback grants supplied
 - **WHEN** a consumer attempts to bind an MCP profile with native callback grants
 - **THEN** binding fails before registration or process startup
+
+### Requirement: Named MCP invocation methods
+Hosting SHALL expose `McpMethods.ListTools` and `McpMethods.CallTool` for callers of `IPluginSession.InvokeAsync`. Their values SHALL remain `tools/list` and `tools/call`; literal-string callers SHALL remain compatible.
+
+#### Scenario: Packed consumer discovers and calls tools
+- **WHEN** a consumer uses the named methods from the packed Hosting library
+- **THEN** discovery and invocation use the same wire methods and result semantics as literal-string calls

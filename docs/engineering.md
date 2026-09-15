@@ -22,6 +22,8 @@ Use source-generated `[LoggerMessage]` methods for C# logging, stable event iden
 
 Use an injected `TimeProvider` for persisted or compared timestamps. Traces use activities and metrics; reproducible benchmark elapsed times use a monotonic clock or a benchmark harness. Tracing alone is not a performance benchmark. Keep simulation time supplied by consumers separate from operational deadlines.
 
+Keep repeated wire method names, reserved operation identifiers and transport metadata keys in small internal constants grouped by protocol. Share SDK operation identifiers as linked source when the SDK and client must remain independently packaged. Keep wire fixtures independent so tests can detect accidental value changes. Do not extract ordinary diagnostics or formatting literals solely to remove strings, and do not add public constants without a consumer API need. C# constants are substituted at compile time; see [Microsoft’s constants guidance](https://learn.microsoft.com/en-us/dotnet/csharp/programming-guide/classes-and-structs/constants).
+
 Use centrally configured resilience policies when needed, rather than scattered retry loops. A timeout does not prove that an external side effect failed: retry only under an explicit idempotency policy, preserve uncertain outcomes and make compensation separately observable.
 
 The SDK is selected by global.json. The package-consuming sample contains executable framework-independent checks; changes to testing tools and package dependencies must be deliberate. No sibling framework, assertion-library license or infrastructure service is implicitly required. Public API documentation and package-consumer tests are part of implementing a public contract.
