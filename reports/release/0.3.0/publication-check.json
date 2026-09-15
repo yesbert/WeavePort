@@ -1,0 +1,42 @@
+[
+  {
+    "package": "WeavePort.Abstractions",
+    "version": "0.3.0",
+    "qualifiedSha256": "b624a6a95bb0c28df003573ebcb46710166c885ceb6b5bf5babe09178115b774",
+    "publicSha256": "9aa56067cfdb068b0f5c2dba10ab76a2278429ff2de78f594623bbd54ec4fdbc",
+    "payloadsMatch": true,
+    "iconMatches": true,
+    "mcpReadme": true,
+    "url": "https://www.nuget.org/packages/WeavePort.Abstractions/0.3.0"
+  },
+  {
+    "package": "WeavePort.Hosting",
+    "version": "0.3.0",
+    "qualifiedSha256": "72845bac681ff4721b6f5af78b766235ecd552db08a3eda417b828ab4f2bd4a0",
+    "publicSha256": "2baa747ec74990db56e058a84a2ca1fda760b464126c417551a5c7bad257c630",
+    "payloadsMatch": true,
+    "iconMatches": true,
+    "mcpReadme": true,
+    "url": "https://www.nuget.org/packages/WeavePort.Hosting/0.3.0"
+  },
+  {
+    "package": "WeavePort.Sdk",
+    "version": "0.3.0",
+    "qualifiedSha256": "5475e60f8a310caeb71386b312220507f2eef11446703d998336e1ceb13511fe",
+    "publicSha256": "a448c33f886d3585fe2501d9539d829c9053eec76cebece2f014202c81cd2834",
+    "payloadsMatch": true,
+    "iconMatches": true,
+    "mcpReadme": true,
+    "url": "https://www.nuget.org/packages/WeavePort.Sdk/0.3.0"
+  },
+  {
+    "package": "WeavePort.Sdk.Client",
+    "version": "0.3.0",
+    "qualifiedSha256": "aa96ff07347fa6afe3810c9c0270cddd2f46662e3a4959c522c3ee40b9583b83",
+    "publicSha256": "6a1573c7f7a75d1a23efce70fc694cb926200e0300cf429045dcc2c3a019472f",
+    "payloadsMatch": true,
+    "iconMatches": true,
+    "mcpReadme": true,
+    "url": "https://www.nuget.org/packages/WeavePort.Sdk.Client/0.3.0"
+  }
+]

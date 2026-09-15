@@ -6,4 +6,4 @@
 - [x] Pass fresh candidate qualification, website and repository checks.
 - [x] Update the DEV draft without publishing it.
 - [x] Merge with required checks and publish the four packages through Trusted Publishing.
-- [ ] Verify public packages and website; retain release evidence.
+- [x] Verify public packages and website; retain release evidence.

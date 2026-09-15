@@ -15,6 +15,8 @@ The exact tag passed 1,088 assertions and froze 139 artifacts, using .NET SDK 10
 
 A release review reproduced and fixed an input-required result incorrectly accepted when content was also supplied. The focused MCP suite now has 107 assertions. Subsequent maintainability changes separate receive-loop orchestration from notification and response validation. The normal nuget-org environment gate and OIDC Trusted Publishing published all four packages and sibling symbols.
 
+Public NuGet downloads of all four packages were verified after indexing. Every ZIP entry matches the qualified original except NuGet’s added repository signature; embedded icons and MCP package readmes were also checked. See [public download verification](publication-check.json). The public website serves the 0.3.0 MCP documentation.
+
 ## Measurements of the released Hosting assembly
 
 These local measurements use the actual Hosting and Abstractions DLLs extracted from the original qualified NuGet packages; Hosting's SHA-256 is recorded in [measurements.json](measurements.json) and was checked against the package entry. The C# test harness calls native TypeScript and official MCP SDK2 echo implementations with Node 24.21.0 on macOS arm64. Five alternating repetitions, 30 warmups per size, and 18,000 successful measured calls. Cells below are medians of per-run statistics, including p99, not pooled request percentiles.
