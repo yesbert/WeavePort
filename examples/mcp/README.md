@@ -7,8 +7,11 @@ From the repository root, with the SDK in `global.json` and Node installed:
 ```sh
 ./scripts/prepare-core-packages.sh
 npm ci --prefix tests/mcp --ignore-scripts
+dotnet restore examples/mcp --force --force-evaluate --no-cache
 dotnet run --project examples/mcp -c Release -- "$(command -v node)" "$PWD/tests/mcp/server.mjs"
 ```
+
+The explicit restore refreshes locally rebuilt package hashes, as in the native SDK examples. Release qualification separately rejects dependency-topology drift and freezes the actual tested package bytes.
 
 Expected output:
 
