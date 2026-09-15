@@ -44,3 +44,7 @@ The first short after-run showed notably higher C# callback means and strong wit
 Raw failed attempts remain under artifacts/mcp-integration-baseline: the initial default benchmark hit source-package hash drift, and early experimental control runners had inherited-job/dependency setup failures. They are excluded from completed-run counts. The later paired-3 control completed successfully without these setup failures. No Docker service was stopped or reconfigured.
 
 A matching follow-up for C# list-8m completed both topologies with ten warmups and ten measured iterations. The paired changes were +0.6% through the gateway and -3.4% locally; `payload-control.json` retains the values. The originally slower callback/large-payload observations therefore did not reproduce as a consistent native regression in these focused controls. Short local measurements still cannot promise exact performance equality in other workloads or deployments.
+
+## Final candidate qualification
+
+The fresh-checkout verifier passed commit `c568520` with 1,080 reported assertions and 139 frozen artifacts. It includes source and packed host regressions, both official MCP protocol revisions, gateway tests, three application examples, SDK/recovery/compatibility checks, code style and documentation. `qualification.json` records the full commit and successful stages. Later documentation/task archival does not change the qualified runtime. Nothing was published.
