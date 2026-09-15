@@ -1,6 +1,6 @@
 # Optional local MCP plugins
 
-Reuse local MCP tools from your .NET application while keeping native plugins for application-specific contracts. The 0.3.0 package line adds MCP tools alongside the default WeavePort protocol. No extra runtime package dependency is required by Hosting.
+Reuse local MCP tools from your .NET application while keeping native plugins for application-specific contracts. Hosting 0.3.1 supports MCP tools alongside the default WeavePort protocol. No extra runtime package dependency is required by Hosting.
 
 A local MCP server is a child process offering functions over stdin/stdout. One process can offer many tools. It needs neither a network listener nor an AI model. Existing native plugins remain native. Consuming MCP servers is separate from exposing WeavePort functions through an external MCP gateway; this implementation only consumes local servers.
 
@@ -8,7 +8,7 @@ A local MCP server is a child process offering functions over stdin/stdout. One 
 
 ## Bind and call
 
-The snippet uses the public `McpMethods` constants from the current source build. They are not in published NuGet 0.3.0; follow the local-package build in the example, or use `"tools/list"` and `"tools/call"` with that release. The wire protocol is unchanged.
+The snippet uses the public `McpMethods` constants available in Hosting 0.3.1.
 
 Use an absolute runtime executable and server entry-point path selected by the trusted application. Deploy dependencies beforehand: the host does not download servers or run package managers.
 

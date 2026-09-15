@@ -1,6 +1,6 @@
 # Product status
 
-Public NuGet version: **0.3.0**, under MIT, with four core packages: Abstractions, Hosting, Sdk and Sdk.Client. Windows, Linux and macOS are supported targets for trusted stdio execution. Current release validation covers macOS arm64; Windows and Linux release validation is pending. See [platform support and validation](platform-qualification.md). This pre-1.0 API remains subject to evolution. Python/TypeScript registry publication and a new offline distribution are outside this release. The historical internal distribution remains **0.1.0-internal.2**.
+Public NuGet version: **0.3.1**, under MIT, with four core packages: Abstractions, Hosting, Sdk and Sdk.Client. Windows, Linux and macOS are supported targets for trusted stdio execution. Current release validation covers macOS arm64; Windows and Linux release validation is pending. See [platform support and validation](platform-qualification.md). This pre-1.0 API remains subject to evolution. Python/TypeScript registry publication and a new offline distribution are outside this release. The historical internal distribution remains **0.1.0-internal.2**.
 
 The [0.3.0 release evidence](../reports/release/0.3.0/README.md) records 1,088 assertion executions, exact tested package/symbol provenance, successful Trusted Publishing and measurements of the released Hosting assembly. Earlier [0.2.1 evidence](../reports/release/0.2.1/README.md) remains available as historical release data.
 
@@ -24,6 +24,8 @@ HiveWeaver, TreeWeaver and NextPA integration remains separate application work.
 
 The [repository cleanup qualification](../reports/verification/current/README.md) adds a maintained-link check (399 assertion executions), moved adapter checks and a packaging regression. It does not replace the exact current release evidence above.
 
-## Unreleased source capability
+## MCP support
 
 The 0.3.0 release adds [optional local MCP tools](mcp-plugins.md) alongside the native protocol, with explicit 2025-11-25/2026-07-28 selection. Included in the 0.3.0 package line. The guide and [measurement report](../reports/mcp/local-stdio/README.md) identify the tested subset and platform limits.
+
+Version 0.3.1 adds public `McpMethods.ListTools` and `McpMethods.CallTool` constants used by the consumer examples. The MCP wire protocol and supported subset remain unchanged.

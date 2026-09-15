@@ -2,7 +2,7 @@
 
 This executable consumer uses the packed Hosting library to discover and call an ordinary text-normalization tool. It checks both explicitly selected MCP revisions, host status, tool-level errors and the expected result. No AI model, account, network listener or Docker service is needed.
 
-`McpMethods.ListTools` and `McpMethods.CallTool` are available in the current source build, not the published 0.3.0 packages. Build the local packages with the commands below. When using NuGet 0.3.0 directly, the equivalent method strings are `"tools/list"` and `"tools/call"`.
+`McpMethods.ListTools` and `McpMethods.CallTool` are public constants in Hosting 0.3.1.
 
 From the repository root, with the SDK in `global.json` and Node installed:
 

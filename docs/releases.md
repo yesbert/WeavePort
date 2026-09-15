@@ -6,7 +6,7 @@ The GitHub delivery target is [yesbert/WeavePort](https://github.com/yesbert/Wea
 
 The release allowlist in `build/release-packages.json` contains `WeavePort.Abstractions`, `WeavePort.Hosting`, `WeavePort.Sdk` and `WeavePort.Sdk.Client`. Gateway, Composition and Testing remain optional/experimental; adding them requires appropriate package-consumer evidence. Python and TypeScript author SDK publication is separate from NuGet delivery.
 
-The current release version is `0.3.0`, licensed under [MIT](../LICENSE). The four core package references and exact compatibility matrix use 0.3.0; host API and wire protocol remain 1. Python/TypeScript SDK versions remain 0.1.0 without registry publication. Historical internal distribution and measurement evidence retain their original identities. Public releases require a complete clean candidate qualification; a tag override cannot substitute for updating compatibility inputs.
+The current release version is `0.3.1`, licensed under [MIT](../LICENSE). The four core package references and exact compatibility matrix use 0.3.1; host API and wire protocol remain 1. Python/TypeScript SDK versions remain 0.1.0 without registry publication. Historical internal distribution and measurement evidence retain their original identities. Public releases require a complete clean candidate qualification; a tag override cannot substitute for updating compatibility inputs.
 
 ## Trusted Publishing setup
 
@@ -61,3 +61,7 @@ Hosting adds explicitly selected local MCP 2025-11-25 and 2026-07-28 tools along
 Update all four core packages and exact installation declarations together. Native author SDKs remain 0.1.0 and are still source-built. Hosting uses Microsoft logging/DI abstractions 10.0.12; the optional gateway's build-only Grpc.Tools is 2.84.0. Remote MCP, arbitrary server SDKs and additional platform qualifications are outside this release.
 
 The [0.3.0 release report](../reports/release/0.3.0/README.md) links the original qualified packages, symbols, test evidence and measurements of the released Hosting assembly.
+
+## 0.3.1 named MCP methods
+
+Hosting exposes `McpMethods.ListTools` and `McpMethods.CallTool` for consumer invocations. Examples and the guide use these constants. Internal MCP identifiers, SDK operations and gateway metadata are centralized without changing wire values. Update the four core packages together to match the exact 0.3.1 compatibility matrix.
