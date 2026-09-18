@@ -5,7 +5,7 @@ using WeavePort.Abstractions;
 
 namespace WeavePort.Sdk.Client;
 /// <summary>Owns an existing host binding and exposes author-SDK operations over it.</summary>
-public sealed class LocalPluginClient(IPluginSession session, TimeSpan? streamTimeout = null) : IPluginClient
+public sealed class LocalPluginClient(IPluginSession session, TimeSpan? streamTimeout = null) : IBoundPluginClient
 {
     private readonly object _disposeSync = new();
     private Task? _disposal;
@@ -15,6 +15,15 @@ public sealed class LocalPluginClient(IPluginSession session, TimeSpan? streamTi
     private readonly TimeSpan _streamTimeout = streamTimeout ?? TimeSpan.FromSeconds(30);
     /// <summary>The immutable host-bound customer, never taken from an operation input.</summary>
     public string Tenant => session.Tenant;
+
+    /// <inheritdoc/>
+    public Task<string> GetTenantAsync(CancellationToken cancellationToken = default)
+    {
+        using var stop = CreateOperationSource(cancellationToken);
+        stop.Token.ThrowIfCancellationRequested();
+        return Task.FromResult(Tenant);
+    }
+
     /// <summary>Current worker instance for host diagnostics.</summary>
     public string Instance => session.Instance;
 

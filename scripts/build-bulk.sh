@@ -2,11 +2,11 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 mkdir -p artifacts/packages
-for wp_project in Abstractions Hosting Composition; do
+for wp_project in Abstractions Hosting Sdk.Client Composition; do
   dotnet pack "src/WeavePort.$wp_project" -c Release -o artifacts/packages --nologo
 done
 wp_stamp="$(date -u +%Y%m%d-%H%M%S)-$$"
-for wp_package in weaveport.abstractions weaveport.hosting weaveport.composition; do
+for wp_package in weaveport.abstractions weaveport.hosting weaveport.sdk.client weaveport.composition; do
   wp_cache="artifacts/bulk-consumer-packages/$wp_package"
   if [ -d "$wp_cache" ]; then mv "$wp_cache" "$wp_cache-previous-$wp_stamp"; fi
 done

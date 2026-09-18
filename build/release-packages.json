@@ -2,5 +2,8 @@
   "WeavePort.Abstractions",
   "WeavePort.Hosting",
   "WeavePort.Sdk",
-  "WeavePort.Sdk.Client"
+  "WeavePort.Sdk.Client",
+  "WeavePort.Composition",
+  "WeavePort.Sdk.Gateway.Client",
+  "WeavePort.Sdk.Gateway"
 ]

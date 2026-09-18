@@ -4,7 +4,7 @@ Write a plugin as ordinary asynchronous functions and result streams in C#, Pyth
 
 ## C#
 
-Reference the public `WeavePort.Sdk` NuGet package at version 0.3.1, or the matching locally packed package when working from source. Register ordinary async handlers; the delegate return uses ValueTask, so an async lambda needs no wrapper. Asynchronous iterators use normal `IAsyncEnumerable<T>` and cancellation tokens.
+Reference the public `WeavePort.Sdk` NuGet package at version 0.4.0, or the matching locally packed package when working from source. Register ordinary async handlers; the delegate return uses ValueTask, so an async lambda needs no wrapper. Asynchronous iterators use normal `IAsyncEnumerable<T>` and cancellation tokens.
 
 ```csharp
 var plugin = new PluginApplication();
@@ -89,7 +89,7 @@ await foreach (SearchHit hit in plugin.StreamAsync<SearchRequest, SearchHit>("re
 
 For a worker host, the trusted application registers that same local client in `GatewayRegistry`, adds gRPC services and maps `GatewayService`. Registration returns a random credential that authorizes only that preconfigured binding. The caller constructs `RemotePluginClient(endpoint, credential)` and uses the same IPluginClient methods. The binding client owns a reusable channel and up to eight binding-scoped duplex sessions to avoid a demonstrated Kestrel stream-reuse defect without per-call TCP churn; see [the cause and compatibility correction (historical) — pre-public record](history.md). No provider edit or gRPC import is necessary. RPC requests cannot register executable paths, select tenant identity or assign grants.
 
-The optional `WeavePort.Sdk.Gateway` NuGet contains both gateway hosting and its .NET client and requires the ASP.NET Core shared framework. Splitting client-only deployment dependencies is a possible later packaging refinement. The [worker-host sample](../tests/WeavePort.WorkerHost/Program.cs) binds loopback and configures 1-MiB gRPC limits. Its stdin bootstrap and snapshot commands belong to the test launcher, not to plugin authors or the public remote protocol. Deployment registration, credential distribution/rotation and remote TLS termination belong to the trusted application. HTTPS is required by the client for non-loopback endpoints; real remote deployment is not qualified by the current release.
+The 0.4.0 candidate separates `WeavePort.Sdk.Gateway` hosting (ASP.NET Core required) from `WeavePort.Sdk.Gateway.Client` (plain .NET). See [HTTPS deployment and package usage](gateway.md). The [worker-host sample](../tests/WeavePort.WorkerHost/Program.cs) binds loopback and configures 1-MiB gRPC limits. Its stdin bootstrap and snapshot commands belong to the test launcher, not to plugin authors or the public remote protocol. Deployment registration, credential distribution/rotation and remote TLS termination belong to the trusted application. HTTPS is required by the client for non-loopback endpoints; the exact executed TLS topology and deployment-site checks are documented in the gateway guide.
 
 Callbacks execute **where PluginHost is hosted**. Supply the application's `IHostCallbacks` implementation there. The sample uses identical application callback code in both locations. This first gateway does not serialize or forward arbitrary closures from the calling product process. For a remote node, that callback implementation needs access to the appropriate application services. The plugin API remains `context.CallHostAsync`, `context.call_host` or `context.callHost`.
 

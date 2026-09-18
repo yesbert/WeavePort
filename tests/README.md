@@ -22,3 +22,7 @@ Local-only Docker/capacity/lifecycle/security consumers use `adapter-nuget.confi
 ## MCP checks
 
 Host regressions include optional-MCP malformed-traffic, authority, quotas, cancellation and state-lifecycle checks. [Official SDK interoperability and comparative measurements](mcp/README.md) use an isolated development-only npm fixture. The full candidate verifier exercises its two protocol revisions against the packed host.
+
+## Optional package release qualification
+
+After `./scripts/prepare-core-packages.sh`, run `python3 scripts/verify-optional.py`. This builds fresh-cache NuGet consumers, validates TLS and local/remote composition, checks the optional API/dependency baseline, and executes the multilingual native composition and HTTP delivery fixtures. `--build-only` and `--verify-only` separate preparation from frozen-candidate execution. The clean release candidate uses both phases and hashes the consumer output trees.

@@ -7,9 +7,9 @@
     <Description>Bounded externally orchestrated large-result processing.</Description>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="../WeavePort.Abstractions/WeavePort.Abstractions.csproj" />
+    <ProjectReference Include="../WeavePort.Sdk.Client/WeavePort.Sdk.Client.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="../../docs/package.md" Pack="true" PackagePath="PACKAGE.md" />
+    <None Include="../../docs/package-composition.md" Pack="true" PackagePath="PACKAGE.md" />
   </ItemGroup>
 </Project>
