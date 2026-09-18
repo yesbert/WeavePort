@@ -6,6 +6,11 @@ using WeavePort.Sdk.Client;
 
 if (args[0] == "--api") { ApiChecks.Run(args[1], args.Contains("--candidate")); return; }
 
+// Preserve source compatibility with the original nullable-timeout overload.
+await using (var compatible = new WeavePort.Sdk.Gateway.RemotePluginClient(new Uri("http://localhost"), "test", null)) { }
+
+await TransportChecks.RunAsync();
+
 string root = Path.GetFullPath(args[0]);
 string storage = Path.Combine(root, "artifacts/optional/storage-" + Guid.NewGuid().ToString("N"));
 Directory.CreateDirectory(storage);
@@ -54,8 +59,11 @@ await using (var tls = new TlsFixture())
 await using (var incompatible = new TlsFixture())
 {
     await incompatible.StartAsync(incompatible: true);
-    await using var client = incompatible.Client("test");
-    await Check.Fails<InvalidDataException>(() => client.GetTenantAsync(), "incompatible gateway identity version rejected");
+    foreach (string variant in new[] { "test", "array", "null", "string-version", "null-version", "missing-tenant", "numeric-tenant", "blank-tenant" })
+    {
+        await using var client = incompatible.Client(variant);
+        await Check.Fails<InvalidDataException>(() => client.GetTenantAsync(), "invalid gateway identity rejected: " + variant);
+    }
 }
 Check.That(!Directory.EnumerateFileSystemEntries(storage).Any(), "local and remote composition cleanup");
 Directory.Delete(storage);

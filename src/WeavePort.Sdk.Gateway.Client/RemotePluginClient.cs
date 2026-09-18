@@ -42,7 +42,7 @@ public sealed class RemotePluginClient : IBoundPluginClient
     public async Task<string> GetTenantAsync(CancellationToken cancellationToken = default)
     {
         JsonElement identity = await ExchangeAsync(new Request { Mode = Mode.Describe }, cancellationToken);
-        if (!identity.TryGetProperty("protocol", out var protocol) || !protocol.TryGetInt32(out int version) || version != 1 || !identity.TryGetProperty("tenant", out var tenant) || tenant.ValueKind != JsonValueKind.String || string.IsNullOrWhiteSpace(tenant.GetString()))
+        if (identity.ValueKind != JsonValueKind.Object || !identity.TryGetProperty("protocol", out var protocol) || protocol.ValueKind != JsonValueKind.Number || !protocol.TryGetInt32(out int version) || version != 1 || !identity.TryGetProperty("tenant", out var tenant) || tenant.ValueKind != JsonValueKind.String || string.IsNullOrWhiteSpace(tenant.GetString()))
         {
             throw new InvalidDataException("Incompatible gateway binding identity.");
         }
