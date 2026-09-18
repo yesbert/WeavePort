@@ -1,5 +1,6 @@
 using System.Text.Json;
 using WeavePort.Abstractions;
+using WeavePort.Sdk.Client;
 
 namespace WeavePort.Composition;
 /// <summary>Technical composition primitives. Products own contracts, session identity, ordering and merge semantics.</summary>
@@ -22,14 +23,35 @@ public static class Composition
             }
 
             token.ThrowIfCancellationRequested();
-            byte[] decoded = result.Value.GetProperty("data").GetBytesFromBase64();
-            if (decoded.Length > chunkBytes)
-            {
-                throw new InvalidDataException("Output chunk too large.");
-            }
-
-            return decoded;
+            return Decode(result.Value, chunkBytes);
         }, chunkBytes, cancellationToken);
+    }
+
+    /// <summary>Maps bounded chunks through an SDK operation after verifying local or authenticated remote binding identity. The caller retains client ownership.</summary>
+    public static async Task<ResultHandle> MapAsync(ResultScope scope, ResultHandle input, IBoundPluginClient client, int chunkBytes = 65536, CancellationToken cancellationToken = default)
+    {
+        string tenant = await client.GetTenantAsync(cancellationToken);
+        if (!StringComparer.Ordinal.Equals(scope.Tenant, tenant))
+        {
+            throw new UnauthorizedAccessException("Plugin binding belongs to another tenant.");
+        }
+
+        return await scope.TransformAsync(input, async (bytes, token) =>
+        {
+            JsonElement result = await client.CallAsync("bulk-map", JsonSerializer.SerializeToElement(new BulkChunk(bytes), BulkJson.Default.BulkChunk), token);
+            token.ThrowIfCancellationRequested();
+            return Decode(result, chunkBytes);
+        }, chunkBytes, cancellationToken);
+    }
+
+    private static byte[] Decode(JsonElement value, int chunkBytes)
+    {
+        if (value.ValueKind != JsonValueKind.Object || !value.TryGetProperty("data", out var data) || data.ValueKind != JsonValueKind.String || !data.TryGetBytesFromBase64(out byte[]? decoded) || decoded.Length > chunkBytes)
+        {
+            throw new InvalidDataException("Invalid or oversized bulk-map data.");
+        }
+
+        return decoded;
     }
 
     /// <summary>Runs required branches with bounded parallelism. Any failure cancels siblings and awaits started operations.</summary>

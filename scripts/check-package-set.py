@@ -8,6 +8,7 @@ policy = json.loads(Path("compatibility/local-v1.json").read_text())
 versions = dict(policy["HostPackages"])
 sdk = policy["AuthorSdks"]["dotnet"]
 versions[sdk["Package"]] = sdk["Version"]
+versions.update({name: sdk["Version"] for name in json.loads(Path("build/release-packages.json").read_text())})
 versions.update(json.loads(Path("compatibility/external-packages.json").read_text()))
 expected = {f"{name}.{version}.nupkg" for name, version in versions.items()}
 recorded = json.loads(Path(sys.argv[1]).read_text())

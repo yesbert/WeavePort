@@ -1,6 +1,6 @@
 # Large results and external composition
 
-Combine bounded plugin results under your application’s ordering and merge rules. `WeavePort.Composition` is an optional .NET package depending on Abstractions and is outside the four-package public 0.3.1 release. The product owns domain contracts, authentication, selected sessions, order and merge semantics. Plugins do not get peer addresses, result paths or authority to resolve arbitrary result handles. Existing invocation messages remain limited to 1 MiB; a logical result can span many bounded invocations.
+Combine bounded plugin results under your application’s ordering and merge rules. `WeavePort.Composition` is an optional .NET package in the 0.4.0 source candidate, depending on Sdk.Client and Abstractions. The product owns domain contracts, authentication, selected sessions, order and merge semantics. Plugins do not get peer addresses, result paths or authority to resolve arbitrary result handles. Existing invocation messages remain limited to 1 MiB; a logical result can span many bounded invocations.
 
 ## Request-owned results
 
@@ -43,3 +43,11 @@ The finite `WeavePort.BulkDemo http` test supplies a loopback ASP.NET Core endpo
 File ownership and result-handle checks protect the broker API. They do not prevent hostile code running under the same native OS identity from bypassing the API and reading filesystem data. Use an independently enforced worker sandbox for untrusted plugins; never mount the private result root into it. Paths, data and the per-run HTTP test key are not logged. Secure physical erasure, encrypted result storage, crash-orphan reclamation and cross-node storage are not claimed by this optional package.
 
 The implementation targets .NET 10 using portable file/stream/concurrency APIs; Unix private-directory modes are conditional. Windows requires the product to provide a root with appropriate ACLs. Actual new execution evidence is from macOS native socket/stdio; compile support is not Windows/Linux execution proof. See [regression entry points](../tests/README.md) and the [results report (historical) — pre-public record](history.md) for measured sizes and tradeoffs.
+
+## SDK clients and cleanup failures
+
+Pass a `LocalPluginClient` or `RemotePluginClient` to the SDK overload of `Composition.MapAsync`. Both implement `IBoundPluginClient`; remote identity is discovered through the authenticated gateway before any bulk-map invocation. The identity must match the request scope. The caller owns client lifetime. Custom implementations remain trusted application code. See the [gateway example](../examples/gateway/README.md).
+
+SDK workers register a `bulk-map` function with an object containing base64 `data` as both input and output. Malformed/missing/non-base64 or oversized output fails without committing a result. This is separate from the legacy native direct-operation overload.
+
+If partial-file removal fails, producer and cleanup errors are aggregated and the quota reservation is retained conservatively until scope cleanup. Disposal attempts cancellation, drains active operations and attempts storage cleanup even if a cancellation callback fails. Repeated disposal observes the same completion or failure. A deletion failure is observable; no successful deletion or secure erasure is claimed. Applications own recovery of failed storage and process-crash remnants.

@@ -18,7 +18,7 @@ builder.Logging.ClearProviders();
 builder.Services.Configure<HostOptions>(options => options.ShutdownTimeout = TimeSpan.FromSeconds(1));
 builder.WebHost.ConfigureKestrel(options => options.Listen(IPAddress.Loopback, 0, endpoint => endpoint.Protocols = HttpProtocols.Http2));
 var registry = new GatewayRegistry();
-string credential = registry.Register(new EchoClient());
+string credential = registry.Register(new EchoClient(), "test");
 builder.Services.AddSingleton(registry);
 builder.Services.AddGrpc();
 var app = builder.Build();

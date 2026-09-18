@@ -153,9 +153,9 @@ public sealed class ResultScope : IAsyncDisposable
 
             return handle;
         }
-        catch
+        catch (Exception productionError)
         {
-            File.Delete(Path.Combine(_directory, id));
+            RemovePartial(id, productionError);
             lock (_sync)
             {
                 _bytes -= reserved;
@@ -163,6 +163,18 @@ public sealed class ResultScope : IAsyncDisposable
             }
 
             throw;
+        }
+    }
+
+    private void RemovePartial(string id, Exception productionError)
+    {
+        try
+        {
+            File.Delete(Path.Combine(_directory, id));
+        }
+        catch (Exception cleanupError)
+        {
+            throw new AggregateException(productionError, cleanupError);
         }
     }
 
@@ -233,16 +245,39 @@ public sealed class ResultScope : IAsyncDisposable
 
     private async Task DisposeCoreAsync()
     {
-        await _lifetime.CancelAsync();
-        await _idle.Task;
-        Directory.Delete(_directory, true);
-        lock (_sync)
+        var errors = new List<Exception>();
+        try
         {
-            _results.Clear();
-            _bytes = 0;
-            _objects = 0;
+            await _lifetime.CancelAsync();
+        }
+        catch (Exception error)
+        {
+            errors.Add(error);
         }
 
-        _lifetime.Dispose();
+        await _idle.Task;
+        try
+        {
+            Directory.Delete(_directory, true);
+            lock (_sync)
+            {
+                _results.Clear();
+                _bytes = 0;
+                _objects = 0;
+            }
+        }
+        catch (Exception error)
+        {
+            errors.Add(error);
+        }
+        finally
+        {
+            _lifetime.Dispose();
+        }
+
+        if (errors.Count > 0)
+        {
+            throw new AggregateException(errors).Flatten();
+        }
     }
 }

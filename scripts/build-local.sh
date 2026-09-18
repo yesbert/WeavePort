@@ -2,7 +2,7 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 mkdir -p artifacts/packages artifacts/local
-for project in Abstractions Hosting Testing Composition; do
+for project in Abstractions Hosting Sdk.Client Testing Composition; do
   dotnet pack "src/WeavePort.$project" -c Release -o artifacts/packages --nologo
 done
 wp_cache_stamp="$(date -u +%Y%m%d-%H%M%S)-$$"
