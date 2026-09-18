@@ -6,7 +6,7 @@ import { setTimeout } from 'k6/timers';
 const config = JSON.parse(open(__ENV.WP_SOAK_CONFIG));
 const rowText = 'x'.repeat(8192);
 const client = new Client();
-client.load(['../../src/WeavePort.Sdk.Gateway'], 'gateway.proto');
+client.load(['../../src/WeavePort.Sdk.Gateway.Client'], 'gateway.proto');
 const errors = new Rate('unexpected_errors');
 const operations = new Counter('completed_operations');
 const latency = new Trend('operation_ms', true);

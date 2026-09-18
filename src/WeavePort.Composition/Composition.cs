@@ -6,6 +6,7 @@ namespace WeavePort.Composition;
 /// <summary>Technical composition primitives. Products own contracts, session identity, ordering and merge semantics.</summary>
 public static class Composition
 {
+    private const string BulkMapOperation = "bulk-map";
     /// <summary>Executes one externally bound plugin over bounded base64 chunks. The plugin must implement the bulk-map contract.</summary>
     public static Task<ResultHandle> MapAsync(ResultScope scope, ResultHandle input, IPluginSession session, int chunkBytes = 65536, CancellationToken cancellationToken = default)
     {
@@ -16,7 +17,7 @@ public static class Composition
 
         return scope.TransformAsync(input, async (bytes, token) =>
         {
-            InvocationResult result = await session.InvokeAsync("bulk-map", JsonSerializer.SerializeToElement(new BulkChunk(bytes), BulkJson.Default.BulkChunk), token);
+            InvocationResult result = await session.InvokeAsync(BulkMapOperation, JsonSerializer.SerializeToElement(new BulkChunk(bytes), BulkJson.Default.BulkChunk), token);
             if (result.Status != "ok")
             {
                 throw new IOException("Plugin stage failed: " + result.Status);
@@ -38,7 +39,7 @@ public static class Composition
 
         return await scope.TransformAsync(input, async (bytes, token) =>
         {
-            JsonElement result = await client.CallAsync("bulk-map", JsonSerializer.SerializeToElement(new BulkChunk(bytes), BulkJson.Default.BulkChunk), token);
+            JsonElement result = await client.CallAsync(BulkMapOperation, JsonSerializer.SerializeToElement(new BulkChunk(bytes), BulkJson.Default.BulkChunk), token);
             token.ThrowIfCancellationRequested();
             return Decode(result, chunkBytes);
         }, chunkBytes, cancellationToken);

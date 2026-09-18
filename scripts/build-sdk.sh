@@ -3,12 +3,11 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 mkdir -p artifacts/packages artifacts/sdk-packages-js artifacts/sdk-wheel artifacts/sdk-python-example
 wp_stamp="$(date -u +%Y%m%d-%H%M%S)-$$"
-for wp_package in abstractions hosting sdk sdk.client sdk.gateway; do
+for wp_package in abstractions hosting sdk sdk.client sdk.gateway.client sdk.gateway; do
   wp_cache="artifacts/sdk-packages/weaveport.$wp_package"
   if [ -d "$wp_cache" ]; then mv "$wp_cache" "$wp_cache-previous-$wp_stamp"; fi
 done
 ./scripts/prepare-core-packages.sh
-dotnet pack src/WeavePort.Sdk.Gateway -c Release -o artifacts/packages --nologo
 dotnet restore examples/sdk/csharp --force --force-evaluate --no-cache
 dotnet publish examples/sdk/csharp -c Release --no-restore --self-contained false -o artifacts/sdk-csharp --nologo
 npm ci --prefix sdks/typescript --ignore-scripts

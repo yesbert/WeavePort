@@ -11,7 +11,7 @@ Reviewed for the 0.4.0 source candidate on 2026-09-18. `compatibility/optional-d
 | Microsoft.Extensions.Logging.Abstractions, Microsoft.Extensions.DependencyInjection.Abstractions | 10.0.12 | Hosting consumer closure | Existing core MIT review; higher compatible versions selected when Hosting is present |
 | Grpc.Tools | 2.84.0 | Build only, PrivateAssets=all | Apache-2.0 package metadata; upstream combined license includes bundled tool component terms. Tools/binaries are not shipped in WeavePort runtime packages |
 
-Exact source provenance comes from the NuGet nuspec repository commit:
+License text is retained with normalized text whitespace/line endings. Exact source provenance comes from the NuGet nuspec repository commit:
 
 - gRPC .NET `4301104498e53898a452e8fb2fea6c0b1492b755`: [license](https://github.com/grpc/grpc-dotnet/blob/4301104498e53898a452e8fb2fea6c0b1492b755/LICENSE), retained in [grpc-dotnet-LICENSE.txt](licenses/grpc-dotnet-LICENSE.txt).
 - Protobuf `f377bfefc5e2cfab68b816903c25b23e091c439d`: [license](https://github.com/protocolbuffers/protobuf/blob/f377bfefc5e2cfab68b816903c25b23e091c439d/LICENSE), retained in [protobuf-LICENSE.txt](licenses/protobuf-LICENSE.txt). Its explicit generated-code clause assigns generated code to the input-file owner; the runtime retains its BSD license.
