@@ -1,0 +1,284 @@
+--- reviewed-api
++++ candidate-api
+@@ -138,14 +138,17 @@
+   Method Void Deconstruct(Int32 ByRef, System.Nullable`1[System.TimeSpan] ByRef, System.Nullable`1[System.TimeSpan] ByRef) [Public] (MemoryMiB, Timeout, IdleTimeout)
+   Method Void set_IdleTimeout(System.Nullable`1[System.TimeSpan]) [Public] (value)
+   Method Void set_MemoryMiB(Int32) [Public] (value)
++  Method Void set_ReusePolicy(WeavePort.Hosting.WorkerReusePolicy) [Public] (value)
+   Method Void set_Timeout(System.Nullable`1[System.TimeSpan]) [Public] (value)
+   Method WeavePort.Hosting.ExecutionProfile <Clone>$() [Public, Virtual, Abstract] ()
+   Method WeavePort.Hosting.ExecutionProtections get_Protection() [Public, Virtual, Abstract] ()
++  Method WeavePort.Hosting.WorkerReusePolicy get_ReusePolicy() [Public] ()
+   Property Int32 MemoryMiB
+   Property System.Nullable`1[System.TimeSpan] IdleTimeout
+   Property System.Nullable`1[System.TimeSpan] Timeout
+   Property System.Type EqualityContract
+   Property WeavePort.Hosting.ExecutionProtections Protection
++  Property WeavePort.Hosting.WorkerReusePolicy ReusePolicy
+ type WeavePort.Hosting.ExecutionProtections : System.Enum [Public, Sealed]
+   implements System.IComparable
+   implements System.IConvertible
+@@ -202,6 +205,14 @@
+   Method System.Threading.Tasks.ValueTask DisposeAsync() [Public, Final, Virtual] ()
+   Method WeavePort.Hosting.WorkerPoolSnapshot get_Snapshot() [Public] ()
+   Property WeavePort.Hosting.WorkerPoolSnapshot Snapshot
++type WeavePort.Hosting.PluginWorkClass : System.Enum [Public, Sealed]
++  implements System.IComparable
++  implements System.IConvertible
++  implements System.IFormattable
++  implements System.ISpanFormattable
++  Field Int32 value__
++  Field WeavePort.Hosting.PluginWorkClass Heavy=1
++  Field WeavePort.Hosting.PluginWorkClass Normal=0
+ type WeavePort.Hosting.ProcessProfile : WeavePort.Hosting.ExecutionProfile [Public, Sealed]
+   implements System.IEquatable`1[WeavePort.Hosting.ExecutionProfile]
+   implements System.IEquatable`1[WeavePort.Hosting.ProcessProfile]
+@@ -248,6 +259,149 @@
+   Field WeavePort.Hosting.ProcessProtocol Mcp20251125=1
+   Field WeavePort.Hosting.ProcessProtocol Mcp20260728=2
+   Field WeavePort.Hosting.ProcessProtocol Native=0
++type WeavePort.Hosting.ScheduledInvocationResult : System.Object [Public, Sealed]
++  implements System.IEquatable`1[WeavePort.Hosting.ScheduledInvocationResult]
++  Constructor Void .ctor(WeavePort.Abstractions.InvocationResult, Double, Double, Boolean) [Public] (Result, QueueMs, ExecutionMs, Cold)
++  Method Boolean Equals(System.Object) [Public, Virtual] (obj)
++  Method Boolean Equals(WeavePort.Hosting.ScheduledInvocationResult) [Public, Final, Virtual] (other)
++  Method Boolean get_Cold() [Public] ()
++  Method Boolean op_Equality(WeavePort.Hosting.ScheduledInvocationResult, WeavePort.Hosting.ScheduledInvocationResult) [Public, Static] (left, right)
++  Method Boolean op_Inequality(WeavePort.Hosting.ScheduledInvocationResult, WeavePort.Hosting.ScheduledInvocationResult) [Public, Static] (left, right)
++  Method Double get_ExecutionMs() [Public] ()
++  Method Double get_QueueMs() [Public] ()
++  Method Int32 GetHashCode() [Public, Virtual] ()
++  Method System.String ToString() [Public, Virtual] ()
++  Method Void Deconstruct(WeavePort.Abstractions.InvocationResult ByRef, Double ByRef, Double ByRef, Boolean ByRef) [Public] (Result, QueueMs, ExecutionMs, Cold)
++  Method Void set_Cold(Boolean) [Public] (value)
++  Method Void set_ExecutionMs(Double) [Public] (value)
++  Method Void set_QueueMs(Double) [Public] (value)
++  Method Void set_Result(WeavePort.Abstractions.InvocationResult) [Public] (value)
++  Method WeavePort.Abstractions.InvocationResult get_Result() [Public] ()
++  Method WeavePort.Hosting.ScheduledInvocationResult <Clone>$() [Public] ()
++  Property Boolean Cold
++  Property Double ExecutionMs
++  Property Double QueueMs
++  Property WeavePort.Abstractions.InvocationResult Result
++type WeavePort.Hosting.ScheduledPlugin : System.Object [Public, Sealed]
++  implements System.IAsyncDisposable
++  implements WeavePort.Abstractions.IPluginSession
++  Method System.String get_Instance() [Public, Final, Virtual] ()
++  Method System.String get_Tenant() [Public, Final, Virtual] ()
++  Method System.Threading.Tasks.Task RestartAsync(System.Threading.CancellationToken) [Public, Final, Virtual] (cancellationToken=null)
++  Method System.Threading.Tasks.Task`1[WeavePort.Abstractions.InvocationResult] InvokeAsync(System.String, System.Text.Json.JsonElement, System.Threading.CancellationToken) [Public, Final, Virtual] (operation, payload, cancellationToken=null)
++  Method System.Threading.Tasks.Task`1[WeavePort.Hosting.ScheduledInvocationResult] InvokeMeasuredAsync(System.String, System.Text.Json.JsonElement, System.Threading.CancellationToken) [Public] (operation, payload, cancellationToken=null)
++  Method System.Threading.Tasks.ValueTask DisposeAsync() [Public, Final, Virtual] ()
++  Property System.String Instance
++  Property System.String Tenant
++type WeavePort.Hosting.ScheduledPluginHost : System.Object [Public, Sealed]
++  implements System.IAsyncDisposable
++  Constructor Void .ctor(WeavePort.Hosting.SchedulingOptions, System.TimeProvider) [Public] (options=null, timeProvider=null)
++  Method System.Threading.Tasks.Task`1[WeavePort.Hosting.ScheduledPlugin] RegisterAsync(WeavePort.Abstractions.PluginContext, WeavePort.Hosting.ExecutionProfile, WeavePort.Abstractions.IHostCallbacks, System.Collections.Generic.IEnumerable`1[System.String], WeavePort.Hosting.PluginWorkClass, WeavePort.Hosting.ExecutionProtections, System.Threading.CancellationToken) [Public] (context, profile, callbacks, grants, workClass=0, requiredProtection=0, cancellationToken=null)
++  Method System.Threading.Tasks.ValueTask DisposeAsync() [Public, Final, Virtual] ()
++  Method WeavePort.Hosting.SchedulingSnapshot get_Snapshot() [Public] ()
++  Property WeavePort.Hosting.SchedulingSnapshot Snapshot
++type WeavePort.Hosting.SchedulingOptions : System.Object [Public, Sealed]
++  implements System.IEquatable`1[WeavePort.Hosting.SchedulingOptions]
++  Constructor Void .ctor() [Public] ()
++  Method Boolean Equals(System.Object) [Public, Virtual] (obj)
++  Method Boolean Equals(WeavePort.Hosting.SchedulingOptions) [Public, Final, Virtual] (other)
++  Method Boolean op_Equality(WeavePort.Hosting.SchedulingOptions, WeavePort.Hosting.SchedulingOptions) [Public, Static] (left, right)
++  Method Boolean op_Inequality(WeavePort.Hosting.SchedulingOptions, WeavePort.Hosting.SchedulingOptions) [Public, Static] (left, right)
++  Method Int32 GetHashCode() [Public, Virtual] ()
++  Method Int32 get_MaximumConcurrentStarts() [Public] ()
++  Method Int32 get_MaximumHeavyCalls() [Public] ()
++  Method Int32 get_MaximumHeavyCallsPerTenant() [Public] ()
++  Method Int32 get_MaximumHeavyPluginsPerTenant() [Public] ()
++  Method Int32 get_MaximumPayloadBytes() [Public] ()
++  Method Int32 get_MaximumPristineWorkers() [Public] ()
++  Method Int32 get_MaximumQueuedCalls() [Public] ()
++  Method Int32 get_MaximumQueuedCallsPerTenant() [Public] ()
++  Method Int32 get_MaximumRegistrations() [Public] ()
++  Method Int64 get_MemoryBudgetMiB() [Public] ()
++  Method System.Nullable`1[System.Int32] get_MaximumWorkers() [Public] ()
++  Method System.String ToString() [Public, Virtual] ()
++  Method System.TimeSpan get_DemandWindow() [Public] ()
++  Method System.TimeSpan get_HeavyTimeout() [Public] ()
++  Method System.TimeSpan get_IdleTimeout() [Public] ()
++  Method System.TimeSpan get_NormalTimeout() [Public] ()
++  Method System.TimeSpan get_QueueTimeout() [Public] ()
++  Method System.TimeSpan get_ReusableIdleTimeout() [Public] ()
++  Method Void set_DemandWindow(System.TimeSpan) [Public] (value)
++  Method Void set_HeavyTimeout(System.TimeSpan) [Public] (value)
++  Method Void set_IdleTimeout(System.TimeSpan) [Public] (value)
++  Method Void set_MaximumConcurrentStarts(Int32) [Public] (value)
++  Method Void set_MaximumHeavyCalls(Int32) [Public] (value)
++  Method Void set_MaximumHeavyCallsPerTenant(Int32) [Public] (value)
++  Method Void set_MaximumHeavyPluginsPerTenant(Int32) [Public] (value)
++  Method Void set_MaximumPayloadBytes(Int32) [Public] (value)
++  Method Void set_MaximumPristineWorkers(Int32) [Public] (value)
++  Method Void set_MaximumQueuedCalls(Int32) [Public] (value)
++  Method Void set_MaximumQueuedCallsPerTenant(Int32) [Public] (value)
++  Method Void set_MaximumRegistrations(Int32) [Public] (value)
++  Method Void set_MaximumWorkers(System.Nullable`1[System.Int32]) [Public] (value)
++  Method Void set_MemoryBudgetMiB(Int64) [Public] (value)
++  Method Void set_NormalTimeout(System.TimeSpan) [Public] (value)
++  Method Void set_QueueTimeout(System.TimeSpan) [Public] (value)
++  Method Void set_ReusableIdleTimeout(System.TimeSpan) [Public] (value)
++  Method WeavePort.Hosting.SchedulingOptions <Clone>$() [Public] ()
++  Property Int32 MaximumConcurrentStarts
++  Property Int32 MaximumHeavyCalls
++  Property Int32 MaximumHeavyCallsPerTenant
++  Property Int32 MaximumHeavyPluginsPerTenant
++  Property Int32 MaximumPayloadBytes
++  Property Int32 MaximumPristineWorkers
++  Property Int32 MaximumQueuedCalls
++  Property Int32 MaximumQueuedCallsPerTenant
++  Property Int32 MaximumRegistrations
++  Property Int64 MemoryBudgetMiB
++  Property System.Nullable`1[System.Int32] MaximumWorkers
++  Property System.TimeSpan DemandWindow
++  Property System.TimeSpan HeavyTimeout
++  Property System.TimeSpan IdleTimeout
++  Property System.TimeSpan NormalTimeout
++  Property System.TimeSpan QueueTimeout
++  Property System.TimeSpan ReusableIdleTimeout
++type WeavePort.Hosting.SchedulingSnapshot : System.Object [Public, Sealed]
++  implements System.IEquatable`1[WeavePort.Hosting.SchedulingSnapshot]
++  Constructor Void .ctor(Int32, Int32, Int32, Int32, Int64, Int64, Int64, Int64, System.String, WeavePort.Hosting.WorkerPoolSnapshot) [Public] (Registrations, Queued, Active, HeavyActive, Completed, Rejected, Evictions, ColdCalls, Failure, Runtime)
++  Method Boolean Equals(System.Object) [Public, Virtual] (obj)
++  Method Boolean Equals(WeavePort.Hosting.SchedulingSnapshot) [Public, Final, Virtual] (other)
++  Method Boolean op_Equality(WeavePort.Hosting.SchedulingSnapshot, WeavePort.Hosting.SchedulingSnapshot) [Public, Static] (left, right)
++  Method Boolean op_Inequality(WeavePort.Hosting.SchedulingSnapshot, WeavePort.Hosting.SchedulingSnapshot) [Public, Static] (left, right)
++  Method Int32 GetHashCode() [Public, Virtual] ()
++  Method Int32 get_Active() [Public] ()
++  Method Int32 get_HeavyActive() [Public] ()
++  Method Int32 get_Queued() [Public] ()
++  Method Int32 get_Registrations() [Public] ()
++  Method Int64 get_ColdCalls() [Public] ()
++  Method Int64 get_Completed() [Public] ()
++  Method Int64 get_Evictions() [Public] ()
++  Method Int64 get_Rejected() [Public] ()
++  Method System.String ToString() [Public, Virtual] ()
++  Method System.String get_Failure() [Public] ()
++  Method Void Deconstruct(Int32 ByRef, Int32 ByRef, Int32 ByRef, Int32 ByRef, Int64 ByRef, Int64 ByRef, Int64 ByRef, Int64 ByRef, System.String ByRef, WeavePort.Hosting.WorkerPoolSnapshot ByRef) [Public] (Registrations, Queued, Active, HeavyActive, Completed, Rejected, Evictions, ColdCalls, Failure, Runtime)
++  Method Void set_Active(Int32) [Public] (value)
++  Method Void set_ColdCalls(Int64) [Public] (value)
++  Method Void set_Completed(Int64) [Public] (value)
++  Method Void set_Evictions(Int64) [Public] (value)
++  Method Void set_Failure(System.String) [Public] (value)
++  Method Void set_HeavyActive(Int32) [Public] (value)
++  Method Void set_Queued(Int32) [Public] (value)
++  Method Void set_Registrations(Int32) [Public] (value)
++  Method Void set_Rejected(Int64) [Public] (value)
++  Method Void set_Runtime(WeavePort.Hosting.WorkerPoolSnapshot) [Public] (value)
++  Method WeavePort.Hosting.SchedulingSnapshot <Clone>$() [Public] ()
++  Method WeavePort.Hosting.WorkerPoolSnapshot get_Runtime() [Public] ()
++  Property Int32 Active
++  Property Int32 HeavyActive
++  Property Int32 Queued
++  Property Int32 Registrations
++  Property Int64 ColdCalls
++  Property Int64 Completed
++  Property Int64 Evictions
++  Property Int64 Rejected
++  Property System.String Failure
++  Property WeavePort.Hosting.WorkerPoolSnapshot Runtime
+ type WeavePort.Hosting.UnixSocketTransport : System.Object [Public, Sealed]
+   implements System.IEquatable`1[WeavePort.Hosting.UnixSocketTransport]
+   Constructor Void .ctor(System.String, System.String) [Public] (LocalDirectory, DockerDirectory)
+@@ -270,6 +424,7 @@
+   Constructor Void .ctor(Int32, Int64, Int32, Int32, System.Nullable`1[System.TimeSpan], System.Nullable`1[System.TimeSpan], Int32, Int64) [Public] (MaximumWorkers=64, MemoryBudgetMiB=16384, MaximumPristineWorkers=4, MaximumConcurrentStarts=8, PristineLifetime=null, MaintenanceInterval=null, MaximumWorkersPerTenant=8, MemoryBudgetPerTenantMiB=2048)
+   Method Boolean Equals(System.Object) [Public, Virtual] (obj)
+   Method Boolean Equals(WeavePort.Hosting.WorkerPoolOptions) [Public, Final, Virtual] (other)
++  Method Boolean get_WaitForStartCapacity() [Public] ()
+   Method Boolean op_Equality(WeavePort.Hosting.WorkerPoolOptions, WeavePort.Hosting.WorkerPoolOptions) [Public, Static] (left, right)
+   Method Boolean op_Inequality(WeavePort.Hosting.WorkerPoolOptions, WeavePort.Hosting.WorkerPoolOptions) [Public, Static] (left, right)
+   Method Int32 GetHashCode() [Public, Virtual] ()
+@@ -282,6 +437,7 @@
+   Method System.Nullable`1[System.TimeSpan] get_MaintenanceInterval() [Public] ()
+   Method System.Nullable`1[System.TimeSpan] get_PristineLifetime() [Public] ()
+   Method System.String ToString() [Public, Virtual] ()
++  Method System.TimeSpan get_ReusableIdleTimeout() [Public] ()
+   Method Void Deconstruct(Int32 ByRef, Int64 ByRef, Int32 ByRef, Int32 ByRef, System.Nullable`1[System.TimeSpan] ByRef, System.Nullable`1[System.TimeSpan] ByRef, Int32 ByRef, Int64 ByRef) [Public] (MaximumWorkers, MemoryBudgetMiB, MaximumPristineWorkers, MaximumConcurrentStarts, PristineLifetime, MaintenanceInterval, MaximumWorkersPerTenant, MemoryBudgetPerTenantMiB)
+   Method Void set_MaintenanceInterval(System.Nullable`1[System.TimeSpan]) [Public] (value)
+   Method Void set_MaximumConcurrentStarts(Int32) [Public] (value)
+@@ -291,7 +447,10 @@
+   Method Void set_MemoryBudgetMiB(Int64) [Public] (value)
+   Method Void set_MemoryBudgetPerTenantMiB(Int64) [Public] (value)
+   Method Void set_PristineLifetime(System.Nullable`1[System.TimeSpan]) [Public] (value)
++  Method Void set_ReusableIdleTimeout(System.TimeSpan) [Public] (value)
++  Method Void set_WaitForStartCapacity(Boolean) [Public] (value)
+   Method WeavePort.Hosting.WorkerPoolOptions <Clone>$() [Public] ()
++  Property Boolean WaitForStartCapacity
+   Property Int32 MaximumConcurrentStarts
+   Property Int32 MaximumPristineWorkers
+   Property Int32 MaximumWorkers
+@@ -300,6 +459,7 @@
+   Property Int64 MemoryBudgetPerTenantMiB
+   Property System.Nullable`1[System.TimeSpan] MaintenanceInterval
+   Property System.Nullable`1[System.TimeSpan] PristineLifetime
++  Property System.TimeSpan ReusableIdleTimeout
+ type WeavePort.Hosting.WorkerPoolSnapshot : System.Object [Public, Sealed]
+   implements System.IEquatable`1[WeavePort.Hosting.WorkerPoolSnapshot]
+   Constructor Void .ctor(Int32, Int32, Int32, Int32, Int64, Int32, Int32, System.String) [Public] (Workers, Pristine, Starting, Quarantined, ReservedMemoryMiB, Bindings, Tenants, MaintenanceFailure)
+@@ -312,10 +472,15 @@
+   Method Int32 get_Bindings() [Public] ()
+   Method Int32 get_Pristine() [Public] ()
+   Method Int32 get_Quarantined() [Public] ()
++  Method Int32 get_ReusableWorkers() [Public] ()
+   Method Int32 get_Starting() [Public] ()
+   Method Int32 get_Tenants() [Public] ()
+   Method Int32 get_Workers() [Public] ()
+   Method Int64 get_ReservedMemoryMiB() [Public] ()
++  Method Int64 get_ReuseHits() [Public] ()
++  Method Int64 get_SessionCleanupFailures() [Public] ()
++  Method Int64 get_SessionReturns() [Public] ()
++  Method Int64 get_WorkersStarted() [Public] ()
+   Method System.String ToString() [Public, Virtual] ()
+   Method System.String get_MaintenanceFailure() [Public] ()
+   Method Void Deconstruct(Int32 ByRef, Int32 ByRef, Int32 ByRef, Int32 ByRef, Int64 ByRef, Int32 ByRef, Int32 ByRef, System.String ByRef) [Public] (Workers, Pristine, Starting, Quarantined, ReservedMemoryMiB, Bindings, Tenants, MaintenanceFailure)
+@@ -325,19 +490,37 @@
+   Method Void set_Pristine(Int32) [Public] (value)
+   Method Void set_Quarantined(Int32) [Public] (value)
+   Method Void set_ReservedMemoryMiB(Int64) [Public] (value)
++  Method Void set_ReusableWorkers(Int32) [Public] (value)
++  Method Void set_ReuseHits(Int64) [Public] (value)
++  Method Void set_SessionCleanupFailures(Int64) [Public] (value)
++  Method Void set_SessionReturns(Int64) [Public] (value)
+   Method Void set_Starting(Int32) [Public] (value)
+   Method Void set_Tenants(Int32) [Public] (value)
+   Method Void set_Workers(Int32) [Public] (value)
++  Method Void set_WorkersStarted(Int64) [Public] (value)
+   Method WeavePort.Hosting.WorkerPoolSnapshot <Clone>$() [Public] ()
+   Property Double OldestQuarantineSeconds
+   Property Int32 Bindings
+   Property Int32 Pristine
+   Property Int32 Quarantined
++  Property Int32 ReusableWorkers
+   Property Int32 Starting
+   Property Int32 Tenants
+   Property Int32 Workers
+   Property Int64 ReservedMemoryMiB
++  Property Int64 ReuseHits
++  Property Int64 SessionCleanupFailures
++  Property Int64 SessionReturns
++  Property Int64 WorkersStarted
+   Property System.String MaintenanceFailure
++type WeavePort.Hosting.WorkerReusePolicy : System.Enum [Public, Sealed]
++  implements System.IComparable
++  implements System.IConvertible
++  implements System.IFormattable
++  implements System.ISpanFormattable
++  Field Int32 value__
++  Field WeavePort.Hosting.WorkerReusePolicy ApprovedSessions=1
++  Field WeavePort.Hosting.WorkerReusePolicy CustomerBound=0
+ type WeavePort.Sdk.PluginApplication : System.Object [Public, Sealed]
+   Constructor Void .ctor(System.Text.Json.JsonSerializerOptions) [Public] (json=null)
+   Method System.String get_PluginVersion() [Public] ()
+@@ -350,6 +533,9 @@
+   Method System.String get_Tenant() [Public] ()
+   Method System.Text.Json.JsonElement get_Configuration() [Public] ()
+   Method System.Threading.Tasks.Task`1[System.Text.Json.JsonElement] CallHostAsync(System.String, System.Text.Json.JsonElement, System.Threading.CancellationToken) [Public] (operation, input, cancellationToken=null)
++  Method T OwnAsync[T](T) [Public] (resource)
++  Method T Own[T](T) [Public] (resource)
++  Method Void OnClose(System.Func`1[System.Threading.Tasks.ValueTask]) [Public] (cleanup)
+   Property System.String Tenant
+   Property System.Text.Json.JsonElement Configuration
+ type WeavePort.Sdk.Client.IPluginClient :  [Public, ClassSemanticsMask, Abstract]

@@ -5,10 +5,10 @@ Define tested tenant boundaries across Docker and cooperative trusted local exec
 ## Requirements
 
 ### Requirement: Independent tenant execution
-The tested Docker execution profile SHALL isolate worker state, configuration and writable files between tenants using the same artifact version. Trusted local execution SHALL preserve cooperative instance state and bound context separation, without promising hostile same-user confinement or memory-fault isolation.
+The customer-bound Docker execution profile SHALL isolate worker state, configuration and writable files between tenants using the same artifact version. Trusted local execution SHALL preserve cooperative bound context separation without promising hostile same-user confinement. Explicitly approved session reuse SHALL follow its cooperative cleanup contract rather than claim complete heap or filesystem separation.
 
 #### Scenario: Failure of tenant A
-- **WHEN** A crashes, exceeds memory, hangs or is deactivated in the tested Docker profile while B calls the same plugin
+- **WHEN** A crashes, exceeds memory, hangs or is deactivated in the customer-bound Docker profile while B calls the same plugin
 - **THEN** B has no induced invocation failures, instance restart or state loss
 
 ### Requirement: Bounded execution
@@ -26,11 +26,19 @@ The host SHALL permit isolated restart and disposal and reject calls to disabled
 - **THEN** B retains its process and its state
 
 ### Requirement: No used-worker reassignment
-Used execution environments SHALL be destroyed rather than returned to a customer-shared pristine reserve. Fresh cooperative state SHALL NOT be presented as a filesystem sandbox against hostile same-user native code.
+Customer-bound used execution environments SHALL be destroyed rather than reassigned. Only an operator-approved native deployment with the session-cleanup capability and a successful cleanup acknowledgement SHALL permit compatible sequential reuse. Fresh cooperative state SHALL NOT be presented as a sandbox against hostile same-user code.
 
 #### Scenario: Customer replacement
-- **WHEN** cooperative fixture A writes private markers and secrets into its instance workspace and releases it before cooperative fixture B uses the identical plugin
-- **THEN** B's fresh process and instance workspace contain none of A's markers and callbacks use only B's bound authority
+- **WHEN** customer-bound fixture A writes private markers and releases its instance before B uses the identical plugin
+- **THEN** B receives a fresh environment and callbacks use only B's bound authority
+
+#### Scenario: Approved customer switch
+- **WHEN** an approved SDK function completes registered cleanup and another compatible customer invokes it
+- **THEN** the same worker may execute with the new bound context and grants while old SDK contexts reject callbacks
+
+#### Scenario: Hidden global negative control
+- **WHEN** approved code retains an unregistered customer value in global state
+- **THEN** documentation and tests expose the accepted residual risk rather than claiming automatic erasure
 
 ### Requirement: Expired callback scope
 Nested plugin invocations from a completed or cancelled callback scope SHALL be denied even when the nested target has the same tenant identifier.

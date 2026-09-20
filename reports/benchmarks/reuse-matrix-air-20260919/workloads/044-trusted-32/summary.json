@@ -1,0 +1,150 @@
+{
+  "config": {
+    "mode": "trusted",
+    "workers": 32,
+    "seconds": 15,
+    "cpus": "1",
+    "workload": "io",
+    "ioMs": 100
+  },
+  "image": "sha256:ec90b7cd1578af275ee435754d4f4c9848c14891de7410ed06da655e632d3d58",
+  "counts": {
+    "offered": 4307,
+    "completed": 4307,
+    "correct": 4307,
+    "failed": 0,
+    "dropped": 0,
+    "withinOneSecond": 4307,
+    "customersCompleted": 4307,
+    "faultsExpected": 0,
+    "faultsContained": 0
+  },
+  "elapsed": 15.093854167003883,
+  "preparedSeconds": 1.2141607090015896,
+  "customersPerSecond": 285.34792719909626,
+  "requestsPerSecond": 285.34792719909626,
+  "hostCpuCores": 0.05077053160320247,
+  "latency": {
+    "responseMs": {
+      "count": 4307,
+      "mean": 111.44111835041966,
+      "max": 184.5654580029077,
+      "p50": 111.77152410657577,
+      "p95": 119.83420235354079,
+      "p99": 123.46529851905542
+    },
+    "turnoverMs": {
+      "count": 4307,
+      "mean": 111.4422457623292,
+      "max": 184.56600000354229,
+      "p50": 111.77152410657577,
+      "p95": 119.83420235354079,
+      "p99": 123.46529851905542
+    },
+    "queueMs": {
+      "count": 4307,
+      "mean": 0.001012539187017984,
+      "max": 0.015208002878353,
+      "p50": 0.0010022281455185505,
+      "p95": 0.0031472017194579395,
+      "p99": 0.004458334629570464
+    },
+    "executionMs": {
+      "count": 4307,
+      "mean": 102.00319538312183,
+      "max": 112.12391700246371,
+      "p50": 102.1971557066337,
+      "p95": 106.34677003891741,
+      "p99": 108.48434011669966
+    },
+    "cleanupMs": {
+      "count": 4307,
+      "mean": 0.5532213030013095,
+      "max": 5.882749999727821,
+      "p50": 0.4694351362450219,
+      "p95": 1.3886900853164084,
+      "p99": 2.2167152171942583
+    },
+    "generatorLagMs": {
+      "count": 0
+    },
+    "pluginImportMs": {
+      "count": 4307,
+      "mean": 0.36653406131552807,
+      "max": 79.32212500236346,
+      "p50": 0.008099441802634623,
+      "p95": 0.016746165359994073,
+      "p99": 0.059848217426112
+    },
+    "childWorkMs": {
+      "count": 0
+    },
+    "childStartMs": {
+      "count": 0
+    },
+    "childResponseWaitMs": {
+      "count": 0
+    },
+    "childExitWaitMs": {
+      "count": 0
+    },
+    "processTurnoverMs": {
+      "count": 0
+    }
+  },
+  "byWorkload": {
+    "io": {
+      "count": 4307,
+      "mean": 111.44111835041966,
+      "max": 184.5654580029077,
+      "p50": 111.77152410657577,
+      "p95": 119.83420235354079,
+      "p99": 123.46529851905542
+    }
+  },
+  "memoryPeakMiB": 353.36328125,
+  "hostRssPeakMiB": 34.46875,
+  "helpersRssPeakMiB": 960.40625,
+  "memoryRawPeakMiB": 353.45703125,
+  "starts": 32,
+  "retirements": 32,
+  "failure": null,
+  "failedExamples": [],
+  "known": [
+    "wp-matrix-056062a4f26b43b0a9a601316a095948",
+    "wp-matrix-0812141bb4af4fc1ba7386e5981d2839",
+    "wp-matrix-17de6403cb8e40cfbafa10e174567e71",
+    "wp-matrix-3b17040d95e8420794e8126d69e52612",
+    "wp-matrix-3b92440f1544429eab8dfe70e6fd43d9",
+    "wp-matrix-55c702aebab94f43a6bbd48633e7d526",
+    "wp-matrix-66328fa869104f5e8a3e9cbe4cec501c",
+    "wp-matrix-6c9234a84b154db6b41bd650ed3e7d19",
+    "wp-matrix-6eca3514ff6d4e6c974c5acb2e05142d",
+    "wp-matrix-756938e4a81a47658c1364d980cc483f",
+    "wp-matrix-7834095dabeb4eada285bcf5eff14d0f",
+    "wp-matrix-798a3bbbbb844341a93533d8cd24fd92",
+    "wp-matrix-88b9f1d30eac4cccafb858537bed419d",
+    "wp-matrix-90e1cfcac14d402cadd38089122e4c6b",
+    "wp-matrix-9846066b449b4a79aa89c8b466d0f2aa",
+    "wp-matrix-98d95d822e9147728ab0c88f39909f30",
+    "wp-matrix-9ac7f4656c864e1ab532c80ac4b8df16",
+    "wp-matrix-a20f23c355b44a83acc04dbc4cacab26",
+    "wp-matrix-a5e4885765e94c529524d06bbcedb3d9",
+    "wp-matrix-a83408a492f74950a5ccb7d36ebf55f4",
+    "wp-matrix-aeb71e1e0f9b4169b5286758835e9dbf",
+    "wp-matrix-b6f023f4c91d42acb3900afd1842962a",
+    "wp-matrix-b981061c21734cfea4eb491f3377d87b",
+    "wp-matrix-bb3c16097cb74078afafcd9a34947289",
+    "wp-matrix-bbe796f0345247a4b07f2340170b8ae9",
+    "wp-matrix-d45eee76893b49708dcaefe8dc5ebecb",
+    "wp-matrix-de332d31540b45efa43c79e96de709c0",
+    "wp-matrix-df2b0b28efea46649faa7886123a1135",
+    "wp-matrix-e5baa894460c41848cd6a2d9bd857baf",
+    "wp-matrix-fb68d8c7e24e4b3983f89fd62db92bc2",
+    "wp-matrix-fc2c07f7d729484481de2b3853dd2619",
+    "wp-matrix-fd24ab947460493b8c26792a83e4642f"
+  ],
+  "remaining": [],
+  "passed": true,
+  "meetsOneSecondSlo": true
+}

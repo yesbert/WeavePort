@@ -5,11 +5,11 @@ Define verified local coordinator behavior for pristine worker assignment, bound
 ## Requirements
 
 ### Requirement: Shared pristine reserve
-A coordinator SHALL hold a bounded reserve of customer-unassigned workers keyed by resolved artifact or trusted local launch profile, version and execution reservations and SHALL assign each worker exclusively at most once. Local executable/script stability SHALL be an explicit trusted-deployment prerequisite rather than an immutable-image claim.
+A coordinator SHALL hold a bounded reserve of pristine customer-unassigned workers keyed by resolved deployment, version, reuse policy and execution reservations. Initial pristine checkout SHALL be exclusive; subsequent approved reuse SHALL use the separate acknowledged-clean lifecycle. Local executable/script stability SHALL remain a trusted-deployment prerequisite.
 
 #### Scenario: Two customers acquire the same plugin
-- **WHEN** A and B concurrently acquire workers from the shared reserve
-- **THEN** they receive distinct execution environments with their own bound context and no prior customer's state
+- **WHEN** A and B concurrently acquire default customer-bound workers from the reserve
+- **THEN** each receives its own execution environment with no prior customer state
 
 ### Requirement: Accounted execution capacity
 The coordinator SHALL bound reserved worker count and configured memory reservations both globally and per tenant, simultaneous launches and pristine residency; cleanup-uncertain workers SHALL remain reserved and unavailable for assignment. Whether a memory reservation is also an enforced worker ceiling SHALL be identified by the execution profile.
@@ -23,14 +23,14 @@ The coordinator SHALL bound reserved worker count and configured memory reservat
 - **THEN** further A allocations are rejected without dispatch and B can still allocate within its own allowance
 
 ### Requirement: Explicit idle policy
-A binding SHALL retain its process state by default and SHALL permit opt-in release of idle execution environments without revoking the binding.
+Customer-bound bindings SHALL retain process state by default and permit opt-in idle release. Approved clean sessions SHALL instead follow shared reusable-idle retention and SHALL NOT promise binding-affine process state.
 
 #### Scenario: Idle release and reuse
-- **WHEN** an opted-in binding exceeds its idle duration while no invocation is active
-- **THEN** its used environment is destroyed and its next invocation obtains a fresh environment with the original immutable binding
+- **WHEN** a customer-bound binding exceeds its configured idle duration
+- **THEN** its used worker is destroyed and its next call obtains a fresh worker
 
 #### Scenario: Stateful default
-- **WHEN** a binding has no idle-release policy
+- **WHEN** a customer-bound binding has no idle-release policy
 - **THEN** maintenance does not discard its process state
 
 ### Requirement: Bounded host registration lifetime
@@ -41,15 +41,15 @@ Disposed bindings SHALL be removed from host registration, while shared callback
 - **THEN** a new binding for the same tenant cannot bypass the existing callback limit
 
 ### Requirement: Adapter-aware local lifecycle
-Trusted local workers SHALL share binding authority, admission, pristine assignment and idle/restart/disposal policies, while reports and APIs SHALL distinguish scheduling memory reservations from enforced resource ceilings. Used local workers SHALL never be assigned to another customer.
+Trusted local workers SHALL share binding authority, admission and pool policies, while APIs SHALL distinguish memory reservations from enforced resource ceilings. Customer-bound used local workers SHALL never move to another customer. Approved local sessions SHALL remain cooperative same-user execution.
 
 #### Scenario: Trusted replacement
-- **WHEN** a cooperative local worker writes instance state and is released before another customer binds the same fixture
-- **THEN** the replacement receives a fresh process and workspace with its own bound context
+- **WHEN** a customer-bound cooperative local worker writes state and is replaced for another customer
+- **THEN** the replacement receives a fresh process and workspace with its own context
 
 #### Scenario: Local cleanup limit
-- **WHEN** a local worker is stopped or cleanup fails
-- **THEN** root-process termination is bounded and uncertain cleanup retains its reservation, without claiming kernel-enforced containment of escaped descendants
+- **WHEN** local cleanup is unconfirmed
+- **THEN** its reservation remains unavailable without claiming kernel-enforced containment of escaped descendants
 
 ### Requirement: Exceptional lifecycle completion
 Invocation setup failures SHALL release acquired admission. Unsupported invocation deadlines SHALL be rejected before binding registration. Cancellation callback failures SHALL NOT prevent independent worker cleanup and binding deregistration; outstanding callbacks SHALL retain admission until actual completion.
@@ -87,3 +87,26 @@ Native Unix sockets SHALL use exclusively created owner-only temporary directori
 #### Scenario: Docker executable override
 - **WHEN** a deployment supplies a relative Docker executable path
 - **THEN** setup rejects it before executing any command
+
+### Requirement: Approved reusable worker pool
+The host SHALL default to customer-bound execution and SHALL permit operator-approved native sessions to return a worker only after a valid cleanup acknowledgement. Reusable workers SHALL remain globally accounted, have no assigned tenant, retain exact normalized deployment/version compatibility and expire under an explicit reusable-idle policy. Legacy or MCP workers SHALL NOT silently enter the approved pool.
+
+#### Scenario: Successful cleanup
+- **WHEN** a reviewed compatible SDK session acknowledges cleanup
+- **THEN** another compatible binding can acquire that worker exclusively and reuse counters reflect the assignment
+
+#### Scenario: Cleanup failure or cancellation
+- **WHEN** cleanup fails, an acknowledgement is invalid or the invocation deadline expires
+- **THEN** the worker is retired and never reassigned as clean
+
+#### Scenario: Old binding disposed
+- **WHEN** a binding that has returned its clean worker is disposed or restarted
+- **THEN** it does not destroy a worker subsequently assigned to another binding
+
+#### Scenario: Explicit restart
+- **WHEN** an approved binding is explicitly restarted
+- **THEN** its next acquisition bypasses previously used clean workers without destroying another binding's active worker
+
+#### Scenario: Idle or incompatible demand
+- **WHEN** a clean worker expires or capacity is needed for an incompatible deployment
+- **THEN** it may be removed while reservation accounting remains until removal is confirmed

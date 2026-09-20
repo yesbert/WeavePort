@@ -5,7 +5,7 @@ using System.Text.Json;
 using WeavePort.Abstractions;
 
 namespace WeavePort.Hosting;
-internal sealed class PluginSession(SessionBinding binding, TenantAdmission admission, WorkerPool pool, TimeProvider clock, Action<PluginSession, TenantAdmission> removed, ILogger logger) : IPluginSession
+internal sealed partial class PluginSession(SessionBinding binding, TenantAdmission admission, WorkerPool pool, TimeProvider clock, Action<PluginSession, TenantAdmission> removed, ILogger logger) : IPluginSession
 {
     private const string Disabled = "disabled";
     private static readonly ActivitySource Traces = new("WeavePort.Hosting");
@@ -62,6 +62,8 @@ internal sealed class PluginSession(SessionBinding binding, TenantAdmission admi
     private async Task<InvocationResult> InvokeAdmittedAsync(string operation, JsonElement payload, InvocationScope? parent, long started, CancellationToken cancellationToken)
     {
         _dispatched = false;
+        _clean = false;
+        LastAcquisitionReused = false;
         bool admitted = false;
         string id = "";
         try
@@ -91,6 +93,8 @@ internal sealed class PluginSession(SessionBinding binding, TenantAdmission admi
             await EnsureStartedAsync(deadline.Token);
             string trace = parent?.TraceId ?? activity?.TraceId.ToString() ?? id;
             JsonElement value = await DispatchAsync(new InvokeFrame("invoke", id, operation, payload, binding.Context, trace), parent, deadline.Token);
+            deadline.Token.ThrowIfCancellationRequested();
+            await ReturnCleanWorkerAsync();
             return new InvocationResult("ok", value, Instance, Stopwatch.GetElapsedTime(started).TotalMilliseconds, true);
         }
         catch (WorkerCapacityException)
@@ -161,92 +165,10 @@ internal sealed class PluginSession(SessionBinding binding, TenantAdmission admi
         }
 
         await StopAsync();
-        _worker = await pool.AcquireAsync(binding.Profile, binding.Context.Version, binding.Context.Tenant, token);
+        _worker = await pool.AcquireAsync(binding.Profile, binding.Context.Version, binding.Context.Tenant, token, _freshNext);
+        _freshNext = false;
+        LastAcquisitionReused = _worker.AcquiredFromReuse;
         _instance = _worker.Instance;
-    }
-
-    private async Task<JsonElement> ExchangeAsync(string id, string trace, CancellationToken token)
-    {
-        var callbackIds = new HashSet<string>(StringComparer.Ordinal);
-        while (true)
-        {
-            JsonElement frame = await _worker!.Reader.ReadAsync(token);
-            WorkerEnvelope.Validate(frame);
-            if (frame.GetProperty("id").GetString() != id)
-            {
-                throw new InvalidDataException("Invocation mismatch.");
-            }
-
-            string? type = frame.GetProperty("type").GetString();
-            if (type == "result")
-            {
-                return frame.GetProperty("value");
-            }
-
-            if (type == "error")
-            {
-                throw new IOException("Plugin reported an execution error.");
-            }
-
-            if (type != "callback")
-            {
-                throw new InvalidDataException("Unknown frame.");
-            }
-
-            string operation = frame.GetProperty("operation").GetString() ?? "";
-            string callbackId = frame.GetProperty("callbackId").GetString() ?? "";
-            if (!binding.Grants.Contains(operation) || !(InvocationScope.Current.Value?.Allows(operation) ?? false))
-            {
-                throw new UnauthorizedAccessException();
-            }
-
-            if (!(InvocationScope.Current.Value?.TakeCallback() ?? false) || !callbackIds.Add(callbackId))
-            {
-                throw new InvalidDataException("Callback budget or identity violation.");
-            }
-
-            var call = new HostCall(binding.Context, id, operation, frame.GetProperty("payload"), trace);
-            JsonElement value = await InvokeCallbackAsync(call, token);
-            await Frames.WriteAsync(_worker!.Input, new CallbackResultFrame("callback-result", id, callbackId, value), WireJson.Default.CallbackResultFrame, token);
-        }
-    }
-
-    private async Task<JsonElement> InvokeCallbackAsync(HostCall call, CancellationToken token)
-    {
-        if (!await admission.Callbacks.WaitAsync(0, token))
-        {
-            throw new IOException("Callback capacity exhausted.");
-        }
-
-        admission.RetainCallback();
-        Task<JsonElement> callback = Task.Run(async () =>
-        {
-            try
-            {
-                return await binding.Callbacks.InvokeAsync(call, token);
-            }
-            catch (Exception error) when (error is not OperationCanceledException and not UnauthorizedAccessException)
-            {
-                RuntimeLog.CallbackFailed(logger, Instance, call.InvocationId, error.GetType().Name);
-                throw new IOException("Host callback failed.", error);
-            }
-            finally
-            {
-                admission.ReleaseCallback();
-            }
-        }, CancellationToken.None);
-        JsonElement value;
-        try
-        {
-            value = await callback.WaitAsync(token);
-        }
-        catch (OperationCanceledException)
-        {
-            _ = callback.ContinueWith(task => _ = task.Exception, TaskContinuationOptions.OnlyOnFaulted);
-            throw;
-        }
-
-        return value;
     }
 
     private InvocationResult Result(string status, long started, bool? dispatched = null) => new(status, _termination, Instance, Stopwatch.GetElapsedTime(started).TotalMilliseconds, dispatched ?? _dispatched);
@@ -287,6 +209,7 @@ internal sealed class PluginSession(SessionBinding binding, TenantAdmission admi
         await _gate.WaitAsync(cancellationToken);
         try
         {
+            _freshNext = true;
             await StopAsync();
         }
         finally

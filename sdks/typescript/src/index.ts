@@ -5,16 +5,13 @@ import { createInterface } from 'node:readline';
 import { randomUUID } from 'node:crypto';
 import type { Readable, Writable } from 'node:stream';
 
-/** Context and capabilities supplied by the host, independent of transport. */
-export interface PluginContext {
-    readonly tenant: string;
-    readonly configuration: unknown;
-    callHost<T = unknown>(operation: string, input: unknown): Promise<T>;
-}
+import { SessionContext, SessionCleanupError } from './session.js';
+import type { PluginContext } from './session.js';
+export type { PluginContext } from './session.js';
 type Handler = (input: any, context: PluginContext, signal: AbortSignal) => Promise<unknown>;
 type Generator = (input: any, context: PluginContext, signal: AbortSignal) => AsyncIterable<unknown>;
 type Invocation = { id: string; operation: string; payload: any; context: { tenant: string; configuration: unknown } };
-const scopes = new AsyncLocalStorage<{ request: Invocation; active: boolean }>();
+const scopes = new AsyncLocalStorage<{ request?: Invocation; active: boolean }>();
 const encode = (value: unknown) => {
     const text = JSON.stringify(value);
     if (text === undefined) throw new TypeError('Result is not JSON');
@@ -46,6 +43,7 @@ class Runtime {
     private output!: Writable;
     private socket?: Socket;
     private iterator?: AsyncIterator<unknown>;
+    private context?: SessionContext;
     private abort?: AbortController;
     private streamId?: string;
     private pending?: unknown;
@@ -72,7 +70,7 @@ class Runtime {
         this.callbackTail = new Promise<void>(resolve => release = resolve);
         await previous;
         try {
-            if (!scope?.active) throw new Error('Expired invocation');
+            if (!scope?.active || !scope.request) throw new Error('Expired invocation');
             const callbackId = String(++this.callbackId), id = scope.request.id;
             await this.send({ type: 'callback', id, callbackId, operation, payload });
             const reply = await this.read();
@@ -84,7 +82,13 @@ class Runtime {
         const iterator = this.iterator;
         this.iterator = undefined; this.streamId = undefined; this.pending = undefined; this.hasPending = false;
         this.abort?.abort(); this.abort = undefined;
-        if (iterator?.return) await iterator.return();
+        try { if (iterator?.return) await iterator.return(); }
+        finally { await this.completeContext(); }
+    }
+    private async completeContext(): Promise<void> {
+        const context = this.context;
+        this.context = undefined;
+        await context?.complete();
     }
     private async dispatch(request: Invocation): Promise<unknown> {
         const { operation, payload } = request;
@@ -112,11 +116,11 @@ class Runtime {
             return { items, done };
         }
         if (this.iterator) throw new Error('Stream already active');
-        const context: PluginContext = Object.freeze({ ...request.context, callHost: <T>(name: string, input: unknown) => this.callback<T>(name, input) });
+        const context = this.context = new SessionContext(request.context.tenant, request.context.configuration, <T>(name: string, input: unknown) => this.callback<T>(name, input));
         const abort = new AbortController();
         if (operation === '$sdk.call') {
             try { return await this.functions.get(payload.operation)!(payload.input, context, abort.signal); }
-            finally { abort.abort(); }
+            finally { try { abort.abort(); } finally { await this.completeContext(); } }
         }
         if (operation !== '$sdk.start') throw new Error('Unknown SDK operation');
         this.abort = abort;
@@ -134,16 +138,27 @@ class Runtime {
         }
         globalThis.console = new Console({ stdout: process.stderr, stderr: process.stderr });
         this.reader = createInterface({ input, crlfDelay: Infinity })[Symbol.asyncIterator]();
-        await this.send({ type: 'ready', protocol: 1, pluginVersion: this.pluginVersion });
+        await this.send({ type: 'ready', protocol: 1, pluginVersion: this.pluginVersion, sessionCleanup: 1 });
         try {
             let request: Invocation | undefined;
             while ((request = await this.read()) !== undefined) {
-                const invocation = request, scope = { request: invocation, active: true };
+                const invocation = request;
+                const scope: { request?: Invocation; active: boolean } = { request: invocation, active: true };
                 await scopes.run(scope, async () => {
-                    try { await this.send({ type: 'result', id: invocation.id, value: await this.dispatch(invocation) }); }
-                    catch { await this.close(); await this.send({ type: 'error', id: invocation.id, code: 'sdk-error' }); }
-                    finally { scope.active = false; }
+                    try {
+                        const value = await this.dispatch(invocation);
+                        scope.active = false;
+                        await this.callbackTail;
+                        await this.send({ type: 'result', id: invocation.id, value, reusable: !this.context && !this.iterator });
+                    }
+                    catch (error) {
+                        let cleanupFailed = error instanceof SessionCleanupError;
+                        try { await this.close(); } catch { cleanupFailed = true; }
+                        await this.send({ type: 'error', id: invocation.id, code: cleanupFailed ? 'cleanup-error' : 'sdk-error' });
+                    }
+                    finally { scope.active = false; scope.request = undefined; }
                 });
+                request = undefined;
             }
         } finally { await this.close(); this.socket?.destroy(); }
     }

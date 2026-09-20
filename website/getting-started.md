@@ -25,7 +25,7 @@ cd WeavePort
 ./scripts/decision-room.sh --build
 ```
 
-The runner packs the platform libraries, builds the host and C# worker, installs the Python SDK into a private environment and runs the example. It consumes packages built from that checkout. To inspect the exact public release source, select the `v0.3.1` tag; main may contain later work.
+The runner packs the platform libraries, builds the host and C# worker, installs the Python SDK into a private environment and runs the example. It consumes packages built from that checkout. To inspect the exact public release source, select the `v0.4.0` tag; main may contain later work.
 
 ## 2. Check the result
 

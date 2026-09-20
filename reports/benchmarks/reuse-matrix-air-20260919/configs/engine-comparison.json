@@ -1,0 +1,66 @@
+[
+  {
+    "mode": "trusted",
+    "workers": 8,
+    "seconds": 30,
+    "cpus": "1",
+    "transport": "cli",
+    "repeat": 1
+  },
+  {
+    "mode": "trusted",
+    "workers": 8,
+    "seconds": 30,
+    "cpus": "1",
+    "transport": "engine",
+    "repeat": 1
+  },
+  {
+    "mode": "forkserver",
+    "workers": 8,
+    "seconds": 30,
+    "cpus": "1",
+    "transport": "cli",
+    "repeat": 1
+  },
+  {
+    "mode": "forkserver",
+    "workers": 8,
+    "seconds": 30,
+    "cpus": "1",
+    "transport": "engine",
+    "repeat": 1
+  },
+  {
+    "mode": "trusted",
+    "workers": 8,
+    "seconds": 30,
+    "cpus": "1",
+    "transport": "engine",
+    "repeat": 2
+  },
+  {
+    "mode": "trusted",
+    "workers": 8,
+    "seconds": 30,
+    "cpus": "1",
+    "transport": "cli",
+    "repeat": 2
+  },
+  {
+    "mode": "forkserver",
+    "workers": 8,
+    "seconds": 30,
+    "cpus": "1",
+    "transport": "engine",
+    "repeat": 2
+  },
+  {
+    "mode": "forkserver",
+    "workers": 8,
+    "seconds": 30,
+    "cpus": "1",
+    "transport": "cli",
+    "repeat": 2
+  }
+]

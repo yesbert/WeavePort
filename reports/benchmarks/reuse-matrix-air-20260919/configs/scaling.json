@@ -1,0 +1,141 @@
+[
+  {
+    "mode": "trusted",
+    "workers": 1,
+    "seconds": 15
+  },
+  {
+    "mode": "process",
+    "workers": 1,
+    "seconds": 15
+  },
+  {
+    "mode": "forkserver",
+    "workers": 1,
+    "seconds": 15
+  },
+  {
+    "mode": "trusted",
+    "workers": 2,
+    "seconds": 15
+  },
+  {
+    "mode": "process",
+    "workers": 2,
+    "seconds": 15
+  },
+  {
+    "mode": "forkserver",
+    "workers": 2,
+    "seconds": 15
+  },
+  {
+    "mode": "trusted",
+    "workers": 4,
+    "seconds": 15
+  },
+  {
+    "mode": "process",
+    "workers": 4,
+    "seconds": 15
+  },
+  {
+    "mode": "forkserver",
+    "workers": 4,
+    "seconds": 15
+  },
+  {
+    "mode": "trusted",
+    "workers": 8,
+    "seconds": 15
+  },
+  {
+    "mode": "process",
+    "workers": 8,
+    "seconds": 15
+  },
+  {
+    "mode": "forkserver",
+    "workers": 8,
+    "seconds": 15
+  },
+  {
+    "mode": "trusted",
+    "workers": 16,
+    "seconds": 15
+  },
+  {
+    "mode": "process",
+    "workers": 16,
+    "seconds": 15
+  },
+  {
+    "mode": "forkserver",
+    "workers": 16,
+    "seconds": 15
+  },
+  {
+    "mode": "fresh",
+    "workers": 1,
+    "seconds": 15
+  },
+  {
+    "mode": "fresh",
+    "workers": 4,
+    "seconds": 15
+  },
+  {
+    "mode": "trusted",
+    "workers": 1,
+    "seconds": 15,
+    "cpus": "1"
+  },
+  {
+    "mode": "process",
+    "workers": 1,
+    "seconds": 15,
+    "cpus": "1"
+  },
+  {
+    "mode": "forkserver",
+    "workers": 1,
+    "seconds": 15,
+    "cpus": "1"
+  },
+  {
+    "mode": "trusted",
+    "workers": 4,
+    "seconds": 15,
+    "cpus": "1"
+  },
+  {
+    "mode": "process",
+    "workers": 4,
+    "seconds": 15,
+    "cpus": "1"
+  },
+  {
+    "mode": "forkserver",
+    "workers": 4,
+    "seconds": 15,
+    "cpus": "1"
+  },
+  {
+    "mode": "trusted",
+    "workers": 8,
+    "seconds": 15,
+    "cpus": "1"
+  },
+  {
+    "mode": "process",
+    "workers": 8,
+    "seconds": 15,
+    "cpus": "1"
+  },
+  {
+    "mode": "forkserver",
+    "workers": 8,
+    "seconds": 15,
+    "cpus": "1"
+  }
+]

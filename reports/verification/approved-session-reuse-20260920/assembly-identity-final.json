@@ -1,0 +1,32 @@
+[
+  {
+    "assembly": "WeavePort.Abstractions.dll",
+    "sha256": "96cc6772bffb076261cdda4b5f4d252ac49429c904914adea6f8fe7b2fdba892",
+    "verifiedFiles": [
+      "src/WeavePort.Abstractions/bin/Release/net10.0/WeavePort.Abstractions.dll",
+      "tests/WeavePort.ReuseTests/bin/Release/net10.0/WeavePort.Abstractions.dll",
+      "benchmarks/WeavePort.Density/bin/Release/net10.0/WeavePort.Abstractions.dll"
+    ],
+    "nupkg": "artifacts/packages/WeavePort.Abstractions.0.3.1.nupkg"
+  },
+  {
+    "assembly": "WeavePort.Hosting.dll",
+    "sha256": "21d2bf8c3bdf9c5b2e7ce96022fcf7b1cb8062caa8e6d5f54007885a03914948",
+    "verifiedFiles": [
+      "src/WeavePort.Hosting/bin/Release/net10.0/WeavePort.Hosting.dll",
+      "tests/WeavePort.ReuseTests/bin/Release/net10.0/WeavePort.Hosting.dll",
+      "benchmarks/WeavePort.Density/bin/Release/net10.0/WeavePort.Hosting.dll"
+    ],
+    "nupkg": "artifacts/packages/WeavePort.Hosting.0.3.1.nupkg"
+  },
+  {
+    "assembly": "WeavePort.Sdk.dll",
+    "sha256": "0a009ed80ab5592e1f0785358f90f5f8df7fa47ed98f61e5d958ed10c0336358",
+    "verifiedFiles": [
+      "src/WeavePort.Sdk/bin/Release/net10.0/WeavePort.Sdk.dll",
+      "tests/WeavePort.ReuseTests/bin/Release/net10.0/WeavePort.Sdk.dll",
+      "artifacts/approved-reuse-integration/docker-context/csharp/WeavePort.Sdk.dll"
+    ],
+    "nupkg": "artifacts/packages/WeavePort.Sdk.0.3.1.nupkg"
+  }
+]

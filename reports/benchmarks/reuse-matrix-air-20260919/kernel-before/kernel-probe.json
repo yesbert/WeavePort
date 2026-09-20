@@ -1,0 +1,277 @@
+{
+  "image": "sha256:d44b593363edf08065c6196b16f4bb9f533c1ca3a98669d632d3c782fed50873",
+  "results": [
+    {
+      "mode": "fresh",
+      "leave": {
+        "request": {
+          "id": "1",
+          "tenant": "customer-1",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "kernel_leave"
+        },
+        "container": "wp-matrix-ea78c2f6ad6a4dc3ab4bc5cdbc8a4fce",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "shmid": 0
+          },
+          "reusable": true,
+          "error": null,
+          "pluginImportMs": 9.28866699905484,
+          "executionMs": 1.3119590003043413,
+          "cleanupMs": 0.08533399886800908,
+          "id": "1"
+        },
+        "queueMs": 0.0020419975044205785,
+        "startupMs": 100.06454199901782,
+        "retirementMs": 25.7799579994753,
+        "responseMs": 111.41233299713349,
+        "turnoverMs": 137.19458299601683
+      },
+      "probe": {
+        "request": {
+          "id": "2",
+          "tenant": "customer-2",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "kernel_probe",
+          "shmid": 0
+        },
+        "container": "wp-matrix-f9aa96f9c342423e9cc3578f2a9569f2",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "accessible": false,
+            "canary": null
+          },
+          "reusable": true,
+          "error": null,
+          "pluginImportMs": 9.80958299987833,
+          "executionMs": 1.4035409985808656,
+          "cleanupMs": 0.09383300130139105,
+          "id": "2"
+        },
+        "queueMs": 0.0028340000426396728,
+        "startupMs": 84.95250000123633,
+        "retirementMs": 28.22866699716542,
+        "responseMs": 97.08054200018523,
+        "turnoverMs": 125.3121249974356
+      }
+    },
+    {
+      "mode": "process",
+      "leave": {
+        "request": {
+          "id": "1",
+          "tenant": "customer-1",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "kernel_leave"
+        },
+        "container": "wp-matrix-4f9835b3249b4942872420596bcdaee5",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "shmid": 0
+          },
+          "reusable": true,
+          "error": null,
+          "pluginImportMs": 8.924000001570676,
+          "executionMs": 1.223582999955397,
+          "cleanupMs": 0.08800000068731606,
+          "id": "1"
+        },
+        "queueMs": 0.0013749959180131555,
+        "startupMs": 75.23924999986775,
+        "retirementMs": 0.0,
+        "responseMs": 117.21574999683071,
+        "turnoverMs": 117.217458995583
+      },
+      "probe": {
+        "request": {
+          "id": "2",
+          "tenant": "customer-2",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "kernel_probe",
+          "shmid": 0
+        },
+        "container": "wp-matrix-4f9835b3249b4942872420596bcdaee5",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "accessible": true,
+            "canary": "customer-1"
+          },
+          "reusable": true,
+          "error": null,
+          "pluginImportMs": 8.572582999477163,
+          "executionMs": 1.1397080015740357,
+          "cleanupMs": 0.08112499926937744,
+          "id": "2"
+        },
+        "queueMs": 0.0014170000213198364,
+        "startupMs": 0.0,
+        "retirementMs": 0.0,
+        "responseMs": 28.4561250009574,
+        "turnoverMs": 28.45941700070398
+      }
+    },
+    {
+      "mode": "trusted",
+      "leave": {
+        "request": {
+          "id": "1",
+          "tenant": "customer-1",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "kernel_leave"
+        },
+        "container": "wp-matrix-7a85e88bb5e946b9a8e7d5cb70e0236f",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "shmid": 0
+          },
+          "reusable": true,
+          "error": null,
+          "pluginImportMs": 10.163417002331698,
+          "executionMs": 1.4454999982262962,
+          "cleanupMs": 0.10033299986389466,
+          "id": "1"
+        },
+        "queueMs": 0.003125001967418939,
+        "startupMs": 76.010208002117,
+        "retirementMs": 0.0,
+        "responseMs": 88.69950000371318,
+        "turnoverMs": 88.70100000058301
+      },
+      "probe": {
+        "request": {
+          "id": "2",
+          "tenant": "customer-2",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "kernel_probe",
+          "shmid": 0
+        },
+        "container": "wp-matrix-7a85e88bb5e946b9a8e7d5cb70e0236f",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "accessible": true,
+            "canary": "customer-1"
+          },
+          "reusable": true,
+          "error": null,
+          "pluginImportMs": 0.00145800004247576,
+          "executionMs": 0.09545799912302755,
+          "cleanupMs": 0.06341599873849191,
+          "id": "2"
+        },
+        "queueMs": 0.0017500060494057834,
+        "startupMs": 0.0,
+        "retirementMs": 0.0,
+        "responseMs": 0.8628750001662411,
+        "turnoverMs": 0.8638750005047768
+      }
+    },
+    {
+      "mode": "forkserver",
+      "leave": {
+        "request": {
+          "id": "1",
+          "tenant": "customer-1",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "kernel_leave"
+        },
+        "container": "wp-matrix-dad580378e5e456baeb362caa85a7a1e",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "shmid": 0
+          },
+          "reusable": true,
+          "error": null,
+          "pluginImportMs": 0.10762500096461736,
+          "executionMs": 0.28345800092210993,
+          "cleanupMs": 0.14124999870546162,
+          "childWorkMs": 0.5363340023905039,
+          "childStartMs": 0.5737920000683516,
+          "childResponseWaitMs": 2.534750001359498,
+          "childExitWaitMs": 0.3300829994259402,
+          "processTurnoverMs": 3.43908300055773,
+          "untrustedDeserializeMarkerPresent": false,
+          "id": "1"
+        },
+        "queueMs": 0.0017080019460991025,
+        "startupMs": 170.05654200329445,
+        "retirementMs": 0.0,
+        "responseMs": 174.34700000012526,
+        "turnoverMs": 174.34900000080233
+      },
+      "probe": {
+        "request": {
+          "id": "2",
+          "tenant": "customer-2",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "kernel_probe",
+          "shmid": 0
+        },
+        "container": "wp-matrix-dad580378e5e456baeb362caa85a7a1e",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "accessible": true,
+            "canary": "customer-1"
+          },
+          "reusable": true,
+          "error": null,
+          "pluginImportMs": 0.0890829978743568,
+          "executionMs": 0.24624999787192792,
+          "cleanupMs": 0.1293339992116671,
+          "childWorkMs": 0.46870900041540153,
+          "childStartMs": 0.48070800039567985,
+          "childResponseWaitMs": 2.453917000821093,
+          "childExitWaitMs": 0.322083000355633,
+          "processTurnoverMs": 3.257083000789862,
+          "untrustedDeserializeMarkerPresent": false,
+          "id": "2"
+        },
+        "queueMs": 0.002791995939332992,
+        "startupMs": 0.0,
+        "retirementMs": 0.0,
+        "responseMs": 3.9949999991222285,
+        "turnoverMs": 3.9954999956535175
+      }
+    }
+  ]
+}

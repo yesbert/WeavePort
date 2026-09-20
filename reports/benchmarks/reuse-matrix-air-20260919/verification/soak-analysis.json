@@ -1,0 +1,84 @@
+[
+  {
+    "mode": "trusted",
+    "rate": 4500,
+    "stability": {
+      "earlyMeanBacklog": 19.38144329896907,
+      "lateMeanBacklog": 17.737113402061855,
+      "allowedBacklogGrowth": 450.0,
+      "maxWindowP99Ms": 337.2901533568785,
+      "qualified": true
+    },
+    "counts": {
+      "offered": 8098973,
+      "completed": 8098973,
+      "correct": 8098973,
+      "failed": 0,
+      "dropped": 0,
+      "withinOneSecond": 8098973,
+      "customersCompleted": 8098973,
+      "faultsExpected": 0,
+      "faultsContained": 0
+    },
+    "customersPerSecond": 4499.426035919248,
+    "latency": {
+      "count": 8098973,
+      "mean": 1.928852611623066,
+      "max": 350.6733404501574,
+      "p50": 1.3345038765672337,
+      "p95": 2.424388786780675,
+      "p99": 7.100854849048922
+    },
+    "memoryPeakMiB": 191.02734375,
+    "steadyContainerEarlyMedianMiB": 181.96875,
+    "steadyContainerLateMedianMiB": 189.048828125,
+    "steadyHostEarlyMedianMiB": 33.984375,
+    "steadyHostLateMedianMiB": 29.3125,
+    "starts": 16,
+    "retirements": 16,
+    "remaining": [],
+    "sampleCount": 584,
+    "swapDeltaMiB": -32.0
+  },
+  {
+    "mode": "forkserver",
+    "rate": 550,
+    "stability": {
+      "earlyMeanBacklog": 5.297435897435897,
+      "lateMeanBacklog": 4.948717948717949,
+      "allowedBacklogGrowth": 55.0,
+      "maxWindowP99Ms": 347.51038229374524,
+      "qualified": true
+    },
+    "counts": {
+      "offered": 990096,
+      "completed": 990096,
+      "correct": 990096,
+      "failed": 0,
+      "dropped": 0,
+      "withinOneSecond": 990096,
+      "customersCompleted": 990096,
+      "faultsExpected": 0,
+      "faultsContained": 0
+    },
+    "customersPerSecond": 550.0514251514625,
+    "latency": {
+      "count": 990096,
+      "mean": 8.353718746457048,
+      "max": 390.4178512020735,
+      "p50": 7.613077513845836,
+      "p95": 11.562665195089401,
+      "p99": 16.217528101416306
+    },
+    "memoryPeakMiB": 478.0703125,
+    "steadyContainerEarlyMedianMiB": 456.158203125,
+    "steadyContainerLateMedianMiB": 456.171875,
+    "steadyHostEarlyMedianMiB": 30.15625,
+    "steadyHostLateMedianMiB": 26.453125,
+    "starts": 16,
+    "retirements": 16,
+    "remaining": [],
+    "sampleCount": 585,
+    "swapDeltaMiB": -16.0
+  }
+]

@@ -6,21 +6,66 @@ import os
 import socket
 import sys
 import uuid
-from dataclasses import dataclass
+import inspect
 
 _SCOPE = contextvars.ContextVar("weaveport_invocation", default=None)
 
 def _encode(value):
     return json.dumps(value, ensure_ascii=True, separators=(",", ":")).encode("utf-8")
 
-@dataclass(frozen=True)
+class SessionCleanupError(RuntimeError):
+    """Registered cleanup failed; the host must retire the worker."""
+
 class PluginContext:
-    tenant: str
-    configuration: object
-    _runtime: object
+    """Resources belong to one function call or complete result stream."""
+    def __init__(self, tenant, configuration, runtime):
+        self._tenant, self._configuration, self._runtime = tenant, configuration, runtime
+        self._active, self._cleanup = True, []
+
+    def _check(self):
+        if not self._active:
+            raise RuntimeError("Session completed")
+
+    @property
+    def tenant(self):
+        self._check()
+        return self._tenant
+
+    @property
+    def configuration(self):
+        self._check()
+        return self._configuration
+
+    def on_close(self, action):
+        """Register a sync/async zero-argument cleanup action, in ownership order."""
+        self._check()
+        if not callable(action):
+            raise TypeError("Cleanup must be callable")
+        self._cleanup.append(action)
+
+    def own(self, resource):
+        """Transfer a resource exposing close() or aclose() to this session."""
+        self.on_close(getattr(resource, "aclose", None) or resource.close)
+        return resource
 
     async def call_host(self, operation, value):
+        self._check()
         return await self._runtime.callback(operation, value)
+
+    async def _close(self):
+        self._active = False
+        self._tenant = self._configuration = self._runtime = None
+        actions, self._cleanup = self._cleanup, []
+        errors = []
+        for action in reversed(actions):
+            try:
+                result = action()
+                if inspect.isawaitable(result):
+                    await result
+            except BaseException as error:
+                errors.append(error)
+        if errors:
+            raise SessionCleanupError("Registered session cleanup failed") from errors[0]
 
 class PluginApplication:
     def __init__(self, plugin_version="1"):
@@ -50,6 +95,7 @@ class PluginApplication:
 class _Runtime:
     def __init__(self, app):
         self.app = app
+        self.context = None
         self.iterator = None
         self.stream_id = None
         self.pending = None
@@ -102,8 +148,16 @@ class _Runtime:
         self.stream_id = None
         self.pending = None
         self.has_pending = False
-        if iterator is not None:
-            await iterator.aclose()
+        try:
+            if iterator is not None:
+                await iterator.aclose()
+        finally:
+            await self.complete_context()
+
+    async def complete_context(self):
+        context, self.context = self.context, None
+        if context is not None:
+            await context._close()
 
     async def dispatch(self, request):
         operation, payload = request["operation"], request["payload"]
@@ -140,9 +194,12 @@ class _Runtime:
             return dict(items=items, done=done)
         if self.iterator is not None:
             raise RuntimeError("Stream already active")
-        context = PluginContext(request["context"]["tenant"], request["context"]["configuration"], self)
+        context = self.context = PluginContext(request["context"]["tenant"], request["context"]["configuration"], self)
         if operation == "$sdk.call":
-            return await self.app._functions[payload["operation"]](payload["input"], context)
+            try:
+                return await self.app._functions[payload["operation"]](payload["input"], context)
+            finally:
+                await self.complete_context()
         if operation != "$sdk.start":
             raise ValueError("Unknown SDK operation")
         self.iterator = self.app._streams[payload["operation"]](payload["input"], context).__aiter__()
@@ -150,20 +207,30 @@ class _Runtime:
         return dict(stream=self.stream_id)
 
     async def run(self):
-        await self.send(dict(type="ready", protocol=1, pluginVersion=self.app._plugin_version))
+        await self.send(dict(type="ready", protocol=1, pluginVersion=self.app._plugin_version, sessionCleanup=1))
         try:
             while (request := await self.read()) is not None:
                 scope = dict(request=request, active=True)
                 handle = _SCOPE.set(scope)
                 try:
                     value = await self.dispatch(request)
-                    await self.send(dict(type="result", id=request["id"], value=value))
-                except Exception:
-                    await self.close()
-                    await self.send(dict(type="error", id=request["id"], code="sdk-error"))
+                    scope["active"] = False
+                    async with self.callback_lock:
+                        pass
+                    await self.send(dict(type="result", id=request["id"], value=value, reusable=self.context is None and self.iterator is None))
+                except Exception as error:
+                    cleanup_failed = isinstance(error, SessionCleanupError)
+                    try:
+                        await self.close()
+                    except Exception:
+                        cleanup_failed = True
+                    await self.send(dict(type="error", id=request["id"], code="cleanup-error" if cleanup_failed else "sdk-error"))
                 finally:
                     scope["active"] = False
                     _SCOPE.reset(handle)
+                    scope["request"] = None
+                    request = None
+                    value = None
         finally:
             await self.close()
             if self.channel:

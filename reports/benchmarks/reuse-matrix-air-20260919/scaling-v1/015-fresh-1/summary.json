@@ -1,0 +1,128 @@
+{
+  "config": {
+    "mode": "fresh",
+    "workers": 1,
+    "seconds": 15
+  },
+  "image": "sha256:38985b720bd830c893e5ecde51c4ae5f00b2c9495e7535d454c81a89df40be00",
+  "counts": {
+    "offered": 42,
+    "completed": 42,
+    "correct": 42,
+    "failed": 0,
+    "dropped": 0,
+    "withinOneSecond": 42
+  },
+  "elapsed": 15.332470375000412,
+  "preparedSeconds": 6.74580005579628e-05,
+  "customersPerSecond": 2.739284601422155,
+  "hostCpuCores": 0.024286497276208734,
+  "latency": {
+    "responseMs": {
+      "count": 42,
+      "mean": 305.0728857855401,
+      "max": 517.8317499994591,
+      "p50": 299.3278852861266,
+      "p95": 376.3039477421597,
+      "p99": 517.8317499994591
+    },
+    "turnoverMs": {
+      "count": 42,
+      "mean": 365.0049453811204,
+      "max": 584.250374999101,
+      "p50": 361.6206973315043,
+      "p95": 441.2459731229399,
+      "p99": 584.250374999101
+    },
+    "queueMs": {
+      "count": 42,
+      "mean": 0.003069404816155189,
+      "max": 0.0038329999370034784,
+      "p50": 0.003085189412271287,
+      "p95": 0.00354634567235958,
+      "p99": 0.0038329999370034784
+    },
+    "executionMs": {
+      "count": 42,
+      "mean": 0.24422023826835876,
+      "max": 0.365625000995351,
+      "p50": 0.2410147095195973,
+      "p95": 0.27981059553977056,
+      "p99": 0.365625000995351
+    },
+    "cleanupMs": {
+      "count": 42,
+      "mean": 0.0970346904761668,
+      "max": 0.1389579992974177,
+      "p50": 0.09458764516928526,
+      "p95": 0.10658372611799194,
+      "p99": 0.1389579992974177
+    },
+    "generatorLagMs": {
+      "count": 0
+    }
+  },
+  "byWorkload": {
+    "echo": {
+      "count": 42,
+      "mean": 305.0728857855401,
+      "max": 517.8317499994591,
+      "p50": 299.3278852861266,
+      "p95": 376.3039477421597,
+      "p99": 517.8317499994591
+    }
+  },
+  "memoryPeakMiB": 17.50390625,
+  "memoryRawPeakMiB": 17.50390625,
+  "starts": 42,
+  "retirements": 42,
+  "failure": null,
+  "failedExamples": [],
+  "known": [
+    "wp-matrix-08e22a49fef54f3d8ef0918a38afcdb8",
+    "wp-matrix-19e0ccff61d943cdaff8e39954724fcd",
+    "wp-matrix-1a8ab9c44fe24a49a2cd71798bfca7ad",
+    "wp-matrix-1c60f2307bb24800ae6532fd6a982071",
+    "wp-matrix-2004142583614f298a3c876dcd3188ca",
+    "wp-matrix-2199a29755a549e390152a9b9be5ef88",
+    "wp-matrix-2650ba7f30974b2c9665926016f861ac",
+    "wp-matrix-29121f17c6f1418486694dc466c563a9",
+    "wp-matrix-37d60e74840a4601afe2975c02cf4260",
+    "wp-matrix-3dbaa781f317436e866599eab0823603",
+    "wp-matrix-3ed7a122c0c545429c7dc7307c6f2793",
+    "wp-matrix-429eee996bf8486ca2a0a84c772bed83",
+    "wp-matrix-44ee7eabe9a9441a8fa276cd47f07091",
+    "wp-matrix-51a265e040be4ad58f4ab97f4e5f382e",
+    "wp-matrix-56990a4e81da4df2b628bcaa86a21f20",
+    "wp-matrix-56c063a8405245e1b52d12f5c68f82d0",
+    "wp-matrix-5c11b07072c54c9d8dfdb72bd89c591d",
+    "wp-matrix-7811681beffd4f888863c86ab3f4a4d4",
+    "wp-matrix-78394817976049febce0c16f70df7f0c",
+    "wp-matrix-82bbdd977505410cbb17b14dc78d5eeb",
+    "wp-matrix-872942ad486e4c998b228895e05f36fb",
+    "wp-matrix-87814668616f43e3820f1415891588ed",
+    "wp-matrix-94044f8afb734063918b87266fc71b34",
+    "wp-matrix-94f8229f500e42749011b06b96591770",
+    "wp-matrix-9702da09f6264eff8d11fbd4d954cc22",
+    "wp-matrix-9764a4f8ae6e4d2184467edc001fb705",
+    "wp-matrix-a16d170964894f08b88eb7bd01be31df",
+    "wp-matrix-b219f26d7edf4c1fb9d0cf0feb521caa",
+    "wp-matrix-bd171fa1f5cb40afae35c8c29118d8ff",
+    "wp-matrix-be754baf503e4eb7ad8e472d4acd149d",
+    "wp-matrix-c14f96373906436bbf3957a04baa520e",
+    "wp-matrix-d12840f544a14ed2b99e743cb9a64fe8",
+    "wp-matrix-d152b750274c464893335b200aa9d733",
+    "wp-matrix-d60adc47fa6a46418ada5ba16a89090a",
+    "wp-matrix-d7a5a38cc15049f2ad9d531fdae0b169",
+    "wp-matrix-dbe5201e0a9a4d40aca8b91ed56e22ba",
+    "wp-matrix-df1ee90b14ad4856a2bee3d3b2058cba",
+    "wp-matrix-e8ce2e93d4e34cfb971f2a56f2dcf809",
+    "wp-matrix-eb9fbf94701841c0ab1323ba4c60d056",
+    "wp-matrix-f0f47e9f9367484ba1f71ec4cdf42721",
+    "wp-matrix-f7a3f07ec69e4e25a86fa3e6a4afad85",
+    "wp-matrix-fd96f8a1cb4c46cd948a67fbe4d985df"
+  ],
+  "remaining": [],
+  "passed": true,
+  "meetsOneSecondSlo": true
+}

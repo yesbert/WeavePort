@@ -1,10 +1,13 @@
 # Verification entry points
 
-`./scripts/verify.sh` qualifies committed HEAD in a fresh checkout with isolated dependency caches. It covers source and packed host contracts, gateway cancellation, documentation, code style, all three applications, author SDK versions, recovery and compatibility. Generated evidence stays in `artifacts/candidates/`.
+`./scripts/verify.sh` qualifies committed HEAD in a fresh checkout with isolated dependency caches. It covers source and packed host/reuse contracts, maintained author examples, gateway cancellation, documentation, code style, all three applications, author SDK versions, recovery and compatibility. Generated evidence stays in `artifacts/candidates/`.
 
 | Scope | Command |
 | --- | --- |
 | Host regressions | `dotnet run --project tests/WeavePort.Hosting.Tests -c Release` |
+| Fair scheduler public API | `dotnet run --project tests/WeavePort.Scheduling.Tests -c Release` (also checked as a packed consumer) |
+| Density observer controls | `python3 tools/performance/test_density.py` |
+| Customer-density pilot | See [supervised density testing](../docs/density-testing.md) |
 | Windows/Linux CI fixtures | `python scripts/ci/native.py` |
 | Native adapter fixtures | `./scripts/verify-local.sh` |
 | Composition fixtures | `./scripts/build-bulk.sh`, then `./scripts/bulk.sh verify artifacts/runs/composition` |
@@ -22,3 +25,7 @@ Local-only Docker/capacity/lifecycle/security consumers use `adapter-nuget.confi
 ## MCP checks
 
 Host regressions include optional-MCP malformed-traffic, authority, quotas, cancellation and state-lifecycle checks. [Official SDK interoperability and comparative measurements](mcp/README.md) use an isolated development-only npm fixture. The full candidate verifier exercises its two protocol revisions against the packed host.
+
+## Approved-session reuse
+
+`tests/WeavePort.ReuseTests` exercises all three SDKs through the actual host: default affinity, approved sharing, registered cleanup, expired contexts, callback authority, pinned streams, cleanup failure/timeout, idle expiry, malformed capability/acknowledgements and a small shared scheduler. See its [reproduction guide](WeavePort.ReuseTests/README.md). Repeat with fresh locally packed candidates; source-only tests do not qualify the package boundary.

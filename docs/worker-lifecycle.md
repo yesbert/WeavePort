@@ -2,6 +2,8 @@
 
 Control how workers start, stay available and get cleaned up through one `PluginHost`. The hosting package provides one shared, bounded pristine reserve per host. Use one coordinator for each intended node budget. Several hosts have independent budgets; this is not a distributed allocator or an automatic machine-wide singleton.
 
+For reconstructible plugins, the optional [fair scheduler](fair-scheduling.md) adds queued tenant fairness, pressure eviction and separate normal/heavy policy over a private host. The direct-host defaults described below remain unchanged.
+
 ```csharp
 await using var host = new PluginHost(
     maximumCallsPerTenant: 4,
@@ -29,13 +31,17 @@ The consumer supplies `PluginContext`, `IHostCallbacks`, granted operations and 
 
 Defaults are 64 workers, 16,384 MiB of summed configured worker ceilings, eight concurrent starts, at most four pristine workers, eight assigned workers and 2,048 MiB per tenant. Maintenance runs every second; unused pristine workers expire after 30 seconds. No warm target is configured automatically, so the default does not speculatively launch workers. Limits are coordinator policy values, not machine sizing recommendations.
 
-`PrewarmAsync` sets a persistent target by resolved image digest, plugin version, Docker context and sandbox resource profile. Targets share the global pristine ceiling; they are not multiplied by customer count. Zero removes a target. Initial fill and later replenishment obey the same budgets as real work. Read `Snapshot.Pristine` to see achieved readiness when resource pressure prevents a full target. Failed configuration attempts restore the prior target. Under capacity pressure, actual demand can reclaim unused pristine workers for another image; used or quarantined workers are never reclaimed for assignment.
+`PrewarmAsync` sets a persistent target by resolved image digest, plugin version, Docker context and sandbox resource profile. Targets share the global pristine ceiling; they are not multiplied by customer count. Zero removes a target. Initial fill and later replenishment obey the same budgets as real work. Read `Snapshot.Pristine` to see achieved readiness when resource pressure prevents a full target. Failed configuration attempts restore the prior target. Under capacity pressure, actual demand can reclaim unused pristine workers for another image; quarantined workers are never assigned. Clean approved workers can also be destroyed to make room for incompatible demand.
 
-Ready workers have received no customer context, credentials or callback authority. Each checkout is exclusive and sets its tenant owner once. Its immutable session supplies the same context and grants throughout that binding. Warm, used instances stay with their binding; they never return to a customer-shared reserve. A configuration, principal, grant or secret change requires disposal and a new binding. A changed image tag does not silently change an existing binding's resolved digest.
+Pristine ready workers have received no customer context, credentials or callback authority. Each checkout is exclusive and sets its tenant owner once. Its immutable session supplies the same context and grants throughout that binding. By default, warm used instances stay with their binding and never return to a shared reserve. Explicit `ApprovedSessions` profiles can instead return successfully cleaned SDK workers to a separate compatible pool; see [approved reuse](reusable-plugins.md). A configuration, principal, grant or secret change requires disposal and a new binding. A changed image tag does not silently change an existing binding's resolved digest.
 
-Optional host logging identifies admission refusals with event 1006 and fixed reasons: `concurrent-starts`, `pool-reservations`, `tenant-reservations`, `session-call` or `tenant-calls`. No payload or caller-supplied reason is logged.
+Optional host logging identifies admission refusals with event 1006 and fixed reasons: `concurrent-starts`, `foreground-priority`, `pool-reservations`, `tenant-reservations`, `session-call` or `tenant-calls`. No payload or caller-supplied reason is logged.
+
+`foreground-priority` means speculative replenishment was deferred for an actual acquisition; it does not mean a customer invocation failed.
 
 Admission counts starting, assigned, pristine and cleanup-uncertain workers globally, and assigned/starting/cleanup-uncertain workers against their tenant. Reserved memory sums configured container ceilings; it is not measured Docker residency or RSS. Exceeding worker, memory, tenant or concurrent-start admission returns `busy` without dispatch. Hosts still need sizing headroom and application-level overload handling; caps do not eliminate shared CPU/engine interference or ensure fairness across an unlimited number of tenants.
+
+Foreground acquisitions take priority over speculative replenishment. With `WaitForStartCapacity = true`, a call can wait within its existing invocation deadline for a pending unassigned startup when that startup occupies needed capacity. It adopts only a compatible ready profile; an incompatible pristine worker is replaced within the same budget. Caller cancellation stops its wait without destroying a shared startup it never acquired. The default direct host remains fail-fast. This closes a reserve/foreground race reproduced in low-frequency Docker population tests.
 
 ## Release, callbacks and diagnostics
 
@@ -53,7 +59,7 @@ Worker removal attempts `docker rm --force` and confirms absence if Docker repor
 
 `./scripts/lifecycle.sh` records a separate 128-customer resource experiment. `PristineStartBenchmarks` measures first-call latency with/without a ready reserve; reserve construction is outside that timed call and has a real CPU/memory cost. See [benchmark boundaries](benchmarking.md), [capacity testing (historical) — pre-public record](history.md) and the [original design exploration](architecture.md).
 
-The current runtime does not implement predictive pool sizing, distributed placement/fencing, checkpoint storage or safe cross-tenant reuse of a used process. The default stdio transport retains one Docker CLI process per running worker; the opt-in [Linux socket transport (historical) — pre-public record](history.md) uses short-lived CLI commands for lifecycle operations. Container isolation does not establish protection against kernel/engine failure or zero latency interference from another customer.
+The current runtime does not implement predictive pool sizing, distributed placement/fencing, checkpoint storage or automatic erasure of arbitrary state during cross-customer reuse. Approved reuse provides the documented cooperative cleanup contract. The default stdio transport retains one Docker CLI process per running worker; the opt-in [Linux socket transport (historical) — pre-public record](history.md) uses short-lived CLI commands for lifecycle operations. Container isolation does not establish protection against kernel/engine failure or zero latency interference from another customer.
 
 The [trusted local adapter](local-execution.md) shares these lifecycle rules. Its memory reservations are admission estimates, not OS-enforced ceilings; root-process cleanup does not attest termination of escaped descendants. Docker-specific enforcement statements above apply only to Docker profiles.
 
@@ -71,4 +77,8 @@ Use `ExecutionProtections` to combine required restrictions. `BindAsync` and `Pr
 
 ### Optional MCP workers
 
-The source MCP integration shares these local lifecycle policies, with explicit protocol selection and no additional SDK-owned process launcher. [MCP plugins](mcp-plugins.md) documents cancellation, result semantics and the tools-only boundary. Available in the 0.3.1 package line.
+The source MCP integration shares these local lifecycle policies, with explicit protocol selection and no additional SDK-owned process launcher. [MCP plugins](mcp-plugins.md) documents cancellation, result semantics and the tools-only boundary. Available in the 0.4.0 package line.
+
+## Approved session reuse
+
+`ExecutionProfile.ReusePolicy` defaults to `CustomerBound`. `ApprovedSessions` requires native SDK cleanup capability and explicit operator approval of the complete deployment. Clean workers have no tenant assignment and retain global reservations until destroyed. `WorkerPoolOptions.ReusableIdleTimeout` defaults to 30 seconds, independently of pristine targets. `ReusableWorkers`, `ReuseHits`, `SessionReturns`, `SessionCleanupFailures` and `WorkersStarted` expose this lifecycle. Missing cleanup acknowledgement, SDK cleanup failure or an invocation deadline prevents transfer. Active streams remain bound until close/completion. This does not promise erasure of unregistered plugin state. See [operator and author guidance](reusable-plugins.md).

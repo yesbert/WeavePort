@@ -1,0 +1,289 @@
+{
+  "image": "sha256:2f39d7c25dfa05614b47e5a4e2e439dd2ccc24dbcc7b5c61b41a2cf497525d34",
+  "results": [
+    {
+      "mode": "fresh",
+      "leave": {
+        "request": {
+          "id": "1",
+          "tenant": "customer-1",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "kernel_leave"
+        },
+        "container": "wp-matrix-7ac0fb1367924611b8845a89575ce2f5",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "shmid": 0
+          },
+          "reusable": false,
+          "error": "kernel-ipc-remains",
+          "pluginImportMs": 9.72804200137034,
+          "executionMs": 1.3586670029326342,
+          "cleanupMs": 0.08995900134323165,
+          "kernelObjects": [
+            "shm:0"
+          ],
+          "id": "1"
+        },
+        "queueMs": 0.0029579969123005867,
+        "startupMs": 104.5272080009454,
+        "retirementMs": 26.845542000955902,
+        "responseMs": 117.35712499648798,
+        "turnoverMs": 144.20491599594243
+      },
+      "probe": {
+        "request": {
+          "id": "2",
+          "tenant": "customer-2",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "kernel_probe",
+          "shmid": 0
+        },
+        "container": "wp-matrix-edbaafdc7cd34e378969ff2561f615d8",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "accessible": false,
+            "canary": null
+          },
+          "reusable": true,
+          "error": null,
+          "pluginImportMs": 9.441165999305667,
+          "executionMs": 1.2790840009984095,
+          "cleanupMs": 0.08808300117379986,
+          "id": "2"
+        },
+        "queueMs": 0.002707995008677244,
+        "startupMs": 90.2161670019268,
+        "retirementMs": 27.24595900508575,
+        "responseMs": 101.92533299414208,
+        "turnoverMs": 129.1744169939193
+      }
+    },
+    {
+      "mode": "process",
+      "leave": {
+        "request": {
+          "id": "1",
+          "tenant": "customer-1",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "kernel_leave"
+        },
+        "container": "wp-matrix-debac4f07c3347e79820cdcb18ab365a",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "shmid": 0
+          },
+          "reusable": false,
+          "error": "kernel-ipc-remains",
+          "pluginImportMs": 8.85970899980748,
+          "executionMs": 1.2013330015179235,
+          "cleanupMs": 0.08308399992529303,
+          "kernelObjects": [
+            "shm:0"
+          ],
+          "id": "1"
+        },
+        "queueMs": 0.0017080019460991025,
+        "startupMs": 71.93520799773978,
+        "retirementMs": 27.396083998610266,
+        "responseMs": 101.61679200245999,
+        "turnoverMs": 129.01491700176848
+      },
+      "probe": {
+        "request": {
+          "id": "2",
+          "tenant": "customer-2",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "kernel_probe",
+          "shmid": 0
+        },
+        "container": "wp-matrix-854aad82475e46ebb82e7bc0fa0668b2",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "accessible": false,
+            "canary": null
+          },
+          "reusable": true,
+          "error": null,
+          "pluginImportMs": 8.706000000529457,
+          "executionMs": 1.2314999985392205,
+          "cleanupMs": 0.08254099884652533,
+          "id": "2"
+        },
+        "queueMs": 0.00145800004247576,
+        "startupMs": 74.6911669994006,
+        "retirementMs": 0.0,
+        "responseMs": 144.12925000215182,
+        "turnoverMs": 144.13245800096774
+      }
+    },
+    {
+      "mode": "trusted",
+      "leave": {
+        "request": {
+          "id": "1",
+          "tenant": "customer-1",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "kernel_leave"
+        },
+        "container": "wp-matrix-8af2b65c26f4451588d8b472f8a8cbd2",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "shmid": 0
+          },
+          "reusable": false,
+          "error": "kernel-ipc-remains",
+          "pluginImportMs": 9.594292001565918,
+          "executionMs": 1.3447919991449453,
+          "cleanupMs": 0.09383300130139105,
+          "kernelObjects": [
+            "shm:0"
+          ],
+          "id": "1"
+        },
+        "queueMs": 0.001959000655915588,
+        "startupMs": 89.12795800279127,
+        "retirementMs": 29.15495799970813,
+        "responseMs": 101.13241699582431,
+        "turnoverMs": 130.28908399428474
+      },
+      "probe": {
+        "request": {
+          "id": "2",
+          "tenant": "customer-2",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "kernel_probe",
+          "shmid": 0
+        },
+        "container": "wp-matrix-6521732233e44cce8c382394aba009c7",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "accessible": false,
+            "canary": null
+          },
+          "reusable": true,
+          "error": null,
+          "pluginImportMs": 10.243500000797212,
+          "executionMs": 1.3648749991261866,
+          "cleanupMs": 0.09449999924981967,
+          "id": "2"
+        },
+        "queueMs": 0.0016250050975941122,
+        "startupMs": 78.23808299872326,
+        "retirementMs": 0.0,
+        "responseMs": 91.32495900121285,
+        "turnoverMs": 91.32666700315895
+      }
+    },
+    {
+      "mode": "forkserver",
+      "leave": {
+        "request": {
+          "id": "1",
+          "tenant": "customer-1",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "kernel_leave"
+        },
+        "container": "wp-matrix-5a4d6f5a81c44a9081459f61873769fb",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "shmid": 0
+          },
+          "reusable": false,
+          "error": "kernel-ipc-remains",
+          "pluginImportMs": 0.11450000238255598,
+          "executionMs": 0.2985829996760003,
+          "cleanupMs": 0.14441600069403648,
+          "childWorkMs": 0.5617500028165523,
+          "childStartMs": 0.5513340001925826,
+          "childResponseWaitMs": 2.612583000882296,
+          "childExitWaitMs": 0.349458001437597,
+          "processTurnoverMs": 3.5139169995090924,
+          "untrustedDeserializeMarkerPresent": false,
+          "kernelObjects": [
+            "shm:0"
+          ],
+          "id": "1"
+        },
+        "queueMs": 0.0016659978427924216,
+        "startupMs": 135.5156249992433,
+        "retirementMs": 26.140709000173956,
+        "responseMs": 139.9552910006605,
+        "turnoverMs": 166.0977499996079
+      },
+      "probe": {
+        "request": {
+          "id": "2",
+          "tenant": "customer-2",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "kernel_probe",
+          "shmid": 0
+        },
+        "container": "wp-matrix-93354b50cc564332814aa6be39eeeb84",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "accessible": false,
+            "canary": null
+          },
+          "reusable": true,
+          "error": null,
+          "pluginImportMs": 0.12066699855495244,
+          "executionMs": 0.2882920016418211,
+          "cleanupMs": 0.14312500206870027,
+          "childWorkMs": 0.5567500011238735,
+          "childStartMs": 0.5750410018663388,
+          "childResponseWaitMs": 2.7592089973040856,
+          "childExitWaitMs": 0.360250000085216,
+          "processTurnoverMs": 3.6949579989595804,
+          "untrustedDeserializeMarkerPresent": false,
+          "id": "2"
+        },
+        "queueMs": 0.001667001924943179,
+        "startupMs": 150.00929200323299,
+        "retirementMs": 0.0,
+        "responseMs": 154.61225000035483,
+        "turnoverMs": 154.61358300672146
+      }
+    }
+  ]
+}

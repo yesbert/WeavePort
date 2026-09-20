@@ -75,11 +75,19 @@ def export(candidate, destination, version, root=ROOT):
         symbol_relative = symbols.relative_to(candidate / "checkout").as_posix()
         require(symbols.is_file() and digest(symbols) == manifest.get(symbol_relative), "Missing or changed qualified symbols")
         selected.append(symbols)
+    policy = json.loads((root / "compatibility/local-v1.json").read_text())["AuthorSdks"]
+    author_root = candidate / "checkout/artifacts/sdk-version-tests"
+    author_files = [author_root / "wheel" / f"weaveport_sdk-{policy['python']['Version']}-py3-none-any.whl",
+                    author_root / f"weaveport-sdk-{policy['node']['Version']}.tgz"]
+    for path in author_files:
+        relative = path.relative_to(candidate / "checkout").as_posix()
+        require(path.is_file() and digest(path) == manifest.get(relative), "Missing or changed qualified author SDK: " + path.name)
+        selected.append(path)
     require(not destination.exists(), "Output directory already exists; use a new destination")
     destination.mkdir(parents=True)
     for path in selected:
         shutil.copy2(path, destination / path.name)
-    print(f"Exported {len(packages)} qualified packages and symbols")
+    print(f"Exported {len(packages)} qualified packages and symbols plus {len(author_files)} author SDK artifacts")
 
 
 if __name__ == "__main__":

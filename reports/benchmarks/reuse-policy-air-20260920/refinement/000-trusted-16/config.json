@@ -1,0 +1,14 @@
+{
+  "mode": "trusted",
+  "transport": "engine",
+  "cpus": 1,
+  "memory": 64,
+  "workers": 16,
+  "seconds": 30,
+  "arrival": "poisson",
+  "policy": "approved",
+  "workload": "session",
+  "pluginsPerCustomer": 2,
+  "seed": 1731,
+  "rate": 1000
+}
