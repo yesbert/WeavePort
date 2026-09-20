@@ -2,7 +2,7 @@ using System.Text.Json;
 using WeavePort.Abstractions;
 
 namespace WeavePort.Hosting;
-internal sealed class ScheduledCall(ScheduledPlugin plugin, string operation, JsonElement payload, CancellationToken token, long enqueued)
+internal sealed class ScheduledCall(ScheduledPlugin plugin, string operation, JsonElement payload, long enqueued, CancellationToken token)
 {
     private static readonly JsonElement Empty = JsonSerializer.SerializeToElement(new { });
     internal ScheduledPlugin Plugin { get; } = plugin;

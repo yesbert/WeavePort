@@ -39,22 +39,27 @@ internal sealed partial class PluginSession
                 throw new InvalidDataException("Unknown frame.");
             }
 
-            string operation = frame.GetProperty("operation").GetString() ?? "";
-            string callbackId = frame.GetProperty("callbackId").GetString() ?? "";
-            if (!binding.Grants.Contains(operation) || !(InvocationScope.Current.Value?.Allows(operation) ?? false))
-            {
-                throw new UnauthorizedAccessException();
-            }
-
-            if (!(InvocationScope.Current.Value?.TakeCallback() ?? false) || !callbackIds.Add(callbackId))
-            {
-                throw new InvalidDataException("Callback budget or identity violation.");
-            }
-
-            var call = new HostCall(binding.Context, id, operation, frame.GetProperty("payload"), trace);
-            JsonElement value = await InvokeCallbackAsync(call, token);
-            await Frames.WriteAsync(_worker!.Input, new CallbackResultFrame("callback-result", id, callbackId, value), WireJson.Default.CallbackResultFrame, token);
+            await RespondToCallbackAsync(frame, id, trace, callbackIds, token);
         }
+    }
+
+    private async Task RespondToCallbackAsync(JsonElement frame, string id, string trace, HashSet<string> callbackIds, CancellationToken token)
+    {
+        string operation = frame.GetProperty("operation").GetString() ?? "";
+        string callbackId = frame.GetProperty("callbackId").GetString() ?? "";
+        if (!binding.Grants.Contains(operation) || !(InvocationScope.Current.Value?.Allows(operation) ?? false))
+        {
+            throw new UnauthorizedAccessException();
+        }
+
+        if (!(InvocationScope.Current.Value?.TakeCallback() ?? false) || !callbackIds.Add(callbackId))
+        {
+            throw new InvalidDataException("Callback budget or identity violation.");
+        }
+
+        var call = new HostCall(binding.Context, id, operation, frame.GetProperty("payload"), trace);
+        JsonElement value = await InvokeCallbackAsync(call, token);
+        await Frames.WriteAsync(_worker!.Input, new CallbackResultFrame("callback-result", id, callbackId, value), WireJson.Default.CallbackResultFrame, token);
     }
 
     private async Task<JsonElement> InvokeCallbackAsync(HostCall call, CancellationToken token)
