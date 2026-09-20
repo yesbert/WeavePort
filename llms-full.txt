@@ -464,7 +464,7 @@ Version 0.3.1 adds public `McpMethods.ListTools` and `McpMethods.CallTool` const
 
 ## Approved session reuse and fair scheduling
 
-Version 0.4.0 adds a memory-led fair scheduler and opt-in `WorkerReusePolicy.ApprovedSessions`. Customer-bound execution remains the default. The host requires the updated SDK cleanup handshake before sharing compatible reviewed deployments; C#, Python and TypeScript expose registered session resources. See [operator/author guidance](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/reusable-plugins.md), [candidate verification](https://raw.githubusercontent.com/yesbert/WeavePort/main/reports/verification/approved-session-reuse-20260920/README.md) and [release procedure](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/releases.md). Python/TypeScript 0.2.0 artifacts accompany the GitHub release; separate registry publication is not claimed.
+Version 0.4.0 adds a memory-led fair scheduler and opt-in `WorkerReusePolicy.ApprovedSessions`. Customer-bound execution remains the default. The host requires the updated SDK cleanup handshake before sharing compatible reviewed deployments; C#, Python and TypeScript expose registered session resources. See [operator/author guidance](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/reusable-plugins.md), [candidate verification](https://raw.githubusercontent.com/yesbert/WeavePort/main/reports/verification/approved-session-reuse-20260920/README.md) and [public release evidence](https://raw.githubusercontent.com/yesbert/WeavePort/main/reports/release/0.4.0/README.md). Python/TypeScript 0.2.0 artifacts accompany the GitHub release; separate registry publication is not claimed.
 
 ---
 
@@ -1586,6 +1586,8 @@ The GitHub delivery target is [yesbert/WeavePort](https://github.com/yesbert/Wea
 The release allowlist in `build/release-packages.json` contains `WeavePort.Abstractions`, `WeavePort.Hosting`, `WeavePort.Sdk` and `WeavePort.Sdk.Client`. Gateway, Composition and Testing remain optional/experimental; adding them requires appropriate package-consumer evidence. Python and TypeScript author SDK publication is separate from NuGet delivery.
 
 The current release version is `0.4.0`, licensed under [MIT](https://raw.githubusercontent.com/yesbert/WeavePort/main/LICENSE). The four core package references and exact compatibility matrix use 0.4.0; host API and wire protocol remain 1. Python/TypeScript SDK versions are 0.2.0; the qualified wheel and tarball accompany the GitHub release without claiming PyPI/npm registry publication. Historical internal distribution and measurement evidence retain their original identities. Public releases require a complete clean candidate qualification; a tag override cannot substitute for updating compatibility inputs.
+
+The [0.4.0 release report](https://raw.githubusercontent.com/yesbert/WeavePort/main/reports/release/0.4.0/README.md) retains the exact qualification, artifact hashes and publication verification.
 
 ## Trusted Publishing setup
 

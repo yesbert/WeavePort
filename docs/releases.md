@@ -8,6 +8,8 @@ The release allowlist in `build/release-packages.json` contains `WeavePort.Abstr
 
 The current release version is `0.4.0`, licensed under [MIT](../LICENSE). The four core package references and exact compatibility matrix use 0.4.0; host API and wire protocol remain 1. Python/TypeScript SDK versions are 0.2.0; the qualified wheel and tarball accompany the GitHub release without claiming PyPI/npm registry publication. Historical internal distribution and measurement evidence retain their original identities. Public releases require a complete clean candidate qualification; a tag override cannot substitute for updating compatibility inputs.
 
+The [0.4.0 release report](../reports/release/0.4.0/README.md) retains the exact qualification, artifact hashes and publication verification.
+
 ## Trusted Publishing setup
 
 The workflow separates three responsibilities: verification without publication credentials, a gated publish job and a separate release announcement.
