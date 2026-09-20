@@ -8,7 +8,7 @@ The release allowlist in `build/release-packages.json` contains the four core pa
 
 The release version is `0.5.0`, licensed under [MIT](../LICENSE). All seven .NET packages and the exact compatibility matrix use 0.5.0; host API and wire protocol remain 1. Python/TypeScript SDK versions are 0.2.0; the qualified wheel and tarball accompany the GitHub release without claiming PyPI/npm registry publication. Historical internal distribution and measurement evidence retain their original identities. Public releases require a complete clean candidate qualification; a tag override cannot substitute for updating compatibility inputs.
 
-The [0.4.0 release report](../reports/release/0.4.0/README.md) retains the exact qualification, artifact hashes and publication verification.
+The [0.5.0 release report](../reports/release/0.5.0/README.md) records all seven public packages, tag qualification and download verification. The [0.4.0 release report](../reports/release/0.4.0/README.md) retains the exact qualification, artifact hashes and publication verification.
 
 ## Trusted Publishing setup
 
@@ -27,6 +27,8 @@ Configure these values:
 | NuGet.org repository | `WeavePort` |
 | NuGet.org workflow filename | `release.yml` |
 | NuGet.org environment | `nuget-org` |
+| NuGet.org package pattern | `WeavePort.*` |
+| NuGet.org scope | Push new packages and package versions |
 
 Create the matching policy in the authenticated NuGet.org account. Scope it to the intended WeavePort packages and permit new package IDs when creating the first release. A policy for Stratara does not authorize WeavePort. Follow [NuGet Trusted Publishing](https://learn.microsoft.com/en-us/nuget/nuget-org/trusted-publishing) for current account requirements and policy activation rules. There is no long-lived API-key fallback.
 
