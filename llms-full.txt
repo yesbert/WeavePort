@@ -441,6 +441,8 @@ Source: https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/status.md
 
 Release version: **0.5.0**, under MIT, with four core packages and optional Composition, Gateway server and Gateway client packages. Windows, Linux and macOS are supported targets for trusted stdio execution. Current release validation covers macOS arm64; Windows and Linux release validation is pending. See [platform support and validation](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/platform-qualification.md). This pre-1.0 API remains subject to evolution. Python/TypeScript registry publication and a new offline distribution are outside this release. The historical internal distribution remains **0.1.0-internal.2**.
 
+The [0.5.0 release evidence](https://raw.githubusercontent.com/yesbert/WeavePort/main/reports/release/0.5.0/README.md) records all seven published packages, 3,496 qualification assertions, artifact provenance and public download verification.
+
 The [0.3.0 release evidence](https://raw.githubusercontent.com/yesbert/WeavePort/main/reports/release/0.3.0/README.md) records 1,088 assertion executions, exact tested package/symbol provenance, successful Trusted Publishing and measurements of the released Hosting assembly. Earlier [0.2.1 evidence](https://raw.githubusercontent.com/yesbert/WeavePort/main/reports/release/0.2.1/README.md) remains available as historical release data.
 
 Implemented and checked: immutable installed-artifact selection, exact compatibility/API gates, shared coordinator template, guarded native recovery, optional safe diagnostics and standalone offline installation. The [candidate evidence](https://raw.githubusercontent.com/yesbert/WeavePort/main/reports/release/0.1.0-internal.2/candidate/report.md) records 398 assertion executions; the [distribution evidence](https://raw.githubusercontent.com/yesbert/WeavePort/main/reports/release/0.1.0-internal.2/distribution/report.md) records 144 application assertions and six offline template builds. These records identify their exact source and artifacts.
@@ -1705,7 +1707,7 @@ The release allowlist in `build/release-packages.json` contains the four core pa
 
 The release version is `0.5.0`, licensed under [MIT](https://raw.githubusercontent.com/yesbert/WeavePort/main/LICENSE). All seven .NET packages and the exact compatibility matrix use 0.5.0; host API and wire protocol remain 1. Python/TypeScript SDK versions are 0.2.0; the qualified wheel and tarball accompany the GitHub release without claiming PyPI/npm registry publication. Historical internal distribution and measurement evidence retain their original identities. Public releases require a complete clean candidate qualification; a tag override cannot substitute for updating compatibility inputs.
 
-The [0.4.0 release report](https://raw.githubusercontent.com/yesbert/WeavePort/main/reports/release/0.4.0/README.md) retains the exact qualification, artifact hashes and publication verification.
+The [0.5.0 release report](https://raw.githubusercontent.com/yesbert/WeavePort/main/reports/release/0.5.0/README.md) records all seven public packages, tag qualification and download verification. The [0.4.0 release report](https://raw.githubusercontent.com/yesbert/WeavePort/main/reports/release/0.4.0/README.md) retains the exact qualification, artifact hashes and publication verification.
 
 ## Trusted Publishing setup
 
@@ -1724,6 +1726,8 @@ Configure these values:
 | NuGet.org repository | `WeavePort` |
 | NuGet.org workflow filename | `release.yml` |
 | NuGet.org environment | `nuget-org` |
+| NuGet.org package pattern | `WeavePort.*` |
+| NuGet.org scope | Push new packages and package versions |
 
 Create the matching policy in the authenticated NuGet.org account. Scope it to the intended WeavePort packages and permit new package IDs when creating the first release. A policy for Stratara does not authorize WeavePort. Follow [NuGet Trusted Publishing](https://learn.microsoft.com/en-us/nuget/nuget-org/trusted-publishing) for current account requirements and policy activation rules. There is no long-lived API-key fallback.
 
