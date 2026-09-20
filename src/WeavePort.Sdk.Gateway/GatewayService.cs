@@ -22,6 +22,9 @@ public sealed class GatewayService(GatewayRegistry registry) : WorkerGateway.Wor
                 _ = Authorize(context);
                 switch (request.Mode)
                 {
+                    case Mode.Describe:
+                        terminal = Encode(new { tenant = registry.GetTenant(context.RequestHeaders.GetValue(GatewayMetadata.BindingCredential)), protocol = 1 });
+                        break;
                     case Mode.Call:
                         terminal = await CallAsync(request, context);
                         break;

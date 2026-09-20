@@ -1,0 +1,35 @@
+{
+  "packages": {
+    "WeavePort.Composition": {
+      "WeavePort.Sdk.Client": "$version"
+    },
+    "WeavePort.Sdk.Gateway.Client": {
+      "WeavePort.Sdk.Client": "$version",
+      "Google.Protobuf": "3.36.1",
+      "Grpc.Net.Client": "2.83.0"
+    },
+    "WeavePort.Sdk.Gateway": {
+      "WeavePort.Sdk.Gateway.Client": "$version",
+      "Grpc.AspNetCore.Server": "2.83.0"
+    }
+  },
+  "sourceClosures": {
+    "WeavePort.Composition": {},
+    "WeavePort.Sdk.Gateway.Client": {
+      "Google.Protobuf/3.36.1": "BSD-3-Clause",
+      "Grpc.Core.Api/2.83.0": "Apache-2.0",
+      "Grpc.Net.Client/2.83.0": "Apache-2.0",
+      "Grpc.Net.Common/2.83.0": "Apache-2.0",
+      "Grpc.Tools/2.84.0": "Apache-2.0",
+      "Microsoft.Extensions.DependencyInjection.Abstractions/8.0.0": "MIT",
+      "Microsoft.Extensions.Logging.Abstractions/8.0.0": "MIT"
+    },
+    "WeavePort.Sdk.Gateway": {
+      "Google.Protobuf/3.36.1": "BSD-3-Clause",
+      "Grpc.AspNetCore.Server/2.83.0": "Apache-2.0",
+      "Grpc.Core.Api/2.83.0": "Apache-2.0",
+      "Grpc.Net.Client/2.83.0": "Apache-2.0",
+      "Grpc.Net.Common/2.83.0": "Apache-2.0"
+    }
+  }
+}

@@ -86,8 +86,8 @@ jobs:
           for project in src/WeavePort.*/*.csproj; do
             dotnet build "$project" -c Debug --no-incremental --nologo
           done
-          for project in WeavePort.Hosting.Tests WeavePort.Gateway.Tests WeavePort.Scheduling.Tests WeavePort.ReuseTests; do
-            dotnet build "tests/$project" -c Debug --no-incremental --nologo -p:SonarQubeTestProject=true -p:BuildProjectReferences=false
+          for project in WeavePort.Hosting.Tests WeavePort.Gateway.Tests WeavePort.Scheduling.Tests WeavePort.ReuseTests WeavePort.Optional.Tests; do
+            dotnet build "tests/$project" -c Debug --no-incremental --nologo -p:SonarQubeTestProject=true -p:BuildProjectReferences=false -p:UsePackedCore=false
           done
       - name: Submit analysis and wait for quality gate
         env:

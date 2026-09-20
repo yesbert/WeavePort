@@ -24,6 +24,7 @@ def inventory(checkout):
     for app in ["decision-room", "document-workshop", "appointment-desk"]:
         trees += [f"artifacts/{app}/host", f"artifacts/{app}/releases"]
     trees += ["artifacts/decision-room/wheel"]
+    trees += [f"artifacts/optional/{name}" for name in ["worker", "client", "server", "tests", "bulk-worker", "bulk-tests"]]
     for app in ["decision-room", "sdk-version-tests"]:
         sites = list((checkout / f"artifacts/{app}/python/lib").glob("python*/site-packages"))
         assert len(sites) == 1, "Expected one Python environment"
@@ -78,6 +79,8 @@ def build_candidate(checkout, env, run, stage):
     env["WEAVEPORT_PYTHON_WHEEL"] = str(wheel)
     for app in ["decision-room", "document-workshop", "appointment-desk"]:
         stage(app + "-build", ["./scripts/" + app + ".sh", "--build", "--build-only"])
+    stage("optional-build", ["python3", "scripts/verify-optional.py", "--build-only"])
+
     reuse.build(checkout, stage)
     frozen = inventory(checkout)
     (run / "artifact-manifest.json").write_text(json.dumps(frozen, indent=2))
@@ -94,6 +97,7 @@ def verify_candidate(checkout, env, run, stage, package_set):
     env.update(WP_VERSION_ROOT=str(checkout / "artifacts/sdk-version-tests"),
                WP_VERSION_DOTNET=shutil.which("dotnet"), WP_VERSION_NODE=shutil.which("node"))
     stage("sdk-verify", [env["WP_VERSION_DOTNET"], str(checkout / "artifacts/sdk-version-tests/host/WeavePort.SdkVersionTests.dll")])
+    stage("optional-verify", ["python3", "scripts/verify-optional.py", "--verify-only"])
     stage("recovery-verify", ["./scripts/verify-recovery.sh"])
     stage("compatibility-verify", ["./scripts/verify-compatibility.sh"])
     # Copy-only negative control: a changed package cannot enter the fixed feed unnoticed.

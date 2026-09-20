@@ -538,17 +538,23 @@ type WeavePort.Sdk.PluginCallContext : System.Object [Public, Sealed]
   Method Void OnClose(System.Func`1[System.Threading.Tasks.ValueTask]) [Public] (cleanup)
   Property System.String Tenant
   Property System.Text.Json.JsonElement Configuration
+type WeavePort.Sdk.Client.IBoundPluginClient :  [Public, ClassSemanticsMask, Abstract]
+  implements System.IAsyncDisposable
+  implements WeavePort.Sdk.Client.IPluginClient
+  Method System.Threading.Tasks.Task`1[System.String] GetTenantAsync(System.Threading.CancellationToken) [Public, Virtual, Abstract] (cancellationToken=null)
 type WeavePort.Sdk.Client.IPluginClient :  [Public, ClassSemanticsMask, Abstract]
   implements System.IAsyncDisposable
   Method System.Collections.Generic.IAsyncEnumerable`1[System.Text.Json.JsonElement] StreamAsync(System.String, System.Text.Json.JsonElement, System.Threading.CancellationToken) [Public, Virtual, Abstract] (operation, input, cancellationToken=null)
   Method System.Threading.Tasks.Task`1[System.Text.Json.JsonElement] CallAsync(System.String, System.Text.Json.JsonElement, System.Threading.CancellationToken) [Public, Virtual, Abstract] (operation, input, cancellationToken=null)
 type WeavePort.Sdk.Client.LocalPluginClient : System.Object [Public, Sealed]
   implements System.IAsyncDisposable
+  implements WeavePort.Sdk.Client.IBoundPluginClient
   implements WeavePort.Sdk.Client.IPluginClient
   Constructor Void .ctor(WeavePort.Abstractions.IPluginSession, System.Nullable`1[System.TimeSpan]) [Public] (session, streamTimeout=null)
   Method System.Collections.Generic.IAsyncEnumerable`1[System.Text.Json.JsonElement] StreamAsync(System.String, System.Text.Json.JsonElement, System.Threading.CancellationToken) [Public, Final, Virtual] (operation, input, cancellationToken=null)
   Method System.String get_Instance() [Public] ()
   Method System.String get_Tenant() [Public] ()
+  Method System.Threading.Tasks.Task`1[System.String] GetTenantAsync(System.Threading.CancellationToken) [Public, Final, Virtual] (cancellationToken=null)
   Method System.Threading.Tasks.Task`1[System.Text.Json.JsonElement] CallAsync(System.String, System.Text.Json.JsonElement, System.Threading.CancellationToken) [Public, Final, Virtual] (operation, input, cancellationToken=null)
   Method System.Threading.Tasks.ValueTask DisposeAsync() [Public, Final, Virtual] ()
   Property System.String Instance

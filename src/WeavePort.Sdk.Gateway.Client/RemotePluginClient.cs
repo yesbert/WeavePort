@@ -3,18 +3,27 @@ using System.Runtime.CompilerServices;
 using System.Text.Json;
 using Google.Protobuf;
 using Grpc.Core;
+using Grpc.Net.Client;
 using WeavePort.Sdk.Client;
 using WeavePort.Sdk.Gateway.Protocol;
 
 namespace WeavePort.Sdk.Gateway;
 /// <summary>Product client for a preconfigured worker-host binding; the plugin artifact stays unchanged.</summary>
-public sealed class RemotePluginClient : IPluginClient
+public sealed class RemotePluginClient : IBoundPluginClient
 {
     private readonly GatewaySessions _sessions;
     private readonly TimeSpan _callTimeout;
     /// <summary>Creates a binding client with at most eight leased sessions and a default 30-second operation timeout, including lease wait. Plain HTTP is permitted only on loopback; remote endpoints require HTTPS.</summary>
-    public RemotePluginClient(Uri endpoint, string bindingCredential, TimeSpan? callTimeout = null)
+    public RemotePluginClient(Uri endpoint, string bindingCredential, TimeSpan? callTimeout = null) : this(endpoint, bindingCredential, new GrpcChannelOptions(), callTimeout)
     {
+    }
+
+    /// <summary>Creates a client with transport configuration for trusted certificate/handler policy. Handler ownership follows DisposeHttpClient; transport message limits are enforced by this library.</summary>
+    public RemotePluginClient(Uri endpoint, string bindingCredential, GrpcChannelOptions channelOptions, TimeSpan? callTimeout = null)
+    {
+        ArgumentNullException.ThrowIfNull(endpoint);
+        ArgumentNullException.ThrowIfNull(channelOptions);
+        ArgumentException.ThrowIfNullOrWhiteSpace(bindingCredential);
         if (endpoint.Scheme != "https" && !(endpoint.Scheme == "http" && endpoint.IsLoopback))
         {
             throw new ArgumentException("Remote gateway requires HTTPS.", nameof(endpoint));
@@ -26,7 +35,19 @@ public sealed class RemotePluginClient : IPluginClient
             throw new ArgumentOutOfRangeException(nameof(callTimeout));
         }
 
-        _sessions = new(endpoint, new() { { GatewayMetadata.BindingCredential, bindingCredential } });
+        _sessions = new(endpoint, new() { { GatewayMetadata.BindingCredential, bindingCredential } }, channelOptions);
+    }
+
+    /// <inheritdoc/>
+    public async Task<string> GetTenantAsync(CancellationToken cancellationToken = default)
+    {
+        JsonElement identity = await ExchangeAsync(new Request { Mode = Mode.Describe }, cancellationToken);
+        if (identity.ValueKind != JsonValueKind.Object || !identity.TryGetProperty("protocol", out var protocol) || protocol.ValueKind != JsonValueKind.Number || !protocol.TryGetInt32(out int version) || version != 1 || !identity.TryGetProperty("tenant", out var tenant) || tenant.ValueKind != JsonValueKind.String || string.IsNullOrWhiteSpace(tenant.GetString()))
+        {
+            throw new InvalidDataException("Incompatible gateway binding identity.");
+        }
+
+        return tenant.GetString()!;
     }
 
     /// <inheritdoc/>

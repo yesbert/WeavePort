@@ -46,3 +46,7 @@ The API is pre-1.0 and evolving. The host API, wire protocol, package version an
 ## MCP support is included in Hosting
 
 `WeavePort.Hosting` 0.4.0 includes optional local MCP tools with no additional MCP runtime dependency. Use the low-level session contract for `tools/list` and `tools/call`; `WeavePort.Sdk.Client` remains the native typed/streaming client. Deploy the trusted server and its language dependencies separately. [Complete MCP guide](../docs/mcp-plugins.md).
+
+## Upcoming optional package family
+
+The 0.5.0 source candidate adds `WeavePort.Composition`, `WeavePort.Sdk.Gateway` and `WeavePort.Sdk.Gateway.Client`. The remote client requires only .NET 10; the gateway server requires ASP.NET Core. Until public publication, use the prepared repository NuGet feed. See [release status](../docs/releases.md), [HTTPS gateway](../docs/gateway.md) and [composition](../docs/bulk-composition.md). Testing remains internal.

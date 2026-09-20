@@ -2,7 +2,7 @@
 
 Keep the host, SDKs and plugin artifacts on a known-compatible combination. This guide defines the exact identities checked during installation and startup.
 
-**Public package policy for 0.4.0, reviewed 2026-09-20.** The [machine-readable matrix](../compatibility/local-v1.json) defines one exact combination. It is embedded in `WeavePort.Hosting` and consumed by the offline installation sealer. The public NuGet package set uses this exact matrix; no general SemVer range is accepted.
+**Source candidate package policy for 0.5.0, reviewed 2026-09-20.** The [machine-readable matrix](../compatibility/local-v1.json) defines one exact combination. It is embedded in `WeavePort.Hosting` and consumed by the offline installation sealer. The public NuGet package set uses this exact matrix; no general SemVer range is accepted.
 
 ## Separate compatibility identities
 
@@ -10,8 +10,8 @@ Keep the host, SDKs and plugin artifacts on a known-compatible combination. This
 |---|---|---|
 | Local host API level | `1` | Installation compatibility declaration against the embedded matrix |
 | Transport protocol | `1` | Compatibility declaration and existing worker startup protocol checks |
-| Core host packages | Abstractions, Hosting, Sdk.Client, each `0.4.0` | Exact declaration plus actual packed/loaded metadata checks |
-| C# author SDK (`dotnet`) | `WeavePort.Sdk` `0.4.0` | Entry-specific declaration, packed metadata and native startup/call checks |
+| Core host packages | Abstractions, Hosting, Sdk.Client, each `0.5.0` | Exact declaration plus actual packed/loaded metadata checks |
+| C# author SDK (`dotnet`) | `WeavePort.Sdk` `0.5.0` | Entry-specific declaration, packed metadata and native startup/call checks |
 | Python author SDK (`python`) | `weaveport-sdk` `0.2.0` | Entry-specific declaration, wheel/installed metadata and native startup/call checks |
 | TypeScript author SDK (`node`) | `@weaveport/sdk` `0.2.0` | Entry-specific declaration, npm/installed metadata and native startup/call checks |
 | Plugin artifact release | Exact chosen installation, e.g. `1` or `2` | Manifest identity/content pin and worker's advertised release |
@@ -42,7 +42,7 @@ The [API baseline](../compatibility/public-api.txt) records exported types and p
 | Sdk.Client | `IPluginClient`, typed extensions, `LocalPluginClient`, `PluginCallException` |
 | Sdk | `PluginApplication`, `PluginCallContext` |
 
-The snapshot includes Docker/socket profile signatures because they are exported by Hosting; that does not qualify their deployment here. The tested product baseline remains native local macOS, .NET 10, with actual C#/Python/TypeScript SDK calls. Gateway, Composition and Testing packages remain separate optional/experimental surfaces outside this exact core package/API gate. Their existing evidence is retained, not silently promoted to this local support matrix.
+The snapshot includes Docker/socket profile signatures because they are exported by Hosting; that does not qualify their deployment here. The tested product baseline remains native local macOS, .NET 10, with actual C#/Python/TypeScript SDK calls. Composition and Gateway server/client have a separate [reviewed optional API](../compatibility/optional-api.txt), [dependency matrix](../compatibility/optional-dependencies.json) and packed consumer gate. They are selected independently and do not become mandatory installation declaration entries. Testing remains internal. See [gateway topology limits](gateway.md); these tests do not widen the native worker platform matrix.
 
 A signature snapshot does not prove behavioral, binary or nullable-annotation compatibility. The current snapshot does not encode every custom modifier/attribute; code review and package-consuming runtime scenarios remain necessary. For Python/TypeScript, this milestone records package identity and tests the author/startup contract, not a complete language-level exported-symbol snapshot.
 
@@ -69,3 +69,5 @@ From the repository root:
 ```
 
 The final script checks actual NuGet identity/dependency closure/target libraries, installed and packed author SDK metadata, loaded versions, embedded policy, the API baseline and installation compatibility/refusal cases. Negative checks use copies to prove that real package dependency drift and an API mismatch fail. Separate sample processes verify state preservation. Historical internal-candidate evidence is in the [retained report](../reports/release/0.1.0-internal.2/candidate/report.md).
+
+The 0.5.0 source candidate adds bound-client tenant discovery and optional Composition/Gateway packages while preserving the 0.4.0 cleanup and scheduling contracts. All selected .NET packages must come from the same qualified delivery; optional package identities are not mandatory installation declarations. Version 0.4.0 remains the published release until a separate release operation completes.

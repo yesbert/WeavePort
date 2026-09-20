@@ -22,7 +22,7 @@ internal static class SessionChecks
         }));
         int sessions = requests.Count;
         if (sessions is < 2 or > 8) throw new InvalidDataException("Session concurrency/retention bound.");
-        string revoked = registry.Register(new EchoClient());
+        string revoked = registry.Register(new EchoClient(), "test");
         await using var other = new RemotePluginClient(address, revoked, TimeSpan.FromSeconds(1));
         await other.CallAsync("echo", JsonSerializer.SerializeToElement(new { }));
         await registry.RevokeAsync(revoked);
@@ -37,7 +37,7 @@ internal static class SessionChecks
     private static async Task<bool> CheckQueueAsync(GatewayRegistry registry, Uri address)
     {
         var held = new HeldClient();
-        string credential = registry.Register(held);
+        string credential = registry.Register(held, "test");
         await using var client = new RemotePluginClient(address, credential, TimeSpan.FromSeconds(5));
         Task<JsonElement>[] active = Enumerable.Range(0, 8)
             .Select(index => client.CallAsync("hold", JsonSerializer.SerializeToElement(new { index }))).ToArray();

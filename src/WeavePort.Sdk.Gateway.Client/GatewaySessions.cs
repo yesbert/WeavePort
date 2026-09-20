@@ -17,11 +17,13 @@ internal sealed class GatewaySessions : IDisposable
     private bool _disposed;
     internal CancellationToken Lifetime { get; }
 
-    internal GatewaySessions(Uri endpoint, Metadata headers)
+    internal GatewaySessions(Uri endpoint, Metadata headers, GrpcChannelOptions options)
     {
         Lifetime = _lifetime.Token;
         _headers = headers;
-        _channel = GrpcChannel.ForAddress(endpoint, new GrpcChannelOptions { MaxReceiveMessageSize = 1 << 20, MaxSendMessageSize = 1 << 20 });
+        options.MaxReceiveMessageSize = 1 << 20;
+        options.MaxSendMessageSize = 1 << 20;
+        _channel = GrpcChannel.ForAddress(endpoint, options);
         _client = new(_channel);
     }
 

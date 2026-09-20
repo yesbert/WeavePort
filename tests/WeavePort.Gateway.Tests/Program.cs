@@ -13,7 +13,7 @@ internal static class RegistryChecks
     {
         var registry = new GatewayRegistry();
         var clients = Enumerable.Range(0, 3).Select(_ => new TestClient(fail: true)).ToArray();
-        string[] credentials = clients.Select(registry.Register).ToArray();
+        string[] credentials = clients.Select(client => registry.Register(client, "test")).ToArray();
         Task disposal = registry.DisposeAsync().AsTask();
         await ExpectAsync<AggregateException>(() => disposal);
         Check(clients.All(client => client.Disposals == 1), "every throwing client disposed exactly once");
@@ -23,7 +23,7 @@ internal static class RegistryChecks
             await ExpectAsync<UnauthorizedAccessException>(() => Task.FromResult(registry.Get(token)));
             await ExpectAsync<UnauthorizedAccessException>(() => Task.FromResult(registry.Begin(token, Guid.NewGuid().ToString("N"), default)));
         }
-        await ExpectAsync<ObjectDisposedException>(() => Task.FromResult(registry.Register(new TestClient())));
+        await ExpectAsync<ObjectDisposedException>(() => Task.FromResult(registry.Register(new TestClient(), "test")));
         await ClientCancellationAsync();
         await ActiveStreamAsync();
         await ConcurrentRevokeAsync();
@@ -52,7 +52,7 @@ internal static class RegistryChecks
     {
         var registry = new GatewayRegistry();
         var client = new TestClient();
-        string token = registry.Register(client);
+        string token = registry.Register(client, "test");
         var stream = registry.Begin(token, Guid.NewGuid().ToString("N"), default);
         Task disposal = registry.DisposeAsync().AsTask();
         Check(stream.Stop.IsCancellationRequested && !disposal.IsCompleted, "shutdown waits for cancelled stream exit");
@@ -66,7 +66,7 @@ internal static class RegistryChecks
         var release = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
         var registry = new GatewayRegistry();
         var client = new TestClient(release: release.Task);
-        string token = registry.Register(client);
+        string token = registry.Register(client, "test");
         Task revoke = registry.RevokeAsync(token);
         Task dispose = registry.DisposeAsync().AsTask();
         Check(!dispose.IsCompleted, "registry joins pending revoke");
@@ -84,7 +84,7 @@ internal static class RegistryChecks
             bool accepted = false;
             await Task.WhenAll(Task.Run(() =>
             {
-                try { registry.Register(client); accepted = true; }
+                try { registry.Register(client, "test"); accepted = true; }
                 catch (ObjectDisposedException) { /* Caller retains rejected ownership. */ }
             }), Task.Run(async () => await registry.DisposeAsync()));
             Check(client.Disposals == (accepted ? 1 : 0), "registration race ownership");

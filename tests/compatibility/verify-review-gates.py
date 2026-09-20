@@ -21,8 +21,8 @@ print("PASS: API drift fails without rewriting either reviewed or candidate base
 packages = work / "packages"
 packages.mkdir()
 for name in ("Abstractions", "Hosting", "Sdk.Client", "Sdk"):
-    shutil.copyfile(root / f"artifacts/packages/WeavePort.{name}.0.4.0.nupkg", packages / f"WeavePort.{name}.0.4.0.nupkg")
-path = packages / "WeavePort.Hosting.0.4.0.nupkg"
+    shutil.copyfile(root / f"artifacts/packages/WeavePort.{name}.0.5.0.nupkg", packages / f"WeavePort.{name}.0.5.0.nupkg")
+path = packages / "WeavePort.Hosting.0.5.0.nupkg"
 with zipfile.ZipFile(path) as archive:
     content = {name: archive.read(name) for name in archive.namelist()}
 name = next(name for name in content if name.endswith(".nuspec"))

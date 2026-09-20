@@ -1,0 +1,172 @@
+# Reviewed optional package API including generated gateway protocol
+type WeavePort.Composition.Composition : System.Object [Public, Abstract, Sealed]
+  Method System.Threading.Tasks.Task`1[WeavePort.Composition.ResultHandle[]] FanOutAsync(WeavePort.Composition.ResultScope, WeavePort.Composition.ResultHandle, System.Collections.Generic.IReadOnlyList`1[System.Func`4[WeavePort.Composition.ResultScope,WeavePort.Composition.ResultHandle,System.Threading.CancellationToken,System.Threading.Tasks.Task`1[WeavePort.Composition.ResultHandle]]], Int32, System.Threading.CancellationToken) [Public, Static] (scope, input, branches, maximumParallelism, cancellationToken=null)
+  Method System.Threading.Tasks.Task`1[WeavePort.Composition.ResultHandle] ConcatenateAsync(WeavePort.Composition.ResultScope, System.Collections.Generic.IReadOnlyList`1[WeavePort.Composition.ResultHandle], System.Threading.CancellationToken) [Public, Static] (scope, inputs, cancellationToken=null)
+  Method System.Threading.Tasks.Task`1[WeavePort.Composition.ResultHandle] MapAsync(WeavePort.Composition.ResultScope, WeavePort.Composition.ResultHandle, WeavePort.Abstractions.IPluginSession, Int32, System.Threading.CancellationToken) [Public, Static] (scope, input, session, chunkBytes=65536, cancellationToken=null)
+  Method System.Threading.Tasks.Task`1[WeavePort.Composition.ResultHandle] MapAsync(WeavePort.Composition.ResultScope, WeavePort.Composition.ResultHandle, WeavePort.Sdk.Client.IBoundPluginClient, Int32, System.Threading.CancellationToken) [Public, Static] (scope, input, client, chunkBytes=65536, cancellationToken=null)
+type WeavePort.Composition.ResultHandle : System.Object [Public, Sealed]
+  Method Int64 get_Length() [Public] ()
+  Property Int64 Length
+type WeavePort.Composition.ResultLimits : System.Object [Public, Sealed]
+  implements System.IEquatable`1[WeavePort.Composition.ResultLimits]
+  Constructor Void .ctor(Int64, Int64, Int32) [Public] (MaximumObjectBytes=268435456, MaximumScopeBytes=1073741824, MaximumObjects=32)
+  Method Boolean Equals(System.Object) [Public, Virtual] (obj)
+  Method Boolean Equals(WeavePort.Composition.ResultLimits) [Public, Final, Virtual] (other)
+  Method Boolean op_Equality(WeavePort.Composition.ResultLimits, WeavePort.Composition.ResultLimits) [Public, Static] (left, right)
+  Method Boolean op_Inequality(WeavePort.Composition.ResultLimits, WeavePort.Composition.ResultLimits) [Public, Static] (left, right)
+  Method Int32 GetHashCode() [Public, Virtual] ()
+  Method Int32 get_MaximumObjects() [Public] ()
+  Method Int64 get_MaximumObjectBytes() [Public] ()
+  Method Int64 get_MaximumScopeBytes() [Public] ()
+  Method System.String ToString() [Public, Virtual] ()
+  Method Void Deconstruct(Int64 ByRef, Int64 ByRef, Int32 ByRef) [Public] (MaximumObjectBytes, MaximumScopeBytes, MaximumObjects)
+  Method Void set_MaximumObjectBytes(Int64) [Public] (value)
+  Method Void set_MaximumObjects(Int32) [Public] (value)
+  Method Void set_MaximumScopeBytes(Int64) [Public] (value)
+  Method WeavePort.Composition.ResultLimits <Clone>$() [Public] ()
+  Property Int32 MaximumObjects
+  Property Int64 MaximumObjectBytes
+  Property Int64 MaximumScopeBytes
+type WeavePort.Composition.ResultScope : System.Object [Public, Sealed]
+  implements System.IAsyncDisposable
+  Constructor Void .ctor(System.String, System.String, WeavePort.Composition.ResultLimits) [Public] (privateRoot, tenant, limits=null)
+  Method Int64 get_ReservedBytes() [Public] ()
+  Method System.String get_Tenant() [Public] ()
+  Method System.Threading.Tasks.Task CopyToAsync(WeavePort.Composition.ResultHandle, System.IO.Stream, System.Threading.CancellationToken) [Public] (handle, destination, cancellationToken=null)
+  Method System.Threading.Tasks.Task`1[WeavePort.Composition.ResultHandle] CreateAsync(System.Func`3[System.IO.Stream,System.Threading.CancellationToken,System.Threading.Tasks.Task], System.Threading.CancellationToken) [Public] (producer, cancellationToken=null)
+  Method System.Threading.Tasks.Task`1[WeavePort.Composition.ResultHandle] TransformAsync(WeavePort.Composition.ResultHandle, System.Func`3[System.ReadOnlyMemory`1[System.Byte],System.Threading.CancellationToken,System.Threading.Tasks.ValueTask`1[System.ReadOnlyMemory`1[System.Byte]]], Int32, System.Threading.CancellationToken) [Public] (input, transform, chunkBytes=65536, cancellationToken=null)
+  Method System.Threading.Tasks.ValueTask DisposeAsync() [Public, Final, Virtual] ()
+  Property Int64 ReservedBytes
+  Property System.String Tenant
+type WeavePort.Sdk.Gateway.GatewayHostingExtensions : System.Object [Public, Abstract, Sealed]
+  Method Microsoft.AspNetCore.Builder.IEndpointConventionBuilder MapWeavePortGateway(Microsoft.AspNetCore.Routing.IEndpointRouteBuilder) [Public, Static] (endpoints)
+  Method Microsoft.Extensions.DependencyInjection.IServiceCollection AddWeavePortGateway(Microsoft.Extensions.DependencyInjection.IServiceCollection) [Public, Static] (services)
+type WeavePort.Sdk.Gateway.GatewayRegistry : System.Object [Public, Sealed]
+  implements System.IAsyncDisposable
+  Constructor Void .ctor() [Public] ()
+  Method System.String Register(WeavePort.Sdk.Client.IPluginClient, System.String) [Public] (client, tenant)
+  Method System.String Register(WeavePort.Sdk.Client.LocalPluginClient) [Public] (client)
+  Method System.Threading.Tasks.Task RevokeAsync(System.String) [Public] (token)
+  Method System.Threading.Tasks.ValueTask DisposeAsync() [Public, Final, Virtual] ()
+type WeavePort.Sdk.Gateway.GatewayService : WeavePort.Sdk.Gateway.Protocol.WorkerGateway+WorkerGatewayBase [Public, Sealed]
+  Constructor Void .ctor(WeavePort.Sdk.Gateway.GatewayRegistry) [Public] (registry)
+  Method System.Threading.Tasks.Task Session(Grpc.Core.IAsyncStreamReader`1[WeavePort.Sdk.Gateway.Protocol.Request], Grpc.Core.IServerStreamWriter`1[WeavePort.Sdk.Gateway.Protocol.Reply], Grpc.Core.ServerCallContext) [Public, Virtual] (requestStream, responseStream, context)
+type WeavePort.Sdk.Gateway.Protocol.GatewayReflection : System.Object [Public, Abstract, Sealed]
+  Method Google.Protobuf.Reflection.FileDescriptor get_Descriptor() [Public, Static] ()
+  Property Google.Protobuf.Reflection.FileDescriptor Descriptor
+type WeavePort.Sdk.Gateway.Protocol.Mode : System.Enum [Public, Sealed]
+  implements System.IComparable
+  implements System.IConvertible
+  implements System.IFormattable
+  implements System.ISpanFormattable
+  Field Int32 value__
+  Field WeavePort.Sdk.Gateway.Protocol.Mode Call=0
+  Field WeavePort.Sdk.Gateway.Protocol.Mode Cancel=2
+  Field WeavePort.Sdk.Gateway.Protocol.Mode Describe=3
+  Field WeavePort.Sdk.Gateway.Protocol.Mode Stream=1
+type WeavePort.Sdk.Gateway.Protocol.Reply : System.Object [Public, Sealed]
+  implements Google.Protobuf.IBufferMessage
+  implements Google.Protobuf.IDeepCloneable`1[WeavePort.Sdk.Gateway.Protocol.Reply]
+  implements Google.Protobuf.IMessage
+  implements Google.Protobuf.IMessage`1[WeavePort.Sdk.Gateway.Protocol.Reply]
+  implements System.IEquatable`1[WeavePort.Sdk.Gateway.Protocol.Reply]
+  Constructor Void .ctor() [Public] ()
+  Constructor Void .ctor(WeavePort.Sdk.Gateway.Protocol.Reply) [Public] (other)
+  Field Int32 CancelledFieldNumber=5
+  Field Int32 CompleteFieldNumber=2
+  Field Int32 ErrorFieldNumber=3
+  Field Int32 JsonFieldNumber=1
+  Field Int32 MayHaveExecutedFieldNumber=4
+  Method Boolean Equals(System.Object) [Public, Virtual] (other)
+  Method Boolean Equals(WeavePort.Sdk.Gateway.Protocol.Reply) [Public, Final, Virtual] (other)
+  Method Boolean get_Cancelled() [Public] ()
+  Method Boolean get_Complete() [Public] ()
+  Method Boolean get_MayHaveExecuted() [Public] ()
+  Method Google.Protobuf.ByteString get_Json() [Public] ()
+  Method Google.Protobuf.MessageParser`1[WeavePort.Sdk.Gateway.Protocol.Reply] get_Parser() [Public, Static] ()
+  Method Google.Protobuf.Reflection.MessageDescriptor get_Descriptor() [Public, Static] ()
+  Method Int32 CalculateSize() [Public, Final, Virtual] ()
+  Method Int32 GetHashCode() [Public, Virtual] ()
+  Method System.String ToString() [Public, Virtual] ()
+  Method System.String get_Error() [Public] ()
+  Method Void MergeFrom(Google.Protobuf.CodedInputStream) [Public, Final, Virtual] (input)
+  Method Void MergeFrom(WeavePort.Sdk.Gateway.Protocol.Reply) [Public, Final, Virtual] (other)
+  Method Void WriteTo(Google.Protobuf.CodedOutputStream) [Public, Final, Virtual] (output)
+  Method Void set_Cancelled(Boolean) [Public] (value)
+  Method Void set_Complete(Boolean) [Public] (value)
+  Method Void set_Error(System.String) [Public] (value)
+  Method Void set_Json(Google.Protobuf.ByteString) [Public] (value)
+  Method Void set_MayHaveExecuted(Boolean) [Public] (value)
+  Method WeavePort.Sdk.Gateway.Protocol.Reply Clone() [Public, Final, Virtual] ()
+  Property Boolean Cancelled
+  Property Boolean Complete
+  Property Boolean MayHaveExecuted
+  Property Google.Protobuf.ByteString Json
+  Property Google.Protobuf.MessageParser`1[WeavePort.Sdk.Gateway.Protocol.Reply] Parser
+  Property Google.Protobuf.Reflection.MessageDescriptor Descriptor
+  Property System.String Error
+type WeavePort.Sdk.Gateway.Protocol.Request : System.Object [Public, Sealed]
+  implements Google.Protobuf.IBufferMessage
+  implements Google.Protobuf.IDeepCloneable`1[WeavePort.Sdk.Gateway.Protocol.Request]
+  implements Google.Protobuf.IMessage
+  implements Google.Protobuf.IMessage`1[WeavePort.Sdk.Gateway.Protocol.Request]
+  implements System.IEquatable`1[WeavePort.Sdk.Gateway.Protocol.Request]
+  Constructor Void .ctor() [Public] ()
+  Constructor Void .ctor(WeavePort.Sdk.Gateway.Protocol.Request) [Public] (other)
+  Field Int32 InputFieldNumber=2
+  Field Int32 ModeFieldNumber=4
+  Field Int32 OperationFieldNumber=1
+  Field Int32 StreamIdFieldNumber=3
+  Method Boolean Equals(System.Object) [Public, Virtual] (other)
+  Method Boolean Equals(WeavePort.Sdk.Gateway.Protocol.Request) [Public, Final, Virtual] (other)
+  Method Google.Protobuf.ByteString get_Input() [Public] ()
+  Method Google.Protobuf.MessageParser`1[WeavePort.Sdk.Gateway.Protocol.Request] get_Parser() [Public, Static] ()
+  Method Google.Protobuf.Reflection.MessageDescriptor get_Descriptor() [Public, Static] ()
+  Method Int32 CalculateSize() [Public, Final, Virtual] ()
+  Method Int32 GetHashCode() [Public, Virtual] ()
+  Method System.String ToString() [Public, Virtual] ()
+  Method System.String get_Operation() [Public] ()
+  Method System.String get_StreamId() [Public] ()
+  Method Void MergeFrom(Google.Protobuf.CodedInputStream) [Public, Final, Virtual] (input)
+  Method Void MergeFrom(WeavePort.Sdk.Gateway.Protocol.Request) [Public, Final, Virtual] (other)
+  Method Void WriteTo(Google.Protobuf.CodedOutputStream) [Public, Final, Virtual] (output)
+  Method Void set_Input(Google.Protobuf.ByteString) [Public] (value)
+  Method Void set_Mode(WeavePort.Sdk.Gateway.Protocol.Mode) [Public] (value)
+  Method Void set_Operation(System.String) [Public] (value)
+  Method Void set_StreamId(System.String) [Public] (value)
+  Method WeavePort.Sdk.Gateway.Protocol.Mode get_Mode() [Public] ()
+  Method WeavePort.Sdk.Gateway.Protocol.Request Clone() [Public, Final, Virtual] ()
+  Property Google.Protobuf.ByteString Input
+  Property Google.Protobuf.MessageParser`1[WeavePort.Sdk.Gateway.Protocol.Request] Parser
+  Property Google.Protobuf.Reflection.MessageDescriptor Descriptor
+  Property System.String Operation
+  Property System.String StreamId
+  Property WeavePort.Sdk.Gateway.Protocol.Mode Mode
+type WeavePort.Sdk.Gateway.Protocol.WorkerGateway : System.Object [Public, Abstract, Sealed]
+  Method Google.Protobuf.Reflection.ServiceDescriptor get_Descriptor() [Public, Static] ()
+  Method Grpc.Core.ServerServiceDefinition BindService(WorkerGatewayBase) [Public, Static] (serviceImpl)
+  Method Void BindService(Grpc.Core.ServiceBinderBase, WorkerGatewayBase) [Public, Static] (serviceBinder, serviceImpl)
+  NestedType WeavePort.Sdk.Gateway.Protocol.WorkerGateway+WorkerGatewayBase
+  NestedType WeavePort.Sdk.Gateway.Protocol.WorkerGateway+WorkerGatewayClient
+  Property Google.Protobuf.Reflection.ServiceDescriptor Descriptor
+type WeavePort.Sdk.Gateway.Protocol.WorkerGateway+WorkerGatewayBase : System.Object [NestedPublic, Abstract]
+  Constructor Void .ctor() [Family] ()
+  Method System.Threading.Tasks.Task Session(Grpc.Core.IAsyncStreamReader`1[WeavePort.Sdk.Gateway.Protocol.Request], Grpc.Core.IServerStreamWriter`1[WeavePort.Sdk.Gateway.Protocol.Reply], Grpc.Core.ServerCallContext) [Public, Virtual] (requestStream, responseStream, context)
+type WeavePort.Sdk.Gateway.Protocol.WorkerGateway+WorkerGatewayClient : Grpc.Core.ClientBase`1[WeavePort.Sdk.Gateway.Protocol.WorkerGateway+WorkerGatewayClient] [NestedPublic]
+  Constructor Void .ctor() [Family] ()
+  Constructor Void .ctor(ClientBaseConfiguration) [Family] (configuration)
+  Constructor Void .ctor(Grpc.Core.CallInvoker) [Public] (callInvoker)
+  Constructor Void .ctor(Grpc.Core.ChannelBase) [Public] (channel)
+  Method Grpc.Core.AsyncDuplexStreamingCall`2[WeavePort.Sdk.Gateway.Protocol.Request,WeavePort.Sdk.Gateway.Protocol.Reply] Session(Grpc.Core.CallOptions) [Public, Virtual] (options)
+  Method Grpc.Core.AsyncDuplexStreamingCall`2[WeavePort.Sdk.Gateway.Protocol.Request,WeavePort.Sdk.Gateway.Protocol.Reply] Session(Grpc.Core.Metadata, System.Nullable`1[System.DateTime], System.Threading.CancellationToken) [Public, Virtual] (headers=null, deadline=null, cancellationToken=null)
+  Method WorkerGatewayClient NewInstance(ClientBaseConfiguration) [Family, Virtual] (configuration)
+type WeavePort.Sdk.Gateway.RemotePluginClient : System.Object [Public, Sealed]
+  implements System.IAsyncDisposable
+  implements WeavePort.Sdk.Client.IBoundPluginClient
+  implements WeavePort.Sdk.Client.IPluginClient
+  Constructor Void .ctor(System.Uri, System.String, Grpc.Net.Client.GrpcChannelOptions, System.Nullable`1[System.TimeSpan]) [Public] (endpoint, bindingCredential, channelOptions, callTimeout=null)
+  Constructor Void .ctor(System.Uri, System.String, System.Nullable`1[System.TimeSpan]) [Public] (endpoint, bindingCredential, callTimeout=null)
+  Method System.Collections.Generic.IAsyncEnumerable`1[System.Text.Json.JsonElement] StreamAsync(System.String, System.Text.Json.JsonElement, System.Threading.CancellationToken) [Public, Final, Virtual] (operation, input, cancellationToken=null)
+  Method System.Threading.Tasks.Task`1[System.String] GetTenantAsync(System.Threading.CancellationToken) [Public, Final, Virtual] (cancellationToken=null)
+  Method System.Threading.Tasks.Task`1[System.Text.Json.JsonElement] CallAsync(System.String, System.Text.Json.JsonElement, System.Threading.CancellationToken) [Public, Final, Virtual] (operation, input, cancellationToken=null)
+  Method System.Threading.Tasks.ValueTask DisposeAsync() [Public, Final, Virtual] ()

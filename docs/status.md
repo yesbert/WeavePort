@@ -30,6 +30,10 @@ The 0.3.0 release adds [optional local MCP tools](mcp-plugins.md) alongside the 
 
 Version 0.3.1 adds public `McpMethods.ListTools` and `McpMethods.CallTool` constants used by the consumer examples. The MCP wire protocol and supported subset remain unchanged.
 
+## Composition and gateway source candidate
+
+Current source targets 0.5.0 with optional Composition, Gateway server and Gateway client packages. The candidate adds authenticated local/remote composition, separate client-only deployment, direct TLS tests and package API/dependency gates. Publication and platform claims depend on retained qualification evidence; see [release status](releases.md) and [gateway limits](gateway.md).
+
 ## Approved session reuse and fair scheduling
 
 Version 0.4.0 adds a memory-led fair scheduler and opt-in `WorkerReusePolicy.ApprovedSessions`. Customer-bound execution remains the default. The host requires the updated SDK cleanup handshake before sharing compatible reviewed deployments; C#, Python and TypeScript expose registered session resources. See [operator/author guidance](reusable-plugins.md), [candidate verification](../reports/verification/approved-session-reuse-20260920/README.md) and [public release evidence](../reports/release/0.4.0/README.md). Python/TypeScript 0.2.0 artifacts accompany the GitHub release; separate registry publication is not claimed.
