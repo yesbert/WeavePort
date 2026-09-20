@@ -6,7 +6,7 @@ The GitHub delivery target is [yesbert/WeavePort](https://github.com/yesbert/Wea
 
 The release allowlist in `build/release-packages.json` contains the four core packages plus `WeavePort.Composition`, `WeavePort.Sdk.Gateway.Client` and `WeavePort.Sdk.Gateway`. Testing remains internal. The three optional packages have a separate API baseline and packed-consumer qualification. Python and TypeScript author SDK publication is separate from NuGet delivery.
 
-The latest verified public release is `0.4.0`, licensed under [MIT](../LICENSE). The current source candidate targets 0.5.0 for all seven .NET packages and its exact compatibility matrix; host API and wire protocol remain 1. Python/TypeScript SDK versions are 0.2.0; the qualified wheel and tarball accompany the GitHub release without claiming PyPI/npm registry publication. Historical internal distribution and measurement evidence retain their original identities. Public releases require a complete clean candidate qualification; a tag override cannot substitute for updating compatibility inputs.
+The release version is `0.5.0`, licensed under [MIT](../LICENSE). All seven .NET packages and the exact compatibility matrix use 0.5.0; host API and wire protocol remain 1. Python/TypeScript SDK versions are 0.2.0; the qualified wheel and tarball accompany the GitHub release without claiming PyPI/npm registry publication. Historical internal distribution and measurement evidence retain their original identities. Public releases require a complete clean candidate qualification; a tag override cannot substitute for updating compatibility inputs.
 
 The [0.4.0 release report](../reports/release/0.4.0/README.md) retains the exact qualification, artifact hashes and publication verification.
 
@@ -68,9 +68,9 @@ The [0.3.0 release report](../reports/release/0.3.0/README.md) links the origina
 
 Hosting exposes `McpMethods.ListTools` and `McpMethods.CallTool` for consumer invocations. Examples and the guide use these constants. Internal MCP identifiers, SDK operations and gateway metadata are centralized without changing wire values. Update the four core packages together to match the exact 0.3.1 compatibility matrix.
 
-## 0.5.0 composition and gateway candidate
+## 0.5.0 composition and gateway packages
 
-Composition adds bound SDK mapping with authenticated remote tenant discovery and observable cleanup failures. Gateway splits hosting from the ASP.NET-independent remote client and adds direct HTTP/2 TLS qualification. See [gateway deployment](gateway.md), [composition](bulk-composition.md) and [dependency review](optional-dependencies.md). No public 0.5.0 publication is claimed until the release workflow and package verification complete.
+Composition adds bound SDK mapping with authenticated remote tenant discovery and observable cleanup failures. Gateway splits hosting from the ASP.NET-independent remote client and adds direct HTTP/2 TLS qualification. See [gateway deployment](gateway.md), [composition](bulk-composition.md) and [dependency review](optional-dependencies.md). The [release audit](../reports/release/0.5.0/audit.md) records the integrated review and qualification boundary. Publication is completed only by the gated release workflow and public package verification.
 
 Run `./scripts/prepare-core-packages.sh` to prepare all seven release packages in `artifacts/packages`, then `python3 scripts/verify-optional.py` for packed optional consumers. The clean candidate performs this qualification against frozen artifacts. Core installation declarations remain the three core host identities plus author SDKs; optional packages are never mandatory declaration entries.
 

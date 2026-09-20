@@ -2,7 +2,7 @@
 
 Keep the host, SDKs and plugin artifacts on a known-compatible combination. This guide defines the exact identities checked during installation and startup.
 
-**Source candidate package policy for 0.5.0, reviewed 2026-09-20.** The [machine-readable matrix](../compatibility/local-v1.json) defines one exact combination. It is embedded in `WeavePort.Hosting` and consumed by the offline installation sealer. The public NuGet package set uses this exact matrix; no general SemVer range is accepted.
+**Package policy for 0.5.0, reviewed 2026-09-20.** The [machine-readable matrix](../compatibility/local-v1.json) defines one exact combination. It is embedded in `WeavePort.Hosting` and consumed by the offline installation sealer. The public NuGet package set uses this exact matrix; no general SemVer range is accepted.
 
 ## Separate compatibility identities
 
@@ -70,4 +70,4 @@ From the repository root:
 
 The final script checks actual NuGet identity/dependency closure/target libraries, installed and packed author SDK metadata, loaded versions, embedded policy, the API baseline and installation compatibility/refusal cases. Negative checks use copies to prove that real package dependency drift and an API mismatch fail. Separate sample processes verify state preservation. Historical internal-candidate evidence is in the [retained report](../reports/release/0.1.0-internal.2/candidate/report.md).
 
-The 0.5.0 source candidate adds bound-client tenant discovery and optional Composition/Gateway packages while preserving the 0.4.0 cleanup and scheduling contracts. All selected .NET packages must come from the same qualified delivery; optional package identities are not mandatory installation declarations. Version 0.4.0 remains the published release until a separate release operation completes.
+The 0.5.0 release adds bound-client tenant discovery and optional Composition/Gateway packages while preserving the 0.4.0 cleanup and scheduling contracts. All selected .NET packages must come from the same qualified delivery; optional package identities are not mandatory installation declarations. Upgrade all selected .NET packages to 0.5.0 together after publication.

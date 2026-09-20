@@ -1,0 +1,34 @@
+{
+  "date": "2026-09-20",
+  "source": "NuGet vulnerability data via dotnet list package --vulnerable --include-transitive",
+  "packages": [
+    {
+      "package": "WeavePort.Abstractions",
+      "vulnerabilities": []
+    },
+    {
+      "package": "WeavePort.Hosting",
+      "vulnerabilities": []
+    },
+    {
+      "package": "WeavePort.Sdk",
+      "vulnerabilities": []
+    },
+    {
+      "package": "WeavePort.Sdk.Client",
+      "vulnerabilities": []
+    },
+    {
+      "package": "WeavePort.Composition",
+      "vulnerabilities": []
+    },
+    {
+      "package": "WeavePort.Sdk.Gateway.Client",
+      "vulnerabilities": []
+    },
+    {
+      "package": "WeavePort.Sdk.Gateway",
+      "vulnerabilities": []
+    }
+  ]
+}

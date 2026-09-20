@@ -1,6 +1,6 @@
 # Product status
 
-Release version: **0.4.0**, under MIT, with four core packages: Abstractions, Hosting, Sdk and Sdk.Client. Windows, Linux and macOS are supported targets for trusted stdio execution. Current release validation covers macOS arm64; Windows and Linux release validation is pending. See [platform support and validation](platform-qualification.md). This pre-1.0 API remains subject to evolution. Python/TypeScript registry publication and a new offline distribution are outside this release. The historical internal distribution remains **0.1.0-internal.2**.
+Release version: **0.5.0**, under MIT, with four core packages and optional Composition, Gateway server and Gateway client packages. Windows, Linux and macOS are supported targets for trusted stdio execution. Current release validation covers macOS arm64; Windows and Linux release validation is pending. See [platform support and validation](platform-qualification.md). This pre-1.0 API remains subject to evolution. Python/TypeScript registry publication and a new offline distribution are outside this release. The historical internal distribution remains **0.1.0-internal.2**.
 
 The [0.3.0 release evidence](../reports/release/0.3.0/README.md) records 1,088 assertion executions, exact tested package/symbol provenance, successful Trusted Publishing and measurements of the released Hosting assembly. Earlier [0.2.1 evidence](../reports/release/0.2.1/README.md) remains available as historical release data.
 
@@ -30,9 +30,9 @@ The 0.3.0 release adds [optional local MCP tools](mcp-plugins.md) alongside the 
 
 Version 0.3.1 adds public `McpMethods.ListTools` and `McpMethods.CallTool` constants used by the consumer examples. The MCP wire protocol and supported subset remain unchanged.
 
-## Composition and gateway source candidate
+## Composition and gateway packages
 
-Current source targets 0.5.0 with optional Composition, Gateway server and Gateway client packages. The candidate adds authenticated local/remote composition, separate client-only deployment, direct TLS tests and package API/dependency gates. Publication and platform claims depend on retained qualification evidence; see [release status](releases.md) and [gateway limits](gateway.md).
+Version 0.5.0 includes the integrated runtime with optional Composition, Gateway server and Gateway client packages. This release adds authenticated local/remote composition, separate client-only deployment, direct TLS tests and package API/dependency gates. Publication and platform claims depend on retained qualification evidence; see [release status](releases.md) and [gateway limits](gateway.md).
 
 ## Approved session reuse and fair scheduling
 

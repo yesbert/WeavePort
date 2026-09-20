@@ -162,9 +162,9 @@ public sealed class RemotePluginClient : IBoundPluginClient
         }
 
         JsonElement batch = JsonElement.Parse(reply.Json.Span);
-        if (batch.GetArrayLength() > 16)
+        if (batch.ValueKind != JsonValueKind.Array || batch.GetArrayLength() > 16)
         {
-            throw new InvalidDataException("Gateway batch count.");
+            throw new InvalidDataException("Invalid gateway batch shape or count.");
         }
 
         return batch;
