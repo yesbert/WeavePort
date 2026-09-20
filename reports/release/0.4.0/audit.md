@@ -21,7 +21,7 @@ Registered cleanup is cooperative: it does not erase arbitrary globals, runtime 
 - 344 assertions per Docker provider (C#, Python, TypeScript): 1,032 assertion executions.
 - 382 existing packaged multilingual SDK regression checks.
 - Six public API/package checks and two negative compatibility gates.
-- Eleven release tooling tests, including missing/modified author SDK refusal.
+- Twelve release tooling tests, including missing/modified author SDK refusal.
 - Nine alternating-customer calls through the maintained author examples.
 - Core readability/style, maintained documentation links, current/pending public-tree checks and specification validation.
 
@@ -30,3 +30,9 @@ Local logs are retained in the ignored release-audit-040 artifacts directory. Cl
 ## Static report-format finding
 
 CodeQL flagged the historical report writer’s trusted-mode throughput bounds as possible sensitive clear-text data. The source fields are numeric `qualifiedLow` and `firstRejected` capacity measurements. The formatter now converts inputs explicitly to numbers, rejecting arbitrary strings. Representative retained capacity values preserve identical formatting; measurement records are unchanged. The reproduction-script manifest entry is refreshed for this audited script correction; its previous source remains in Git history. The release waits for the renewed CodeQL result rather than excluding the report tree.
+
+## Final main-branch quality review
+
+The main-branch SonarQube analysis measured 83% coverage of new code and no security hotspots, but rejected seven maintainability findings. The follow-up factors callback handling into a focused method, uses explicit pending-status branches, places cancellation last in the internal scheduled-call constructor, removes invalid exception parameter names, and centralizes the C# session expiry guard. Session metadata reads now also take the cleanup lock. No public contract changes are introduced by these corrections.
+
+The standalone Python wheel and TypeScript tarball now contain the repository MIT license and author-facing README. Release export verifies each embedded license against the repository copy in addition to checking the frozen artifact hashes. A negative control rejects a mismatched license before creating output.

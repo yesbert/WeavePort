@@ -6,6 +6,7 @@ from pathlib import Path
 import re
 import shutil
 import subprocess
+import tarfile
 import xml.etree.ElementTree as ET
 import zipfile
 
@@ -82,6 +83,18 @@ def export(candidate, destination, version, root=ROOT):
     for path in author_files:
         relative = path.relative_to(candidate / "checkout").as_posix()
         require(path.is_file() and digest(path) == manifest.get(relative), "Missing or changed qualified author SDK: " + path.name)
+        expected_license = (root / "LICENSE").read_bytes()
+        if path.suffix == ".whl":
+            with zipfile.ZipFile(path) as archive:
+                license_path = f"weaveport_sdk-{policy['python']['Version']}.dist-info/licenses/LICENSE"
+                require(license_path in archive.namelist() and archive.read(license_path) == expected_license,
+                        "Author SDK license missing or differs from the project license")
+        else:
+            with tarfile.open(path) as archive:
+                require("package/LICENSE" in archive.getnames(), "Author SDK license missing")
+                member = archive.getmember("package/LICENSE")
+                require(member.isfile() and archive.extractfile(member).read() == expected_license,
+                        "Author SDK license differs from the project license")
         selected.append(path)
     require(not destination.exists(), "Output directory already exists; use a new destination")
     destination.mkdir(parents=True)

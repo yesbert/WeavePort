@@ -50,7 +50,7 @@ public sealed record SchedulingOptions
     {
         if (MaximumWorkers < 1 || MemoryBudgetMiB < 64 || MaximumConcurrentStarts < 1 || MaximumHeavyCalls < 0 || MaximumHeavyCalls >= MaximumWorkers || MaximumHeavyCallsPerTenant < 1 || MaximumHeavyPluginsPerTenant < 1 || MaximumQueuedCalls < 1 || MaximumQueuedCallsPerTenant < 1 || MaximumRegistrations < 1 || MaximumPayloadBytes < 1 || MaximumPristineWorkers < 0 || MaximumPristineWorkers > MaximumWorkers)
         {
-            throw new ArgumentOutOfRangeException(nameof(SchedulingOptions));
+            throw new ArgumentOutOfRangeException(null, "Scheduling limits and deadlines must fit the supported budgets.");
         }
 
         foreach (TimeSpan duration in new[]
@@ -67,7 +67,7 @@ public sealed record SchedulingOptions
         {
             if (duration <= TimeSpan.Zero || duration.TotalMilliseconds > uint.MaxValue - 1)
             {
-                throw new ArgumentOutOfRangeException(nameof(SchedulingOptions));
+                throw new ArgumentOutOfRangeException(null, "Scheduling limits and deadlines must fit the supported budgets.");
             }
         }
     }

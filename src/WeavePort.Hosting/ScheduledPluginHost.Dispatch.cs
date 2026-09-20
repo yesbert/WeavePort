@@ -122,7 +122,7 @@ public sealed partial class ScheduledPluginHost
         foreach (ScheduledCall call in _queue.ToArray())
         {
             double queued = _clock.GetElapsedTime(call.Enqueued).TotalMilliseconds;
-            string? status = _closed || call.Plugin.Closed ? "disabled" : call.Token.IsCancellationRequested ? "cancelled" : queued >= _options.QueueTimeout.TotalMilliseconds ? "busy" : null;
+            string? status = PendingStatus(call, queued);
             if (status is not null)
             {
                 _queue.Remove(call);
@@ -130,6 +130,21 @@ public sealed partial class ScheduledPluginHost
                 call.Completion.TrySetResult(ScheduledCall.Rejected(status, queued));
             }
         }
+    }
+
+    private string? PendingStatus(ScheduledCall call, double queued)
+    {
+        if (_closed || call.Plugin.Closed)
+        {
+            return "disabled";
+        }
+
+        if (call.Token.IsCancellationRequested)
+        {
+            return "cancelled";
+        }
+
+        return queued >= _options.QueueTimeout.TotalMilliseconds ? "busy" : null;
     }
 
     private async Task RunAsync(ScheduledCall call, bool cold)

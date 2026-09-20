@@ -18,9 +18,30 @@ public sealed class PluginCallContext
     }
 
     /// <summary>Host-bound customer identity; unavailable after session cleanup.</summary>
-    public string Tenant => _tenant ?? throw new InvalidOperationException("Session completed.");
+    public string Tenant
+    {
+        get
+        {
+            lock (_sync)
+            {
+                EnsureActive();
+                return _tenant!;
+            }
+        }
+    }
+
     /// <summary>Configuration for this invocation or result stream; do not retain copies across sessions.</summary>
-    public JsonElement Configuration => _active ? _configuration : throw new InvalidOperationException("Session completed.");
+    public JsonElement Configuration
+    {
+        get
+        {
+            lock (_sync)
+            {
+                EnsureActive();
+                return _configuration;
+            }
+        }
+    }
 
     /// <summary>Registers cleanup before handing ownership to the session. Actions run in reverse order, including after handler failure.</summary>
     public void OnClose(Func<ValueTask> cleanup)
@@ -28,11 +49,7 @@ public sealed class PluginCallContext
         ArgumentNullException.ThrowIfNull(cleanup);
         lock (_sync)
         {
-            if (!_active)
-            {
-                throw new InvalidOperationException("Session completed.");
-            }
-
+            EnsureActive();
             _cleanup.Add(cleanup);
         }
     }
@@ -64,12 +81,16 @@ public sealed class PluginCallContext
     {
         lock (_sync)
         {
-            if (!_active)
-            {
-                throw new InvalidOperationException("Session completed.");
-            }
-
+            EnsureActive();
             return _callback!(operation, input, cancellationToken);
+        }
+    }
+
+    private void EnsureActive()
+    {
+        if (!_active)
+        {
+            throw new InvalidOperationException("Session completed.");
         }
     }
 

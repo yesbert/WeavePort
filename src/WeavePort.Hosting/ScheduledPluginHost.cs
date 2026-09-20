@@ -127,7 +127,7 @@ public sealed partial class ScheduledPluginHost : IAsyncDisposable
                 throw new InvalidDataException("Queued payload exceeds the configured byte limit.");
             }
 
-            var call = new ScheduledCall(plugin, operation, payload.Clone(), token, _clock.GetTimestamp());
+            var call = new ScheduledCall(plugin, operation, payload.Clone(), _clock.GetTimestamp(), token);
             _queue.Add(call);
             plugin.LastDemand = call.Enqueued;
             Wake();

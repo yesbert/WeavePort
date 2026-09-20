@@ -6,3 +6,6 @@ name = "weaveport-sdk"
 version = "0.2.0"
 description = "WeavePort author SDK with registered session cleanup"
 requires-python = ">=3.11"
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
