@@ -60,6 +60,15 @@ await using (var tls = new TlsFixture())
 await using (var incompatible = new TlsFixture())
 {
     await incompatible.StartAsync(incompatible: true);
+    foreach (string malformed in new[] { "batch-object", "batch-null", "batch-string", "batch-number", "batch-count", "batch-item" })
+    {
+        await using var client = incompatible.Client(malformed);
+        await Check.Fails<InvalidDataException>(async () =>
+        {
+            await foreach (var item in client.StreamAsync("numbers", Check.Json(1))) { }
+        }, "malformed gateway stream batch rejected: " + malformed);
+        Check.That(await client.GetTenantAsync() == "A", "client recovers after rejected stream batch: " + malformed);
+    }
     foreach (string variant in new[] { "test", "array", "null", "string-version", "null-version", "missing-tenant", "numeric-tenant", "blank-tenant" })
     {
         await using var client = incompatible.Client(variant);

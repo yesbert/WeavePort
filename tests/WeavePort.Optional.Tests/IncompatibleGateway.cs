@@ -18,6 +18,26 @@ internal sealed class IncompatibleGateway : WorkerGateway.WorkerGatewayBase
             _ => "{\"tenant\":\"A\",\"protocol\":2}"
         };
         while (await requests.MoveNext(context.CancellationToken))
-            await replies.WriteAsync(new Reply { Complete = true, Json = ByteString.CopyFromUtf8(json) }, context.CancellationToken);
+        {
+            string credential = context.RequestHeaders.GetValue("x-weaveport-binding") ?? "";
+            if (credential.StartsWith("batch-", StringComparison.Ordinal))
+            {
+                string batch = credential switch
+                {
+                    "batch-object" => "{}",
+                    "batch-null" => "null",
+                    "batch-string" => "\"wrong\"",
+                    "batch-number" => "7",
+                    "batch-count" => "[" + string.Join(",", Enumerable.Repeat("0", 17)) + "]",
+                    "batch-item" => "[\"" + new string('x', 128 * 1024) + "\"]",
+                    _ => "[]"
+                };
+                bool stream = requests.Current.Mode == Mode.Stream;
+                string value = stream ? batch : "{\"tenant\":\"A\",\"protocol\":1}";
+                await replies.WriteAsync(new Reply { Complete = !stream, Json = ByteString.CopyFromUtf8(value) }, context.CancellationToken);
+            }
+            else
+                await replies.WriteAsync(new Reply { Complete = true, Json = ByteString.CopyFromUtf8(json) }, context.CancellationToken);
+        }
     }
 }

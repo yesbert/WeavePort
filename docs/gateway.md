@@ -1,6 +1,6 @@
 # Gateway packages and HTTPS deployment
 
-The 0.5.0 source candidate adds `WeavePort.Sdk.Gateway` (server) and `WeavePort.Sdk.Gateway.Client` (remote client). The client package targets .NET 10 without requiring the ASP.NET Core shared framework. The server requires ASP.NET Core. Both preserve the `WeavePort.Sdk.Gateway` namespace. See the [runnable example](../examples/gateway/README.md), [client package](package-gateway-client.md) and [server package](package-gateway.md).
+The 0.5.0 release adds `WeavePort.Sdk.Gateway` (server) and `WeavePort.Sdk.Gateway.Client` (remote client). The client package targets .NET 10 without requiring the ASP.NET Core shared framework. The server requires ASP.NET Core. Both preserve the `WeavePort.Sdk.Gateway` namespace. See the [runnable example](../examples/gateway/README.md), [client package](package-gateway-client.md) and [server package](package-gateway.md).
 
 ## Register and call
 

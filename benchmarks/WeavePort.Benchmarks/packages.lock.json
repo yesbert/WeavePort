@@ -24,7 +24,7 @@
         "type": "Direct",
         "requested": "[0.5.0, )",
         "resolved": "0.5.0",
-        "contentHash": "59+6vmB1amY9Bmc6LescniZF0EzxfpFme53OjnFJq72qkQMmHmV4lcEQl0A5EsLx63qcBWaRO6ZuDCFS0UkDdQ==",
+        "contentHash": "Kg7J2oDcbWZQHrhLVlE5B+uGK8FDS0lBbg24e4J88BW06h/1s7oVQ32HM1KR2qmpTk+xmDvUK5S41QyZQqK2pg==",
         "dependencies": {
           "Microsoft.Extensions.Logging.Abstractions": "10.0.12",
           "WeavePort.Abstractions": "0.5.0"
@@ -34,7 +34,7 @@
         "type": "Direct",
         "requested": "[0.5.0, )",
         "resolved": "0.5.0",
-        "contentHash": "Nxsy9RFWt+RLiQsUTuvRS482HY6Uxi8/YR+U0mnDnXcRT+WnzQmdpBMcVokeSsueFJy6NHM2Ksw23noZA3Zq5g==",
+        "contentHash": "+QSKAnG9FrfnZoql3OvXUpJ+va5U4UUUDJ3a00ziUgtCL2nOu0EaqAWKY+NHsDLqFaajA8I36k/O0oFvkwOadw==",
         "dependencies": {
           "Grpc.AspNetCore.Server": "2.83.0",
           "WeavePort.Sdk.Gateway.Client": "0.5.0"
@@ -227,12 +227,12 @@
       "WeavePort.Abstractions": {
         "type": "Transitive",
         "resolved": "0.5.0",
-        "contentHash": "vZgBrQgqXMa7ZmzhiCXBB9LOVVy+VwFjoYHPX/d5krAD29NyH0l8hB0y2uxBWcW/W7L2TqLblIZK4dqu8uYXqA=="
+        "contentHash": "r+XHDJNkM5CvtMVla/Ofvw/r3LMouIOJg5t5jIT/Svflpld85/+FUujDZCnHCHIZFJ4192rPkljlNVczlkPD7g=="
       },
       "WeavePort.Sdk.Client": {
         "type": "Transitive",
         "resolved": "0.5.0",
-        "contentHash": "V7M1WC5IHNshIHbrX33bOUpBixUGkvSRtMJzUGrCBN9qbJn7LgPHdXv8WDY9TGB2jcCeeDB/qk1MsQ59EOPC8A==",
+        "contentHash": "F/jV5SO31bMMJYjxkAvsEOADFxw51h5jHzsmzxPto/p1Ow4JWwUYdYd1YCdcvDFMk66QKblbQbr6rBvNDfYwnA==",
         "dependencies": {
           "WeavePort.Abstractions": "0.5.0"
         }
@@ -240,7 +240,7 @@
       "WeavePort.Sdk.Gateway.Client": {
         "type": "Transitive",
         "resolved": "0.5.0",
-        "contentHash": "XoVufubrRbFFPUt0nkNcNEnPD/pA+gqkSdrvBFW4JWNxRmi/yuVHi1zXInbDQf+/iEPiTICRJZAnD3qESCPS1w==",
+        "contentHash": "rZFSCq7JpDOQnX1DAYmD04gqfcwG7YcOtq6IO0TvE9YeBrLgW7h4Fil1NpjttubemspVXG+0HatQ3DpU7O2tMQ==",
         "dependencies": {
           "Google.Protobuf": "3.36.1",
           "Grpc.Net.Client": "2.83.0",
