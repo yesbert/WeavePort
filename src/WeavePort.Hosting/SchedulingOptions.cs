@@ -46,28 +46,28 @@ public sealed record SchedulingOptions
     /// <summary>Demand expires after this interval; unused profiles receive no reserve.</summary>
     public TimeSpan DemandWindow { get; init; } = TimeSpan.FromSeconds(30);
 
-    internal void Validate()
+    internal static void Validate(SchedulingOptions options)
     {
-        if (MaximumWorkers < 1 || MemoryBudgetMiB < 64 || MaximumConcurrentStarts < 1 || MaximumHeavyCalls < 0 || MaximumHeavyCalls >= MaximumWorkers || MaximumHeavyCallsPerTenant < 1 || MaximumHeavyPluginsPerTenant < 1 || MaximumQueuedCalls < 1 || MaximumQueuedCallsPerTenant < 1 || MaximumRegistrations < 1 || MaximumPayloadBytes < 1 || MaximumPristineWorkers < 0 || MaximumPristineWorkers > MaximumWorkers)
+        if (options.MaximumWorkers < 1 || options.MemoryBudgetMiB < 64 || options.MaximumConcurrentStarts < 1 || options.MaximumHeavyCalls < 0 || options.MaximumHeavyCalls >= options.MaximumWorkers || options.MaximumHeavyCallsPerTenant < 1 || options.MaximumHeavyPluginsPerTenant < 1 || options.MaximumQueuedCalls < 1 || options.MaximumQueuedCallsPerTenant < 1 || options.MaximumRegistrations < 1 || options.MaximumPayloadBytes < 1 || options.MaximumPristineWorkers < 0 || options.MaximumPristineWorkers > options.MaximumWorkers)
         {
-            throw new ArgumentOutOfRangeException();
+            throw new ArgumentOutOfRangeException(nameof(options), "Scheduling limits must fit the configured budgets.");
         }
 
         foreach (TimeSpan duration in new[]
         {
-            QueueTimeout,
-            NormalTimeout,
-            HeavyTimeout,
-            IdleTimeout,
-            ReusableIdleTimeout,
-            DemandWindow
+            options.QueueTimeout,
+            options.NormalTimeout,
+            options.HeavyTimeout,
+            options.IdleTimeout,
+            options.ReusableIdleTimeout,
+            options.DemandWindow
         }
 
         )
         {
             if (duration <= TimeSpan.Zero || duration.TotalMilliseconds > uint.MaxValue - 1)
             {
-                throw new ArgumentOutOfRangeException();
+                throw new ArgumentOutOfRangeException(nameof(options), "Scheduling deadlines must be positive and fit the supported timer range.");
             }
         }
     }

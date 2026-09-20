@@ -32,7 +32,7 @@ public sealed partial class ScheduledPluginHost : IAsyncDisposable
     public ScheduledPluginHost(SchedulingOptions? options = null, TimeProvider? timeProvider = null)
     {
         _options = options ?? new();
-        _options.Validate();
+        SchedulingOptions.Validate(_options);
         _clock = timeProvider ?? TimeProvider.System;
         // Every supported profile reserves at least 64 MiB. This derived ceiling cannot bind before memory does.
         _workerLimit = _options.MaximumWorkers ?? (int)Math.Min(int.MaxValue, _options.MemoryBudgetMiB / 64);
