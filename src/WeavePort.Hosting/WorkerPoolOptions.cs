@@ -8,7 +8,14 @@ namespace WeavePort.Hosting;
 /// <param name = "MaintenanceInterval">Interval for replenishment, expiry and opted-in idle release.</param>
 /// <param name = "MaximumWorkersPerTenant">Maximum assigned workers for any one tenant, including quarantine.</param>
 /// <param name = "MemoryBudgetPerTenantMiB">Maximum summed assigned worker memory reservations per tenant.</param>
-public sealed record WorkerPoolOptions(int MaximumWorkers = 64, long MemoryBudgetMiB = 16384, int MaximumPristineWorkers = 4, int MaximumConcurrentStarts = 8, TimeSpan? PristineLifetime = null, TimeSpan? MaintenanceInterval = null, int MaximumWorkersPerTenant = 8, long MemoryBudgetPerTenantMiB = 2048);
+public sealed record WorkerPoolOptions(int MaximumWorkers = 64, long MemoryBudgetMiB = 16384, int MaximumPristineWorkers = 4, int MaximumConcurrentStarts = 8, TimeSpan? PristineLifetime = null, TimeSpan? MaintenanceInterval = null, int MaximumWorkersPerTenant = 8, long MemoryBudgetPerTenantMiB = 2048)
+{
+    /// <summary>Wait for launch slots and pending pristine capacity within the caller deadline; default direct-host admission remains fail-fast.</summary>
+    public bool WaitForStartCapacity { get; init; }
+    /// <summary>Maximum idle retention of successfully cleaned approved workers, independent of pristine reserve targets.</summary>
+    public TimeSpan ReusableIdleTimeout { get; init; } = TimeSpan.FromSeconds(30);
+}
+
 /// <summary>Point-in-time coordinator accounting. Reserved memory is not measured residency.</summary>
 /// <param name = "Workers">All reserved execution environments.</param>
 /// <param name = "Pristine">Ready customer-unassigned workers.</param>
@@ -20,6 +27,16 @@ public sealed record WorkerPoolOptions(int MaximumWorkers = 64, long MemoryBudge
 /// <param name = "MaintenanceFailure">Last background maintenance failure type, if any.</param>
 public sealed record WorkerPoolSnapshot(int Workers, int Pristine, int Starting, int Quarantined, long ReservedMemoryMiB, int Bindings, int Tenants, string? MaintenanceFailure)
 {
+    /// <summary>Cleaned approved workers currently available for compatible sessions.</summary>
+    public int ReusableWorkers { get; init; }
+    /// <summary>Assignments from the cleaned approved pool.</summary>
+    public long ReuseHits { get; init; }
+    /// <summary>Successful returns after cleanup acknowledgement.</summary>
+    public long SessionReturns { get; init; }
+    /// <summary>Explicit SDK cleanup failures or invalid cleanup acknowledgements.</summary>
+    public long SessionCleanupFailures { get; init; }
+    /// <summary>Successfully started execution environments.</summary>
+    public long WorkersStarted { get; init; }
     /// <summary>Age in seconds since first quarantine entry for the oldest pending removal, including retries; zero when none remain.</summary>
     public double OldestQuarantineSeconds { get; init; }
 }

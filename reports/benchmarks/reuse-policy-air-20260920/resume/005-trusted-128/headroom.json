@@ -1,0 +1,7 @@
+{
+  "dockerMiB": 23994.02734375,
+  "backgroundRawMiB": 12305.5859375,
+  "additionalReserveMiB": 2048,
+  "availableForPoolMiB": 9640.44140625,
+  "requestedPoolReservationMiB": 8192
+}

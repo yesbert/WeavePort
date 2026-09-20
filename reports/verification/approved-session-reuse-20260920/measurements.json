@@ -1,0 +1,900 @@
+{
+  "date": "2026-09-20",
+  "developmentCandidate": true,
+  "published": false,
+  "tests": {
+    "sourceReuse": 976,
+    "packedReuse": 976,
+    "dockerReusePerLanguage": 324,
+    "languages": [
+      "csharp",
+      "python",
+      "typescript"
+    ],
+    "packedSdkRegression": 382,
+    "scheduler": 88,
+    "api": 6,
+    "negativeReviewGates": 2,
+    "exampleCalls": 9
+  },
+  "runs": [
+    {
+      "name": "density-native",
+      "passed": true,
+      "adapter": "native",
+      "customers": 30000,
+      "callsPerCustomerPerMinute": 2,
+      "seconds": 59.9994216,
+      "registrationSeconds": 0.2887172,
+      "warmupCustomers": 0,
+      "warmupSeconds": 0,
+      "callsPerSecond": 1000.0096400929306,
+      "totals": {
+        "Success": 60000,
+        "Failed": 0,
+        "Dropped": 0,
+        "Cold": 8,
+        "Statuses": {},
+        "latency": {
+          "count": 60000,
+          "mean": 2.641371818333345,
+          "p50": 0.9588439007423877,
+          "p95": 12.743980360489097,
+          "p99": 33.12508311487986,
+          "max": 219.0637
+        },
+        "coldLatency": {
+          "count": 8,
+          "mean": 192.8731,
+          "p50": 185.24847481590245,
+          "p95": 219.39058962955096,
+          "p99": 219.39058962955096,
+          "max": 219.0637
+        },
+        "residentLatency": {
+          "count": 59992,
+          "mean": 2.6160042055607553,
+          "p50": 0.9588439007423877,
+          "p95": 12.617802337117919,
+          "p99": 33.12508311487986,
+          "max": 181.5168
+        },
+        "queue": {
+          "count": 60000,
+          "mean": 1.025275268333345,
+          "p50": 0.02775484737056825,
+          "p95": 1.1699717775507186,
+          "p99": 24.09200893690095,
+          "max": 170.3788
+        },
+        "execution": {
+          "count": 60000,
+          "mean": 0.7131231966666661,
+          "p50": 0.22207821802653266,
+          "p95": 0.7627045074886527,
+          "p99": 22.695762226709302,
+          "max": 203.9673
+        },
+        "arrivalLag": {
+          "count": 60000,
+          "mean": 0.8815442983333337,
+          "p50": 0.6188814471422334,
+          "p95": 1.2296520965391669,
+          "p99": 10.97702079073046,
+          "max": 42.1452
+        }
+      },
+      "resources": {
+        "peakHostMiB": 207.28125,
+        "peakChildRssMiB": 194.796875,
+        "peakCombinedRssMiB": 378.671875,
+        "samples": 108,
+        "peakWorkers": 8,
+        "scope": "macOS host/load-generator and owned child process RSS; sampled shared pages may be counted twice"
+      },
+      "before": {
+        "Registrations": 30000,
+        "Queued": 0,
+        "Active": 0,
+        "HeavyActive": 0,
+        "Completed": 0,
+        "Rejected": 0,
+        "Evictions": 0,
+        "ColdCalls": 0,
+        "Failure": null,
+        "Runtime": {
+          "Workers": 0,
+          "Pristine": 0,
+          "Starting": 0,
+          "Quarantined": 0,
+          "ReservedMemoryMiB": 0,
+          "Bindings": 30000,
+          "Tenants": 30000,
+          "MaintenanceFailure": null,
+          "ReusableWorkers": 0,
+          "ReuseHits": 0,
+          "SessionReturns": 0,
+          "SessionCleanupFailures": 0,
+          "WorkersStarted": 0,
+          "OldestQuarantineSeconds": 0
+        }
+      },
+      "after": {
+        "Registrations": 30000,
+        "Queued": 0,
+        "Active": 0,
+        "HeavyActive": 0,
+        "Completed": 60000,
+        "Rejected": 0,
+        "Evictions": 0,
+        "ColdCalls": 8,
+        "Failure": null,
+        "Runtime": {
+          "Workers": 8,
+          "Pristine": 0,
+          "Starting": 0,
+          "Quarantined": 0,
+          "ReservedMemoryMiB": 512,
+          "Bindings": 30000,
+          "Tenants": 30000,
+          "MaintenanceFailure": null,
+          "ReusableWorkers": 8,
+          "ReuseHits": 59992,
+          "SessionReturns": 60000,
+          "SessionCleanupFailures": 0,
+          "WorkersStarted": 8,
+          "OldestQuarantineSeconds": 0
+        }
+      },
+      "cleanup": {
+        "Workers": 0,
+        "Pristine": 0,
+        "Starting": 0,
+        "Quarantined": 0,
+        "ReservedMemoryMiB": 0,
+        "Bindings": 0,
+        "Tenants": 0,
+        "MaintenanceFailure": null,
+        "ReusableWorkers": 0,
+        "ReuseHits": 59992,
+        "SessionReturns": 60000,
+        "SessionCleanupFailures": 0,
+        "WorkersStarted": 8,
+        "OldestQuarantineSeconds": 0
+      },
+      "identity": {
+        "os": "macOS 27.0.0",
+        "architecture": "Arm64",
+        "runtime": "10.0.12",
+        "cpuCount": 10,
+        "serverGc": false,
+        "hostingSha256": "34C8CEC5AAE1415A5ADF3388B80E019EEB8D4B398136D437DC4E5E09E98C7F5B",
+        "harnessSha256": "DC0EE8691116237D3BBB18F581108D2D8CF481F23771867D64E605A46186F2BA",
+        "scope": "Source-built candidate, native trusted processes or local Docker stdio. Population and positive Rate use fixed intended arrivals; no M2 Ultra comparison."
+      },
+      "eachCustomerSuccessMin": 2,
+      "eachCustomerSuccessMax": 2,
+      "customersAboveP99Target": 0,
+      "peakDockerWorkingSetMiB": null,
+      "peakDockerRawCgroupMiB": null,
+      "baselineSwapMiB": 11212.38,
+      "peakSwapDeltaMiB": 0.0,
+      "ownedInstances": [
+        "weaveport-0b25a28a555042278fee9b0aab7d6ab3-p53265",
+        "weaveport-18aeea3fee9a4fa8adf39d340127c7f0-p53264",
+        "weaveport-22a0b61045f44e1f9fc4ff4353fec981-p53276",
+        "weaveport-3090845c394149cba21ed6a5234f12b8-p53263",
+        "weaveport-4a3175aca34542b390606928cc78f5bd-p53271",
+        "weaveport-588b3881a90e4815bac3c970aa57d063-p53277",
+        "weaveport-7615df36636a47e9bde584c043883859-p53262",
+        "weaveport-f6127667548a4307b8640624873122d2-p53278"
+      ],
+      "rawEvidence": [
+        {
+          "path": "artifacts/approved-reuse-integration/density-native/result.json",
+          "sha256": "cd2fd26c4475e96a33fa19e432001b1ced75064b7b659d0c01d9de41ccf791d5"
+        },
+        {
+          "path": "artifacts/approved-reuse-integration/density-native/resources.jsonl",
+          "sha256": "5ed1f50b78c591f23daa2f9b2fb3d07379a86dff5ed1b074bfef03844be0cf88"
+        },
+        {
+          "path": "artifacts/approved-reuse-integration/density-native/supervisor.json",
+          "sha256": "0814861d07cda6fe201c805e1f735d3f142f825f196afca3f8969c9fb4a0c43c"
+        }
+      ],
+      "configuration": {
+        "Root": "<repository>",
+        "Output": "<repository>/artifacts/approved-reuse-integration/density-native",
+        "Adapter": "native",
+        "Language": "python",
+        "DockerImage": "weaveport-sdk-reuse-python:local",
+        "Executable": "<repository>/artifacts/approved-reuse-integration/python/bin/python",
+        "Mode": "scheduled",
+        "ApprovedSdk": true,
+        "Arguments": [
+          "<repository>/tests/WeavePort.ReuseTests/worker.py",
+          "-"
+        ],
+        "Clients": 30000,
+        "RegisteredClients": 0,
+        "Workers": null,
+        "MemoryBudgetMiB": 512,
+        "WorkerMemoryMiB": 64,
+        "ConcurrentStarts": 4,
+        "Seconds": 60,
+        "Rate": 0,
+        "Traffic": "population",
+        "CallsPerCustomerPerMinute": 2,
+        "Seed": 1729,
+        "PayloadBytes": 64,
+        "Pristine": 0,
+        "P99Ms": 1000,
+        "QueueMs": 5000,
+        "MaxHostRssMiB": 768,
+        "MaxOwnedRssMiB": 1024,
+        "MaxPending": 4096,
+        "IdleMs": 120000
+      }
+    },
+    {
+      "name": "density-docker",
+      "passed": false,
+      "adapter": "docker",
+      "customers": 6000,
+      "callsPerCustomerPerMinute": 2,
+      "seconds": 60.0009289,
+      "registrationSeconds": 293.1135663,
+      "warmupCustomers": 0,
+      "warmupSeconds": 0,
+      "callsPerSecond": 199.99690371460233,
+      "totals": {
+        "Success": 12000,
+        "Failed": 0,
+        "Dropped": 0,
+        "Cold": 8,
+        "Statuses": {},
+        "latency": {
+          "count": 12000,
+          "mean": 14.264980124999957,
+          "p50": 2.1682060913899117,
+          "p95": 23.38346651794082,
+          "p99": 526.6218667555286,
+          "max": 1941.647
+        },
+        "coldLatency": {
+          "count": 8,
+          "mean": 1377.1897625,
+          "p50": 1005.5141443228243,
+          "p95": 1958.4849002674696,
+          "p99": 1958.4849002674696,
+          "max": 1941.647
+        },
+        "residentLatency": {
+          "count": 11992,
+          "mean": 13.355757454969936,
+          "p50": 2.1682060913899117,
+          "p95": 23.151947047466162,
+          "p99": 486.3264585410464,
+          "max": 960.4653
+        },
+        "queue": {
+          "count": 12000,
+          "mean": 9.517227808333327,
+          "p50": 0.035949641327685036,
+          "p95": 0.17665029497788035,
+          "p99": 476.7439060298465,
+          "max": 867.5305
+        },
+        "execution": {
+          "count": 12000,
+          "mean": 4.0250542166666525,
+          "p50": 1.4418637890874815,
+          "p95": 13.937903635645661,
+          "p99": 37.3261727790485,
+          "max": 1930.0068
+        },
+        "arrivalLag": {
+          "count": 12000,
+          "mean": 0.6983833166666671,
+          "p50": 0.6127539080616171,
+          "p95": 1.1816714953262257,
+          "p99": 4.438533198175604,
+          "max": 18.3527
+        }
+      },
+      "resources": {
+        "peakHostMiB": 96.296875,
+        "peakChildRssMiB": 238.703125,
+        "peakCombinedRssMiB": 334.984375,
+        "samples": 101,
+        "peakWorkers": 8,
+        "scope": "macOS host and owned Docker CLI RSS only; container memory recorded separately by supervisor"
+      },
+      "before": {
+        "Registrations": 6000,
+        "Queued": 0,
+        "Active": 0,
+        "HeavyActive": 0,
+        "Completed": 0,
+        "Rejected": 0,
+        "Evictions": 0,
+        "ColdCalls": 0,
+        "Failure": null,
+        "Runtime": {
+          "Workers": 0,
+          "Pristine": 0,
+          "Starting": 0,
+          "Quarantined": 0,
+          "ReservedMemoryMiB": 0,
+          "Bindings": 6000,
+          "Tenants": 6000,
+          "MaintenanceFailure": null,
+          "ReusableWorkers": 0,
+          "ReuseHits": 0,
+          "SessionReturns": 0,
+          "SessionCleanupFailures": 0,
+          "WorkersStarted": 0,
+          "OldestQuarantineSeconds": 0
+        }
+      },
+      "after": {
+        "Registrations": 6000,
+        "Queued": 0,
+        "Active": 0,
+        "HeavyActive": 0,
+        "Completed": 12000,
+        "Rejected": 0,
+        "Evictions": 0,
+        "ColdCalls": 8,
+        "Failure": null,
+        "Runtime": {
+          "Workers": 8,
+          "Pristine": 0,
+          "Starting": 0,
+          "Quarantined": 0,
+          "ReservedMemoryMiB": 512,
+          "Bindings": 6000,
+          "Tenants": 6000,
+          "MaintenanceFailure": null,
+          "ReusableWorkers": 8,
+          "ReuseHits": 11992,
+          "SessionReturns": 12000,
+          "SessionCleanupFailures": 0,
+          "WorkersStarted": 8,
+          "OldestQuarantineSeconds": 0
+        }
+      },
+      "cleanup": {
+        "Workers": 0,
+        "Pristine": 0,
+        "Starting": 0,
+        "Quarantined": 0,
+        "ReservedMemoryMiB": 0,
+        "Bindings": 0,
+        "Tenants": 0,
+        "MaintenanceFailure": null,
+        "ReusableWorkers": 0,
+        "ReuseHits": 11992,
+        "SessionReturns": 12000,
+        "SessionCleanupFailures": 0,
+        "WorkersStarted": 8,
+        "OldestQuarantineSeconds": 0
+      },
+      "identity": {
+        "os": "macOS 27.0.0",
+        "architecture": "Arm64",
+        "runtime": "10.0.12",
+        "cpuCount": 10,
+        "serverGc": false,
+        "hostingSha256": "34C8CEC5AAE1415A5ADF3388B80E019EEB8D4B398136D437DC4E5E09E98C7F5B",
+        "harnessSha256": "DC0EE8691116237D3BBB18F581108D2D8CF481F23771867D64E605A46186F2BA",
+        "scope": "Source-built candidate, native trusted processes or local Docker stdio. Population and positive Rate use fixed intended arrivals; no M2 Ultra comparison."
+      },
+      "eachCustomerSuccessMin": 2,
+      "eachCustomerSuccessMax": 2,
+      "customersAboveP99Target": 5,
+      "peakDockerWorkingSetMiB": 129.16796875,
+      "peakDockerRawCgroupMiB": 129.16796875,
+      "baselineSwapMiB": 11212.38,
+      "peakSwapDeltaMiB": 0.0,
+      "ownedInstances": [
+        "weaveport-4d1d0d9773a14be893d787d97284b9c4",
+        "weaveport-52d34c96648e42c0a6d48b971da6b104",
+        "weaveport-60e4c86637fb455a9214d4b7d78be16f",
+        "weaveport-6ab95352c0fa46b8b09640c756f5a470",
+        "weaveport-be366642375749c0abfddb9ec2c11a21",
+        "weaveport-c0e222d004aa442ba73ebb9de319a2de",
+        "weaveport-fb5097c0d068407b95bb52993a381634",
+        "weaveport-fc2436d496d043e5bc0e5eb4064d7051"
+      ],
+      "rawEvidence": [
+        {
+          "path": "artifacts/approved-reuse-integration/density-docker/result.json",
+          "sha256": "7b14e265360fd4f7486b41d924c6de449fc62100252c4f69054f4ad9059d949c"
+        },
+        {
+          "path": "artifacts/approved-reuse-integration/density-docker/resources.jsonl",
+          "sha256": "e14c226bb0c6cb06816e9baeeaba4612d6e834b81a2ed223ad903eb2bbaee2fc"
+        },
+        {
+          "path": "artifacts/approved-reuse-integration/density-docker/supervisor.json",
+          "sha256": "df1a11d4db1fb51f593285d775b6b8f8f75ea849ae1e53a4801ffb0fb47b468e"
+        }
+      ],
+      "configuration": {
+        "Root": "<repository>",
+        "Output": "<repository>/artifacts/approved-reuse-integration/density-docker",
+        "Adapter": "docker",
+        "Language": "python",
+        "DockerImage": "weaveport-sdk-reuse-python:local",
+        "Executable": "<repository>/artifacts/approved-reuse-integration/python/bin/python",
+        "Mode": "scheduled",
+        "ApprovedSdk": true,
+        "Arguments": [
+          "<repository>/tests/WeavePort.ReuseTests/worker.py",
+          "-"
+        ],
+        "Clients": 6000,
+        "RegisteredClients": 0,
+        "Workers": null,
+        "MemoryBudgetMiB": 512,
+        "WorkerMemoryMiB": 64,
+        "ConcurrentStarts": 4,
+        "Seconds": 60,
+        "Rate": 0,
+        "Traffic": "population",
+        "CallsPerCustomerPerMinute": 2,
+        "Seed": 1729,
+        "PayloadBytes": 64,
+        "Pristine": 0,
+        "P99Ms": 1000,
+        "QueueMs": 5000,
+        "MaxHostRssMiB": 768,
+        "MaxOwnedRssMiB": 1024,
+        "MaxPending": 4096,
+        "IdleMs": 120000
+      }
+    },
+    {
+      "name": "density-final-native",
+      "passed": true,
+      "adapter": "native",
+      "customers": 30000,
+      "callsPerCustomerPerMinute": 2,
+      "seconds": 59.999742,
+      "registrationSeconds": 0.2896447,
+      "warmupCustomers": 8,
+      "warmupSeconds": 0.2251436,
+      "callsPerSecond": 1000.0043000184901,
+      "totals": {
+        "Success": 60000,
+        "Failed": 0,
+        "Dropped": 0,
+        "Cold": 0,
+        "Statuses": {},
+        "latency": {
+          "count": 60000,
+          "mean": 2.3612035899999864,
+          "p50": 0.9684323397498116,
+          "p95": 13.261437066486202,
+          "p99": 31.517379982929864,
+          "max": 58.0834
+        },
+        "coldLatency": {
+          "count": 0,
+          "mean": 0,
+          "p50": 0,
+          "p95": 0,
+          "p99": 0,
+          "max": 0
+        },
+        "residentLatency": {
+          "count": 60000,
+          "mean": 2.3612035899999864,
+          "p50": 0.9684323397498116,
+          "p95": 13.261437066486202,
+          "p99": 31.517379982929864,
+          "max": 58.0834
+        },
+        "queue": {
+          "count": 60000,
+          "mean": 0.7136377083333333,
+          "p50": 0.02917062352545879,
+          "p95": 0.9493503967746413,
+          "p99": 22.028283216952428,
+          "max": 44.8234
+        },
+        "execution": {
+          "count": 60000,
+          "mean": 0.736322970000007,
+          "p50": 0.22207821802653266,
+          "p95": 0.7703315525635391,
+          "p99": 25.82989448452953,
+          "max": 56.0289
+        },
+        "arrivalLag": {
+          "count": 60000,
+          "mean": 0.8895323600000022,
+          "p50": 0.6188814471422334,
+          "p95": 1.2054230923822828,
+          "p99": 11.886540571061328,
+          "max": 43.1311
+        }
+      },
+      "resources": {
+        "peakHostMiB": 220.46875,
+        "peakChildRssMiB": 194.671875,
+        "peakCombinedRssMiB": 415.140625,
+        "samples": 107,
+        "peakWorkers": 8,
+        "scope": "macOS host/load-generator and owned child process RSS; sampled shared pages may be counted twice"
+      },
+      "before": {
+        "Registrations": 30000,
+        "Queued": 0,
+        "Active": 0,
+        "HeavyActive": 0,
+        "Completed": 8,
+        "Rejected": 0,
+        "Evictions": 0,
+        "ColdCalls": 8,
+        "Failure": null,
+        "Runtime": {
+          "Workers": 8,
+          "Pristine": 0,
+          "Starting": 0,
+          "Quarantined": 0,
+          "ReservedMemoryMiB": 512,
+          "Bindings": 30000,
+          "Tenants": 30000,
+          "MaintenanceFailure": null,
+          "ReusableWorkers": 8,
+          "ReuseHits": 0,
+          "SessionReturns": 8,
+          "SessionCleanupFailures": 0,
+          "WorkersStarted": 8,
+          "OldestQuarantineSeconds": 0
+        }
+      },
+      "after": {
+        "Registrations": 30000,
+        "Queued": 0,
+        "Active": 0,
+        "HeavyActive": 0,
+        "Completed": 60008,
+        "Rejected": 0,
+        "Evictions": 0,
+        "ColdCalls": 8,
+        "Failure": null,
+        "Runtime": {
+          "Workers": 8,
+          "Pristine": 0,
+          "Starting": 0,
+          "Quarantined": 0,
+          "ReservedMemoryMiB": 512,
+          "Bindings": 30000,
+          "Tenants": 30000,
+          "MaintenanceFailure": null,
+          "ReusableWorkers": 8,
+          "ReuseHits": 60000,
+          "SessionReturns": 60008,
+          "SessionCleanupFailures": 0,
+          "WorkersStarted": 8,
+          "OldestQuarantineSeconds": 0
+        }
+      },
+      "cleanup": {
+        "Workers": 0,
+        "Pristine": 0,
+        "Starting": 0,
+        "Quarantined": 0,
+        "ReservedMemoryMiB": 0,
+        "Bindings": 0,
+        "Tenants": 0,
+        "MaintenanceFailure": null,
+        "ReusableWorkers": 0,
+        "ReuseHits": 60000,
+        "SessionReturns": 60008,
+        "SessionCleanupFailures": 0,
+        "WorkersStarted": 8,
+        "OldestQuarantineSeconds": 0
+      },
+      "identity": {
+        "os": "macOS 27.0.0",
+        "architecture": "Arm64",
+        "runtime": "10.0.12",
+        "cpuCount": 10,
+        "serverGc": false,
+        "hostingSha256": "21D2BF8C3BDF9C5B2E7CE96022FCF7B1CB8062CAA8E6D5F54007885A03914948",
+        "harnessSha256": "9B2C6874EAE23117AE5CCDF214032DA044FED9FCF23B76C6A0E474281E5F78DB",
+        "scope": "Source-built candidate, native trusted processes or local Docker stdio. Population and positive Rate use fixed intended arrivals; no M2 Ultra comparison."
+      },
+      "eachCustomerSuccessMin": 2,
+      "eachCustomerSuccessMax": 2,
+      "customersAboveP99Target": 0,
+      "peakDockerWorkingSetMiB": null,
+      "peakDockerRawCgroupMiB": null,
+      "baselineSwapMiB": 11180.38,
+      "peakSwapDeltaMiB": 0.0,
+      "ownedInstances": [
+        "weaveport-0709d19c9a494a01bbbe61df50dd5349-p81137",
+        "weaveport-1ab9c5dc237045689cd7da1d096ed3f1-p81141",
+        "weaveport-4f6531c8c4234c25863ccc6cd2901149-p81139",
+        "weaveport-69b14ffc6ec1483992a961ad8d9593cc-p81136",
+        "weaveport-808215c1622a4907a0cf4bfafa5350fc-p81146",
+        "weaveport-b0c5c5c41fb64061b29237aab2736f62-p81140",
+        "weaveport-d4a3f89ffa144286a334c9b5692d8717-p81138",
+        "weaveport-e63e8df7eac647508009a4bfaf46688b-p81142"
+      ],
+      "rawEvidence": [
+        {
+          "path": "artifacts/approved-reuse-integration/density-final-native/result.json",
+          "sha256": "19c80ef779cb6fa859d5e42e9bc0539e9bf2914b554794fb3eb8779b15cb8999"
+        },
+        {
+          "path": "artifacts/approved-reuse-integration/density-final-native/resources.jsonl",
+          "sha256": "e49f8103a50719486be3c3e38e320c3f1a9ab0fa49a614704db424d9e293550b"
+        },
+        {
+          "path": "artifacts/approved-reuse-integration/density-final-native/supervisor.json",
+          "sha256": "c7729e196a6386130a94c84b42827dc04dcce076c88a37f5af23e97b50b0262d"
+        }
+      ],
+      "configuration": {
+        "Root": "<repository>",
+        "Output": "<repository>/artifacts/approved-reuse-integration/density-final-native",
+        "Adapter": "native",
+        "Language": "python",
+        "DockerImage": "weaveport-sdk-reuse-python:local",
+        "Executable": "<repository>/artifacts/approved-reuse-integration/python/bin/python",
+        "Mode": "scheduled",
+        "ApprovedSdk": true,
+        "Arguments": [
+          "<repository>/tests/WeavePort.ReuseTests/worker.py",
+          "-"
+        ],
+        "Clients": 30000,
+        "RegisteredClients": 0,
+        "Workers": null,
+        "MemoryBudgetMiB": 512,
+        "WorkerMemoryMiB": 64,
+        "ConcurrentStarts": 4,
+        "Seconds": 60,
+        "Rate": 0,
+        "Traffic": "population",
+        "CallsPerCustomerPerMinute": 2,
+        "Seed": 1729,
+        "PayloadBytes": 64,
+        "WarmupCustomers": 8,
+        "Pristine": 0,
+        "P99Ms": 1000,
+        "QueueMs": 5000,
+        "MaxHostRssMiB": 768,
+        "MaxOwnedRssMiB": 1024,
+        "MaxPending": 4096,
+        "IdleMs": 120000
+      }
+    },
+    {
+      "name": "density-final-docker",
+      "passed": true,
+      "adapter": "docker",
+      "customers": 1000,
+      "callsPerCustomerPerMinute": 2,
+      "seconds": 60.0003171,
+      "registrationSeconds": 30.2992517,
+      "warmupCustomers": 8,
+      "warmupSeconds": 0.9468451,
+      "callsPerSecond": 33.333157167597705,
+      "totals": {
+        "Success": 2000,
+        "Failed": 0,
+        "Dropped": 0,
+        "Cold": 2,
+        "Statuses": {},
+        "latency": {
+          "count": 2000,
+          "mean": 4.021787699999998,
+          "p50": 2.753046399395726,
+          "p95": 12.125460036539662,
+          "p99": 33.79089728548894,
+          "max": 247.3794
+        },
+        "coldLatency": {
+          "count": 2,
+          "mean": 233.7033,
+          "p50": 221.58449552584648,
+          "p95": 249.68695584768926,
+          "p99": 249.68695584768926,
+          "max": 247.3794
+        },
+        "residentLatency": {
+          "count": 1998,
+          "mean": 3.7918762762762745,
+          "p50": 2.7257885142531944,
+          "p95": 12.005405976771941,
+          "p99": 33.12508311487986,
+          "max": 41.5063
+        },
+        "queue": {
+          "count": 2000,
+          "mean": 0.07051810000000004,
+          "p50": 0.05405935838037751,
+          "p95": 0.12346529851905542,
+          "p99": 0.1680766943770639,
+          "max": 8.4815
+        },
+        "execution": {
+          "count": 2000,
+          "mean": 3.2942420999999924,
+          "p50": 2.0629736996174435,
+          "p95": 11.422731852687486,
+          "p99": 32.472388113792626,
+          "max": 245.2408
+        },
+        "arrivalLag": {
+          "count": 2000,
+          "mean": 0.6304543499999996,
+          "p50": 0.6376341738720902,
+          "p95": 1.1469187114505621,
+          "p99": 1.3994587883419325,
+          "max": 3.521
+        }
+      },
+      "resources": {
+        "peakHostMiB": 79.5,
+        "peakChildRssMiB": 210.109375,
+        "peakCombinedRssMiB": 289.03125,
+        "samples": 103,
+        "peakWorkers": 6,
+        "scope": "macOS host and owned Docker CLI RSS only; container memory recorded separately by supervisor"
+      },
+      "before": {
+        "Registrations": 1000,
+        "Queued": 0,
+        "Active": 0,
+        "HeavyActive": 0,
+        "Completed": 8,
+        "Rejected": 0,
+        "Evictions": 0,
+        "ColdCalls": 6,
+        "Failure": null,
+        "Runtime": {
+          "Workers": 6,
+          "Pristine": 0,
+          "Starting": 0,
+          "Quarantined": 0,
+          "ReservedMemoryMiB": 384,
+          "Bindings": 1000,
+          "Tenants": 1000,
+          "MaintenanceFailure": null,
+          "ReusableWorkers": 6,
+          "ReuseHits": 2,
+          "SessionReturns": 8,
+          "SessionCleanupFailures": 0,
+          "WorkersStarted": 6,
+          "OldestQuarantineSeconds": 0
+        }
+      },
+      "after": {
+        "Registrations": 1000,
+        "Queued": 0,
+        "Active": 0,
+        "HeavyActive": 0,
+        "Completed": 2008,
+        "Rejected": 0,
+        "Evictions": 0,
+        "ColdCalls": 8,
+        "Failure": null,
+        "Runtime": {
+          "Workers": 6,
+          "Pristine": 0,
+          "Starting": 0,
+          "Quarantined": 0,
+          "ReservedMemoryMiB": 384,
+          "Bindings": 1000,
+          "Tenants": 1000,
+          "MaintenanceFailure": null,
+          "ReusableWorkers": 6,
+          "ReuseHits": 2000,
+          "SessionReturns": 2008,
+          "SessionCleanupFailures": 0,
+          "WorkersStarted": 8,
+          "OldestQuarantineSeconds": 0
+        }
+      },
+      "cleanup": {
+        "Workers": 0,
+        "Pristine": 0,
+        "Starting": 0,
+        "Quarantined": 0,
+        "ReservedMemoryMiB": 0,
+        "Bindings": 0,
+        "Tenants": 0,
+        "MaintenanceFailure": null,
+        "ReusableWorkers": 0,
+        "ReuseHits": 2000,
+        "SessionReturns": 2008,
+        "SessionCleanupFailures": 0,
+        "WorkersStarted": 8,
+        "OldestQuarantineSeconds": 0
+      },
+      "identity": {
+        "os": "macOS 27.0.0",
+        "architecture": "Arm64",
+        "runtime": "10.0.12",
+        "cpuCount": 10,
+        "serverGc": false,
+        "hostingSha256": "21D2BF8C3BDF9C5B2E7CE96022FCF7B1CB8062CAA8E6D5F54007885A03914948",
+        "harnessSha256": "9B2C6874EAE23117AE5CCDF214032DA044FED9FCF23B76C6A0E474281E5F78DB",
+        "scope": "Source-built candidate, native trusted processes or local Docker stdio. Population and positive Rate use fixed intended arrivals; no M2 Ultra comparison."
+      },
+      "eachCustomerSuccessMin": 2,
+      "eachCustomerSuccessMax": 2,
+      "customersAboveP99Target": 0,
+      "peakDockerWorkingSetMiB": 93.41015625,
+      "peakDockerRawCgroupMiB": 93.41015625,
+      "baselineSwapMiB": 11180.38,
+      "peakSwapDeltaMiB": 0.0,
+      "ownedInstances": [
+        "weaveport-45b3d8e9672742289edd49f5a6f14e7b",
+        "weaveport-4d6e0cb3cc5345c1a9602869bfaeb05d",
+        "weaveport-590e3dee648f4cd2b88a5785f3210ac5",
+        "weaveport-6f0642a7c42d4e6e8e17ca06f53ccf51",
+        "weaveport-75e528b3f6b84fb8820219ec940a227d",
+        "weaveport-a5924e15cb8f49cc8a0a437a828dafd6",
+        "weaveport-ae42e3954fb5400880e6a48a9a0c4765",
+        "weaveport-d1db9bb173644073b27d7e120e0b5a7c"
+      ],
+      "rawEvidence": [
+        {
+          "path": "artifacts/approved-reuse-integration/density-final-docker/result.json",
+          "sha256": "138576a4fb26c5c898d134aca5c8c1a747f2301ab6e7ff5412baf0a277f9adf1"
+        },
+        {
+          "path": "artifacts/approved-reuse-integration/density-final-docker/resources.jsonl",
+          "sha256": "3cdf648f1322ba951348eea43f3ec9d22a7709b747930477c52a39cf473b3e69"
+        },
+        {
+          "path": "artifacts/approved-reuse-integration/density-final-docker/supervisor.json",
+          "sha256": "ed06494f66a44912639c4fdffe8df643186844a75834325a2bf4c7ae594f52d4"
+        }
+      ],
+      "configuration": {
+        "Root": "<repository>",
+        "Output": "<repository>/artifacts/approved-reuse-integration/density-final-docker",
+        "Adapter": "docker",
+        "Language": "python",
+        "DockerImage": "weaveport-sdk-reuse-python:local",
+        "Executable": "<repository>/artifacts/approved-reuse-integration/python/bin/python",
+        "Mode": "scheduled",
+        "ApprovedSdk": true,
+        "Arguments": [
+          "<repository>/tests/WeavePort.ReuseTests/worker.py",
+          "-"
+        ],
+        "Clients": 1000,
+        "RegisteredClients": 0,
+        "Workers": null,
+        "MemoryBudgetMiB": 512,
+        "WorkerMemoryMiB": 64,
+        "ConcurrentStarts": 4,
+        "Seconds": 60,
+        "Rate": 0,
+        "Traffic": "population",
+        "CallsPerCustomerPerMinute": 2,
+        "Seed": 1729,
+        "PayloadBytes": 64,
+        "WarmupCustomers": 8,
+        "Pristine": 0,
+        "P99Ms": 1000,
+        "QueueMs": 5000,
+        "MaxHostRssMiB": 768,
+        "MaxOwnedRssMiB": 1024,
+        "MaxPending": 4096,
+        "IdleMs": 120000
+      }
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+PASS 107 MCP protocol, authority and lifecycle assertions
+PASS manifest parsing, identity, compatibility and pinned file validation
+PASS lifetime source disposal
+PASS shutdown drains pending startup and rejects late admission
+PASS trusted Docker executable and CPU validation without daemon access
+PASS 6 quarantine age and reservation assertions
+PASS 8 concurrent-start admission assertions
+PASS 215 JSON size equivalence/boundary/concurrency assertions
+PASS 4 fragmented maximum frame/compaction/ownership assertions
+PASS 24 transport assertions: split/multiple/UTF8/ownership/limits/depth/EOF/cancellation/atomic output
+PASS 1 socket platform/path/connection assertions
+PASS 25 hostile envelope assertions
+PASS 6 native endpoint ownership assertions
+PASS 26 lifecycle and safe diagnostics assertions

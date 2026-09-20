@@ -2,7 +2,7 @@
 
 This executable consumer uses the packed Hosting library to discover and call an ordinary text-normalization tool. It checks both explicitly selected MCP revisions, host status, tool-level errors and the expected result. No AI model, account, network listener or Docker service is needed.
 
-`McpMethods.ListTools` and `McpMethods.CallTool` are public constants in Hosting 0.3.1.
+`McpMethods.ListTools` and `McpMethods.CallTool` are public constants in Hosting 0.4.0.
 
 From the repository root, with the SDK in `global.json` and Node installed:
 

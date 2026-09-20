@@ -1,0 +1,125 @@
+{
+  "config": {
+    "mode": "trusted",
+    "workers": 8,
+    "seconds": 15,
+    "cpus": "1",
+    "callsPerCustomer": 10
+  },
+  "image": "sha256:ec90b7cd1578af275ee435754d4f4c9848c14891de7410ed06da655e632d3d58",
+  "counts": {
+    "offered": 98063,
+    "completed": 98063,
+    "correct": 98063,
+    "failed": 0,
+    "dropped": 0,
+    "withinOneSecond": 98063,
+    "customersCompleted": 9806,
+    "faultsExpected": 0,
+    "faultsContained": 0
+  },
+  "elapsed": 15.00138862500171,
+  "preparedSeconds": 0.35963608299789485,
+  "customersPerSecond": 653.6728195719869,
+  "requestsPerSecond": 6536.928177206583,
+  "hostCpuCores": 0.49024081595640734,
+  "latency": {
+    "responseMs": {
+      "count": 98063,
+      "mean": 1.2085109887103325,
+      "max": 33.336374995997176,
+      "p50": 1.1609689553699987,
+      "p95": 1.7987096025387042,
+      "p99": 2.424388786780675
+    },
+    "turnoverMs": {
+      "count": 98063,
+      "mean": 1.2089670179664138,
+      "max": 33.33708399441093,
+      "p50": 1.1609689553699987,
+      "p95": 1.7987096025387042,
+      "p99": 2.424388786780675
+    },
+    "queueMs": {
+      "count": 98063,
+      "mean": 0.0006420484423604597,
+      "max": 0.04916699981549755,
+      "p50": 0.0010022281455185505,
+      "p95": 0.0010429226271614672,
+      "p99": 0.0013780042464422392
+    },
+    "executionMs": {
+      "count": 98063,
+      "mean": 0.07962664190066879,
+      "max": 2.158832998247817,
+      "p50": 0.05582151293537286,
+      "p95": 0.15556185119868435,
+      "p99": 0.28260870149516826
+    },
+    "cleanupMs": {
+      "count": 98063,
+      "mean": 0.09932149359641279,
+      "max": 3.2300839993695263,
+      "p50": 0.07375646080010204,
+      "p95": 0.1975222724567355,
+      "p99": 0.3313809282428505
+    },
+    "generatorLagMs": {
+      "count": 0
+    },
+    "pluginImportMs": {
+      "count": 98063,
+      "mean": 0.00363095737707383,
+      "max": 28.202291003253777,
+      "p50": 0.0010022281455185505,
+      "p95": 0.004117197230620218,
+      "p99": 0.009403200488684817
+    },
+    "childWorkMs": {
+      "count": 0
+    },
+    "childStartMs": {
+      "count": 0
+    },
+    "childResponseWaitMs": {
+      "count": 0
+    },
+    "childExitWaitMs": {
+      "count": 0
+    },
+    "processTurnoverMs": {
+      "count": 0
+    }
+  },
+  "byWorkload": {
+    "echo": {
+      "count": 98063,
+      "mean": 1.2085109887103325,
+      "max": 33.336374995997176,
+      "p50": 1.1609689553699987,
+      "p95": 1.7987096025387042,
+      "p99": 2.424388786780675
+    }
+  },
+  "memoryPeakMiB": 95.0546875,
+  "hostRssPeakMiB": 36.546875,
+  "helpersRssPeakMiB": 241.65625,
+  "memoryRawPeakMiB": 95.0546875,
+  "starts": 8,
+  "retirements": 8,
+  "failure": null,
+  "failedExamples": [],
+  "known": [
+    "wp-matrix-0ea348397ebc4f0bb3aa9831ca95043d",
+    "wp-matrix-1d89ecc6f06f4546a871a84c5b2e8b7b",
+    "wp-matrix-2acaadda6f704c11a5f8f3f86a765ad5",
+    "wp-matrix-2fe1b02b66ff43aaa98a60b7fa8b5afc",
+    "wp-matrix-39529ab1a40947f3ab80f474f63de4ad",
+    "wp-matrix-939b1c9b1ac04912b0b53c00e2bf2181",
+    "wp-matrix-c139ae3075eb44858b788be65673ef31",
+    "wp-matrix-e86b859788054b4284adc2b1fde8760a"
+  ],
+  "remaining": [],
+  "passed": true,
+  "meetsOneSecondSlo": true
+}

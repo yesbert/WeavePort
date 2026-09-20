@@ -1,0 +1,3 @@
+docker-python CustomerBound: passed
+docker-python ApprovedSessions: passed
+PASS 324 reuse assertions

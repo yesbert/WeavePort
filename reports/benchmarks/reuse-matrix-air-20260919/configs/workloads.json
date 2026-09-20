@@ -1,0 +1,389 @@
+[
+  {
+    "mode": "trusted",
+    "workers": 8,
+    "seconds": 15,
+    "cpus": "1",
+    "payload": 65536
+  },
+  {
+    "mode": "trusted",
+    "workers": 8,
+    "seconds": 15,
+    "cpus": "1",
+    "payload": 262144
+  },
+  {
+    "mode": "trusted",
+    "workers": 8,
+    "seconds": 15,
+    "cpus": "1",
+    "workload": "cpu",
+    "cpuMs": 2
+  },
+  {
+    "mode": "trusted",
+    "workers": 8,
+    "seconds": 15,
+    "cpus": "1",
+    "workload": "cpu",
+    "cpuMs": 10
+  },
+  {
+    "mode": "trusted",
+    "workers": 8,
+    "seconds": 15,
+    "cpus": "1",
+    "workload": "cpu",
+    "cpuMs": 50
+  },
+  {
+    "mode": "trusted",
+    "workers": 8,
+    "seconds": 15,
+    "cpus": "1",
+    "workload": "io",
+    "ioMs": 10
+  },
+  {
+    "mode": "trusted",
+    "workers": 8,
+    "seconds": 15,
+    "cpus": "1",
+    "workload": "io",
+    "ioMs": 100
+  },
+  {
+    "mode": "trusted",
+    "workers": 8,
+    "seconds": 15,
+    "cpus": "1",
+    "workload": "io",
+    "ioMs": 500
+  },
+  {
+    "mode": "trusted",
+    "workers": 8,
+    "seconds": 15,
+    "cpus": "1",
+    "workload": "memory",
+    "memoryMiB": 8
+  },
+  {
+    "mode": "trusted",
+    "workers": 8,
+    "seconds": 15,
+    "cpus": "1",
+    "workload": "memory",
+    "memoryMiB": 32
+  },
+  {
+    "mode": "trusted",
+    "workers": 8,
+    "seconds": 15,
+    "cpus": "1",
+    "workload": "memory",
+    "memoryMiB": 64
+  },
+  {
+    "mode": "trusted",
+    "workers": 8,
+    "seconds": 20,
+    "cpus": "1",
+    "workload": "blend",
+    "ioMs": 500,
+    "cpuMs": 10
+  },
+  {
+    "mode": "trusted",
+    "workers": 8,
+    "seconds": 15,
+    "cpus": "1",
+    "callsPerCustomer": 3
+  },
+  {
+    "mode": "trusted",
+    "workers": 8,
+    "seconds": 15,
+    "cpus": "1",
+    "callsPerCustomer": 10
+  },
+  {
+    "mode": "process",
+    "workers": 8,
+    "seconds": 15,
+    "cpus": "1",
+    "payload": 65536
+  },
+  {
+    "mode": "process",
+    "workers": 8,
+    "seconds": 15,
+    "cpus": "1",
+    "payload": 262144
+  },
+  {
+    "mode": "process",
+    "workers": 8,
+    "seconds": 15,
+    "cpus": "1",
+    "workload": "cpu",
+    "cpuMs": 2
+  },
+  {
+    "mode": "process",
+    "workers": 8,
+    "seconds": 15,
+    "cpus": "1",
+    "workload": "cpu",
+    "cpuMs": 10
+  },
+  {
+    "mode": "process",
+    "workers": 8,
+    "seconds": 15,
+    "cpus": "1",
+    "workload": "cpu",
+    "cpuMs": 50
+  },
+  {
+    "mode": "process",
+    "workers": 8,
+    "seconds": 15,
+    "cpus": "1",
+    "workload": "io",
+    "ioMs": 10
+  },
+  {
+    "mode": "process",
+    "workers": 8,
+    "seconds": 15,
+    "cpus": "1",
+    "workload": "io",
+    "ioMs": 100
+  },
+  {
+    "mode": "process",
+    "workers": 8,
+    "seconds": 15,
+    "cpus": "1",
+    "workload": "io",
+    "ioMs": 500
+  },
+  {
+    "mode": "process",
+    "workers": 8,
+    "seconds": 15,
+    "cpus": "1",
+    "workload": "memory",
+    "memoryMiB": 8
+  },
+  {
+    "mode": "process",
+    "workers": 8,
+    "seconds": 15,
+    "cpus": "1",
+    "workload": "memory",
+    "memoryMiB": 32
+  },
+  {
+    "mode": "process",
+    "workers": 8,
+    "seconds": 15,
+    "cpus": "1",
+    "workload": "memory",
+    "memoryMiB": 64
+  },
+  {
+    "mode": "process",
+    "workers": 8,
+    "seconds": 20,
+    "cpus": "1",
+    "workload": "blend",
+    "ioMs": 500,
+    "cpuMs": 10
+  },
+  {
+    "mode": "process",
+    "workers": 8,
+    "seconds": 15,
+    "cpus": "1",
+    "callsPerCustomer": 3
+  },
+  {
+    "mode": "process",
+    "workers": 8,
+    "seconds": 15,
+    "cpus": "1",
+    "callsPerCustomer": 10
+  },
+  {
+    "mode": "forkserver",
+    "workers": 8,
+    "seconds": 15,
+    "cpus": "1",
+    "payload": 65536
+  },
+  {
+    "mode": "forkserver",
+    "workers": 8,
+    "seconds": 15,
+    "cpus": "1",
+    "payload": 262144
+  },
+  {
+    "mode": "forkserver",
+    "workers": 8,
+    "seconds": 15,
+    "cpus": "1",
+    "workload": "cpu",
+    "cpuMs": 2
+  },
+  {
+    "mode": "forkserver",
+    "workers": 8,
+    "seconds": 15,
+    "cpus": "1",
+    "workload": "cpu",
+    "cpuMs": 10
+  },
+  {
+    "mode": "forkserver",
+    "workers": 8,
+    "seconds": 15,
+    "cpus": "1",
+    "workload": "cpu",
+    "cpuMs": 50
+  },
+  {
+    "mode": "forkserver",
+    "workers": 8,
+    "seconds": 15,
+    "cpus": "1",
+    "workload": "io",
+    "ioMs": 10
+  },
+  {
+    "mode": "forkserver",
+    "workers": 8,
+    "seconds": 15,
+    "cpus": "1",
+    "workload": "io",
+    "ioMs": 100
+  },
+  {
+    "mode": "forkserver",
+    "workers": 8,
+    "seconds": 15,
+    "cpus": "1",
+    "workload": "io",
+    "ioMs": 500
+  },
+  {
+    "mode": "forkserver",
+    "workers": 8,
+    "seconds": 15,
+    "cpus": "1",
+    "workload": "memory",
+    "memoryMiB": 8
+  },
+  {
+    "mode": "forkserver",
+    "workers": 8,
+    "seconds": 15,
+    "cpus": "1",
+    "workload": "memory",
+    "memoryMiB": 32
+  },
+  {
+    "mode": "forkserver",
+    "workers": 8,
+    "seconds": 15,
+    "cpus": "1",
+    "workload": "memory",
+    "memoryMiB": 64
+  },
+  {
+    "mode": "forkserver",
+    "workers": 8,
+    "seconds": 20,
+    "cpus": "1",
+    "workload": "blend",
+    "ioMs": 500,
+    "cpuMs": 10
+  },
+  {
+    "mode": "forkserver",
+    "workers": 8,
+    "seconds": 15,
+    "cpus": "1",
+    "callsPerCustomer": 3
+  },
+  {
+    "mode": "forkserver",
+    "workers": 8,
+    "seconds": 15,
+    "cpus": "1",
+    "callsPerCustomer": 10
+  },
+  {
+    "mode": "trusted",
+    "workers": 4,
+    "seconds": 15,
+    "cpus": "1",
+    "workload": "io",
+    "ioMs": 100
+  },
+  {
+    "mode": "trusted",
+    "workers": 16,
+    "seconds": 15,
+    "cpus": "1",
+    "workload": "io",
+    "ioMs": 100
+  },
+  {
+    "mode": "trusted",
+    "workers": 32,
+    "seconds": 15,
+    "cpus": "1",
+    "workload": "io",
+    "ioMs": 100
+  },
+  {
+    "mode": "trusted",
+    "workers": 32,
+    "seconds": 20,
+    "cpus": "1"
+  },
+  {
+    "mode": "forkserver",
+    "workers": 4,
+    "seconds": 15,
+    "cpus": "1",
+    "workload": "io",
+    "ioMs": 100
+  },
+  {
+    "mode": "forkserver",
+    "workers": 16,
+    "seconds": 15,
+    "cpus": "1",
+    "workload": "io",
+    "ioMs": 100
+  },
+  {
+    "mode": "forkserver",
+    "workers": 32,
+    "seconds": 15,
+    "cpus": "1",
+    "workload": "io",
+    "ioMs": 100
+  },
+  {
+    "mode": "forkserver",
+    "workers": 32,
+    "seconds": 20,
+    "cpus": "1"
+  }
+]

@@ -1,0 +1,22 @@
+[
+  {
+    "mode": "trusted",
+    "workers": 16,
+    "cpus": "1",
+    "transport": "engine",
+    "seconds": 1800,
+    "arrival": "poisson",
+    "rate": 4500,
+    "seed": 1731
+  },
+  {
+    "mode": "forkserver",
+    "workers": 16,
+    "cpus": "1",
+    "transport": "engine",
+    "seconds": 1800,
+    "arrival": "poisson",
+    "rate": 550,
+    "seed": 1731
+  }
+]

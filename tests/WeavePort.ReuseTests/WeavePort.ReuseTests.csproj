@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup><OutputType>Exe</OutputType><IsPackable>false</IsPackable><UseAppHost>false</UseAppHost></PropertyGroup>
+  <ItemGroup Condition="'$(UsePackedCore)' != 'true'">
+    <ProjectReference Include="../../src/WeavePort.Hosting/WeavePort.Hosting.csproj" />
+    <ProjectReference Include="../../src/WeavePort.Sdk/WeavePort.Sdk.csproj" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(UsePackedCore)' == 'true'">
+    <PackageReference Include="WeavePort.Hosting" Version="0.4.0" />
+    <PackageReference Include="WeavePort.Sdk" Version="0.4.0" />
+  </ItemGroup>
+</Project>

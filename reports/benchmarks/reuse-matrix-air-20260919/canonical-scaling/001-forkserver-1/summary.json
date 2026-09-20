@@ -1,0 +1,150 @@
+{
+  "config": {
+    "mode": "forkserver",
+    "workers": 1,
+    "seconds": 20,
+    "cpus": "1",
+    "memory": 128,
+    "transport": "engine"
+  },
+  "serialization": "one in-flight call per customer/plugin key",
+  "image": "sha256:80f2e8f31f9605f1641ea22d213f585046d249529bf18a4acf332a4a938597b2",
+  "counts": {
+    "offered": 5770,
+    "completed": 5770,
+    "correct": 5770,
+    "failed": 0,
+    "dropped": 0,
+    "withinOneSecond": 5770,
+    "customersCompleted": 5770,
+    "faultsExpected": 0,
+    "faultsContained": 0
+  },
+  "partiallyServedCustomers": 0,
+  "offeredCustomers": 5770,
+  "elapsed": 20.003509124995617,
+  "preparedSeconds": 0.11168100000213599,
+  "customersPerSecond": 288.4493897518226,
+  "requestsPerSecond": 288.4493897518226,
+  "hostCpuCores": 0.056942259124759934,
+  "latency": {
+    "responseMs": {
+      "count": 5770,
+      "mean": 3.4293062412904325,
+      "max": 21.734916997957043,
+      "p50": 3.4003919178661453,
+      "p95": 3.756148147544384,
+      "p99": 4.360771391069559
+    },
+    "turnoverMs": {
+      "count": 5770,
+      "mean": 3.4300628120108487,
+      "max": 21.73695799865527,
+      "p50": 3.4003919178661453,
+      "p95": 3.756148147544384,
+      "p99": 4.360771391069559
+    },
+    "queueMs": {
+      "count": 5770,
+      "mean": 0.0010619126245148636,
+      "max": 0.0324159991578199,
+      "p50": 0.001129335760273049,
+      "p95": 0.001715223740350772,
+      "p99": 0.0020928989242583102
+    },
+    "executionMs": {
+      "count": 5770,
+      "mean": 0.16120136967986565,
+      "max": 0.28583300081663765,
+      "p50": 0.1602755308518557,
+      "p95": 0.1860749156244509,
+      "p99": 0.20967387240532562
+    },
+    "cleanupMs": {
+      "count": 5770,
+      "mean": 0.11004331299867759,
+      "max": 0.20429100186447613,
+      "p50": 0.10872605901296359,
+      "p95": 0.1287647534947681,
+      "p99": 0.14223639568344057
+    },
+    "generatorLagMs": {
+      "count": 0
+    },
+    "pluginImportMs": {
+      "count": 5770,
+      "mean": 0.0764239965499961,
+      "max": 0.18095800260198303,
+      "p50": 0.07523896566218409,
+      "p95": 0.08999689885009718,
+      "p99": 0.10448360564453675
+    },
+    "childWorkMs": {
+      "count": 5770,
+      "mean": 0.3510742388070283,
+      "max": 0.649042001896305,
+      "p50": 0.3482846859947028,
+      "p95": 0.3963804608083895,
+      "p99": 0.45111793894107893
+    },
+    "childStartMs": {
+      "count": 5770,
+      "mean": 0.3968272669298788,
+      "max": 2.1266250005282927,
+      "p50": 0.388570199792559,
+      "p95": 0.4647872636089326,
+      "p99": 0.5396035839013427
+    },
+    "childResponseWaitMs": {
+      "count": 5770,
+      "mean": 2.034136185235433,
+      "max": 17.277584000112256,
+      "p50": 2.006763368395385,
+      "p95": 2.2838839049904616,
+      "p99": 2.6515183113631293
+    },
+    "childExitWaitMs": {
+      "count": 5770,
+      "mean": 0.305057141623165,
+      "max": 0.8120000020426232,
+      "p50": 0.30299477968602717,
+      "p95": 0.3697112123291189,
+      "p99": 0.41247509700285795
+    },
+    "processTurnoverMs": {
+      "count": 5770,
+      "mean": 2.7362424984443527,
+      "max": 18.512000002374407,
+      "p50": 2.7048138294215285,
+      "p95": 3.0478519248392826,
+      "p99": 3.5034271933694074
+    }
+  },
+  "byWorkload": {
+    "echo": {
+      "count": 5770,
+      "mean": 3.4293062412904325,
+      "max": 21.734916997957043,
+      "p50": 3.4003919178661453,
+      "p95": 3.756148147544384,
+      "p99": 4.360771391069559
+    }
+  },
+  "memorySamplesWithLiveContainers": 7,
+  "memoryPeakMiB": 33.1015625,
+  "helperScope": "RSS of live owned Docker CLI PIDs only; observer children excluded",
+  "hostRssPeakMiB": 31.71875,
+  "helpersRssPeakMiB": 0,
+  "memoryRawPeakMiB": 33.1015625,
+  "starts": 1,
+  "retirements": 1,
+  "failure": null,
+  "failedExamples": [],
+  "known": [
+    "wp-matrix-1c760610a31f411fb56c4707068b3118"
+  ],
+  "remaining": [],
+  "passed": true,
+  "meetsOneSecondSlo": true,
+  "normalEchoP99WithinOneSecond": true
+}

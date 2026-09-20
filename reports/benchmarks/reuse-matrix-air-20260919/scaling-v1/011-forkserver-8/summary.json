@@ -1,0 +1,94 @@
+{
+  "config": {
+    "mode": "forkserver",
+    "workers": 8,
+    "seconds": 15
+  },
+  "image": "sha256:38985b720bd830c893e5ecde51c4ae5f00b2c9495e7535d454c81a89df40be00",
+  "counts": {
+    "offered": 615,
+    "completed": 615,
+    "correct": 615,
+    "failed": 0,
+    "dropped": 0,
+    "withinOneSecond": 615
+  },
+  "elapsed": 15.15674133399807,
+  "preparedSeconds": 2.1565546249985346,
+  "customersPerSecond": 40.57600419824373,
+  "hostCpuCores": 0.015084047089143689,
+  "latency": {
+    "responseMs": {
+      "count": 615,
+      "mean": 196.35933382770617,
+      "max": 279.80229199965834,
+      "p50": 199.0539739612714,
+      "p95": 209.20772714563995,
+      "p99": 265.6382998974299
+    },
+    "turnoverMs": {
+      "count": 615,
+      "mean": 196.3605856408218,
+      "max": 279.803624998749,
+      "p50": 199.0539739612714,
+      "p95": 209.20772714563995,
+      "p99": 265.6382998974299
+    },
+    "queueMs": {
+      "count": 615,
+      "mean": 0.0016399741026561524,
+      "max": 0.03241699960199185,
+      "p50": 0.0015839803470172958,
+      "p95": 0.0018759149441802238,
+      "p99": 0.003653803492577748
+    },
+    "executionMs": {
+      "count": 615,
+      "mean": 0.7206195333051661,
+      "max": 52.56629200084717,
+      "p50": 0.3734083244524101,
+      "p95": 0.5559541120971373,
+      "p99": 0.7875661274237213
+    },
+    "cleanupMs": {
+      "count": 615,
+      "mean": 0.2728921316192122,
+      "max": 50.62287500186358,
+      "p50": 0.17704389754098593,
+      "p95": 0.2410147095195973,
+      "p99": 0.5671287897502898
+    },
+    "generatorLagMs": {
+      "count": 0
+    }
+  },
+  "byWorkload": {
+    "echo": {
+      "count": 615,
+      "mean": 196.35933382770617,
+      "max": 279.80229199965834,
+      "p50": 199.0539739612714,
+      "p95": 209.20772714563995,
+      "p99": 265.6382998974299
+    }
+  },
+  "memoryPeakMiB": 405.46875,
+  "memoryRawPeakMiB": 405.46875,
+  "starts": 8,
+  "retirements": 8,
+  "failure": null,
+  "failedExamples": [],
+  "known": [
+    "wp-matrix-4fbec68f9c11450fa3e86c2e9155645d",
+    "wp-matrix-5c5ef946cf4944b6991af6072f409489",
+    "wp-matrix-6a35cd2814d74495bda9c3da6818c878",
+    "wp-matrix-752099e369464f47b43c61f12ef9e803",
+    "wp-matrix-775eeaca5abd401b92cc25c80004652d",
+    "wp-matrix-7e76dec8738a4096af04633eacf5664e",
+    "wp-matrix-b05cb52b58634bb9aec1af531ffb2d48",
+    "wp-matrix-f619e88a39904815a95ae941cf33ce3b"
+  ],
+  "remaining": [],
+  "passed": true,
+  "meetsOneSecondSlo": true
+}

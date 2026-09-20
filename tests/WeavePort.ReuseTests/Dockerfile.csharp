@@ -1,0 +1,5 @@
+FROM mcr.microsoft.com/dotnet/runtime:10.0@sha256:6a40d375e9c8432fcf4adebae05d7e0a276e9a90dd01174df6709a090771bebc
+WORKDIR /plugin
+COPY csharp/ ./
+ENV DOTNET_EnableDiagnostics=0 DOTNET_GCHeapHardLimitPercent=50
+ENTRYPOINT ["dotnet", "/plugin/WeavePort.ReuseTests.dll", "--worker"]

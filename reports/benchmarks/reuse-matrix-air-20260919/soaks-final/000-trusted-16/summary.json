@@ -1,0 +1,147 @@
+{
+  "config": {
+    "mode": "trusted",
+    "workers": 16,
+    "cpus": "1",
+    "transport": "engine",
+    "seconds": 1800,
+    "arrival": "poisson",
+    "rate": 4500,
+    "seed": 1731
+  },
+  "serialization": "one in-flight call per customer/plugin key",
+  "image": "sha256:7ca4151f0fcc8116e66b48e9af6c14c1a8100da33a046351c8158c3b34b9fb70",
+  "counts": {
+    "offered": 2039821,
+    "completed": 2039818,
+    "correct": 2039818,
+    "failed": 0,
+    "dropped": 0,
+    "withinOneSecond": 2039818,
+    "customersCompleted": 2039818,
+    "faultsExpected": 0,
+    "faultsContained": 0
+  },
+  "partiallyServedCustomers": 0,
+  "offeredCustomers": 2039821,
+  "elapsed": 453.36410591700405,
+  "preparedSeconds": 0.5243817500013392,
+  "customersPerSecond": 4499.293114248932,
+  "requestsPerSecond": 4499.293114248932,
+  "hostCpuCores": 0.5310368484356235,
+  "latency": {
+    "responseMs": {
+      "count": 2039818,
+      "mean": 1.6595910333090893,
+      "max": 68.34531052300008,
+      "p50": 1.3749406785310974,
+      "p95": 2.8427865183714935,
+      "p99": 8.32631075669766
+    },
+    "turnoverMs": {
+      "count": 2039818,
+      "mean": 1.660049764748245,
+      "max": 68.34560252900701,
+      "p50": 1.3749406785310974,
+      "p95": 2.8427865183714935,
+      "p99": 8.32631075669766
+    },
+    "queueMs": {
+      "count": 2039818,
+      "mean": 0.2868668600989017,
+      "max": 63.841197690635454,
+      "p50": 0.13135292504001292,
+      "p95": 0.3060247274828874,
+      "p99": 4.7693114479560705
+    },
+    "executionMs": {
+      "count": 2039818,
+      "mean": 0.08599620098074427,
+      "max": 14.684042002045317,
+      "p50": 0.06879398263955426,
+      "p95": 0.1494918813532963,
+      "p99": 0.30299477968602717
+    },
+    "cleanupMs": {
+      "count": 2039818,
+      "mean": 0.10068417834499188,
+      "max": 18.312792002689093,
+      "p50": 0.08478114974938883,
+      "p95": 0.1752909876643425,
+      "p99": 0.3152975827503464
+    },
+    "generatorLagMs": {
+      "count": 2039821,
+      "mean": 0.10675831352356205,
+      "max": 17.143054044822748,
+      "p50": 0.08562896124688273,
+      "p95": 0.2055424687827915,
+      "p99": 0.35176753285464984
+    },
+    "pluginImportMs": {
+      "count": 2039818,
+      "mean": 0.0024090148882218903,
+      "max": 43.343833000108134,
+      "p50": 0.0016814270565148242,
+      "p95": 0.004036072179806114,
+      "p99": 0.005890757273461114
+    },
+    "childWorkMs": {
+      "count": 0
+    },
+    "childStartMs": {
+      "count": 0
+    },
+    "childResponseWaitMs": {
+      "count": 0
+    },
+    "childExitWaitMs": {
+      "count": 0
+    },
+    "processTurnoverMs": {
+      "count": 0
+    }
+  },
+  "byWorkload": {
+    "echo": {
+      "count": 2039818,
+      "mean": 1.6595910333090893,
+      "max": 68.34531052300008,
+      "p50": 1.3749406785310974,
+      "p95": 2.8427865183714935,
+      "p99": 8.32631075669766
+    }
+  },
+  "memorySamplesWithLiveContainers": 148,
+  "memoryPeakMiB": 183.8984375,
+  "helperScope": "RSS of live owned Docker CLI PIDs only; observer children excluded",
+  "hostRssPeakMiB": 33.484375,
+  "helpersRssPeakMiB": 0,
+  "memoryRawPeakMiB": 183.8984375,
+  "starts": 16,
+  "retirements": 16,
+  "failure": "RuntimeError('Operator stop')",
+  "failedExamples": [],
+  "known": [
+    "wp-matrix-1e5508437e6d461aa68f9d874f3b80c4",
+    "wp-matrix-270fc4da11d14abab02523b0dd876eb6",
+    "wp-matrix-41b7b606d19743f2b0ef7fabac0e229e",
+    "wp-matrix-4d9dfe8d4a564e76b6b05f40fe162777",
+    "wp-matrix-5fa6ca1cf2114c81987b64614e37bf88",
+    "wp-matrix-674225da890d4edab4dabdb8f977436f",
+    "wp-matrix-6f9f30efce734570994fe8f0eec350d2",
+    "wp-matrix-76a949912357492ea5f1e089156e9f99",
+    "wp-matrix-801fca24cdb842708f30256366d48757",
+    "wp-matrix-85ba6e03c9f54cbba924b01b39e481f7",
+    "wp-matrix-a085e49b0acd42bab7fbdffff1576d6d",
+    "wp-matrix-bb787a225bc848629e6bbbe6ac3426c3",
+    "wp-matrix-bbe8971cc67d4c95a46c51b795eed9f7",
+    "wp-matrix-c682e2f61f164618a8bc9dc82698c6f2",
+    "wp-matrix-c769646de7cb45cfafc4b812a9c607c5",
+    "wp-matrix-d66f587ff861410aa36f2fbf41ab1ea1"
+  ],
+  "remaining": [],
+  "passed": false,
+  "meetsOneSecondSlo": false,
+  "normalEchoP99WithinOneSecond": true
+}

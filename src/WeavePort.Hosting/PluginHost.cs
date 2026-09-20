@@ -38,7 +38,7 @@ public sealed class PluginHost : IAsyncDisposable
         ArgumentOutOfRangeException.ThrowIfLessThan(options.MaximumWorkersPerTenant, 1);
         ArgumentOutOfRangeException.ThrowIfLessThan(options.MemoryBudgetPerTenantMiB, 64);
         ArgumentOutOfRangeException.ThrowIfLessThan(options.MaximumConcurrentStarts, 1);
-        if (options.MaximumPristineWorkers > options.MaximumWorkers || options.PristineLifetime <= TimeSpan.Zero || options.MaintenanceInterval <= TimeSpan.Zero)
+        if (options.MaximumPristineWorkers > options.MaximumWorkers || options.PristineLifetime <= TimeSpan.Zero || options.MaintenanceInterval <= TimeSpan.Zero || options.ReusableIdleTimeout <= TimeSpan.Zero)
         {
             throw new ArgumentOutOfRangeException(nameof(options));
         }
@@ -107,6 +107,11 @@ public sealed class PluginHost : IAsyncDisposable
     private static async Task<ExecutionProfile> ResolveAsync(ExecutionProfile profile, ExecutionProtections required, CancellationToken token)
     {
         ArgumentNullException.ThrowIfNull(profile);
+        if (!Enum.IsDefined(profile.ReusePolicy) || profile.ReusePolicy == WorkerReusePolicy.ApprovedSessions && profile is ProcessProfile { Protocol: not ProcessProtocol.Native })
+        {
+            throw new NotSupportedException("Approved reuse requires the native session-cleanup protocol.");
+        }
+
         if ((profile.Protection & required) != required)
         {
             throw new NotSupportedException("Selected execution profile cannot satisfy required protection.");

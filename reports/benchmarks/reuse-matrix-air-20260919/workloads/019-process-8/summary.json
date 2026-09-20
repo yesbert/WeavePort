@@ -1,0 +1,126 @@
+{
+  "config": {
+    "mode": "process",
+    "workers": 8,
+    "seconds": 15,
+    "cpus": "1",
+    "workload": "io",
+    "ioMs": 10
+  },
+  "image": "sha256:ec90b7cd1578af275ee435754d4f4c9848c14891de7410ed06da655e632d3d58",
+  "counts": {
+    "offered": 1501,
+    "completed": 1501,
+    "correct": 1501,
+    "failed": 0,
+    "dropped": 0,
+    "withinOneSecond": 1501,
+    "customersCompleted": 1501,
+    "faultsExpected": 0,
+    "faultsContained": 0
+  },
+  "elapsed": 15.071547332998307,
+  "preparedSeconds": 0.44688850000238745,
+  "customersPerSecond": 99.5916322880561,
+  "requestsPerSecond": 99.5916322880561,
+  "hostCpuCores": 0.03270268069429517,
+  "latency": {
+    "responseMs": {
+      "count": 1501,
+      "mean": 80.14869593145478,
+      "max": 329.5313749986235,
+      "p50": 77.34644243163407,
+      "p95": 87.15590732362674,
+      "p99": 189.39302620591695
+    },
+    "turnoverMs": {
+      "count": 1501,
+      "mean": 80.15012527785032,
+      "max": 329.5332089983276,
+      "p50": 77.34644243163407,
+      "p95": 87.15590732362674,
+      "p99": 189.39302620591695
+    },
+    "queueMs": {
+      "count": 1501,
+      "mean": 0.0017603372499705983,
+      "max": 0.011249998351559043,
+      "p50": 0.0018027173892787745,
+      "p95": 0.0021349661926359023,
+      "p99": 0.0025034157651189146
+    },
+    "executionMs": {
+      "count": 1501,
+      "mean": 11.041016896088138,
+      "max": 51.79087500073365,
+      "p50": 10.892553653873623,
+      "p95": 11.913025513165806,
+      "p99": 14.828331793854836
+    },
+    "cleanupMs": {
+      "count": 1501,
+      "mean": 0.29352073616221863,
+      "max": 9.369499999593245,
+      "p50": 0.27981059553977056,
+      "p95": 0.35176753285464984,
+      "p99": 0.49831485652421664
+    },
+    "generatorLagMs": {
+      "count": 0
+    },
+    "pluginImportMs": {
+      "count": 1501,
+      "mean": 21.2891844584556,
+      "max": 167.50170800150954,
+      "p50": 20.591957343908284,
+      "p95": 22.97379500448088,
+      "p99": 40.91404522902522
+    },
+    "childWorkMs": {
+      "count": 0
+    },
+    "childStartMs": {
+      "count": 0
+    },
+    "childResponseWaitMs": {
+      "count": 0
+    },
+    "childExitWaitMs": {
+      "count": 0
+    },
+    "processTurnoverMs": {
+      "count": 0
+    }
+  },
+  "byWorkload": {
+    "io": {
+      "count": 1501,
+      "mean": 80.14869593145478,
+      "max": 329.5313749986235,
+      "p50": 77.34644243163407,
+      "p95": 87.15590732362674,
+      "p99": 189.39302620591695
+    }
+  },
+  "memoryPeakMiB": 126.48828125,
+  "hostRssPeakMiB": 36.875,
+  "helpersRssPeakMiB": 241.6875,
+  "memoryRawPeakMiB": 126.48828125,
+  "starts": 8,
+  "retirements": 8,
+  "failure": null,
+  "failedExamples": [],
+  "known": [
+    "wp-matrix-1ca7efd8b77d48078781598f288f42cc",
+    "wp-matrix-3b65cd16c63b4b3497c95e77bb130055",
+    "wp-matrix-43a716601fdc4a9bb2be028ddd6ac3fc",
+    "wp-matrix-7733c5d8cc2e4628a3394433ee4cab9c",
+    "wp-matrix-b2e04406c1d04b3b813ad69a74619b27",
+    "wp-matrix-b5320eadb436426a9319db4df4bbccac",
+    "wp-matrix-b5798b4bd5064ef4858aa27ea3628cb4",
+    "wp-matrix-ee07ac74e106407d84b060189bf66d1c"
+  ],
+  "remaining": [],
+  "passed": true,
+  "meetsOneSecondSlo": true
+}

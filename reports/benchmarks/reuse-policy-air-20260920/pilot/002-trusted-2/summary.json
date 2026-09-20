@@ -1,0 +1,377 @@
+{
+  "config": {
+    "mode": "trusted",
+    "transport": "engine",
+    "cpus": 1,
+    "memory": 64,
+    "workers": 2,
+    "seconds": 6,
+    "arrival": "periodic",
+    "policy": "bound",
+    "workload": "session",
+    "pluginsPerCustomer": 2,
+    "rate": 2000,
+    "population": 8,
+    "periodSeconds": 3,
+    "callsPerCustomer": 2
+  },
+  "serialization": "one in-flight call per customer/plugin key",
+  "image": "sha256:1df84645ab74f677627134f1821b163dd5b9c2751cbef54d083369d86ee550b7",
+  "counts": {
+    "offered": 16,
+    "completed": 16,
+    "correct": 16,
+    "failed": 0,
+    "dropped": 0,
+    "withinOneSecond": 16,
+    "customersCompleted": 8,
+    "faultsExpected": 0,
+    "faultsContained": 0
+  },
+  "partiallyServedCustomers": 0,
+  "offeredCustomers": 8,
+  "elapsed": 6.124053708001156,
+  "preparedSeconds": 0.10148370900424197,
+  "customersPerSecond": 1.3063242717071366,
+  "requestsPerSecond": 2.612648543414273,
+  "hostCpuCores": 0.01272000601468031,
+  "latency": {
+    "responseMs": {
+      "count": 16,
+      "mean": 134.73463658465334,
+      "max": 163.69582821789663,
+      "p50": 149.15953221005338,
+      "p95": 163.69582821789663,
+      "p99": 163.69582821789663
+    },
+    "turnoverMs": {
+      "count": 16,
+      "mean": 134.736201585838,
+      "max": 163.69732821476646,
+      "p50": 149.15953221005338,
+      "p95": 163.69732821476646,
+      "p99": 163.69732821476646
+    },
+    "queueMs": {
+      "count": 16,
+      "mean": 38.96861314751732,
+      "max": 62.37500240968075,
+      "p50": 38.16126867621615,
+      "p95": 62.37500240968075,
+      "p99": 62.37500240968075
+    },
+    "executionMs": {
+      "count": 16,
+      "mean": 0.35470299735607114,
+      "max": 0.9166660020127892,
+      "p50": 0.28543478851011994,
+      "p95": 0.9166660020127892,
+      "p99": 0.9166660020127892
+    },
+    "cleanupMs": {
+      "count": 16,
+      "mean": 0.13976825084682787,
+      "max": 0.35316700814291835,
+      "p50": 0.10552844170098212,
+      "p95": 0.35316700814291835,
+      "p99": 0.35316700814291835
+    },
+    "generatorLagMs": {
+      "count": 16,
+      "mean": 0.8001026477165718,
+      "max": 1.2876564250132727,
+      "p50": 1.1268250301319698,
+      "p95": 1.2876564250132727,
+      "p99": 1.2876564250132727
+    },
+    "pluginImportMs": {
+      "count": 16,
+      "mean": 13.172960873816919,
+      "max": 29.30466599354986,
+      "p50": 10.059090549340699,
+      "p95": 29.30466599354986,
+      "p99": 29.30466599354986
+    },
+    "childWorkMs": {
+      "count": 0
+    },
+    "childStartMs": {
+      "count": 0
+    },
+    "childResponseWaitMs": {
+      "count": 0
+    },
+    "childExitWaitMs": {
+      "count": 0
+    },
+    "processTurnoverMs": {
+      "count": 0
+    }
+  },
+  "byWorkload": {
+    "session": {
+      "count": 16,
+      "mean": 134.73463658465334,
+      "max": 163.69582821789663,
+      "p50": 149.15953221005338,
+      "p95": 163.69582821789663,
+      "p99": 163.69582821789663
+    }
+  },
+  "memorySamplesWithLiveContainers": 2,
+  "memoryPeakMiB": 16.77734375,
+  "helperScope": "RSS of live owned Docker CLI PIDs only; observer children excluded",
+  "hostRssPeakMiB": 28.171875,
+  "helpersRssPeakMiB": 0,
+  "memoryRawPeakMiB": 16.77734375,
+  "starts": 16,
+  "retirements": 16,
+  "failure": null,
+  "failedExamples": [],
+  "known": [
+    "wp-matrix-0bd09aea503948b0b167356b0e6ccada",
+    "wp-matrix-0c8adbbd4da5496086546f9bd42284fd",
+    "wp-matrix-2743457862dd480db5be372624c6f29a",
+    "wp-matrix-3dec351944eb4eaf8471de487d9de629",
+    "wp-matrix-3f0f8560c49042858a1729b378206ec3",
+    "wp-matrix-45249bf0904d484088c21097313d90a7",
+    "wp-matrix-5c2a45c8f3484796819269f58b5a1f16",
+    "wp-matrix-5f4394e26d4648fa863ad618885f0fd4",
+    "wp-matrix-67af242386c148ed8f0ef8bffd21405f",
+    "wp-matrix-6d0c308cbc5647b9b53eae1a58ad34eb",
+    "wp-matrix-8275bdc8203844ccbe33c80ff8e4c636",
+    "wp-matrix-c551a6c436eb478f8b685d3d71909bcd",
+    "wp-matrix-ccd9ca629b8b4dd8832e4b64067a2fa4",
+    "wp-matrix-da770cffc7384e54aeaf282004972445",
+    "wp-matrix-e440e4d27b2f4474bc427e77a558106c",
+    "wp-matrix-fa7787a0b513477b940ff494ab6159f5"
+  ],
+  "remaining": [],
+  "poolPolicy": {
+    "policy": "bound",
+    "warmBindingHits": 0,
+    "bindingReplacements": 14,
+    "pristineAssignments": 2,
+    "transitionExamples": [
+      {
+        "previous": null,
+        "next": [
+          "customer-0",
+          "a",
+          "fixture-v1"
+        ],
+        "before": "wp-matrix-e440e4d27b2f4474bc427e77a558106c",
+        "after": "wp-matrix-e440e4d27b2f4474bc427e77a558106c"
+      },
+      {
+        "previous": null,
+        "next": [
+          "customer-1",
+          "b",
+          "fixture-v1"
+        ],
+        "before": "wp-matrix-ccd9ca629b8b4dd8832e4b64067a2fa4",
+        "after": "wp-matrix-ccd9ca629b8b4dd8832e4b64067a2fa4"
+      },
+      {
+        "previous": [
+          "customer-0",
+          "a",
+          "fixture-v1"
+        ],
+        "next": [
+          "customer-2",
+          "a",
+          "fixture-v1"
+        ],
+        "before": "wp-matrix-e440e4d27b2f4474bc427e77a558106c",
+        "after": "wp-matrix-3f0f8560c49042858a1729b378206ec3"
+      },
+      {
+        "previous": [
+          "customer-1",
+          "b",
+          "fixture-v1"
+        ],
+        "next": [
+          "customer-3",
+          "b",
+          "fixture-v1"
+        ],
+        "before": "wp-matrix-ccd9ca629b8b4dd8832e4b64067a2fa4",
+        "after": "wp-matrix-0c8adbbd4da5496086546f9bd42284fd"
+      },
+      {
+        "previous": [
+          "customer-2",
+          "a",
+          "fixture-v1"
+        ],
+        "next": [
+          "customer-4",
+          "a",
+          "fixture-v1"
+        ],
+        "before": "wp-matrix-3f0f8560c49042858a1729b378206ec3",
+        "after": "wp-matrix-fa7787a0b513477b940ff494ab6159f5"
+      },
+      {
+        "previous": [
+          "customer-3",
+          "b",
+          "fixture-v1"
+        ],
+        "next": [
+          "customer-5",
+          "b",
+          "fixture-v1"
+        ],
+        "before": "wp-matrix-0c8adbbd4da5496086546f9bd42284fd",
+        "after": "wp-matrix-67af242386c148ed8f0ef8bffd21405f"
+      },
+      {
+        "previous": [
+          "customer-4",
+          "a",
+          "fixture-v1"
+        ],
+        "next": [
+          "customer-6",
+          "a",
+          "fixture-v1"
+        ],
+        "before": "wp-matrix-fa7787a0b513477b940ff494ab6159f5",
+        "after": "wp-matrix-0bd09aea503948b0b167356b0e6ccada"
+      },
+      {
+        "previous": [
+          "customer-5",
+          "b",
+          "fixture-v1"
+        ],
+        "next": [
+          "customer-7",
+          "b",
+          "fixture-v1"
+        ],
+        "before": "wp-matrix-67af242386c148ed8f0ef8bffd21405f",
+        "after": "wp-matrix-da770cffc7384e54aeaf282004972445"
+      },
+      {
+        "previous": [
+          "customer-6",
+          "a",
+          "fixture-v1"
+        ],
+        "next": [
+          "customer-0",
+          "a",
+          "fixture-v1"
+        ],
+        "before": "wp-matrix-0bd09aea503948b0b167356b0e6ccada",
+        "after": "wp-matrix-3dec351944eb4eaf8471de487d9de629"
+      },
+      {
+        "previous": [
+          "customer-7",
+          "b",
+          "fixture-v1"
+        ],
+        "next": [
+          "customer-1",
+          "b",
+          "fixture-v1"
+        ],
+        "before": "wp-matrix-da770cffc7384e54aeaf282004972445",
+        "after": "wp-matrix-5c2a45c8f3484796819269f58b5a1f16"
+      },
+      {
+        "previous": [
+          "customer-0",
+          "a",
+          "fixture-v1"
+        ],
+        "next": [
+          "customer-2",
+          "a",
+          "fixture-v1"
+        ],
+        "before": "wp-matrix-3dec351944eb4eaf8471de487d9de629",
+        "after": "wp-matrix-6d0c308cbc5647b9b53eae1a58ad34eb"
+      },
+      {
+        "previous": [
+          "customer-1",
+          "b",
+          "fixture-v1"
+        ],
+        "next": [
+          "customer-3",
+          "b",
+          "fixture-v1"
+        ],
+        "before": "wp-matrix-5c2a45c8f3484796819269f58b5a1f16",
+        "after": "wp-matrix-2743457862dd480db5be372624c6f29a"
+      },
+      {
+        "previous": [
+          "customer-2",
+          "a",
+          "fixture-v1"
+        ],
+        "next": [
+          "customer-4",
+          "a",
+          "fixture-v1"
+        ],
+        "before": "wp-matrix-6d0c308cbc5647b9b53eae1a58ad34eb",
+        "after": "wp-matrix-5f4394e26d4648fa863ad618885f0fd4"
+      },
+      {
+        "previous": [
+          "customer-3",
+          "b",
+          "fixture-v1"
+        ],
+        "next": [
+          "customer-5",
+          "b",
+          "fixture-v1"
+        ],
+        "before": "wp-matrix-2743457862dd480db5be372624c6f29a",
+        "after": "wp-matrix-45249bf0904d484088c21097313d90a7"
+      },
+      {
+        "previous": [
+          "customer-4",
+          "a",
+          "fixture-v1"
+        ],
+        "next": [
+          "customer-6",
+          "a",
+          "fixture-v1"
+        ],
+        "before": "wp-matrix-5f4394e26d4648fa863ad618885f0fd4",
+        "after": "wp-matrix-c551a6c436eb478f8b685d3d71909bcd"
+      },
+      {
+        "previous": [
+          "customer-5",
+          "b",
+          "fixture-v1"
+        ],
+        "next": [
+          "customer-7",
+          "b",
+          "fixture-v1"
+        ],
+        "before": "wp-matrix-45249bf0904d484088c21097313d90a7",
+        "after": "wp-matrix-8275bdc8203844ccbe33c80ff8e4c636"
+      }
+    ]
+  },
+  "passed": true,
+  "meetsOneSecondSlo": true,
+  "normalEchoP99WithinOneSecond": false
+}

@@ -14,6 +14,7 @@ internal sealed partial class WorkerPool(WorkerPoolOptions options, TimeProvider
     private readonly CancellationTokenSource _lifetime = new();
     private Task? _disposal;
     private int _pendingStarts;
+    private int _foregroundAcquires;
     private TaskCompletionSource? _startsDrained;
     private long _memory;
     private bool _disposed;
@@ -23,49 +24,14 @@ internal sealed partial class WorkerPool(WorkerPoolOptions options, TimeProvider
         {
             return new(_workers.Count, _workers.Count(w => w.Pristine), _workers.Count(w => w.Starting), _workers.Count(w => w.Quarantined), _memory, bindings, tenants, failure)
             {
+                ReusableWorkers = _workers.Count(w => w.Reusable),
+                ReuseHits = _reuseHits,
+                SessionReturns = _sessionReturns,
+                SessionCleanupFailures = _cleanupFailures,
+                WorkersStarted = _workersStarted,
                 OldestQuarantineSeconds = _workers.Where(w => w.Quarantined).Select(w => clock.GetElapsedTime(w.QuarantinedAt!.Value).TotalSeconds).DefaultIfEmpty(0).Max()
             };
         }
-    }
-
-    internal async Task<Worker> AcquireAsync(ExecutionProfile profile, string version, string tenant, CancellationToken token)
-    {
-        List<Worker> reclaim = [];
-        lock (_sync)
-        {
-            ObjectDisposedException.ThrowIf(_disposed, this);
-            CheckTenantBudget(tenant, profile.MemoryMiB);
-            Worker? ready = _workers.FirstOrDefault(w => w.Pristine && Matches(w, profile, version) && !Expired(w) && w.Running);
-            if (ready is not null)
-            {
-                ready.Pristine = false;
-                ready.Tenant = tenant;
-                return ready;
-            }
-
-            int reserved = _workers.Count;
-            long memory = _memory;
-            foreach (Worker candidate in _workers.Where(w => w.Pristine).OrderBy(w => w.ReadyAt))
-            {
-                if (reserved < options.MaximumWorkers && profile.MemoryMiB <= options.MemoryBudgetMiB - memory)
-                {
-                    break;
-                }
-
-                candidate.Pristine = false;
-                candidate.QuarantinedAt ??= clock.GetTimestamp();
-                reclaim.Add(candidate);
-                reserved--;
-                memory -= candidate.Profile.MemoryMiB;
-            }
-        }
-
-        foreach (Worker candidate in reclaim)
-        {
-            await DestroyAsync(candidate);
-        }
-
-        return await StartAsync(profile, version, false, token, tenant);
     }
 
     internal async Task PrewarmAsync(ExecutionProfile profile, string version, int count, CancellationToken token)
@@ -122,6 +88,7 @@ internal sealed partial class WorkerPool(WorkerPoolOptions options, TimeProvider
         lock (_sync)
         {
             worker.Pristine = false;
+            worker.Reusable = false;
             worker.QuarantinedAt ??= clock.GetTimestamp();
             worker.Starting = false;
         }
@@ -163,7 +130,7 @@ internal sealed partial class WorkerPool(WorkerPoolOptions options, TimeProvider
                 }
 
                 var retained = new Dictionary<(ExecutionProfile, string), int>();
-                expired = _workers.Where(w => w.Quarantined || (w.Pristine && ShouldRemove(w))).ToArray();
+                expired = _workers.Where(w => w.Quarantined || (w.Pristine && ShouldRemove(w)) || (w.Reusable && (!w.Running || clock.GetElapsedTime(w.ReadyAt) >= options.ReusableIdleTimeout))).ToArray();
                 bool ShouldRemove(Worker worker)
                 {
                     var key = (worker.Profile, worker.Version);
@@ -175,6 +142,7 @@ internal sealed partial class WorkerPool(WorkerPoolOptions options, TimeProvider
                 foreach (Worker worker in expired)
                 {
                     worker.Pristine = false;
+                    worker.Reusable = false;
                     worker.QuarantinedAt ??= clock.GetTimestamp();
                 }
 

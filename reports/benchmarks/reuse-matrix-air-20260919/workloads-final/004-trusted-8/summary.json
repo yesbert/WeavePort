@@ -1,0 +1,150 @@
+{
+  "config": {
+    "mode": "trusted",
+    "workers": 8,
+    "seconds": 30,
+    "cpus": "1",
+    "transport": "engine",
+    "workload": "blend",
+    "cpuMs": 10,
+    "ioMs": 500
+  },
+  "serialization": "one in-flight call per customer/plugin key",
+  "image": "sha256:7ca4151f0fcc8116e66b48e9af6c14c1a8100da33a046351c8158c3b34b9fb70",
+  "counts": {
+    "offered": 37106,
+    "completed": 37106,
+    "correct": 37106,
+    "failed": 0,
+    "dropped": 0,
+    "withinOneSecond": 37106,
+    "customersCompleted": 37106,
+    "faultsExpected": 0,
+    "faultsContained": 0
+  },
+  "partiallyServedCustomers": 0,
+  "offeredCustomers": 37106,
+  "elapsed": 30.508462834004604,
+  "preparedSeconds": 0.26600041699566646,
+  "customersPerSecond": 1216.252690340131,
+  "requestsPerSecond": 1216.252690340131,
+  "hostCpuCores": 0.1095021082568744,
+  "latency": {
+    "responseMs": {
+      "count": 37106,
+      "mean": 6.501065740313642,
+      "max": 516.0529169952497,
+      "p50": 0.5504496159377597,
+      "p95": 10.677927314845235,
+      "p99": 502.1790770294658
+    },
+    "turnoverMs": {
+      "count": 37106,
+      "mean": 6.501437157533398,
+      "max": 516.0534169990569,
+      "p50": 0.5504496159377597,
+      "p95": 10.677927314845235,
+      "p99": 502.1790770294658
+    },
+    "queueMs": {
+      "count": 37106,
+      "mean": 0.0005181472799431261,
+      "max": 0.019458995666354895,
+      "p50": 0.0010022281455185505,
+      "p95": 0.001129335760273049,
+      "p99": 0.0013374773453992952
+    },
+    "executionMs": {
+      "count": 37106,
+      "mean": 5.953121654554822,
+      "max": 510.2442509996763,
+      "p50": 0.029823255879923124,
+      "p95": 10.059090549340699,
+      "p99": 502.1790770294658
+    },
+    "cleanupMs": {
+      "count": 37106,
+      "mean": 0.04360555319907452,
+      "max": 0.8676659999764524,
+      "p50": 0.04100520767554804,
+      "p95": 0.0536433767301866,
+      "p99": 0.10764956337917186
+    },
+    "generatorLagMs": {
+      "count": 0
+    },
+    "pluginImportMs": {
+      "count": 37106,
+      "mean": 0.005702638674690876,
+      "max": 37.6178330006951,
+      "p50": 0.0010022281455185505,
+      "p95": 0.0010022281455185505,
+      "p99": 0.001715223740350772
+    },
+    "childWorkMs": {
+      "count": 0
+    },
+    "childStartMs": {
+      "count": 0
+    },
+    "childResponseWaitMs": {
+      "count": 0
+    },
+    "childExitWaitMs": {
+      "count": 0
+    },
+    "processTurnoverMs": {
+      "count": 0
+    }
+  },
+  "byWorkload": {
+    "echo": {
+      "count": 33395,
+      "mean": 0.573884591892868,
+      "max": 42.13766699831467,
+      "p50": 0.5449996197403562,
+      "p95": 0.6327276392070078,
+      "p99": 1.1156683466653166
+    },
+    "cpu": {
+      "count": 3339,
+      "mean": 10.611247138909183,
+      "max": 17.90279199485667,
+      "p50": 10.677927314845235,
+      "p95": 10.784706587993686,
+      "p99": 11.448183361474655
+    },
+    "io": {
+      "count": 372,
+      "mean": 501.70084735752124,
+      "max": 516.0529169952497,
+      "p50": 502.1790770294658,
+      "p95": 507.2008677997605,
+      "p99": 512.2728764777581
+    }
+  },
+  "memorySamplesWithLiveContainers": 10,
+  "memoryPeakMiB": 92.70703125,
+  "helperScope": "RSS of live owned Docker CLI PIDs only; observer children excluded",
+  "hostRssPeakMiB": 39.453125,
+  "helpersRssPeakMiB": 0,
+  "memoryRawPeakMiB": 92.70703125,
+  "starts": 8,
+  "retirements": 8,
+  "failure": null,
+  "failedExamples": [],
+  "known": [
+    "wp-matrix-0b9bd28cb98a4983bff5e3534c19c01c",
+    "wp-matrix-0f099c428f284dc9b8ea47cd3b7eabe5",
+    "wp-matrix-2a2cba109f4a4ad894650a5864922e03",
+    "wp-matrix-38c0906661434df8bf41f51e420f460f",
+    "wp-matrix-5875615ae31b4e349137d89869642463",
+    "wp-matrix-bb70265cbbb74e4483100c9dfaaf6641",
+    "wp-matrix-d1cef41a7ee24e1c9f5fdc46b9abc577",
+    "wp-matrix-d414a4774e4a414e834295a2400da100"
+  ],
+  "remaining": [],
+  "passed": true,
+  "meetsOneSecondSlo": true,
+  "normalEchoP99WithinOneSecond": true
+}

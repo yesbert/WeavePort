@@ -57,6 +57,14 @@ class ReleaseTests(unittest.TestCase):
         symbols = package.with_suffix(".snupkg")
         symbols.write_bytes(b"fixture symbols")
         manifest = {f"artifacts/packages/{p.name}": release.digest(p) for p in [package, symbols]}
+        (self.root / "compatibility").mkdir()
+        (self.root / "compatibility/local-v1.json").write_text(json.dumps({"AuthorSdks": {
+            "python": {"Version": "0.2.0"}, "node": {"Version": "0.2.0"}}}))
+        author = candidate / "checkout/artifacts/sdk-version-tests"
+        (author / "wheel").mkdir(parents=True)
+        for path in [author / "wheel/weaveport_sdk-0.2.0-py3-none-any.whl", author / "weaveport-sdk-0.2.0.tgz"]:
+            path.write_bytes(b"qualified author SDK fixture")
+            manifest[path.relative_to(candidate / "checkout").as_posix()] = release.digest(path)
         (candidate / "artifact-manifest.json").write_text(json.dumps(manifest))
         (candidate / "package-set.json").write_text(json.dumps({package.name: release.digest(package)}))
         (candidate / "result.json").write_text(json.dumps({"status": "passed", "sourceCommit": commit,
@@ -68,6 +76,8 @@ class ReleaseTests(unittest.TestCase):
         output = self.root / "output"
         release.export(candidate, output, "0.1.0-preview.1", self.root)
         self.assertEqual((output / package.name).read_bytes(), package.read_bytes())
+        self.assertEqual((output / "weaveport-sdk-0.2.0.tgz").read_bytes(), b"qualified author SDK fixture")
+        self.assertEqual((output / "weaveport_sdk-0.2.0-py3-none-any.whl").read_bytes(), b"qualified author SDK fixture")
         with self.assertRaisesRegex(ValueError, "already exists"):
             release.export(candidate, output, "0.1.0-preview.1", self.root)
 
@@ -75,6 +85,20 @@ class ReleaseTests(unittest.TestCase):
         candidate, package = self.candidate()
         package.write_bytes(package.read_bytes() + b"changed")
         with self.assertRaisesRegex(ValueError, "Package changed"):
+            release.export(candidate, self.root / "output", "0.1.0-preview.1", self.root)
+        self.assertFalse((self.root / "output").exists())
+
+    def test_changed_author_sdk_refused_before_output(self):
+        candidate, _ = self.candidate()
+        (candidate / "checkout/artifacts/sdk-version-tests/weaveport-sdk-0.2.0.tgz").write_bytes(b"changed")
+        with self.assertRaisesRegex(ValueError, "qualified author SDK"):
+            release.export(candidate, self.root / "output", "0.1.0-preview.1", self.root)
+        self.assertFalse((self.root / "output").exists())
+
+    def test_missing_author_sdk_refused_before_output(self):
+        candidate, _ = self.candidate()
+        (candidate / "checkout/artifacts/sdk-version-tests/wheel/weaveport_sdk-0.2.0-py3-none-any.whl").unlink()
+        with self.assertRaisesRegex(ValueError, "qualified author SDK"):
             release.export(candidate, self.root / "output", "0.1.0-preview.1", self.root)
         self.assertFalse((self.root / "output").exists())
 

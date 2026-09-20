@@ -35,7 +35,7 @@ The [core concepts](concepts.md) explain bindings, callbacks and ownership. The 
 
 ## Start with the right expectations
 
-WeavePort's native execution is for **owner-controlled code**. Workers run with the application's OS-user rights; separate processes are not a hostile-plugin sandbox. The current public release is 0.3.1 under MIT, with an evolving API. Windows, Linux and macOS are supported targets for trusted stdio execution. Current release validation covers macOS arm64; Windows and Linux release validation is pending. See [platform support and validation](../docs/platform-qualification.md) for transport and tooling differences.
+WeavePort's native execution is for **owner-controlled code**. Workers run with the application's OS-user rights; separate processes are not a hostile-plugin sandbox. The current public release is 0.4.0 under MIT, with an evolving API. Windows, Linux and macOS are supported targets for trusted stdio execution. Current release validation covers macOS arm64; Windows and Linux release validation is pending. See [platform support and validation](../docs/platform-qualification.md) for transport and tooling differences.
 
 Your application keeps its database and workflow architecture. It also keeps responsibility for durable state, retries and the meaning of external effects. A cancelled call does not prove an action never happened.
 

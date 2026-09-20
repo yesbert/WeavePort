@@ -2,7 +2,7 @@
 
 Keep the host, SDKs and plugin artifacts on a known-compatible combination. This guide defines the exact identities checked during installation and startup.
 
-**Public package policy for 0.3.1, reviewed 2026-09-14.** The [machine-readable matrix](../compatibility/local-v1.json) defines one exact combination. It is embedded in `WeavePort.Hosting` and consumed by the offline installation sealer. The public NuGet package set uses this exact matrix; no general SemVer range is accepted.
+**Public package policy for 0.4.0, reviewed 2026-09-20.** The [machine-readable matrix](../compatibility/local-v1.json) defines one exact combination. It is embedded in `WeavePort.Hosting` and consumed by the offline installation sealer. The public NuGet package set uses this exact matrix; no general SemVer range is accepted.
 
 ## Separate compatibility identities
 
@@ -10,10 +10,10 @@ Keep the host, SDKs and plugin artifacts on a known-compatible combination. This
 |---|---|---|
 | Local host API level | `1` | Installation compatibility declaration against the embedded matrix |
 | Transport protocol | `1` | Compatibility declaration and existing worker startup protocol checks |
-| Core host packages | Abstractions, Hosting, Sdk.Client, each `0.3.1` | Exact declaration plus actual packed/loaded metadata checks |
-| C# author SDK (`dotnet`) | `WeavePort.Sdk` `0.3.1` | Entry-specific declaration, packed metadata and native startup/call checks |
-| Python author SDK (`python`) | `weaveport-sdk` `0.1.0` | Entry-specific declaration, wheel/installed metadata and native startup/call checks |
-| TypeScript author SDK (`node`) | `@weaveport/sdk` `0.1.0` | Entry-specific declaration, npm/installed metadata and native startup/call checks |
+| Core host packages | Abstractions, Hosting, Sdk.Client, each `0.4.0` | Exact declaration plus actual packed/loaded metadata checks |
+| C# author SDK (`dotnet`) | `WeavePort.Sdk` `0.4.0` | Entry-specific declaration, packed metadata and native startup/call checks |
+| Python author SDK (`python`) | `weaveport-sdk` `0.2.0` | Entry-specific declaration, wheel/installed metadata and native startup/call checks |
+| TypeScript author SDK (`node`) | `@weaveport/sdk` `0.2.0` | Entry-specific declaration, npm/installed metadata and native startup/call checks |
 | Plugin artifact release | Exact chosen installation, e.g. `1` or `2` | Manifest identity/content pin and worker's advertised release |
 | Application domain contract | Exact host-requested ID | Resolver equality, followed by application-owned payload validation |
 
@@ -30,6 +30,8 @@ The metadata is a trusted deployment declaration, not runtime package attestatio
 Old manifests without `Compatibility` fail closed. Rebuild/reseal only offline. This changes manifest identity, so existing pins require the original deployment or new application state; recovery never upgrades a pin automatically. Manifest schema is 1 for the first public release. Future format evolution requires an explicit migration/format decision.
 
 ## Reviewed package/API surface
+
+Version 0.4.0 extends the API snapshot with fair scheduling, operator-owned reuse policy, cleanup registration and pool metrics. The previous constructor/member signatures remain present. Update all four core packages and exact installation declarations together. Python/TypeScript SDK 0.2.0 provides the cleanup capability; earlier SDKs remain valid for customer-bound native workers but cannot enter an approved pool. Download the exact author SDK artifacts from the GitHub release; PyPI/npm registry publication is separate.
 
 The [API baseline](../compatibility/public-api.txt) records exported types and public/protected signatures across the four core .NET packages. It includes parameter names and optional defaults, inheritance/interfaces and enum values. The [packed consumer](../tests/compatibility/Program.cs) detects drift without rewriting the baseline. All four packages target `net10.0` in this candidate.
 

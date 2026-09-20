@@ -1,0 +1,5 @@
+{
+  "qualifiedLow": 6000,
+  "firstRejected": 6375,
+  "scope": "Two finite trials per point under the stated latency/backlog contract; not a universal server maximum"
+}

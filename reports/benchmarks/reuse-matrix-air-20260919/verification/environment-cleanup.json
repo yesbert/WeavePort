@@ -1,0 +1,18 @@
+{
+  "observedOwnedNames": 14153,
+  "remainingOwnedNames": [],
+  "otherContainerCount": 10,
+  "docker": {
+    "ServerVersion": "29.8.0",
+    "KernelVersion": "7.0.12-linuxkit",
+    "OperatingSystem": "Docker Desktop",
+    "Architecture": "aarch64",
+    "NCPU": 10,
+    "MemTotal": 25159561216,
+    "SecurityOptions": [
+      "name=seccomp,profile=builtin",
+      "name=cgroupns"
+    ],
+    "DefaultRuntime": "runc"
+  }
+}

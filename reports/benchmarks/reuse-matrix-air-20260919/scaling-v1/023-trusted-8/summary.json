@@ -1,0 +1,95 @@
+{
+  "config": {
+    "mode": "trusted",
+    "workers": 8,
+    "seconds": 15,
+    "cpus": "1"
+  },
+  "image": "sha256:38985b720bd830c893e5ecde51c4ae5f00b2c9495e7535d454c81a89df40be00",
+  "counts": {
+    "offered": 86868,
+    "completed": 86868,
+    "correct": 86868,
+    "failed": 0,
+    "dropped": 0,
+    "withinOneSecond": 86868
+  },
+  "elapsed": 15.001054665997799,
+  "preparedSeconds": 0.6436847500008298,
+  "customersPerSecond": 5790.7928431792,
+  "hostCpuCores": 0.46792449972937344,
+  "latency": {
+    "responseMs": {
+      "count": 86868,
+      "mean": 1.3667983162088122,
+      "max": 132.95920800010208,
+      "p50": 1.3082088781170804,
+      "p95": 1.9477447545866546,
+      "p99": 2.4003849374066086
+    },
+    "turnoverMs": {
+      "count": 86868,
+      "mean": 1.3673106155815153,
+      "max": 132.95954199929838,
+      "p50": 1.3082088781170804,
+      "p95": 1.9477447545866546,
+      "p99": 2.424388786780675
+    },
+    "queueMs": {
+      "count": 86868,
+      "mean": 0.0007126599155465934,
+      "max": 0.039040998672135174,
+      "p50": 0.0010022281455185505,
+      "p95": 0.0010429226271614672,
+      "p99": 0.0015071029500303879
+    },
+    "executionMs": {
+      "count": 86868,
+      "mean": 0.0938913530861193,
+      "max": 3.3611669969104696,
+      "p50": 0.07829396937632108,
+      "p95": 0.16678336010931977,
+      "p99": 0.2999948313723041
+    },
+    "cleanupMs": {
+      "count": 86868,
+      "mean": 0.11820040123593471,
+      "max": 2.712166002311278,
+      "p50": 0.10242486584113003,
+      "p95": 0.2160272004130794,
+      "p99": 0.35176753285464984
+    },
+    "generatorLagMs": {
+      "count": 0
+    }
+  },
+  "byWorkload": {
+    "echo": {
+      "count": 86868,
+      "mean": 1.3667983162088122,
+      "max": 132.95920800010208,
+      "p50": 1.3082088781170804,
+      "p95": 1.9477447545866546,
+      "p99": 2.4003849374066086
+    }
+  },
+  "memoryPeakMiB": 141.91015625,
+  "memoryRawPeakMiB": 141.91015625,
+  "starts": 8,
+  "retirements": 8,
+  "failure": null,
+  "failedExamples": [],
+  "known": [
+    "wp-matrix-118097c1cbd049e59959b9506096e466",
+    "wp-matrix-46a900cecba74f57acfcdaf03a77e980",
+    "wp-matrix-5c657fbc5c1f4c0aad79d32316d77217",
+    "wp-matrix-67a991b039b84af499131a1bc4680c2a",
+    "wp-matrix-af42e21c75684f5383f5e0812b227e1d",
+    "wp-matrix-b4738f0285b742d688247a76242ae386",
+    "wp-matrix-b7d5b7cbfbb74bfba84147b81c1f4945",
+    "wp-matrix-edea6f57697046bdbf2d1893ae4ec142"
+  ],
+  "remaining": [],
+  "passed": true,
+  "meetsOneSecondSlo": true
+}

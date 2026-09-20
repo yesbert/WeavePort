@@ -1,0 +1,70 @@
+[
+  {
+    "path": "README.md",
+    "sha256": "2bd171aaf4d73609bc26de805e7ea29908004646f5b7fa235e02d44fff8b3f85"
+  },
+  {
+    "path": "api-complete.log",
+    "sha256": "dd6ceab823b66f43186aa08a9a6310abe2d2f131784e6ede7d4942b60598d588"
+  },
+  {
+    "path": "api-diff-final.txt",
+    "sha256": "dfa4a400b3b0813835d9e01975b8b564218c472164cbf9adc4a2bb3c6efa5fa5"
+  },
+  {
+    "path": "assembly-identity-final.json",
+    "sha256": "db1dbd4ca84f3367081cf3b461dbda77db39d18da7e5f7e28a62cb2a26199ec2"
+  },
+  {
+    "path": "docker-csharp-complete.log",
+    "sha256": "0817ff092e61a8ae44fbc02ec138f1ad447ac3361d94d4ee6f00ac985281b9a7"
+  },
+  {
+    "path": "docker-python-complete.log",
+    "sha256": "fab4071eccd50d2c993dadea4019832e553766ab124f0e5fbb5ea39f7b59250c"
+  },
+  {
+    "path": "docker-typescript-complete.log",
+    "sha256": "cfceb0e774cf131724ad06e328b7978ee6aa64663ff1228d2a7250669ebea200"
+  },
+  {
+    "path": "example-results.json",
+    "sha256": "68aab0fa2a582057a3a3acc5069025c793a45803153147fc64f1e45ed33ecb99"
+  },
+  {
+    "path": "hosting-verified.log",
+    "sha256": "bb14df9caa5980314eb06c7716ea3500093b189f820932f5763bae784bd41229"
+  },
+  {
+    "path": "images.json",
+    "sha256": "d65a09ee98e6a196fbc78f21f5bbd32a09342e7cab2f47cd71dc11e61a55539d"
+  },
+  {
+    "path": "measurements.json",
+    "sha256": "777a94cb48d34728710a603a1a1b5e46eaf89f0650c1152a36933e73036a157e"
+  },
+  {
+    "path": "packed-complete.log",
+    "sha256": "e2e2fcbbef4eb5f4aba9df797036d4561f99e2a722719e69a739b8c36bc91526"
+  },
+  {
+    "path": "provenance.json",
+    "sha256": "a0662daaa144d7bd55fb1af7e30b64ad97c6079d1de110aed90e134fa7e61977"
+  },
+  {
+    "path": "scheduling-complete.log",
+    "sha256": "b1b4aa10bef27264526338066aab35c033abc1f8b48c133b41650ca3771c359e"
+  },
+  {
+    "path": "sdk-checks.log",
+    "sha256": "8eff59511103f31cbcb9bf3bcbe765f8ea42d4e7bd75371fb4b2f23a2d59e4f3"
+  },
+  {
+    "path": "source-complete.log",
+    "sha256": "e2e2fcbbef4eb5f4aba9df797036d4561f99e2a722719e69a739b8c36bc91526"
+  },
+  {
+    "path": "style-complete.json",
+    "sha256": "38db40496ff3db03e90b4359ac804a2d3cb4756d747e5d5cbc153e6e98f6e52c"
+  }
+]

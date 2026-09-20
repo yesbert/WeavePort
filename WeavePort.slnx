@@ -1,6 +1,8 @@
 <Solution>
   <Folder Name="/benchmarks/">
     <Project Path="benchmarks/WeavePort.Benchmarks/WeavePort.Benchmarks.csproj" />
+    <Project Path="benchmarks/WeavePort.Density/WeavePort.Density.csproj" />
+    <Project Path="benchmarks/WeavePort.Registry/WeavePort.Registry.csproj" />
   </Folder>
   <Folder Name="/examples/">
     <Project Path="examples/sdk/csharp/ExamplePlugin.csproj" />
@@ -28,13 +30,18 @@
     <Project Path="src/WeavePort.Sdk/WeavePort.Sdk.csproj" />
     <Project Path="src/WeavePort.Testing/WeavePort.Testing.csproj" />
   </Folder>
+  <Folder Name="/examples/reuse/">
+    <Project Path="examples/reuse/csharp/ReusablePlugin.csproj" />
+  </Folder>
   <Folder Name="/tests/">
+    <Project Path="tests/WeavePort.ReuseTests/WeavePort.ReuseTests.csproj" />
     <Project Path="tests/WeavePort.CapacityTests/WeavePort.CapacityTests.csproj" />
     <Project Path="tests/WeavePort.Composition.Tests/WeavePort.BulkDemo.csproj" />
     <Project Path="tests/WeavePort.Docker.Tests/WeavePort.Demo.csproj" />
     <Project Path="tests/WeavePort.Gateway.Tests/WeavePort.Gateway.Tests.csproj" />
     <Project Path="tests/WeavePort.GatewayRegression/WeavePort.GatewayRegression.csproj" />
     <Project Path="tests/WeavePort.Hosting.Tests/WeavePort.Hosting.Tests.csproj" />
+    <Project Path="tests/WeavePort.Scheduling.Tests/WeavePort.Scheduling.Tests.csproj" />
     <Project Path="tests/WeavePort.LifecycleTests/WeavePort.LifecycleTests.csproj" />
     <Project Path="tests/WeavePort.LoadTests/WeavePort.LoadTests.csproj" />
     <Project Path="tests/WeavePort.Local.Tests/WeavePort.LocalDemo.csproj" />

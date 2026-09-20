@@ -9,6 +9,9 @@ internal abstract class Worker(ExecutionProfile profile, string version)
     internal long ReadyAt { get; set; }
     internal string? Tenant { get; set; }
     internal bool Starting { get; set; } = true;
+    internal TaskCompletionSource StartupCompletion { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
+    internal bool Reusable { get; set; }
+    internal bool AcquiredFromReuse { get; set; }
     internal bool Pristine { get; set; }
     internal bool Quarantined => QuarantinedAt is not null;
     internal long? QuarantinedAt { get; set; }

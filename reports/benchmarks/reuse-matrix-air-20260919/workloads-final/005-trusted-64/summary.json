@@ -1,0 +1,190 @@
+{
+  "config": {
+    "mode": "trusted",
+    "workers": 64,
+    "seconds": 30,
+    "cpus": "1",
+    "transport": "engine",
+    "memory": 64,
+    "workload": "io",
+    "ioMs": 100
+  },
+  "serialization": "one in-flight call per customer/plugin key",
+  "image": "sha256:7ca4151f0fcc8116e66b48e9af6c14c1a8100da33a046351c8158c3b34b9fb70",
+  "counts": {
+    "offered": 17208,
+    "completed": 17208,
+    "correct": 17208,
+    "failed": 0,
+    "dropped": 0,
+    "withinOneSecond": 17208,
+    "customersCompleted": 17208,
+    "faultsExpected": 0,
+    "faultsContained": 0
+  },
+  "partiallyServedCustomers": 0,
+  "offeredCustomers": 17208,
+  "elapsed": 30.00733495899476,
+  "preparedSeconds": 2.1462293340009637,
+  "customersPerSecond": 573.4597898652065,
+  "requestsPerSecond": 573.4597898652065,
+  "hostCpuCores": 0.06438635762356695,
+  "latency": {
+    "responseMs": {
+      "count": 17208,
+      "mean": 111.57468304601036,
+      "max": 335.6489590005367,
+      "p50": 112.88923934764154,
+      "p95": 118.64772510251562,
+      "p99": 122.24286982084695
+    },
+    "turnoverMs": {
+      "count": 17208,
+      "mean": 111.57533455279312,
+      "max": 335.64954200119246,
+      "p50": 112.88923934764154,
+      "p95": 118.64772510251562,
+      "p99": 122.24286982084695
+    },
+    "queueMs": {
+      "count": 17208,
+      "mean": 0.0006267645729565571,
+      "max": 0.021041996660642326,
+      "p50": 0.0010022281455185505,
+      "p95": 0.0012108007929873832,
+      "p99": 0.002877611867016725
+    },
+    "executionMs": {
+      "count": 17208,
+      "mean": 103.15922338121248,
+      "max": 124.37470799704897,
+      "p50": 102.1971557066337,
+      "p95": 109.56918351786665,
+      "p99": 112.88923934764154
+    },
+    "cleanupMs": {
+      "count": 17208,
+      "mean": 0.5601742148488498,
+      "max": 17.37233299718355,
+      "p50": 0.3552852081831963,
+      "p95": 1.9284601530560936,
+      "p99": 3.7937096290198276
+    },
+    "generatorLagMs": {
+      "count": 0
+    },
+    "pluginImportMs": {
+      "count": 17208,
+      "mean": 0.5669623775564296,
+      "max": 222.96166700107278,
+      "p50": 0.003917371894044667,
+      "p95": 0.00859772068211674,
+      "p99": 0.01886999828637027
+    },
+    "childWorkMs": {
+      "count": 0
+    },
+    "childStartMs": {
+      "count": 0
+    },
+    "childResponseWaitMs": {
+      "count": 0
+    },
+    "childExitWaitMs": {
+      "count": 0
+    },
+    "processTurnoverMs": {
+      "count": 0
+    }
+  },
+  "byWorkload": {
+    "io": {
+      "count": 17208,
+      "mean": 111.57468304601036,
+      "max": 335.6489590005367,
+      "p50": 112.88923934764154,
+      "p95": 118.64772510251562,
+      "p99": 122.24286982084695
+    }
+  },
+  "memorySamplesWithLiveContainers": 10,
+  "memoryPeakMiB": 700.41015625,
+  "helperScope": "RSS of live owned Docker CLI PIDs only; observer children excluded",
+  "hostRssPeakMiB": 40.328125,
+  "helpersRssPeakMiB": 0,
+  "memoryRawPeakMiB": 700.41015625,
+  "starts": 64,
+  "retirements": 64,
+  "failure": null,
+  "failedExamples": [],
+  "known": [
+    "wp-matrix-02a67668cab84602a3feaa73d5b7be54",
+    "wp-matrix-0d2bc96c538f48a39e7e3b225933fef3",
+    "wp-matrix-0deae8bc56784adbab4865ddf08bedeb",
+    "wp-matrix-11d683066ef74b62b230bc3b75446d8f",
+    "wp-matrix-12027609143747f5833e360a1304a4c8",
+    "wp-matrix-140f48ca72924760a19dfdc9b03b939d",
+    "wp-matrix-16d2e49c53304efdb5d53af347bb3e37",
+    "wp-matrix-172de07bec3646139f465d60e2df5152",
+    "wp-matrix-176fbdb7e0bf438b92990acf0d4d590f",
+    "wp-matrix-1aba348b0f664016ac8dc7f78df32d46",
+    "wp-matrix-23a4fec468274c1f803759ab98b59815",
+    "wp-matrix-24b71d9989ca45d4b4082e8f90b5bb1b",
+    "wp-matrix-256b2d07e6f74ed2a8abd27a8dcddda7",
+    "wp-matrix-2f3cc2e810be4d93b92bda3b354833eb",
+    "wp-matrix-345d11d947e74eec9fdf85d5472a1edd",
+    "wp-matrix-38d988d1078141af84ee88d84a36ffcb",
+    "wp-matrix-3b48e9847bdc4f6999be89bd07819b4c",
+    "wp-matrix-3fbf9fc6a61f477493d0df4d3b8c28a6",
+    "wp-matrix-41f5372a748f49c3a3c1175954091ac6",
+    "wp-matrix-430afe4ea6b24e24bd4ebc5945a8c662",
+    "wp-matrix-49ef02d600ea404da58ba7304d72420a",
+    "wp-matrix-4b032746692245d9a83daa095ece27e5",
+    "wp-matrix-54aaae986986483f98165ae96c12e9b7",
+    "wp-matrix-5b55621975bc48adaa39c0889c6c2cb8",
+    "wp-matrix-5f5c8016d6844ba0b79acfccced6b4d0",
+    "wp-matrix-5fa30df9d9ef45f9905c99fef548134b",
+    "wp-matrix-612b37e00b704836a4fcbd380e07b0fc",
+    "wp-matrix-635c9e8fa7b94da2aba8157da587386b",
+    "wp-matrix-678fd4927bdd400fad1025b42530e04a",
+    "wp-matrix-70e55c43e6304acc98551fac2c2b5964",
+    "wp-matrix-71a6d981c017452cac7659b0a9fb2254",
+    "wp-matrix-72cd141808cf43dd9511952cb0e00434",
+    "wp-matrix-7475e9ff5cc447f6807ec12a08152d48",
+    "wp-matrix-74a472d552df4749a496002e4d5a809f",
+    "wp-matrix-784179d38acc41338ccc2c915f567571",
+    "wp-matrix-78782f04472b40579a3c2920711f2640",
+    "wp-matrix-78878f346e794650883e8e759b1b998e",
+    "wp-matrix-79c4920e18bb463c95fe8afc6bf70842",
+    "wp-matrix-7a6fb98e6ad54378901beaa7004f2fe7",
+    "wp-matrix-80ab04edf4e14a4b8260d8dc17b1a774",
+    "wp-matrix-828374e9939f422d8ef4947fa1173385",
+    "wp-matrix-8677638dff2e4d9c9b3e666c72fd896c",
+    "wp-matrix-8b3ae5925dd64cd384b3cf9ec53da83d",
+    "wp-matrix-93bfba4f6f264073b5630a50b76108d8",
+    "wp-matrix-995b6012280e4d1cb6eb22013ae447f9",
+    "wp-matrix-a0263068703a4c7caa9ab7868024c37c",
+    "wp-matrix-a5117199b2ba4a19901df83b0d6654f2",
+    "wp-matrix-b0dc9e2079644868838d51baa5d7f6a8",
+    "wp-matrix-b16f013299a545d3912120ba9d397cb2",
+    "wp-matrix-ba9641def2634abeaa7db3d2ab5da0e9",
+    "wp-matrix-baab47fb71424aa5b31dfb198900b721",
+    "wp-matrix-c8e69b71c58341b89102cbfb1cbb3b4a",
+    "wp-matrix-cd1bc7b376d34c2c8cf19a8a7372ac90",
+    "wp-matrix-ce6bf1428f994c3b92255e4e0dae84df",
+    "wp-matrix-ceba665393da4e7697ba42f3b019b583",
+    "wp-matrix-cef12faa7cc64b50aeffb6b4c94035df",
+    "wp-matrix-d789f591089c4d6eaa5148a366e3ba6e",
+    "wp-matrix-d8309ba3def54f56b42ee8cb3773b441",
+    "wp-matrix-eb1acae7071e498f87afdc021874aa12",
+    "wp-matrix-f040fb399c5c42a18f5761216eed0171",
+    "wp-matrix-f66946a565ce4df9a6a4e49fbd58eb94",
+    "wp-matrix-f66a1779c1c54ed8a90a2a0d0aad595a",
+    "wp-matrix-fab2217a634a42d89f443f874e410239",
+    "wp-matrix-ffbf8898dce7450999b68d950c12b378"
+  ],
+  "remaining": [],
+  "passed": true,
+  "meetsOneSecondSlo": true,
+  "normalEchoP99WithinOneSecond": false
+}

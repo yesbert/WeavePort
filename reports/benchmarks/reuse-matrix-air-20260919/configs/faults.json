@@ -1,0 +1,23 @@
+[
+  {
+    "mode": "trusted",
+    "workers": 4,
+    "seconds": 90,
+    "cpus": "1",
+    "faultEvery": 100
+  },
+  {
+    "mode": "process",
+    "workers": 4,
+    "seconds": 90,
+    "cpus": "1",
+    "faultEvery": 100
+  },
+  {
+    "mode": "forkserver",
+    "workers": 4,
+    "seconds": 90,
+    "cpus": "1",
+    "faultEvery": 100
+  }
+]

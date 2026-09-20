@@ -6,7 +6,7 @@ The GitHub delivery target is [yesbert/WeavePort](https://github.com/yesbert/Wea
 
 The release allowlist in `build/release-packages.json` contains `WeavePort.Abstractions`, `WeavePort.Hosting`, `WeavePort.Sdk` and `WeavePort.Sdk.Client`. Gateway, Composition and Testing remain optional/experimental; adding them requires appropriate package-consumer evidence. Python and TypeScript author SDK publication is separate from NuGet delivery.
 
-The current release version is `0.3.1`, licensed under [MIT](../LICENSE). The four core package references and exact compatibility matrix use 0.3.1; host API and wire protocol remain 1. Python/TypeScript SDK versions remain 0.1.0 without registry publication. Historical internal distribution and measurement evidence retain their original identities. Public releases require a complete clean candidate qualification; a tag override cannot substitute for updating compatibility inputs.
+The current release version is `0.4.0`, licensed under [MIT](../LICENSE). The four core package references and exact compatibility matrix use 0.4.0; host API and wire protocol remain 1. Python/TypeScript SDK versions are 0.2.0; the qualified wheel and tarball accompany the GitHub release without claiming PyPI/npm registry publication. Historical internal distribution and measurement evidence retain their original identities. Public releases require a complete clean candidate qualification; a tag override cannot substitute for updating compatibility inputs.
 
 ## Trusted Publishing setup
 
@@ -65,3 +65,13 @@ The [0.3.0 release report](../reports/release/0.3.0/README.md) links the origina
 ## 0.3.1 named MCP methods
 
 Hosting exposes `McpMethods.ListTools` and `McpMethods.CallTool` for consumer invocations. Examples and the guide use these constants. Internal MCP identifiers, SDK operations and gateway metadata are centralized without changing wire values. Update the four core packages together to match the exact 0.3.1 compatibility matrix.
+
+## 0.4.0 approved session reuse and fair scheduling
+
+The four core packages add memory-led fair scheduling, explicit operator-approved reuse, cleanup capability checks, idle retention and diagnostics. C# 0.4.0 and Python/TypeScript 0.2.0 SDKs register session-owned resources and attempt reverse-order cleanup. Customer-bound execution remains the default. Hidden globals and unregistered background work remain a documented residual risk under approval; see [best practices and runnable examples](reusable-plugins.md).
+
+Clean candidate qualification now includes source and packed reuse consumers, matching Hosting/SDK DLL hashes, and all three maintained author examples. Download the exact Python wheel and TypeScript tarball from the 0.4.0 release assets and install them with `python -m pip install ./weaveport_sdk-0.2.0-py3-none-any.whl` and `npm install ./weaveport-sdk-0.2.0.tgz`. These packages are not announced as registry publications.
+
+The [implementation evidence](../reports/verification/approved-session-reuse-20260920/README.md) retains pre-release cold/warm measurements with their original hashes and version labels. It does not establish maximum Docker capacity. Docker cold-start and repeated image resolution at registration remain explicitly separate from warmed invocation throughput.
+
+The [0.4.0 audit](../reports/release/0.4.0/audit.md) records release findings and their corrections. Publication evidence is added only after successful gated delivery.
