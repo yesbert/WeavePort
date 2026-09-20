@@ -7,7 +7,8 @@ P=Path('reports/benchmarks/reuse-matrix-air-20260919')
 O=Path(sys.argv[1]) if len(sys.argv)>1 else R/'user-report'
 
 def read(path): return json.loads((R/path).read_text())
-def fmt(v,d=1): return '—' if v is None else f'{v:,.{d}f}'
+# Metrics are numeric; never pass arbitrary report input through the formatter.
+def fmt(v,d=1): return '—' if v is None else f'{float(v):,.{d}f}'
 def table(headers,rows):
     return '\n'.join(['| '+' | '.join(headers)+' |','| '+' | '.join(['---']*len(headers))+' |']+['| '+' | '.join(map(str,row))+' |' for row in rows])
 
