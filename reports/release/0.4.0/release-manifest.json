@@ -1,0 +1,17 @@
+{
+  "tag": "v0.4.0",
+  "commit": "e319b9cca352569fcc35aef8712a328964a68bf8",
+  "workflow": 35519661080,
+  "sha256": {
+    "WeavePort.Abstractions.0.4.0.nupkg": "14a67813815f608b89b83194a5dc332a4b75ca44cbd1ced095b6375828b75f12",
+    "WeavePort.Abstractions.0.4.0.snupkg": "e2396b6ba83d59ee7573946fc0d712899d81b66df1e1353347f96d1d8d136d52",
+    "WeavePort.Hosting.0.4.0.nupkg": "8f44fd9b45678c7a2db29150ab34c46acdf32841ca3311f2633aed183c97660a",
+    "WeavePort.Hosting.0.4.0.snupkg": "6e24b90dd593ce777c0331581c5b3f75374be1d22e4385b5cd00fea4f7cbe42e",
+    "WeavePort.Sdk.0.4.0.nupkg": "1334218269f411fe74719c5a35708f6358a1a5adfa44c114404a8e46236b0224",
+    "WeavePort.Sdk.0.4.0.snupkg": "e8152e853fe79d3cf992bb3a4323326a55d332548904a21c0bbd09086c688fd5",
+    "WeavePort.Sdk.Client.0.4.0.nupkg": "5cca907c466dd9b1ba1d4110c436c2bf6ff774e30e2c00dcdf5d69d7053edc2c",
+    "WeavePort.Sdk.Client.0.4.0.snupkg": "92aa84daae1f48cb799e9f9450b2410e65cbd17fb975bb7fcda53bc21e11e0dc",
+    "weaveport-sdk-0.2.0.tgz": "4a92764ece25acd1cd3982fc267025a53c19dbe5003ab376b7a339767fcfa258",
+    "weaveport_sdk-0.2.0-py3-none-any.whl": "4afe73a2eb3751ad57a68ec5f5c4325d5ffb433479c6786e54c791926a34fa8f"
+  }
+}

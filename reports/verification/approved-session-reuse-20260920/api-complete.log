@@ -1,0 +1,18 @@
+  Determining projects to restore...
+  Restored /Users/norbert/Projects/WeavePort/Source/WeavePort/tests/compatibility/Compatibility.csproj (in 114 ms).
+PASS: WeavePort.Abstractions loaded package version matches matrix
+PASS: WeavePort.Hosting loaded package version matches matrix
+PASS: WeavePort.Sdk.Client loaded package version matches matrix
+PASS: WeavePort.Sdk loaded package version matches matrix
+PASS: packed Hosting embeds the reviewed compatibility matrix
+API candidate written for explicit review; baseline was not modified and API check was not passed.
+PASS: WeavePort.Abstractions loaded package version matches matrix
+PASS: WeavePort.Hosting loaded package version matches matrix
+PASS: WeavePort.Sdk.Client loaded package version matches matrix
+PASS: WeavePort.Sdk loaded package version matches matrix
+PASS: packed Hosting embeds the reviewed compatibility matrix
+PASS: packed public/protected API matches reviewed baseline (see artifacts/compatibility/api-actual.txt on drift)
+Verification passed: 6 package/API assertions.
+PASS: API drift fails without rewriting either reviewed or candidate baseline
+PASS: an actual packed dependency mismatch fails metadata verification
+Verification passed: 2 negative review-gate assertions. Evidence: /Users/norbert/Projects/WeavePort/Source/WeavePort/artifacts/compatibility/negative-e9507bba33154e8394d2633cd5036345

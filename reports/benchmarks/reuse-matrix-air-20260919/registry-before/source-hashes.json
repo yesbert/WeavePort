@@ -1,0 +1,8 @@
+{
+  "src/WeavePort.Hosting/ScheduledCall.cs": "86986698c5e67375cfcf62c94f9e07bf69cd83abfa4cdd24298241f9bff37ce9",
+  "src/WeavePort.Hosting/ScheduledPluginHost.Lifecycle.cs": "16d0ced8f21f82b3fc18c1f1675699b0168111a0d7f8fe526d1eb8a62061e1c1",
+  "src/WeavePort.Hosting/ScheduledPluginHost.Dispatch.cs": "6d5a0e82938317d5b4b5d2d488ac3d8013ba69843374273c91e35b2d897e136d",
+  "src/WeavePort.Hosting/ScheduledPluginHost.cs": "f8f180e2e23fee6588aa63532032f10def15e37da792d8c875ba93695b43fe19",
+  "src/WeavePort.Hosting/ScheduledPlugin.cs": "136975d5acbce61b1d13aaec86a813a76c7e455d67d6aacf58239fa0967279c2",
+  "benchmarks/WeavePort.Registry/Program.cs": "2cc53191b053a0f269bb2f8d7e5362048e26afffa47cbe05bbebd9124bfbd177"
+}

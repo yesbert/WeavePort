@@ -1,6 +1,6 @@
 # Gateway packages and HTTPS deployment
 
-The 0.4.0 source release adds `WeavePort.Sdk.Gateway` (server) and `WeavePort.Sdk.Gateway.Client` (remote client). The client package targets .NET 10 without requiring the ASP.NET Core shared framework. The server requires ASP.NET Core. Both preserve the `WeavePort.Sdk.Gateway` namespace. See the [runnable example](../examples/gateway/README.md), [client package](package-gateway-client.md) and [server package](package-gateway.md).
+The 0.5.0 source candidate adds `WeavePort.Sdk.Gateway` (server) and `WeavePort.Sdk.Gateway.Client` (remote client). The client package targets .NET 10 without requiring the ASP.NET Core shared framework. The server requires ASP.NET Core. Both preserve the `WeavePort.Sdk.Gateway` namespace. See the [runnable example](../examples/gateway/README.md), [client package](package-gateway-client.md) and [server package](package-gateway.md).
 
 ## Register and call
 
@@ -17,7 +17,7 @@ string boundTenant = await client.GetTenantAsync();
 var result = await client.CallAsync<MyInput, MyResult>("operation", input, cancellationToken);
 ```
 
-`GetTenantAsync` authenticates a describe exchange and checks gateway protocol version 1 without invoking plugins. Use coherent 0.4.0 endpoints; arbitrary version combinations are not qualified. Generated public protocol types and field numbers are included in the optional API baseline. The additive describe operation does not change native worker protocol version 1.
+`GetTenantAsync` authenticates a describe exchange and checks gateway protocol version 1 without invoking plugins. Use coherent 0.5.0 endpoints; arbitrary version combinations are not qualified. Generated public protocol types and field numbers are included in the optional API baseline. The additive describe operation does not change native worker protocol version 1.
 
 ## TLS and transport ownership
 

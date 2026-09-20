@@ -1,6 +1,6 @@
 # V1 integration agreement
 
-**Status: integration contract for the 0.4.0 source candidate, reviewed on 2026-09-18.** This guide defines how our applications should integrate WeavePort. It introduces no new runtime API or released compatibility promise. Existing [baseline specifications](../openspec/specs) define verified behavior; the [current status](status.md) separates remaining work from that behavior. Packages use version `0.4.0`; API evolution remains subject to the exact compatibility matrix.
+**Status: integration contract for the 0.5.0 source candidate, reviewed on 2026-09-18.** This guide defines how our applications should integrate WeavePort. It introduces no new runtime API or released compatibility promise. Existing [baseline specifications](../openspec/specs) define verified behavior; the [current status](status.md) separates remaining work from that behavior. Packages use version `0.5.0`; API evolution remains subject to the exact compatibility matrix.
 
 ## Product boundary
 

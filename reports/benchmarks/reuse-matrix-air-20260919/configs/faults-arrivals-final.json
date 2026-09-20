@@ -1,0 +1,42 @@
+[
+  {
+    "mode": "trusted",
+    "workers": 4,
+    "cpus": "1",
+    "transport": "engine",
+    "seconds": 60,
+    "arrival": "poisson",
+    "rate": 250,
+    "faultEvery": 100
+  },
+  {
+    "mode": "trusted",
+    "workers": 4,
+    "cpus": "1",
+    "transport": "engine",
+    "seconds": 60,
+    "arrival": "poisson",
+    "rate": 500,
+    "faultEvery": 100
+  },
+  {
+    "mode": "forkserver",
+    "workers": 4,
+    "cpus": "1",
+    "transport": "engine",
+    "seconds": 60,
+    "arrival": "poisson",
+    "rate": 250,
+    "faultEvery": 100
+  },
+  {
+    "mode": "forkserver",
+    "workers": 4,
+    "cpus": "1",
+    "transport": "engine",
+    "seconds": 60,
+    "arrival": "poisson",
+    "rate": 500,
+    "faultEvery": 100
+  }
+]

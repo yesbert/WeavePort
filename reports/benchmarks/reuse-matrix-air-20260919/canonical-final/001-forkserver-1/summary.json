@@ -1,0 +1,150 @@
+{
+  "config": {
+    "mode": "forkserver",
+    "workers": 1,
+    "seconds": 20,
+    "cpus": "1",
+    "memory": 128,
+    "transport": "engine"
+  },
+  "serialization": "one in-flight call per customer/plugin key",
+  "image": "sha256:7ca4151f0fcc8116e66b48e9af6c14c1a8100da33a046351c8158c3b34b9fb70",
+  "counts": {
+    "offered": 5703,
+    "completed": 5703,
+    "correct": 5703,
+    "failed": 0,
+    "dropped": 0,
+    "withinOneSecond": 5703,
+    "customersCompleted": 5703,
+    "faultsExpected": 0,
+    "faultsContained": 0
+  },
+  "partiallyServedCustomers": 0,
+  "offeredCustomers": 5703,
+  "elapsed": 20.001623083000595,
+  "preparedSeconds": 0.1300460420025047,
+  "customersPerSecond": 285.1268607719634,
+  "requestsPerSecond": 285.1268607719634,
+  "hostCpuCores": 0.05659265727100125,
+  "latency": {
+    "responseMs": {
+      "count": 5703,
+      "mean": 3.470243060533744,
+      "max": 13.210290999268182,
+      "p50": 3.4343958370448067,
+      "p95": 3.869963192563126,
+      "p99": 5.012594263858814
+    },
+    "turnoverMs": {
+      "count": 5703,
+      "mean": 3.4710017927000374,
+      "max": 13.211625002440996,
+      "p50": 3.4343958370448067,
+      "p95": 3.869963192563126,
+      "p99": 5.012594263858814
+    },
+    "queueMs": {
+      "count": 5703,
+      "mean": 0.0010635868024669538,
+      "max": 0.012249998690094799,
+      "p50": 0.001129335760273049,
+      "p95": 0.001767196734907141,
+      "p99": 0.002221654381271352
+    },
+    "executionMs": {
+      "count": 5703,
+      "mean": 0.16140314208977305,
+      "max": 0.5574999995587859,
+      "p50": 0.1586886444077779,
+      "p95": 0.1917131716427874,
+      "p99": 0.2410147095195973
+    },
+    "cleanupMs": {
+      "count": 5703,
+      "mean": 0.11276288566718538,
+      "max": 0.8202089993574191,
+      "p50": 0.11091145279912415,
+      "p95": 0.13533305002165036,
+      "p99": 0.16187828616037425
+    },
+    "generatorLagMs": {
+      "count": 0
+    },
+    "pluginImportMs": {
+      "count": 5703,
+      "mean": 0.0749622442619877,
+      "max": 0.27358299848856404,
+      "p50": 0.07302619881198222,
+      "p95": 0.09089686783859814,
+      "p99": 0.11541490253769432
+    },
+    "childWorkMs": {
+      "count": 5703,
+      "mean": 0.35227630422491835,
+      "max": 1.4831660009804182,
+      "p50": 0.3482846859947028,
+      "p95": 0.40434770807063813,
+      "p99": 0.5185484379416745
+    },
+    "childStartMs": {
+      "count": 5703,
+      "mean": 0.4064230629301062,
+      "max": 1.7769169971870724,
+      "p50": 0.3963804608083895,
+      "p95": 0.49831485652421664,
+      "p99": 0.6327276392070078
+    },
+    "childResponseWaitMs": {
+      "count": 5703,
+      "mean": 2.059348558460807,
+      "max": 9.601915997336619,
+      "p50": 2.026831002079339,
+      "p95": 2.3766187499075335,
+      "p99": 3.0478519248392826
+    },
+    "childExitWaitMs": {
+      "count": 5703,
+      "mean": 0.3072245949756198,
+      "max": 1.6364169969165232,
+      "p50": 0.3060247274828874,
+      "p95": 0.3414221017495371,
+      "p99": 0.4249735049171416
+    },
+    "processTurnoverMs": {
+      "count": 5703,
+      "mean": 2.7731053212008856,
+      "max": 10.705000000598375,
+      "p50": 2.731861967715744,
+      "p95": 3.1402048860138376,
+      "p99": 4.108043910989937
+    }
+  },
+  "byWorkload": {
+    "echo": {
+      "count": 5703,
+      "mean": 3.470243060533744,
+      "max": 13.210290999268182,
+      "p50": 3.4343958370448067,
+      "p95": 3.869963192563126,
+      "p99": 5.012594263858814
+    }
+  },
+  "memorySamplesWithLiveContainers": 7,
+  "memoryPeakMiB": 33.0,
+  "helperScope": "RSS of live owned Docker CLI PIDs only; observer children excluded",
+  "hostRssPeakMiB": 31.4375,
+  "helpersRssPeakMiB": 0,
+  "memoryRawPeakMiB": 33.0,
+  "starts": 1,
+  "retirements": 1,
+  "failure": null,
+  "failedExamples": [],
+  "known": [
+    "wp-matrix-2fcb65ff944f483a90af0135e16229b2"
+  ],
+  "remaining": [],
+  "passed": true,
+  "meetsOneSecondSlo": true,
+  "normalEchoP99WithinOneSecond": true
+}

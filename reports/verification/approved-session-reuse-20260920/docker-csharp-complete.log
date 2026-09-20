@@ -1,0 +1,3 @@
+docker-csharp CustomerBound: passed
+docker-csharp ApprovedSessions: passed
+PASS 324 reuse assertions

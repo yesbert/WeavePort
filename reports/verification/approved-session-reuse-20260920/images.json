@@ -1,0 +1,26 @@
+[
+  {
+    "id": "sha256:1eb68c7733e4b87feb81b77f19e671acd5723c7e0e849c6ab092a5357dc2ca2c",
+    "tags": [
+      "weaveport-sdk-reuse-python:local"
+    ],
+    "architecture": "arm64",
+    "created": "2026-09-20T14:06:47.128396837Z"
+  },
+  {
+    "id": "sha256:79bbd6268ac5cef57d1756e314af3ebc774f9e3cbda3ec8e556da0c51f43c6ce",
+    "tags": [
+      "weaveport-sdk-reuse-typescript:local"
+    ],
+    "architecture": "arm64",
+    "created": "2026-09-20T14:06:48.528129504Z"
+  },
+  {
+    "id": "sha256:379fe8c0c7f37442cdc4e62b6d9d53a52ec0e970567f06c0ccb3701e4fda7d33",
+    "tags": [
+      "weaveport-sdk-reuse-csharp:local"
+    ],
+    "architecture": "arm64",
+    "created": "2026-09-20T14:08:28.557393592Z"
+  }
+]

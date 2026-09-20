@@ -43,7 +43,7 @@
       "weaveport.sdk.client": {
         "type": "Project",
         "dependencies": {
-          "WeavePort.Abstractions": "[0.4.0, )"
+          "WeavePort.Abstractions": "[0.5.0, )"
         }
       },
       "weaveport.sdk.gateway.client": {
@@ -51,7 +51,7 @@
         "dependencies": {
           "Google.Protobuf": "[3.36.1, )",
           "Grpc.Net.Client": "[2.83.0, )",
-          "WeavePort.Sdk.Client": "[0.4.0, )"
+          "WeavePort.Sdk.Client": "[0.5.0, )"
         }
       }
     }

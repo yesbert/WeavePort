@@ -1,0 +1,162 @@
+{
+  "config": {
+    "mode": "forkserver",
+    "workers": 8,
+    "seconds": 30,
+    "cpus": "1",
+    "transport": "engine",
+    "arrival": "poisson",
+    "rate": 700
+  },
+  "image": "sha256:ec90b7cd1578af275ee435754d4f4c9848c14891de7410ed06da655e632d3d58",
+  "counts": {
+    "offered": 20822,
+    "completed": 20822,
+    "correct": 20822,
+    "failed": 0,
+    "dropped": 0,
+    "withinOneSecond": 20822,
+    "customersCompleted": 20822,
+    "faultsExpected": 0,
+    "faultsContained": 0
+  },
+  "partiallyServedCustomers": 0,
+  "offeredCustomers": 20822,
+  "elapsed": 30.00884025000414,
+  "preparedSeconds": 0.35615533300006064,
+  "customersPerSecond": 693.8622028219544,
+  "requestsPerSecond": 693.8622028219544,
+  "hostCpuCores": 0.15893593222081784,
+  "latency": {
+    "responseMs": {
+      "count": 20822,
+      "mean": 7.475413280501666,
+      "max": 26.990810496499762,
+      "p50": 6.960939955934635,
+      "p95": 11.334835011361045,
+      "p99": 14.681516627579045
+    },
+    "turnoverMs": {
+      "count": 20822,
+      "mean": 7.476221144050914,
+      "max": 26.991560494934674,
+      "p50": 6.960939955934635,
+      "p95": 11.334835011361045,
+      "p99": 14.681516627579045
+    },
+    "queueMs": {
+      "count": 20822,
+      "mean": 0.6222751442184862,
+      "max": 17.90810916281771,
+      "p50": 0.2410147095195973,
+      "p95": 2.928925792664668,
+      "p99": 5.592392754863413
+    },
+    "executionMs": {
+      "count": 20822,
+      "mean": 0.2737112902184666,
+      "max": 3.7107499992998783,
+      "p50": 0.26098439435829984,
+      "p95": 0.45111793894107893,
+      "p99": 0.5671287897502898
+    },
+    "cleanupMs": {
+      "count": 20822,
+      "mean": 0.19808913773404987,
+      "max": 1.3285830027598422,
+      "p50": 0.18981502142850237,
+      "p95": 0.2940837480367651,
+      "p99": 0.4003442654164734
+    },
+    "generatorLagMs": {
+      "count": 20822,
+      "mean": 0.19986637429576307,
+      "max": 3.6676921654041905,
+      "p50": 0.1494918813532963,
+      "p95": 0.5032980050894589,
+      "p99": 0.7568355684346453
+    },
+    "pluginImportMs": {
+      "count": 20822,
+      "mean": 0.1537932652723536,
+      "max": 1.3329579996934626,
+      "p50": 0.14365875964027497,
+      "p95": 0.2770401936037332,
+      "p99": 0.3414221017495371
+    },
+    "childWorkMs": {
+      "count": 20822,
+      "mean": 0.6312067826348836,
+      "max": 4.113249997317325,
+      "p50": 0.6020186383058905,
+      "p95": 1.0303010000000001,
+      "p99": 1.2824319950172338
+    },
+    "childStartMs": {
+      "count": 20822,
+      "mean": 1.1035338922848343,
+      "max": 5.377999998017913,
+      "p50": 1.0201,
+      "p95": 1.6776889214629447,
+      "p99": 2.958215050591315
+    },
+    "childResponseWaitMs": {
+      "count": 20822,
+      "mean": 3.9254448574508523,
+      "max": 10.960916999465553,
+      "p50": 3.6821371900248834,
+      "p95": 5.936437599362551,
+      "p99": 6.8920197583511245
+    },
+    "childExitWaitMs": {
+      "count": 20822,
+      "mean": 0.4778531449876556,
+      "max": 4.685249998146901,
+      "p50": 0.47887078248354686,
+      "p95": 0.8195444703372954,
+      "p99": 1.196147475686665
+    },
+    "processTurnoverMs": {
+      "count": 20822,
+      "mean": 5.5075821034483505,
+      "max": 14.949250002246117,
+      "p50": 5.268286948389225,
+      "p95": 7.922198989348807,
+      "p99": 9.106363450393609
+    }
+  },
+  "byWorkload": {
+    "echo": {
+      "count": 20822,
+      "mean": 7.475413280501666,
+      "max": 26.990810496499762,
+      "p50": 6.960939955934635,
+      "p95": 11.334835011361045,
+      "p99": 14.681516627579045
+    }
+  },
+  "memorySamplesWithLiveContainers": 10,
+  "memoryPeakMiB": 244.921875,
+  "helperScope": "RSS of live owned Docker CLI PIDs only; observer children excluded",
+  "hostRssPeakMiB": 34.359375,
+  "helpersRssPeakMiB": 0,
+  "memoryRawPeakMiB": 244.921875,
+  "starts": 8,
+  "retirements": 8,
+  "failure": null,
+  "failedExamples": [],
+  "known": [
+    "wp-matrix-1678930e514f4615b079306e17af5f0a",
+    "wp-matrix-181f12bd20d8428490491c81c99a8cf4",
+    "wp-matrix-627f6d3fa44e48c3ad2e2f3d0df706f4",
+    "wp-matrix-77e6cda19dd041ca88806473605ac8be",
+    "wp-matrix-bd331ac6a55a4c37b72f30664e8388f7",
+    "wp-matrix-e8beafb1bb564f5497d42cfb8d3ad21f",
+    "wp-matrix-eb0a5c61a65645b2b12a65d0f2f94388",
+    "wp-matrix-f1121ada799d4906b23cdaf8536638e9"
+  ],
+  "remaining": [],
+  "passed": true,
+  "meetsOneSecondSlo": true,
+  "normalEchoP99WithinOneSecond": true
+}

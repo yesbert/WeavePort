@@ -2,10 +2,11 @@ using WeavePort.Internal;
 using System.Text.Json;
 
 namespace WeavePort.Sdk;
-internal sealed class Runtime(PluginApplication application)
+internal sealed partial class Runtime(PluginApplication application)
 {
     private Channel _channel = null!;
     private JsonElement _request;
+    private PluginCallContext? _context;
     private IAsyncEnumerator<JsonElement>? _enumerator;
     private CancellationTokenSource? _streamCancellation;
     private JsonElement? _pending;
@@ -16,7 +17,7 @@ internal sealed class Runtime(PluginApplication application)
     private readonly AsyncLocal<CallScope?> _scope = new();
     private sealed class CallScope(JsonElement request)
     {
-        internal JsonElement Request { get; } = request;
+        internal JsonElement Request { get; set; } = request;
 
         internal bool Active = true;
     }
@@ -25,7 +26,7 @@ internal sealed class Runtime(PluginApplication application)
     {
         await using var channel = new Channel();
         _channel = channel;
-        await channel.WriteAsync(new { type = "ready", protocol = 1, pluginVersion = application.PluginVersion }, token);
+        await channel.WriteAsync(new { type = "ready", protocol = 1, pluginVersion = application.PluginVersion, sessionCleanup = 1 }, token);
         try
         {
             while (await channel.ReadAsync(token)is { } request)
@@ -36,17 +37,22 @@ internal sealed class Runtime(PluginApplication application)
                 try
                 {
                     object result = await DispatchAsync(request.GetProperty("operation").GetString()!, request.GetProperty("payload"), token);
-                    await channel.WriteAsync(new { type = "result", id = request.GetProperty("id").GetString(), value = result }, token);
+                    scope.Active = false;
+                    await _callbackGate.WaitAsync(token);
+                    _callbackGate.Release();
+                    await channel.WriteAsync(new { type = "result", id = request.GetProperty("id").GetString(), value = result, reusable = _context is null && _enumerator is null }, token);
                 }
                 catch (Exception error) when (error is not OutOfMemoryException && !token.IsCancellationRequested)
                 {
-                    await CloseAsync();
-                    await channel.WriteAsync(new { type = "error", id = request.GetProperty("id").GetString(), code = "sdk-error" }, token);
+                    await ReportFailureAsync(request, error, token);
                 }
                 finally
                 {
                     scope.Active = false;
+                    scope.Request = default;
                     _scope.Value = null;
+                    _request = default;
+                    request = default;
                 }
             }
         }
@@ -83,10 +89,17 @@ internal sealed class Runtime(PluginApplication application)
 
         string name = payload.GetProperty("operation").GetString()!;
         JsonElement input = payload.GetProperty("input");
-        var context = new PluginCallContext(_request.GetProperty("context"), CallbackAsync);
+        var context = _context = new PluginCallContext(_request.GetProperty("context"), CallbackAsync);
         if (operation == SdkOperations.Call)
         {
-            return await application.Functions[name](input, context, token);
+            try
+            {
+                return await application.Functions[name](input, context, token);
+            }
+            finally
+            {
+                await CompleteContextAsync();
+            }
         }
 
         if (operation != SdkOperations.Start)
@@ -212,6 +225,7 @@ internal sealed class Runtime(PluginApplication application)
         {
             _streamCancellation?.Dispose();
             _streamCancellation = null;
+            await CompleteContextAsync();
         }
     }
 }

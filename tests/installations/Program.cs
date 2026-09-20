@@ -66,7 +66,7 @@ Mutate(d => d["Compatibility"]!["HostPackages"]!["Unreviewed.Package"] = "1.0.0"
 Mutate(d => d["Compatibility"]!["AuthorSdks"]!["dotnet"]!["Version"] = "9.0.0", "unsupported author SDK version rejected");
 Mutate(d => d["Compatibility"]!["AuthorSdks"]!["dotnet"]!["Package"] = "Unreviewed.Sdk", "wrong author SDK package rejected");
 Mutate(d => d["Compatibility"]!["AuthorSdks"]!.AsObject().Remove("dotnet"), "missing entry-point SDK declaration rejected");
-Mutate(d => d["Compatibility"]!["AuthorSdks"]!["python"] = new JsonObject { ["Package"] = "weaveport-sdk", ["Version"] = "0.1.0" }, "SDK declaration without entry point rejected");
+Mutate(d => d["Compatibility"]!["AuthorSdks"]!["python"] = new JsonObject { ["Package"] = "weaveport-sdk", ["Version"] = "0.2.0" }, "SDK declaration without entry point rejected");
 Mutate(d => d["Compatibility"]!["AuthorSdks"]!["dotnet"] = null, "null SDK declaration rejected");
 File.WriteAllText(manifest, baseline.Replace("\"HostApi\": 1", "\"HostApi\": 1, \"HostApi\": 1"));
 Refused(() => Resolve(), "duplicate compatibility fields rejected");

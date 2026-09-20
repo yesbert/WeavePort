@@ -1,36 +1,33 @@
 namespace WeavePort.Hosting;
 internal sealed partial class WorkerPool
 {
-    private async Task<Worker> StartAsync(ExecutionProfile profile, string version, bool pristine, CancellationToken token, string? tenant = null)
+    private async Task<Worker> StartAsync(ExecutionProfile profile, string version, bool pristine, CancellationToken token, string? tenant = null, bool freshOnly = false)
     {
-        if (!await _starts.WaitAsync(0, token))
-        {
-            throw Reject("concurrent-starts");
-        }
-
+        await EnterStartAsync(token);
         Worker? worker = null;
         CancellationTokenSource? deadline = null;
         try
         {
             lock (_sync)
             {
+                if (tenant is not null)
+                {
+                    CheckTenantBudget(tenant, profile.MemoryMiB);
+                    // A shared startup may have become ready while this caller waited for a launch slot.
+                    Worker? ready = TakeReady(profile, version, tenant, freshOnly);
+                    if (ready is not null)
+                    {
+                        return ready;
+                    }
+                }
+
                 worker = ReserveStartup(profile, version, pristine, tenant);
                 deadline = CancellationTokenSource.CreateLinkedTokenSource(token, _lifetime.Token);
             }
 
             deadline.CancelAfter(TimeSpan.FromSeconds(10));
             await worker.StartAsync(deadline.Token);
-            lock (_sync)
-            {
-                if (_disposed)
-                {
-                    throw new OperationCanceledException("Pool shutdown interrupted startup.");
-                }
-
-                worker.Starting = false;
-                worker.Pristine = pristine;
-            }
-
+            MarkReady(worker, pristine);
             return worker;
         }
         catch (Exception error)
@@ -58,13 +55,47 @@ internal sealed partial class WorkerPool
                 }
             }
 
+            worker?.StartupCompletion.TrySetResult();
             _starts.Release();
+        }
+    }
+
+    private void MarkReady(Worker worker, bool pristine)
+    {
+        lock (_sync)
+        {
+            if (_disposed)
+            {
+                throw new OperationCanceledException("Pool shutdown interrupted startup.");
+            }
+
+            _workersStarted++;
+            worker.Starting = false;
+            worker.Pristine = pristine;
+        }
+    }
+
+    private async Task EnterStartAsync(CancellationToken token)
+    {
+        if (options.WaitForStartCapacity)
+        {
+            using var linked = CancellationTokenSource.CreateLinkedTokenSource(token, _lifetime.Token);
+            await _starts.WaitAsync(linked.Token);
+        }
+        else if (!await _starts.WaitAsync(0, token))
+        {
+            throw Reject("concurrent-starts");
         }
     }
 
     private Worker ReserveStartup(ExecutionProfile profile, string version, bool pristine, string? tenant)
     {
         ObjectDisposedException.ThrowIf(_disposed, this);
+        if (pristine && _foregroundAcquires != 0)
+        {
+            throw Reject("foreground-priority");
+        }
+
         if (_workers.Count >= options.MaximumWorkers || profile.MemoryMiB > options.MemoryBudgetMiB - _memory || (pristine && _workers.Count(w => w.Pristine || w.Starting) >= options.MaximumPristineWorkers))
         {
             throw Reject("pool-reservations");

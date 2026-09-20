@@ -1,1 +1,1 @@
-{"name":"@weaveport/sdk","version":"0.1.0","private":true,"type":"module","main":"dist/index.js","types":"dist/index.d.ts","files":["dist"],"scripts":{"build":"tsc"},"devDependencies":{"typescript":"7.0.2","@types/node":"22.20.2"}}
+{"name":"@weaveport/sdk","version":"0.2.0","private":true,"type":"module","main":"dist/index.js","types":"dist/index.d.ts","files":["dist"],"scripts":{"build":"tsc"},"devDependencies":{"typescript":"7.0.2","@types/node":"22.20.2"},"license":"MIT","description":"WeavePort author SDK with registered session cleanup"}

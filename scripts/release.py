@@ -6,6 +6,7 @@ from pathlib import Path
 import re
 import shutil
 import subprocess
+import tarfile
 import xml.etree.ElementTree as ET
 import zipfile
 
@@ -75,11 +76,31 @@ def export(candidate, destination, version, root=ROOT):
         symbol_relative = symbols.relative_to(candidate / "checkout").as_posix()
         require(symbols.is_file() and digest(symbols) == manifest.get(symbol_relative), "Missing or changed qualified symbols")
         selected.append(symbols)
+    policy = json.loads((root / "compatibility/local-v1.json").read_text())["AuthorSdks"]
+    author_root = candidate / "checkout/artifacts/sdk-version-tests"
+    author_files = [author_root / "wheel" / f"weaveport_sdk-{policy['python']['Version']}-py3-none-any.whl",
+                    author_root / f"weaveport-sdk-{policy['node']['Version']}.tgz"]
+    for path in author_files:
+        relative = path.relative_to(candidate / "checkout").as_posix()
+        require(path.is_file() and digest(path) == manifest.get(relative), "Missing or changed qualified author SDK: " + path.name)
+        expected_license = (root / "LICENSE").read_bytes()
+        if path.suffix == ".whl":
+            with zipfile.ZipFile(path) as archive:
+                license_path = f"weaveport_sdk-{policy['python']['Version']}.dist-info/licenses/LICENSE"
+                require(license_path in archive.namelist() and archive.read(license_path) == expected_license,
+                        "Author SDK license missing or differs from the project license")
+        else:
+            with tarfile.open(path) as archive:
+                require("package/LICENSE" in archive.getnames(), "Author SDK license missing")
+                member = archive.getmember("package/LICENSE")
+                require(member.isfile() and archive.extractfile(member).read() == expected_license,
+                        "Author SDK license differs from the project license")
+        selected.append(path)
     require(not destination.exists(), "Output directory already exists; use a new destination")
     destination.mkdir(parents=True)
     for path in selected:
         shutil.copy2(path, destination / path.name)
-    print(f"Exported {len(packages)} qualified packages and symbols")
+    print(f"Exported {len(packages)} qualified packages and symbols plus {len(author_files)} author SDK artifacts")
 
 
 if __name__ == "__main__":

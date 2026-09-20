@@ -1,0 +1,98 @@
+[
+  {
+    "mode": "trusted",
+    "workers": 1,
+    "seconds": 20,
+    "cpus": "1"
+  },
+  {
+    "mode": "process",
+    "workers": 1,
+    "seconds": 20,
+    "cpus": "1"
+  },
+  {
+    "mode": "forkserver",
+    "workers": 1,
+    "seconds": 20,
+    "cpus": "1"
+  },
+  {
+    "mode": "trusted",
+    "workers": 4,
+    "seconds": 20,
+    "cpus": "1"
+  },
+  {
+    "mode": "process",
+    "workers": 4,
+    "seconds": 20,
+    "cpus": "1"
+  },
+  {
+    "mode": "forkserver",
+    "workers": 4,
+    "seconds": 20,
+    "cpus": "1"
+  },
+  {
+    "mode": "trusted",
+    "workers": 8,
+    "seconds": 20,
+    "cpus": "1"
+  },
+  {
+    "mode": "process",
+    "workers": 8,
+    "seconds": 20,
+    "cpus": "1"
+  },
+  {
+    "mode": "forkserver",
+    "workers": 8,
+    "seconds": 20,
+    "cpus": "1"
+  },
+  {
+    "mode": "trusted",
+    "workers": 16,
+    "seconds": 20,
+    "cpus": "1"
+  },
+  {
+    "mode": "process",
+    "workers": 16,
+    "seconds": 20,
+    "cpus": "1"
+  },
+  {
+    "mode": "forkserver",
+    "workers": 16,
+    "seconds": 20,
+    "cpus": "1"
+  },
+  {
+    "mode": "forkserver",
+    "workers": 1,
+    "seconds": 20,
+    "cpus": ".5"
+  },
+  {
+    "mode": "forkserver",
+    "workers": 4,
+    "seconds": 20,
+    "cpus": ".5"
+  },
+  {
+    "mode": "forkserver",
+    "workers": 8,
+    "seconds": 20,
+    "cpus": ".5"
+  },
+  {
+    "mode": "forkserver",
+    "workers": 16,
+    "seconds": 20,
+    "cpus": ".5"
+  }
+]

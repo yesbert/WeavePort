@@ -5,9 +5,9 @@
     <RestorePackagesPath>$(MSBuildThisFileDirectory)../../artifacts/compatibility/packages</RestorePackagesPath>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="WeavePort.Abstractions" Version="0.4.0" />
-    <PackageReference Include="WeavePort.Hosting" Version="0.4.0" />
-    <PackageReference Include="WeavePort.Sdk.Client" Version="0.4.0" />
-    <PackageReference Include="WeavePort.Sdk" Version="0.4.0" />
+    <PackageReference Include="WeavePort.Abstractions" Version="0.5.0" />
+    <PackageReference Include="WeavePort.Hosting" Version="0.5.0" />
+    <PackageReference Include="WeavePort.Sdk.Client" Version="0.5.0" />
+    <PackageReference Include="WeavePort.Sdk" Version="0.5.0" />
   </ItemGroup>
 </Project>

@@ -46,8 +46,14 @@ The summarizer refuses missing cells, missing author SDK verification, changed f
 
 For a multi-hour fault/recovery workload with early-stop controls and chronological resource evidence, see [supervised k6 soak testing](soak-testing.md). Optimization comparisons of source-built candidates are separate from the exact delivered release baseline.
 
+For the separate MacBook Air scheduler experiment, use [supervised density testing](density-testing.md). Its active-customer/worker-count and fixed-arrival staircases include admission waiting and cold replacement; they do not replace the M2 Ultra release baseline.
+
 The [runtime optimization comparison](../reports/optimization/runtime-and-soak/README.md) records source-built before/after measurements separately from the delivered baseline.
 
 ## MCP comparisons
 
 The [MCP fixture measurement](../tests/mcp/README.md) compares complete C# host calls to a native TypeScript plugin and an official MCP server. Keep these measurements separate from native before/after regressions and exact-release qualification. They include SDK and envelope differences and do not isolate wire-protocol cost.
+
+For source-built experiments in customer turnover, trust boundaries, runtime preparation and Docker transport, see the [reuse matrix](../benchmarks/WeavePort.Reuse/MATRIX.md). The [registry diagnostic](../benchmarks/WeavePort.Registry/README.md) separately measures dormant-customer overhead. Neither is a delivered-release maximum-capacity promise.
+
+The [extended MacBook Air evidence](../reports/benchmarks/reuse-matrix-air-20260919/README.md) records pool scaling, repeated arrival-rate boundaries, grouped customers, fault recovery, long-run memory, production-host controls and the corrected kernel-IPC boundary. Experimental reuse remains separate from the production host contract.

@@ -47,7 +47,7 @@ internal sealed class ProcessWorker(ProcessProfile profile, string version, Time
         Reader = new Frames(_socket?.Stream ?? _process.StandardOutput.BaseStream);
         if (Mcp is null)
         {
-            WorkerEnvelope.ValidateReady(await Reader.ReadAsync(token), Version);
+            WorkerEnvelope.ValidateReady(await Reader.ReadAsync(token), Version, Profile.ReusePolicy);
         }
         else
         {

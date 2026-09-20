@@ -1,0 +1,41 @@
+{
+  "registrations": 10000,
+  "activeCustomers": 4,
+  "registrationSeconds": 0.0344079,
+  "requestsPerSecond": 6486.1934477613095,
+  "elapsed": 15.0003235,
+  "counts": [
+    24472,
+    24374,
+    24289,
+    24160
+  ],
+  "managedRegistrationDeltaMiB": 33.760719299316406,
+  "rssBeforeMiB": 52.71875,
+  "rssAfterRegistrationMiB": 75.53125,
+  "disposalSeconds": 0.4891535,
+  "cleanup": {
+    "Registrations": 0,
+    "Queued": 0,
+    "Active": 0,
+    "HeavyActive": 0,
+    "Completed": 97299,
+    "Rejected": 0,
+    "Evictions": 0,
+    "ColdCalls": 4,
+    "Failure": null,
+    "Runtime": {
+      "Workers": 0,
+      "Pristine": 0,
+      "Starting": 0,
+      "Quarantined": 0,
+      "ReservedMemoryMiB": 0,
+      "Bindings": 0,
+      "Tenants": 0,
+      "MaintenanceFailure": null,
+      "OldestQuarantineSeconds": 0
+    }
+  },
+  "hostingSha256": "3D3DD917F2FAC85D56D019E94A958A74FF97F9985E5FF8F76A1D6A9C217FBA9A",
+  "scope": "Diagnostic: four hot customers plus dormant registrations; NOT many-customer throughput."
+}

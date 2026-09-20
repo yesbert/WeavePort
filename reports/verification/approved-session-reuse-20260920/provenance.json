@@ -1,0 +1,380 @@
+{
+  "baseCommit": "6447e589603084f270e4b16539923a5d7de42eb2",
+  "uncommittedCandidate": true,
+  "sourceFiles": [
+    {
+      "path": "benchmarks/WeavePort.Density/DensityResources.Docker.cs",
+      "sha256": "a77a72e0f9e3472c1868e177adccb71fee86de8065af470f316d2e876ce1e796"
+    },
+    {
+      "path": "benchmarks/WeavePort.Density/DensityResources.cs",
+      "sha256": "0c294a814ae1ec5480af3398c8555c887ab844ff3e6a4c14cc6dcf2b82efc460"
+    },
+    {
+      "path": "benchmarks/WeavePort.Density/DensityStats.cs",
+      "sha256": "f9857dda564c58c4a50144d5f586d0150e1dca1cc712a3b1481b1beefd634e5a"
+    },
+    {
+      "path": "benchmarks/WeavePort.Density/HistogramChecks.cs",
+      "sha256": "002f4cf00fac8c3513ec438b61cbcf045293d0cbccf9dfaecf8b9dba2730580a"
+    },
+    {
+      "path": "benchmarks/WeavePort.Density/Program.cs",
+      "sha256": "97b8b259678a06a6ec23ae57a1e0796762650c3f59a7e6f488ea45e4f416f472"
+    },
+    {
+      "path": "sdks/python/build/lib/weaveport_sdk/__init__.py",
+      "sha256": "db9ab9d021020b6825579791cdc6b5deb473557decb0a25e55bd37f6cae125e2"
+    },
+    {
+      "path": "sdks/python/weaveport_sdk/__init__.py",
+      "sha256": "db9ab9d021020b6825579791cdc6b5deb473557decb0a25e55bd37f6cae125e2"
+    },
+    {
+      "path": "sdks/typescript/src/index.ts",
+      "sha256": "f531bcc859913f383a0a75213b1d8af7d0204d22b2a80871dc0452ebd67cc738"
+    },
+    {
+      "path": "sdks/typescript/src/session.ts",
+      "sha256": "c98c6ec6c4df2ed258bfdda4ab9fdf31b90528b300961542ed84fa9322d0c132"
+    },
+    {
+      "path": "src/Shared/Cleanup.cs",
+      "sha256": "1428f03bb5217c30ead7205547c1cb9749edc11c4efaedb876bc92f43e1c9f02"
+    },
+    {
+      "path": "src/Shared/JsonSize.cs",
+      "sha256": "28fd9b529c7a6ffa105f994de61629b0438f1135994d80d680e3917ac2a94315"
+    },
+    {
+      "path": "src/Shared/SdkOperations.cs",
+      "sha256": "74decfd5404dd5eb6402dfc5543666ce3dc06cc4b2c5744f0ab74d327f671abf"
+    },
+    {
+      "path": "src/WeavePort.Abstractions/Contracts.cs",
+      "sha256": "55939ff831127cc48ed1025282632e7593648c968e31df9b3b253a3ef5dd8112"
+    },
+    {
+      "path": "src/WeavePort.Composition/BoundedOutput.cs",
+      "sha256": "b1b2db8d9297298e7d3d763a2683d91d44faaa9e3fc2ea65551da10f221d52b9"
+    },
+    {
+      "path": "src/WeavePort.Composition/BulkJson.cs",
+      "sha256": "e4650e4afd200ccd30345c9c0d2f4eb2b9786cbcfa20be4e1c5d75b6fd992a6d"
+    },
+    {
+      "path": "src/WeavePort.Composition/Composition.cs",
+      "sha256": "0330564c17c7e2c0a9f6bf534d475413c35b64b35e4522a2e7ca9e00c140020b"
+    },
+    {
+      "path": "src/WeavePort.Composition/ResultScope.cs",
+      "sha256": "a9e6fb1c327f5dda633e13d8650e3bcadf124ff1543e339822ba03d9c9b43c7f"
+    },
+    {
+      "path": "src/WeavePort.Hosting/AssemblyInfo.cs",
+      "sha256": "a9409c9553f479a37234f9d55e1eaa121151c49c085eb81a39e7a25ffbbfe091"
+    },
+    {
+      "path": "src/WeavePort.Hosting/DockerCommand.cs",
+      "sha256": "187e72f0e3dc066de4687c20ef65b4112343330f18bf48770c15b57db8cf954d"
+    },
+    {
+      "path": "src/WeavePort.Hosting/DockerProfile.cs",
+      "sha256": "2b6e19caaa9672e3ec7fe67a2697c730d1094ad2d21080f089802b2d643ebda0"
+    },
+    {
+      "path": "src/WeavePort.Hosting/DockerWorker.cs",
+      "sha256": "61b0a727f2d0b8c94a9222d53130b629deeef41d65e1b534fde5d4c2175d68b9"
+    },
+    {
+      "path": "src/WeavePort.Hosting/ExecutionProfile.cs",
+      "sha256": "726a290ad44f715b75c2cb5e8bf7e6befb97c303a1e9e38b7643b51551a36440"
+    },
+    {
+      "path": "src/WeavePort.Hosting/FrameBuffer.cs",
+      "sha256": "6512c799ba77cb8502d0a34e644a98849385929466efe837bc6fe82ef56109b9"
+    },
+    {
+      "path": "src/WeavePort.Hosting/Frames.cs",
+      "sha256": "fcff1140c38dff46baf4896a507e23d0e663659aece8841714a088422f571bfb"
+    },
+    {
+      "path": "src/WeavePort.Hosting/InstallationCompatibility.cs",
+      "sha256": "87904568fe4eae3225cf809b934a7eaf4c36cecbec35d5cfd60c67b5d93e00ff"
+    },
+    {
+      "path": "src/WeavePort.Hosting/InstalledPluginCatalog.cs",
+      "sha256": "864d435b603e6e770320d0e6ddc382913b752083990bbab12fdaa92de14a8e0a"
+    },
+    {
+      "path": "src/WeavePort.Hosting/InvocationScope.cs",
+      "sha256": "823afb970b1ef3fcf83e1b16df4579bc4cfa07c050367f355679c6e36f573517"
+    },
+    {
+      "path": "src/WeavePort.Hosting/McpFields.cs",
+      "sha256": "34866177f5290f9de9ea6d2b64fbc809e73680c73f83393df3802f154aaaef67"
+    },
+    {
+      "path": "src/WeavePort.Hosting/McpMessages.cs",
+      "sha256": "3a495e6b272e8578c6cd8e2e39aea2bf99e1c980bb11f88fabe13a58b6810afa"
+    },
+    {
+      "path": "src/WeavePort.Hosting/McpMethods.cs",
+      "sha256": "fe9cf30f944492bfc5211c382da2a92d7b9d177e7a068267be419301a3e702dd"
+    },
+    {
+      "path": "src/WeavePort.Hosting/McpNames.cs",
+      "sha256": "53b1bbb47ed922f588d29bd4b117eb8b6a31ecea735b3cd658fead624f834808"
+    },
+    {
+      "path": "src/WeavePort.Hosting/McpProtocol.cs",
+      "sha256": "96418aeec06ff852ae8ba86a27ba6d1a289ac827b00390806ef5fd410e70f6c1"
+    },
+    {
+      "path": "src/WeavePort.Hosting/McpWireJson.cs",
+      "sha256": "364d1184b040abb71e0c98b6b0431e1f606be6144367f338aee83d4ec695b16f"
+    },
+    {
+      "path": "src/WeavePort.Hosting/PluginHost.cs",
+      "sha256": "fdf55345ace8e0c7cb3fe92e12fcdb5518aa98b3acc6c0e6b9a06836b19f5846"
+    },
+    {
+      "path": "src/WeavePort.Hosting/PluginSession.Exchange.cs",
+      "sha256": "6c487fbc57f051280899c62d433b61f3fb5c3ad3d16316e0e6969f75f772cf8c"
+    },
+    {
+      "path": "src/WeavePort.Hosting/PluginSession.Reuse.cs",
+      "sha256": "9c4a55253c8c43efb3cb2c96257e3154c06da05af0fcfd93fc21d65f5b07aa85"
+    },
+    {
+      "path": "src/WeavePort.Hosting/PluginSession.cs",
+      "sha256": "1ae455ba9418a1b5668e3bc227f2e97c01fba3c08e1d18f53f68950c1f498f7c"
+    },
+    {
+      "path": "src/WeavePort.Hosting/ProcessProfile.cs",
+      "sha256": "ff6d437bdd2aed16113591d06c132192c818ef48d4709a013e12442d92c733ec"
+    },
+    {
+      "path": "src/WeavePort.Hosting/ProcessProtocol.cs",
+      "sha256": "454a9de7753d5c455b86a77f1492213f66cb538b10d1a57cf75960b0c17fac9f"
+    },
+    {
+      "path": "src/WeavePort.Hosting/ProcessSocket.cs",
+      "sha256": "480d4b80ad7f49f77507b5a9d4b5780cbe1bd1ec30f6bd4f4f51d3b169a24af5"
+    },
+    {
+      "path": "src/WeavePort.Hosting/ProcessWorker.cs",
+      "sha256": "509f44cafae31313eebc49b2037fd1f921984de31465995989b873f42950479b"
+    },
+    {
+      "path": "src/WeavePort.Hosting/RuntimeLog.cs",
+      "sha256": "50eaf5d5548a6e692a9fd2e014a1303ee0322697159a8bf910643d06590ff1f6"
+    },
+    {
+      "path": "src/WeavePort.Hosting/ScheduledCall.cs",
+      "sha256": "86986698c5e67375cfcf62c94f9e07bf69cd83abfa4cdd24298241f9bff37ce9"
+    },
+    {
+      "path": "src/WeavePort.Hosting/ScheduledPlugin.cs",
+      "sha256": "136975d5acbce61b1d13aaec86a813a76c7e455d67d6aacf58239fa0967279c2"
+    },
+    {
+      "path": "src/WeavePort.Hosting/ScheduledPluginHost.Dispatch.cs",
+      "sha256": "a46b9a423e93c3ebe5f7df6038741685908b9bfdadfd228269f776f78c07cd5e"
+    },
+    {
+      "path": "src/WeavePort.Hosting/ScheduledPluginHost.Indexes.cs",
+      "sha256": "3970bd9e77111e74f2877bf282c624749ab52d98b41efbdddfcb1eedb6993577"
+    },
+    {
+      "path": "src/WeavePort.Hosting/ScheduledPluginHost.Lifecycle.cs",
+      "sha256": "9f50fee371fabec754bec7a11be283f53405bc081ebc6fb5075c3554a132e04e"
+    },
+    {
+      "path": "src/WeavePort.Hosting/ScheduledPluginHost.cs",
+      "sha256": "efe0fd823216e4f16ef3a6a2c082190c116a8dc183147e31cd3f68ef2c101fc9"
+    },
+    {
+      "path": "src/WeavePort.Hosting/SchedulingOptions.cs",
+      "sha256": "7f9cec88e30bcb7e8a66c464bf7c4b4ee48687cb6e5010b47ca1043e42416cec"
+    },
+    {
+      "path": "src/WeavePort.Hosting/SessionBinding.cs",
+      "sha256": "b28808d1a3b7846c6bfeabc734cc091a7a3be1f644cea416d4c34e5144558dc1"
+    },
+    {
+      "path": "src/WeavePort.Hosting/TenantAdmission.cs",
+      "sha256": "54dce0efb0521f9b26c498e97301d314a4cd32c53a94473d46f0ea86dd467657"
+    },
+    {
+      "path": "src/WeavePort.Hosting/UnixSocketTransport.cs",
+      "sha256": "e8d82cac0f185f89f001ed1931d7fb71f6ea6c19134afdaac6118621387c3866"
+    },
+    {
+      "path": "src/WeavePort.Hosting/WireJson.cs",
+      "sha256": "a12369e4c13fe1d183d1e81d92ce0d6b4b80dfba4fce214ed67be2107f01db38"
+    },
+    {
+      "path": "src/WeavePort.Hosting/Worker.cs",
+      "sha256": "f076e67b1a63485289b04b507f768570ed5cccb7e1f7160b94f7fd4a180a3d78"
+    },
+    {
+      "path": "src/WeavePort.Hosting/WorkerEnvelope.cs",
+      "sha256": "5cab821048adffe414beae5d5c1f9c1a96bd665edf17cd291f776ced1d8624ff"
+    },
+    {
+      "path": "src/WeavePort.Hosting/WorkerPool.Acquisition.cs",
+      "sha256": "6ceb169ca4d78f952b2b44cda538e22b7403106e934dd613090ce8a23885d8d9"
+    },
+    {
+      "path": "src/WeavePort.Hosting/WorkerPool.Reuse.cs",
+      "sha256": "610578b49a9795ef6fdf6caa5423ed9244d75a514f545bf5b9f65fb27d0291e5"
+    },
+    {
+      "path": "src/WeavePort.Hosting/WorkerPool.Startup.cs",
+      "sha256": "4af530f6c4526c4fc99f8502aaff546aede7680ecaa7b969dc0b2c6087712502"
+    },
+    {
+      "path": "src/WeavePort.Hosting/WorkerPool.cs",
+      "sha256": "d54e607d38249b5aecb075c1d2762140fdbafc18b4884ea6cb52c9fbfb868404"
+    },
+    {
+      "path": "src/WeavePort.Hosting/WorkerPoolOptions.cs",
+      "sha256": "1fa83af36b7f619012902c98adcd5505f791d05e66aa7439f46279a711ba3dc0"
+    },
+    {
+      "path": "src/WeavePort.Hosting/WorkerReusePolicy.cs",
+      "sha256": "17ae81a32b225713db2bda8875b6dd9f5552d060fedd4f7543ca9b21d649e80b"
+    },
+    {
+      "path": "src/WeavePort.Hosting/WorkerSocket.cs",
+      "sha256": "1f5e0ae5745f24483965b3711d276f63df49887051e734b731ff8338d145648b"
+    },
+    {
+      "path": "src/WeavePort.Sdk/Channel.cs",
+      "sha256": "413659c2544a0067bd1192ff6dca739ba4f25e5f908a555e3dec1b0093ed7941"
+    },
+    {
+      "path": "src/WeavePort.Sdk/PluginApplication.cs",
+      "sha256": "66c830505657cd2b042b86cb9766df52ca13109cca6b568fa2741f7f83ece06a"
+    },
+    {
+      "path": "src/WeavePort.Sdk/PluginCallContext.cs",
+      "sha256": "bd20eddb0640355ab22190b1cbb315c496fd800e02d35cd10b82f460ccc43dfe"
+    },
+    {
+      "path": "src/WeavePort.Sdk/Runtime.Cleanup.cs",
+      "sha256": "e2243d85ac6900203c40b6027eae4483f5fe57f5ae1e8d2aedccd84b82eafc2e"
+    },
+    {
+      "path": "src/WeavePort.Sdk/Runtime.cs",
+      "sha256": "ed61e9f43dabf1fc90cd75968c3d7f938d8450eff09dabb71b99463417e73843"
+    },
+    {
+      "path": "src/WeavePort.Sdk.Client/IPluginClient.cs",
+      "sha256": "2d84d05c3a3084ed8b590305a73bed2ee322c5a116c3f8f8d78665d7f8d7472c"
+    },
+    {
+      "path": "src/WeavePort.Sdk.Client/LocalPluginClient.cs",
+      "sha256": "30aa20a96ddb460a61b55efcec65ab2312fcd99c39d162e0c0c7f2cc76bca8d4"
+    },
+    {
+      "path": "src/WeavePort.Sdk.Gateway/AssemblyInfo.cs",
+      "sha256": "c05ebcafca6d3f32eb798150c73d7ca6dbcfe9a2ae2997cbb7aa509f9cd528bf"
+    },
+    {
+      "path": "src/WeavePort.Sdk.Gateway/GatewayMetadata.cs",
+      "sha256": "42959912ed12dec04d09b69df2db65cac096e699c941ea1dad815e1ece9a4f8f"
+    },
+    {
+      "path": "src/WeavePort.Sdk.Gateway/GatewayRegistry.cs",
+      "sha256": "6e18166377b16cc841f80e4d6e7c7c5f0ed170a802dc3fbe67115977b6a3c001"
+    },
+    {
+      "path": "src/WeavePort.Sdk.Gateway/GatewayService.cs",
+      "sha256": "50c657db900c158b2b63ce259e1cd12e5ab06ab4afa19461b8b38317f6e8a03f"
+    },
+    {
+      "path": "src/WeavePort.Sdk.Gateway/GatewaySessions.cs",
+      "sha256": "69431d0f96dc5972ea04ac5ebd63a361776f991ac09aa6cbc4ebd11f6ae470f6"
+    },
+    {
+      "path": "src/WeavePort.Sdk.Gateway/RemotePluginClient.cs",
+      "sha256": "a0f0f571a97a63c960e3179215eef35a2079958e834c86151e0f5ac4d5c841c8"
+    },
+    {
+      "path": "src/WeavePort.Testing/ContractChecks.cs",
+      "sha256": "38853400016e883027209201beeb0b86c6db73259c25c257c31338dd93566376"
+    },
+    {
+      "path": "tests/WeavePort.ReuseTests/Dockerfile.csharp",
+      "sha256": "c582378327a236026d52c96d3be6ebdffb80e052b0ac1ef7bf6f7ed149d517be"
+    },
+    {
+      "path": "tests/WeavePort.ReuseTests/Dockerfile.python",
+      "sha256": "c5cc4337b72aabd48a240c7cdbf25578f2b1d2238873a688d78db227a52bfba5"
+    },
+    {
+      "path": "tests/WeavePort.ReuseTests/Dockerfile.typescript",
+      "sha256": "9ec134a5837ded3c8daaf60cc3e4f5480be0b4e87a01ebfe8b80a1b29a1b5309"
+    },
+    {
+      "path": "tests/WeavePort.ReuseTests/Program.cs",
+      "sha256": "182480c1580e66fbfb8e38e906b11021f72c762590f56b46432368d0c86eb267"
+    },
+    {
+      "path": "tests/WeavePort.ReuseTests/README.md",
+      "sha256": "4364703fbb16ae7758274dfbc0aa448f693e8548c82bd375b7e3867184e171d8"
+    },
+    {
+      "path": "tests/WeavePort.ReuseTests/RawFixture.cs",
+      "sha256": "3d27966e43fcaaf32a645d9bcf4f770ffc74b9ca9e897adde44497911ba8a211"
+    },
+    {
+      "path": "tests/WeavePort.ReuseTests/WeavePort.ReuseTests.csproj",
+      "sha256": "29c468bc84502d909c3788dcde205bde8d3d3844350d0ba4efa2a366067229d6"
+    },
+    {
+      "path": "tests/WeavePort.ReuseTests/WorkerFixture.cs",
+      "sha256": "615c3dda023d14b74c005d7292ffd586b56194df42848c2127290f8b37ce23c9"
+    },
+    {
+      "path": "tests/WeavePort.ReuseTests/worker.mjs",
+      "sha256": "ae9b917e0e9f6605618df0539d55f70d6f9a4773eca2093d890a2ed5c88c29cb"
+    },
+    {
+      "path": "tests/WeavePort.ReuseTests/worker.py",
+      "sha256": "307b44ecdbc8e2ab188642b9818c085e40ee3f883c45adc3f6338dab74758652"
+    }
+  ],
+  "packages": [
+    {
+      "path": "artifacts/packages/WeavePort.Abstractions.0.3.1.nupkg",
+      "sha256": "3b1ea4c63b4be693aefb6adff1a46d913265ac52c84af94ed19da46e158e3a9e"
+    },
+    {
+      "path": "artifacts/packages/WeavePort.Hosting.0.3.1.nupkg",
+      "sha256": "f405a57c1a2935b244e6efa79729888b97bb4e54428ecb0db266e29047f72ca9"
+    },
+    {
+      "path": "artifacts/packages/WeavePort.Sdk.0.3.1.nupkg",
+      "sha256": "9af352906a33ab35d467f8abcd321133804f3dc0d953456781c462dc68e7dff9"
+    },
+    {
+      "path": "artifacts/packages/WeavePort.Sdk.Client.0.3.1.nupkg",
+      "sha256": "5d14344c660fee3366640a11c426d69dfc7a9854467546271ba0a55ababdc4b7"
+    },
+    {
+      "path": "artifacts/packages/WeavePort.Sdk.Gateway.0.3.1.nupkg",
+      "sha256": "e24666c359a9bf6fe1ed1cf75cf89885053eb8a0e1ab1478b71b115a38a1c771"
+    },
+    {
+      "path": "artifacts/approved-reuse-integration/wheel/weaveport_sdk-0.1.0-py3-none-any.whl",
+      "sha256": "324ca72048143f2f46bb20c432f35861f8ca4834c38f254800178c54264f82c4"
+    },
+    {
+      "path": "artifacts/approved-reuse-integration/weaveport-sdk-0.1.0.tgz",
+      "sha256": "9b26e2a2221fabe23f5b3ae78d9e0021b67fdc01d287f6d0cd5f897069b8f885"
+    }
+  ]
+}

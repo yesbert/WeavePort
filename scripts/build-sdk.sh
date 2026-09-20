@@ -13,11 +13,11 @@ dotnet publish examples/sdk/csharp -c Release --no-restore --self-contained fals
 npm ci --prefix sdks/typescript --ignore-scripts
 npm run build --prefix sdks/typescript
 npm pack ./sdks/typescript --pack-destination artifacts/sdk-packages-js
-(cd examples/sdk/typescript && npm install --ignore-scripts --force ../../../artifacts/sdk-packages-js/weaveport-sdk-0.1.0.tgz)
+(cd examples/sdk/typescript && npm install --ignore-scripts --force ../../../artifacts/sdk-packages-js/weaveport-sdk-0.2.0.tgz)
 npm run build --prefix examples/sdk/typescript
 python3 -m venv artifacts/sdk-python
 artifacts/sdk-python/bin/python -m pip wheel ./sdks/python --no-deps -w artifacts/sdk-wheel
-artifacts/sdk-python/bin/python -m pip install --no-deps --force-reinstall artifacts/sdk-wheel/weaveport_sdk-0.1.0-py3-none-any.whl
+artifacts/sdk-python/bin/python -m pip install --no-deps --force-reinstall artifacts/sdk-wheel/weaveport_sdk-0.2.0-py3-none-any.whl
 cp examples/sdk/python/plugin.py artifacts/sdk-python-example/plugin.py
 dotnet restore tests/WeavePort.SdkFixture --force --force-evaluate --no-cache
 dotnet publish tests/WeavePort.WorkerHost -c Release --self-contained false -o artifacts/sdk-worker-host --nologo

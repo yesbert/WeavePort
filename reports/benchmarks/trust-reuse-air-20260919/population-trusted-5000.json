@@ -1,0 +1,79 @@
+{
+  "mode": "trusted",
+  "kind": "population",
+  "repeat": 1,
+  "seed": 1729,
+  "calls": 5000,
+  "uniqueCustomers": 5000,
+  "success": 5000,
+  "failure": null,
+  "passed": true,
+  "seconds": 60.008933290999266,
+  "rps": 83.32092783175584,
+  "preparationSeconds": 0.42874099999971804,
+  "cleanupSeconds": 0.12320729099883465,
+  "starts": 4,
+  "retirements": 4,
+  "remaining": [],
+  "responseMs": {
+    "count": 5000,
+    "mean": 3.486486226139095,
+    "p50": 3.403532085940242,
+    "p95": 5.135220468218904,
+    "p99": 5.488389477250166,
+    "max": 15.419892435602378
+  },
+  "turnoverMs": {
+    "count": 5000,
+    "mean": 3.488194883339747,
+    "p50": 3.4040740829368588,
+    "p95": 5.13667846826138,
+    "p99": 5.491975975019159,
+    "max": 15.421309435623698
+  },
+  "queueMs": {
+    "count": 5000,
+    "mean": 0.7731693305249792,
+    "p50": 0.6873973397887312,
+    "p95": 1.3819654159306083,
+    "p99": 1.5794660903338809,
+    "max": 4.820185975404456
+  },
+  "startupMs": null,
+  "sdkCleanupMs": {
+    "count": 5000,
+    "mean": 0.254717648440419,
+    "p50": 0.2409170010650996,
+    "p95": 0.4225839984428603,
+    "p99": 0.46854099855409004,
+    "max": 4.520916001638398
+  },
+  "peakContainerMiB": 52.48828125,
+  "peakHostRssMiB": 39.828125,
+  "peakChildRssMiB": 123.015625,
+  "scope": "Experimental Python supervisor/SDK scope and Docker stdio, not the released .NET host or SDK. Fresh lifecycle retirement included in turnover.",
+  "meetsOneSecondP99": true,
+  "identity": {
+    "at": 1789834573.569036,
+    "machine": "Mac16,12\n34359738368\n10\nApple M4",
+    "docker": {
+      "MemTotal": 25159561216,
+      "NCPU": 10,
+      "ServerVersion": "29.8.0",
+      "Architecture": "aarch64"
+    },
+    "image": "sha256:4b9a661f1f858c0cdff3be98e234b987f58217fd0d34e07c3ff66217cad7af32",
+    "sourceHashes": {
+      "tools/performance/reuse.py": "accb9226f7e5b78fa5432e3439c88432e78fbf2cd8cf4f9dabfd5e0d9bd4efc6",
+      "tools/performance/docker_memory.py": "1064a6ca4edc374cbc6e53b6b8f3d08078c92beee221643c92dcf499462600ca",
+      "benchmarks/WeavePort.Reuse/fixture/plugin_a.py": "02f1d0d177dece593bacc5340982e1fdd9780aa21fb75410c467f2e0e894dcdd",
+      "benchmarks/WeavePort.Reuse/fixture/plugin_b.py": "cb75c2210292641f442e0949b70ed5ac0622cff82357daedcbb2fd6447a6c9f9",
+      "benchmarks/WeavePort.Reuse/fixture/runtime.py": "862e09373af67e8cbaf655d00be59aeb1175b32bb9ceb50f82b4b305caf1a052",
+      "benchmarks/WeavePort.Reuse/fixture/scope.py": "3d0d3a65f69a1bc5c17cd294991aaf89853ca4e70cf793c14bea79628cb6391b"
+    },
+    "headroom": {
+      "freePercent": 36,
+      "swapUsedMiB": 15991.75
+    }
+  }
+}

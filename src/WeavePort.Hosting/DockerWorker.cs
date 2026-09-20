@@ -36,7 +36,7 @@ internal sealed class DockerWorker(DockerProfile profile, string version, TimePr
         }
 
         JsonElement ready = await Reader.ReadAsync(token);
-        WorkerEnvelope.ValidateReady(ready, Version);
+        WorkerEnvelope.ValidateReady(ready, Version, Profile.ReusePolicy);
         ReadyAt = clock.GetTimestamp();
     }
 

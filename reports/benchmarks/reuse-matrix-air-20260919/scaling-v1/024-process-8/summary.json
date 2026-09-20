@@ -1,0 +1,95 @@
+{
+  "config": {
+    "mode": "process",
+    "workers": 8,
+    "seconds": 15,
+    "cpus": "1"
+  },
+  "image": "sha256:38985b720bd830c893e5ecde51c4ae5f00b2c9495e7535d454c81a89df40be00",
+  "counts": {
+    "offered": 400,
+    "completed": 400,
+    "correct": 400,
+    "failed": 0,
+    "dropped": 0,
+    "withinOneSecond": 400
+  },
+  "elapsed": 15.229696416998195,
+  "preparedSeconds": 0.656537250000838,
+  "customersPerSecond": 26.26447626057413,
+  "hostCpuCores": 0.012618045346295664,
+  "latency": {
+    "responseMs": {
+      "count": 400,
+      "mean": 303.7850562550284,
+      "max": 350.75729199888883,
+      "p50": 302.3211641389879,
+      "p95": 327.3704998411905,
+      "p99": 340.66305489044726
+    },
+    "turnoverMs": {
+      "count": 400,
+      "mean": 303.7864169749446,
+      "max": 350.7592499991006,
+      "p50": 302.3211641389879,
+      "p95": 327.3704998411905,
+      "p99": 340.66305489044726
+    },
+    "queueMs": {
+      "count": 400,
+      "mean": 0.0017197849956573918,
+      "max": 0.013707998732570559,
+      "p50": 0.001715223740350772,
+      "p95": 0.002051660547258416,
+      "p99": 0.004458334629570464
+    },
+    "executionMs": {
+      "count": 400,
+      "mean": 0.5186013450202154,
+      "max": 1.0899160006374586,
+      "p50": 0.49338104606358085,
+      "p95": 0.6783696702490425,
+      "p99": 0.7493421469649953
+    },
+    "cleanupMs": {
+      "count": 400,
+      "mean": 0.19579355999667314,
+      "max": 0.3497500001685694,
+      "p50": 0.18060247988155975,
+      "p95": 0.25840039045376223,
+      "p99": 0.31217582450529346
+    },
+    "generatorLagMs": {
+      "count": 0
+    }
+  },
+  "byWorkload": {
+    "echo": {
+      "count": 400,
+      "mean": 303.7850562550284,
+      "max": 350.75729199888883,
+      "p50": 302.3211641389879,
+      "p95": 327.3704998411905,
+      "p99": 340.66305489044726
+    }
+  },
+  "memoryPeakMiB": 214.84765625,
+  "memoryRawPeakMiB": 214.84765625,
+  "starts": 8,
+  "retirements": 8,
+  "failure": null,
+  "failedExamples": [],
+  "known": [
+    "wp-matrix-1f501b5bac9d4172a8efa4251ce33c00",
+    "wp-matrix-3ffe47c6cab94cc58e74083eaae67470",
+    "wp-matrix-4980b1de1aa54803a3e6deb89292487c",
+    "wp-matrix-7139306ba25c444283f9972c2e91b459",
+    "wp-matrix-7bb99a25112d40a198e6372bd3014583",
+    "wp-matrix-7c7e1c0b1a28403e9d7f93b214e8c096",
+    "wp-matrix-986b3d7ad6da48c8bbf0a27a31f6dd0b",
+    "wp-matrix-ebf93ae9b4a54b8080e4dac5da43946e"
+  ],
+  "remaining": [],
+  "passed": true,
+  "meetsOneSecondSlo": true
+}

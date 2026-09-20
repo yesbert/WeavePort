@@ -1,0 +1,120 @@
+[
+  {
+    "mode": "trusted",
+    "workers": 1,
+    "seconds": 20,
+    "cpus": "1",
+    "transport": "engine"
+  },
+  {
+    "mode": "forkserver",
+    "workers": 1,
+    "seconds": 20,
+    "cpus": "1",
+    "transport": "engine"
+  },
+  {
+    "mode": "trusted",
+    "workers": 4,
+    "seconds": 20,
+    "cpus": "1",
+    "transport": "engine"
+  },
+  {
+    "mode": "forkserver",
+    "workers": 4,
+    "seconds": 20,
+    "cpus": "1",
+    "transport": "engine"
+  },
+  {
+    "mode": "trusted",
+    "workers": 8,
+    "seconds": 20,
+    "cpus": "1",
+    "transport": "engine"
+  },
+  {
+    "mode": "forkserver",
+    "workers": 8,
+    "seconds": 20,
+    "cpus": "1",
+    "transport": "engine"
+  },
+  {
+    "mode": "trusted",
+    "workers": 16,
+    "seconds": 20,
+    "cpus": "1",
+    "transport": "engine"
+  },
+  {
+    "mode": "forkserver",
+    "workers": 16,
+    "seconds": 20,
+    "cpus": "1",
+    "transport": "engine"
+  },
+  {
+    "mode": "process",
+    "workers": 1,
+    "seconds": 20,
+    "cpus": "1",
+    "transport": "engine"
+  },
+  {
+    "mode": "process",
+    "workers": 8,
+    "seconds": 20,
+    "cpus": "1",
+    "transport": "engine"
+  },
+  {
+    "mode": "fresh",
+    "workers": 1,
+    "seconds": 20,
+    "cpus": "1",
+    "transport": "cli"
+  },
+  {
+    "mode": "fresh",
+    "workers": 1,
+    "seconds": 20,
+    "cpus": "1",
+    "transport": "engine"
+  },
+  {
+    "mode": "fresh",
+    "workers": 4,
+    "seconds": 20,
+    "cpus": "1",
+    "transport": "cli"
+  },
+  {
+    "mode": "fresh",
+    "workers": 4,
+    "seconds": 20,
+    "cpus": "1",
+    "transport": "engine"
+  },
+  {
+    "mode": "trusted",
+    "workers": 64,
+    "seconds": 30,
+    "cpus": ".5",
+    "memory": 64,
+    "transport": "engine",
+    "workload": "io",
+    "ioMs": 100
+  },
+  {
+    "mode": "forkserver",
+    "workers": 64,
+    "seconds": 30,
+    "cpus": ".5",
+    "memory": 64,
+    "transport": "engine",
+    "workload": "io",
+    "ioMs": 100
+  }
+]

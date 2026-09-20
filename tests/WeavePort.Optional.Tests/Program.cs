@@ -15,6 +15,7 @@ string root = Path.GetFullPath(args[0]);
 string storage = Path.Combine(root, "artifacts/optional/storage-" + Guid.NewGuid().ToString("N"));
 Directory.CreateDirectory(storage);
 await CompositionChecks.RunAsync(storage);
+await ApprovedReuseChecks.RunAsync(root, args[1], storage);
 await using var host = new PluginHost();
 var profile = new ProcessProfile(args[1], [Path.Combine(root, "artifacts/optional/worker/Worker.dll")],
     trustedCode: true, workspaceRoot: Path.Combine(root, "artifacts/optional/workspaces"));

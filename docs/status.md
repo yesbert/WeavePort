@@ -1,6 +1,6 @@
 # Product status
 
-Latest verified public NuGet version: **0.3.1**, under MIT, with four core packages: Abstractions, Hosting, Sdk and Sdk.Client. Windows, Linux and macOS are supported targets for trusted stdio execution. Current release validation covers macOS arm64; Windows and Linux release validation is pending. See [platform support and validation](platform-qualification.md). This pre-1.0 API remains subject to evolution. Python/TypeScript registry publication and a new offline distribution are outside this release. The historical internal distribution remains **0.1.0-internal.2**.
+Release version: **0.4.0**, under MIT, with four core packages: Abstractions, Hosting, Sdk and Sdk.Client. Windows, Linux and macOS are supported targets for trusted stdio execution. Current release validation covers macOS arm64; Windows and Linux release validation is pending. See [platform support and validation](platform-qualification.md). This pre-1.0 API remains subject to evolution. Python/TypeScript registry publication and a new offline distribution are outside this release. The historical internal distribution remains **0.1.0-internal.2**.
 
 The [0.3.0 release evidence](../reports/release/0.3.0/README.md) records 1,088 assertion executions, exact tested package/symbol provenance, successful Trusted Publishing and measurements of the released Hosting assembly. Earlier [0.2.1 evidence](../reports/release/0.2.1/README.md) remains available as historical release data.
 
@@ -32,4 +32,8 @@ Version 0.3.1 adds public `McpMethods.ListTools` and `McpMethods.CallTool` const
 
 ## Composition and gateway source candidate
 
-Current source targets 0.4.0 with optional Composition, Gateway server and Gateway client packages. The candidate adds authenticated local/remote composition, separate client-only deployment, direct TLS tests and package API/dependency gates. Publication and platform claims depend on retained qualification evidence; see [release status](releases.md) and [gateway limits](gateway.md).
+Current source targets 0.5.0 with optional Composition, Gateway server and Gateway client packages. The candidate adds authenticated local/remote composition, separate client-only deployment, direct TLS tests and package API/dependency gates. Publication and platform claims depend on retained qualification evidence; see [release status](releases.md) and [gateway limits](gateway.md).
+
+## Approved session reuse and fair scheduling
+
+Version 0.4.0 adds a memory-led fair scheduler and opt-in `WorkerReusePolicy.ApprovedSessions`. Customer-bound execution remains the default. The host requires the updated SDK cleanup handshake before sharing compatible reviewed deployments; C#, Python and TypeScript expose registered session resources. See [operator/author guidance](reusable-plugins.md), [candidate verification](../reports/verification/approved-session-reuse-20260920/README.md) and [public release evidence](../reports/release/0.4.0/README.md). Python/TypeScript 0.2.0 artifacts accompany the GitHub release; separate registry publication is not claimed.

@@ -1,0 +1,5679 @@
+[
+  {
+    "mode": "fresh",
+    "checks": [
+      {
+        "name": "distinct customer / alternating plugin correctness",
+        "passed": true
+      },
+      {
+        "name": "distinct customer / alternating plugin correctness",
+        "passed": true
+      },
+      {
+        "name": "distinct customer / alternating plugin correctness",
+        "passed": true
+      },
+      {
+        "name": "distinct customer / alternating plugin correctness",
+        "passed": true
+      },
+      {
+        "name": "stash returned successfully",
+        "passed": true
+      },
+      {
+        "name": "probe returned successfully",
+        "passed": true
+      },
+      {
+        "name": "five memory-residue controls match isolation promise",
+        "passed": true
+      },
+      {
+        "name": "environment returned successfully",
+        "passed": true
+      },
+      {
+        "name": "environment_probe returned successfully",
+        "passed": true
+      },
+      {
+        "name": "environment/cwd/umask/signals restored",
+        "passed": true
+      },
+      {
+        "name": "files returned successfully",
+        "passed": true
+      },
+      {
+        "name": "probe returned successfully",
+        "passed": true
+      },
+      {
+        "name": "tmp/shm/symlink cleanup",
+        "passed": true
+      },
+      {
+        "name": "authority returned successfully",
+        "passed": true
+      },
+      {
+        "name": "cooperative grant and expiry",
+        "passed": true
+      },
+      {
+        "name": "forge_authority returned successfully",
+        "passed": true
+      },
+      {
+        "name": "negative control: local scope grants are NOT a security boundary",
+        "passed": true
+      },
+      {
+        "name": "fd_leak fails closed and next customer recovers",
+        "passed": true
+      },
+      {
+        "name": "cleanup_failure fails closed and next customer recovers",
+        "passed": true
+      },
+      {
+        "name": "untracked_thread fails closed and next customer recovers",
+        "passed": true
+      },
+      {
+        "name": "thread_ignores_stop fails closed and next customer recovers",
+        "passed": true
+      },
+      {
+        "name": "escaped_child fails closed and next customer recovers",
+        "passed": true
+      },
+      {
+        "name": "crash fails closed and next customer recovers",
+        "passed": true
+      },
+      {
+        "name": "hang fails closed and next customer recovers",
+        "passed": true
+      },
+      {
+        "name": "cleanup_hang fails closed and next customer recovers",
+        "passed": true
+      },
+      {
+        "name": "memory_bomb fails closed and next customer recovers",
+        "passed": true
+      },
+      {
+        "name": "stdout_forge fails closed and next customer recovers",
+        "passed": true
+      },
+      {
+        "name": "environment returned successfully",
+        "passed": true
+      },
+      {
+        "name": "normal call after state mutation",
+        "passed": true
+      },
+      {
+        "name": "environment returned successfully",
+        "passed": true
+      },
+      {
+        "name": "normal call after state mutation",
+        "passed": true
+      },
+      {
+        "name": "environment returned successfully",
+        "passed": true
+      },
+      {
+        "name": "normal call after state mutation",
+        "passed": true
+      },
+      {
+        "name": "environment returned successfully",
+        "passed": true
+      },
+      {
+        "name": "normal call after state mutation",
+        "passed": true
+      },
+      {
+        "name": "environment returned successfully",
+        "passed": true
+      },
+      {
+        "name": "normal call after state mutation",
+        "passed": true
+      }
+    ],
+    "rows": [
+      {
+        "request": {
+          "id": "0",
+          "tenant": "customer-0",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "echo"
+        },
+        "container": "wp-matrix-7f0e278768844b8297661c6a077339a7",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "tenant": "customer-0",
+            "plugin": "a",
+            "value": "ABC123XYABC123XYABC123XYABC123XYABC123XYABC123XYABC123XYABC123XY"
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.3765419969568029,
+          "cleanupMs": 0.15124999845284037,
+          "id": "0"
+        },
+        "queueMs": 0.0012080017768312246,
+        "startupMs": 1753.6202920018695,
+        "retirementMs": 296.7977920015983,
+        "responseMs": 2352.7229579995037,
+        "turnoverMs": 2649.527958001272
+      },
+      {
+        "request": {
+          "id": "1",
+          "tenant": "customer-1",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "echo"
+        },
+        "container": "wp-matrix-a85c6bf119fa4802997a4b302cce5e83",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "tenant": "customer-1",
+            "plugin": "b",
+            "value": "yx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbA"
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.28950000341865234,
+          "cleanupMs": 0.10420900071039796,
+          "id": "1"
+        },
+        "queueMs": 0.00541700137546286,
+        "startupMs": 564.7748329975002,
+        "retirementMs": 69.67699999950128,
+        "responseMs": 740.3453750011977,
+        "turnoverMs": 810.028500000044
+      },
+      {
+        "request": {
+          "id": "2",
+          "tenant": "customer-2",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "echo"
+        },
+        "container": "wp-matrix-c97f49fcb73e40f1987eff9a3face80d",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "tenant": "customer-2",
+            "plugin": "a",
+            "value": "ABC123XYABC123XYABC123XYABC123XYABC123XYABC123XYABC123XYABC123XY"
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.2827910029736813,
+          "cleanupMs": 0.1123750007536728,
+          "id": "2"
+        },
+        "queueMs": 0.0035000011848751456,
+        "startupMs": 302.0720419990539,
+        "retirementMs": 72.06275000135065,
+        "responseMs": 494.8573330002546,
+        "turnoverMs": 566.9290420009929
+      },
+      {
+        "request": {
+          "id": "3",
+          "tenant": "customer-3",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "echo"
+        },
+        "container": "wp-matrix-a558c6a44eb64ba58a71f934e0f6189e",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "tenant": "customer-3",
+            "plugin": "b",
+            "value": "yx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbA"
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.2972920010506641,
+          "cleanupMs": 0.11412499952712096,
+          "id": "3"
+        },
+        "queueMs": 0.0033750002330634743,
+        "startupMs": 336.9708749996789,
+        "retirementMs": 60.784291999880224,
+        "responseMs": 522.1619580006518,
+        "turnoverMs": 582.9507080015901
+      },
+      {
+        "request": {
+          "id": "4",
+          "tenant": "customer-4",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "stash"
+        },
+        "container": "wp-matrix-8bf7b3e16d7a4cafa120dbc03b22fa05",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "stored": true
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.25837499924818985,
+          "cleanupMs": 0.11895900024683215,
+          "id": "4"
+        },
+        "queueMs": 0.002791999577311799,
+        "startupMs": 321.47216700104764,
+        "retirementMs": 64.25245799982804,
+        "responseMs": 444.8180420004064,
+        "turnoverMs": 509.0747089998331
+      },
+      {
+        "request": {
+          "id": "5",
+          "tenant": "customer-5",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "probe"
+        },
+        "container": "wp-matrix-e67bb71fc6184a55b0ff67cc8771a9b2",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "hidden": null,
+            "defaults": [],
+            "context": null,
+            "logger": null,
+            "cacheEntries": 0,
+            "extraFiles": []
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.3028330029337667,
+          "cleanupMs": 0.11741699927370064,
+          "id": "5"
+        },
+        "queueMs": 0.0028329995984677225,
+        "startupMs": 508.54616700235056,
+        "retirementMs": 75.61816599991289,
+        "responseMs": 702.1044169996458,
+        "turnoverMs": 777.7282499991998
+      },
+      {
+        "request": {
+          "id": "6",
+          "tenant": "customer-6",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "environment"
+        },
+        "container": "wp-matrix-db3baa934d314c2c9eed41bbd6d59477",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "changed": true
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.24770799791440368,
+          "cleanupMs": 0.1140000022132881,
+          "id": "6"
+        },
+        "queueMs": 0.0031669987947680056,
+        "startupMs": 454.757540999708,
+        "retirementMs": 70.37108299846295,
+        "responseMs": 658.0635829996027,
+        "turnoverMs": 728.43945799832
+      },
+      {
+        "request": {
+          "id": "7",
+          "tenant": "customer-7",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "environment_probe"
+        },
+        "container": "wp-matrix-2a550b5060744964bbf2d4e3c18812c3",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "environment": null,
+            "cwd": "/fixture",
+            "umask": 18,
+            "signalIgnored": false
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.21995800125296228,
+          "cleanupMs": 0.13612499969894998,
+          "id": "7"
+        },
+        "queueMs": 0.0028329995984677225,
+        "startupMs": 346.627292001358,
+        "retirementMs": 79.16324999678181,
+        "responseMs": 538.5431670001708,
+        "turnoverMs": 617.710916998476
+      },
+      {
+        "request": {
+          "id": "8",
+          "tenant": "customer-8",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "files"
+        },
+        "container": "wp-matrix-4130b8f015cf499d84d2e88f4874b948",
+        "outcome": {
+          "status": "ok",
+          "value": null,
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.2851669996744022,
+          "cleanupMs": 0.14279200331657194,
+          "id": "8"
+        },
+        "queueMs": 0.003125001967418939,
+        "startupMs": 408.66641599859577,
+        "retirementMs": 69.73037499847123,
+        "responseMs": 607.8109580012097,
+        "turnoverMs": 677.5462080004218
+      },
+      {
+        "request": {
+          "id": "9",
+          "tenant": "customer-9",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "probe"
+        },
+        "container": "wp-matrix-03d76aa2762943cc95ace08c2e7bc1da",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "hidden": null,
+            "defaults": [],
+            "context": null,
+            "logger": null,
+            "cacheEntries": 0,
+            "extraFiles": []
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.26900000011664815,
+          "cleanupMs": 0.10862500130315311,
+          "id": "9"
+        },
+        "queueMs": 0.0037089994293637574,
+        "startupMs": 315.85400000039954,
+        "retirementMs": 70.96649999948568,
+        "responseMs": 495.63516700072796,
+        "turnoverMs": 566.6058339993469
+      },
+      {
+        "request": {
+          "id": "10",
+          "tenant": "customer-10",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "authority"
+        },
+        "container": "wp-matrix-358a1f5c4ea945a58f744a8e04cdfac3",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "granted": "customer-10",
+            "denied": true,
+            "expired": true
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 1.5431249994435348,
+          "cleanupMs": 0.12412499927449971,
+          "id": "10"
+        },
+        "queueMs": 0.0028329995984677225,
+        "startupMs": 380.9814580017701,
+        "retirementMs": 86.11491700139595,
+        "responseMs": 498.6457499981043,
+        "turnoverMs": 584.765999999945
+      },
+      {
+        "request": {
+          "id": "11",
+          "tenant": "customer-11",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "forge_authority"
+        },
+        "container": "wp-matrix-9ce92d20de0f495fa4b5efbdbd73fb05",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "forgedLocalGrantWorked": true
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.2385420011705719,
+          "cleanupMs": 0.13549999857787043,
+          "id": "11"
+        },
+        "queueMs": 0.0028750000637955964,
+        "startupMs": 349.4965409990982,
+        "retirementMs": 76.1341249999532,
+        "responseMs": 534.2541669997445,
+        "turnoverMs": 610.392624999804
+      },
+      {
+        "request": {
+          "id": "12",
+          "tenant": "customer-12",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "fd_leak"
+        },
+        "container": "wp-matrix-92e9549299ad421aa9678820565f818b",
+        "outcome": {
+          "status": "failed",
+          "value": null,
+          "reusable": false,
+          "error": "cleanup-RuntimeError",
+          "executionMs": 0.22075000015320256,
+          "cleanupMs": 0.13337500058696605,
+          "id": "12"
+        },
+        "queueMs": 0.0030410010367631912,
+        "startupMs": 419.1171249985928,
+        "retirementMs": 49.658833999274066,
+        "responseMs": 532.0552910015977,
+        "turnoverMs": 581.7186250023951
+      },
+      {
+        "request": {
+          "id": "13",
+          "tenant": "customer-13",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "echo"
+        },
+        "container": "wp-matrix-437fc8573210497eba0230406290362e",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "tenant": "customer-13",
+            "plugin": "b",
+            "value": "yx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbA"
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.30408400198211893,
+          "cleanupMs": 0.1254580020031426,
+          "id": "13"
+        },
+        "queueMs": 0.0028329995984677225,
+        "startupMs": 307.63870800001314,
+        "retirementMs": 75.38458300041384,
+        "responseMs": 475.31408299983013,
+        "turnoverMs": 550.703541997791
+      },
+      {
+        "request": {
+          "id": "14",
+          "tenant": "customer-14",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "cleanup_failure"
+        },
+        "container": "wp-matrix-ab1d1e3beaa648ccb0e8267428fadcbe",
+        "outcome": {
+          "status": "failed",
+          "value": null,
+          "reusable": false,
+          "error": "cleanup-RuntimeError",
+          "executionMs": 1.5716250018158462,
+          "cleanupMs": 0.04141699901083484,
+          "id": "14"
+        },
+        "queueMs": 0.003249999281251803,
+        "startupMs": 351.8888329999754,
+        "retirementMs": 59.20091699954355,
+        "responseMs": 473.4234999996261,
+        "turnoverMs": 532.6286659983452
+      },
+      {
+        "request": {
+          "id": "15",
+          "tenant": "customer-15",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "echo"
+        },
+        "container": "wp-matrix-89bdda7da4534a96834b355691e03db9",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "tenant": "customer-15",
+            "plugin": "b",
+            "value": "yx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbA"
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.31791699802852236,
+          "cleanupMs": 0.12262500240467489,
+          "id": "15"
+        },
+        "queueMs": 0.0030000010156072676,
+        "startupMs": 338.90208400043775,
+        "retirementMs": 70.26541700179223,
+        "responseMs": 510.14679099898785,
+        "turnoverMs": 580.4165000008652
+      },
+      {
+        "request": {
+          "id": "16",
+          "tenant": "customer-16",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "untracked_thread"
+        },
+        "container": "wp-matrix-da9bb48bd8914b28bf720b51f5d4f1a4",
+        "outcome": {
+          "status": "failed",
+          "value": null,
+          "reusable": false,
+          "error": "cleanup-RuntimeError",
+          "executionMs": 0.33958399944822304,
+          "cleanupMs": 0.10812500113388523,
+          "id": "16"
+        },
+        "queueMs": 0.0030000010156072676,
+        "startupMs": 351.90783299913164,
+        "retirementMs": 48.632999998517334,
+        "responseMs": 460.2747909993923,
+        "turnoverMs": 508.91245800085017
+      },
+      {
+        "request": {
+          "id": "17",
+          "tenant": "customer-17",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "echo"
+        },
+        "container": "wp-matrix-f30880ace6bd4f32bd1f3cd9c79e6d1b",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "tenant": "customer-17",
+            "plugin": "b",
+            "value": "yx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbA"
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.31316599779529497,
+          "cleanupMs": 0.1278750023629982,
+          "id": "17"
+        },
+        "queueMs": 0.0028329995984677225,
+        "startupMs": 379.3325000006007,
+        "retirementMs": 74.18291599969962,
+        "responseMs": 502.71937499928754,
+        "turnoverMs": 576.9067910005106
+      },
+      {
+        "request": {
+          "id": "18",
+          "tenant": "customer-18",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "thread_ignores_stop"
+        },
+        "container": "wp-matrix-fe305f41573e412897721280f0fb84c9",
+        "outcome": {
+          "status": "failed",
+          "value": null,
+          "reusable": false,
+          "error": "cleanup-RuntimeError",
+          "executionMs": 0.334167001710739,
+          "cleanupMs": 209.22458400309552,
+          "id": "18"
+        },
+        "queueMs": 0.002791999577311799,
+        "startupMs": 377.42754200007766,
+        "retirementMs": 77.47979200212285,
+        "responseMs": 754.5690000006289,
+        "turnoverMs": 832.0541249995586
+      },
+      {
+        "request": {
+          "id": "19",
+          "tenant": "customer-19",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "echo"
+        },
+        "container": "wp-matrix-8e90fd1dff1e4ec3800d26aa9e470e04",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "tenant": "customer-19",
+            "plugin": "b",
+            "value": "yx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbA"
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.30058300035307184,
+          "cleanupMs": 0.12158299796283245,
+          "id": "19"
+        },
+        "queueMs": 0.0028750000637955964,
+        "startupMs": 406.46949999791104,
+        "retirementMs": 66.12591600060114,
+        "responseMs": 537.174082997808,
+        "turnoverMs": 603.3044579999114
+      },
+      {
+        "request": {
+          "id": "20",
+          "tenant": "customer-20",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "escaped_child"
+        },
+        "container": "wp-matrix-f6bbc0e49f894559b2f29990f532ee10",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "pid": 8
+          },
+          "reusable": false,
+          "error": "descendants-remain",
+          "executionMs": 48.04866600170499,
+          "cleanupMs": 0.16008399688871577,
+          "id": "20"
+        },
+        "queueMs": 0.00291700052912347,
+        "startupMs": 368.95733299752465,
+        "retirementMs": 63.287958000728395,
+        "responseMs": 532.4993329995777,
+        "turnoverMs": 595.7915420003701
+      },
+      {
+        "request": {
+          "id": "21",
+          "tenant": "customer-21",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "echo"
+        },
+        "container": "wp-matrix-1ef18bdefe054fef977c05435cda7bc7",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "tenant": "customer-21",
+            "plugin": "b",
+            "value": "yx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbA"
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.30945800244808197,
+          "cleanupMs": 0.12783299825969152,
+          "id": "21"
+        },
+        "queueMs": 0.0026659981813281775,
+        "startupMs": 359.3121660014731,
+        "retirementMs": 62.945041001512436,
+        "responseMs": 471.30687499884516,
+        "turnoverMs": 534.2560829994909
+      },
+      {
+        "request": {
+          "id": "22",
+          "tenant": "customer-22",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "crash"
+        },
+        "container": "wp-matrix-1be7da54ce4d4abc95652951d847fba5",
+        "outcome": {
+          "status": "failed",
+          "reusable": false,
+          "error": "JSONDecodeError"
+        },
+        "queueMs": 0.00291700052912347,
+        "startupMs": 339.8672910007008,
+        "retirementMs": 33.97445799782872,
+        "responseMs": 524.7170840011677,
+        "turnoverMs": 558.6963749992719
+      },
+      {
+        "request": {
+          "id": "23",
+          "tenant": "customer-23",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "echo"
+        },
+        "container": "wp-matrix-21b1ba91621449ad8d9a13552d67f88b",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "tenant": "customer-23",
+            "plugin": "b",
+            "value": "yx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbA"
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.2815829975588713,
+          "cleanupMs": 0.11504199937917292,
+          "id": "23"
+        },
+        "queueMs": 0.003125001967418939,
+        "startupMs": 272.84050000162097,
+        "retirementMs": 69.04612500147778,
+        "responseMs": 385.6487080010993,
+        "turnoverMs": 454.7000830025354
+      },
+      {
+        "request": {
+          "id": "24",
+          "tenant": "customer-24",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "hang"
+        },
+        "container": "wp-matrix-1de687e5b0d64ea2b1578ac39396e75b",
+        "outcome": {
+          "status": "failed",
+          "reusable": false,
+          "error": "TimeoutError"
+        },
+        "queueMs": 0.003125001967418939,
+        "startupMs": 367.0051250010147,
+        "retirementMs": 79.16383399788174,
+        "responseMs": 2868.525417001365,
+        "turnoverMs": 2947.692249999818
+      },
+      {
+        "request": {
+          "id": "25",
+          "tenant": "customer-25",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "echo"
+        },
+        "container": "wp-matrix-508357d677504bc4a505e3c56c534a83",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "tenant": "customer-25",
+            "plugin": "b",
+            "value": "yx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbA"
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.23991699708858505,
+          "cleanupMs": 0.09287500142818317,
+          "id": "25"
+        },
+        "queueMs": 0.0030000010156072676,
+        "startupMs": 253.51116599995294,
+        "retirementMs": 77.13491699905717,
+        "responseMs": 350.42362500098534,
+        "turnoverMs": 427.56274999919697
+      },
+      {
+        "request": {
+          "id": "26",
+          "tenant": "customer-26",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "cleanup_hang"
+        },
+        "container": "wp-matrix-3a40de7ca1dd4cfd82cfe1bf9a11e94e",
+        "outcome": {
+          "status": "failed",
+          "reusable": false,
+          "error": "TimeoutError"
+        },
+        "queueMs": 0.003124998329440132,
+        "startupMs": 255.72345900218352,
+        "retirementMs": 69.58912499976577,
+        "responseMs": 2756.9023329997435,
+        "turnoverMs": 2826.495041997987
+      },
+      {
+        "request": {
+          "id": "27",
+          "tenant": "customer-27",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "echo"
+        },
+        "container": "wp-matrix-3113e55c653f4b938ed913db9aacaa93",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "tenant": "customer-27",
+            "plugin": "b",
+            "value": "yx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbA"
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.24045800091698766,
+          "cleanupMs": 0.0930419992073439,
+          "id": "27"
+        },
+        "queueMs": 0.002792003215290606,
+        "startupMs": 222.10962499957532,
+        "retirementMs": 59.94233299861662,
+        "responseMs": 323.96695900024497,
+        "turnoverMs": 383.91354200211936
+      },
+      {
+        "request": {
+          "id": "28",
+          "tenant": "customer-28",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "memory_bomb"
+        },
+        "container": "wp-matrix-495cebc72f9340ab8cd469a4cb5d97ae",
+        "outcome": {
+          "status": "failed",
+          "reusable": false,
+          "error": "JSONDecodeError"
+        },
+        "queueMs": 0.002791999577311799,
+        "startupMs": 182.64037500193808,
+        "retirementMs": 37.49541599972872,
+        "responseMs": 986.4799169990874,
+        "turnoverMs": 1023.9789580009528
+      },
+      {
+        "request": {
+          "id": "29",
+          "tenant": "customer-29",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "echo"
+        },
+        "container": "wp-matrix-5928f1afd40e48f384e076accb8baf20",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "tenant": "customer-29",
+            "plugin": "b",
+            "value": "yx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbA"
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.24491699878126383,
+          "cleanupMs": 0.09900000077323057,
+          "id": "29"
+        },
+        "queueMs": 0.002291002601850778,
+        "startupMs": 303.8011249991541,
+        "retirementMs": 61.23562499851687,
+        "responseMs": 399.3648330033466,
+        "turnoverMs": 460.60441600275226
+      },
+      {
+        "request": {
+          "id": "30",
+          "tenant": "customer-30",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "stdout_forge"
+        },
+        "container": "wp-matrix-8f27a016f1c54c5eaa29ddec4aa62a74",
+        "outcome": {
+          "status": "failed",
+          "reusable": false,
+          "error": "RuntimeError"
+        },
+        "queueMs": 0.0030000010156072676,
+        "startupMs": 234.76154200034216,
+        "retirementMs": 57.36925000019255,
+        "responseMs": 336.594166001305,
+        "turnoverMs": 393.96758300063084
+      },
+      {
+        "request": {
+          "id": "31",
+          "tenant": "customer-31",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "echo"
+        },
+        "container": "wp-matrix-6e2e2844b8a449b8a723b8c037a2fc15",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "tenant": "customer-31",
+            "plugin": "b",
+            "value": "yx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbA"
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.2516670028853696,
+          "cleanupMs": 0.09495799895375967,
+          "id": "31"
+        },
+        "queueMs": 0.002624998160172254,
+        "startupMs": 236.77366700212588,
+        "retirementMs": 63.665459001640556,
+        "responseMs": 336.6918749998149,
+        "turnoverMs": 400.36187499936204
+      },
+      {
+        "request": {
+          "id": "32",
+          "tenant": "customer-32",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "environment"
+        },
+        "container": "wp-matrix-70d036e6cbeb47cd84f51347dab42283",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "changed": true
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.18629199985298328,
+          "cleanupMs": 0.08812499800114892,
+          "id": "32"
+        },
+        "queueMs": 0.002791999577311799,
+        "startupMs": 231.98662499999045,
+        "retirementMs": 67.65791699945112,
+        "responseMs": 328.2557499987888,
+        "turnoverMs": 395.9177919969079
+      },
+      {
+        "request": {
+          "id": "33",
+          "tenant": "customer-33",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "echo"
+        },
+        "container": "wp-matrix-2cb7e47d5f3243538089eed3d357092b",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "tenant": "customer-33",
+            "plugin": "b",
+            "value": "yx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbA"
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.23579100161441602,
+          "cleanupMs": 0.09758300075191073,
+          "id": "33"
+        },
+        "queueMs": 0.0026670022634789348,
+        "startupMs": 260.12224999794853,
+        "retirementMs": 70.65112499913084,
+        "responseMs": 366.3331250027113,
+        "turnoverMs": 436.98916700304835
+      },
+      {
+        "request": {
+          "id": "34",
+          "tenant": "customer-34",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "environment"
+        },
+        "container": "wp-matrix-12ed2e1efa414eb6baa1c70eab53d787",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "changed": true
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.18304200057173148,
+          "cleanupMs": 0.08575000174460001,
+          "id": "34"
+        },
+        "queueMs": 0.004583998816087842,
+        "startupMs": 217.36850000161212,
+        "retirementMs": 66.53133399959188,
+        "responseMs": 322.9511249992356,
+        "turnoverMs": 389.4866250011546
+      },
+      {
+        "request": {
+          "id": "35",
+          "tenant": "customer-35",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "echo"
+        },
+        "container": "wp-matrix-c3f0f3e4984643869909ad82204e359b",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "tenant": "customer-35",
+            "plugin": "b",
+            "value": "yx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbA"
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.2549170021666214,
+          "cleanupMs": 0.09945800047717057,
+          "id": "35"
+        },
+        "queueMs": 0.003916000423487276,
+        "startupMs": 281.6462499977206,
+        "retirementMs": 61.658833001274616,
+        "responseMs": 393.6893329992017,
+        "turnoverMs": 455.3526659983618
+      },
+      {
+        "request": {
+          "id": "36",
+          "tenant": "customer-36",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "environment"
+        },
+        "container": "wp-matrix-3af82ae3805147ce8c46a6e7a458a670",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "changed": true
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.18950000230688602,
+          "cleanupMs": 0.09108299855142832,
+          "id": "36"
+        },
+        "queueMs": 0.0030419978429563344,
+        "startupMs": 290.4328329968848,
+        "retirementMs": 62.029625001741806,
+        "responseMs": 387.95404199845507,
+        "turnoverMs": 449.9881669980823
+      },
+      {
+        "request": {
+          "id": "37",
+          "tenant": "customer-37",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "echo"
+        },
+        "container": "wp-matrix-f5a8bd66f2514abda53c5f17fcc4da7c",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "tenant": "customer-37",
+            "plugin": "b",
+            "value": "yx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbA"
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.3025839978363365,
+          "cleanupMs": 0.11783400259446353,
+          "id": "37"
+        },
+        "queueMs": 0.0027079986466560513,
+        "startupMs": 267.39683400228387,
+        "retirementMs": 68.80799999998999,
+        "responseMs": 424.9328330006392,
+        "turnoverMs": 493.74612500105286
+      },
+      {
+        "request": {
+          "id": "38",
+          "tenant": "customer-38",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "environment"
+        },
+        "container": "wp-matrix-d085233ec7f044d490c0e6ccf7ddcc07",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "changed": true
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.21591599943349138,
+          "cleanupMs": 0.09983400013879873,
+          "id": "38"
+        },
+        "queueMs": 0.00291700052912347,
+        "startupMs": 266.4474169978348,
+        "retirementMs": 68.4093749987369,
+        "responseMs": 427.40441700152587,
+        "turnoverMs": 495.818417002738
+      },
+      {
+        "request": {
+          "id": "39",
+          "tenant": "customer-39",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "echo"
+        },
+        "container": "wp-matrix-8d176ac1fc024209bc64a290047114a6",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "tenant": "customer-39",
+            "plugin": "b",
+            "value": "yx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbA"
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.31120800122153014,
+          "cleanupMs": 0.11954200090258382,
+          "id": "39"
+        },
+        "queueMs": 0.002916996891144663,
+        "startupMs": 337.62916599880555,
+        "retirementMs": 62.498667000909336,
+        "responseMs": 455.7221249997383,
+        "turnoverMs": 518.2252079976024
+      },
+      {
+        "request": {
+          "id": "40",
+          "tenant": "customer-40",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "environment"
+        },
+        "container": "wp-matrix-7d3518e6feb44efa98934850d4c5ab97",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "changed": true
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.19750000137719326,
+          "cleanupMs": 0.10220900003332645,
+          "id": "40"
+        },
+        "queueMs": 0.002624998160172254,
+        "startupMs": 311.19337500058464,
+        "retirementMs": 70.24916599766584,
+        "responseMs": 416.5402920007182,
+        "turnoverMs": 486.7942079981731
+      },
+      {
+        "request": {
+          "id": "41",
+          "tenant": "customer-41",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "echo"
+        },
+        "container": "wp-matrix-74f1c1edb34d407bad5c0608c5bb3b39",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "tenant": "customer-41",
+            "plugin": "b",
+            "value": "yx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbA"
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.28649999876506627,
+          "cleanupMs": 0.11470800018287264,
+          "id": "41"
+        },
+        "queueMs": 0.0026670022634789348,
+        "startupMs": 341.0001670017664,
+        "retirementMs": 62.56595800005016,
+        "responseMs": 458.64075000281446,
+        "turnoverMs": 521.2109580024844
+      }
+    ],
+    "crossTenantMemoryLeakExpected": false
+  },
+  {
+    "mode": "process",
+    "checks": [
+      {
+        "name": "distinct customer / alternating plugin correctness",
+        "passed": true
+      },
+      {
+        "name": "distinct customer / alternating plugin correctness",
+        "passed": true
+      },
+      {
+        "name": "distinct customer / alternating plugin correctness",
+        "passed": true
+      },
+      {
+        "name": "distinct customer / alternating plugin correctness",
+        "passed": true
+      },
+      {
+        "name": "stash returned successfully",
+        "passed": true
+      },
+      {
+        "name": "probe returned successfully",
+        "passed": true
+      },
+      {
+        "name": "five memory-residue controls match isolation promise",
+        "passed": true
+      },
+      {
+        "name": "environment returned successfully",
+        "passed": true
+      },
+      {
+        "name": "environment_probe returned successfully",
+        "passed": true
+      },
+      {
+        "name": "environment/cwd/umask/signals restored",
+        "passed": true
+      },
+      {
+        "name": "files returned successfully",
+        "passed": true
+      },
+      {
+        "name": "probe returned successfully",
+        "passed": true
+      },
+      {
+        "name": "tmp/shm/symlink cleanup",
+        "passed": true
+      },
+      {
+        "name": "authority returned successfully",
+        "passed": true
+      },
+      {
+        "name": "cooperative grant and expiry",
+        "passed": true
+      },
+      {
+        "name": "forge_authority returned successfully",
+        "passed": true
+      },
+      {
+        "name": "negative control: local scope grants are NOT a security boundary",
+        "passed": true
+      },
+      {
+        "name": "fd_leak fails closed and next customer recovers",
+        "passed": true
+      },
+      {
+        "name": "cleanup_failure fails closed and next customer recovers",
+        "passed": true
+      },
+      {
+        "name": "untracked_thread fails closed and next customer recovers",
+        "passed": true
+      },
+      {
+        "name": "thread_ignores_stop fails closed and next customer recovers",
+        "passed": true
+      },
+      {
+        "name": "escaped_child fails closed and next customer recovers",
+        "passed": true
+      },
+      {
+        "name": "crash fails closed and next customer recovers",
+        "passed": true
+      },
+      {
+        "name": "hang fails closed and next customer recovers",
+        "passed": true
+      },
+      {
+        "name": "cleanup_hang fails closed and next customer recovers",
+        "passed": true
+      },
+      {
+        "name": "memory_bomb fails closed and next customer recovers",
+        "passed": true
+      },
+      {
+        "name": "stdout_forge fails closed and next customer recovers",
+        "passed": true
+      },
+      {
+        "name": "environment returned successfully",
+        "passed": true
+      },
+      {
+        "name": "normal call after state mutation",
+        "passed": true
+      },
+      {
+        "name": "environment returned successfully",
+        "passed": true
+      },
+      {
+        "name": "normal call after state mutation",
+        "passed": true
+      },
+      {
+        "name": "environment returned successfully",
+        "passed": true
+      },
+      {
+        "name": "normal call after state mutation",
+        "passed": true
+      },
+      {
+        "name": "environment returned successfully",
+        "passed": true
+      },
+      {
+        "name": "normal call after state mutation",
+        "passed": true
+      },
+      {
+        "name": "environment returned successfully",
+        "passed": true
+      },
+      {
+        "name": "normal call after state mutation",
+        "passed": true
+      }
+    ],
+    "rows": [
+      {
+        "request": {
+          "id": "0",
+          "tenant": "customer-0",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "echo"
+        },
+        "container": "wp-matrix-a0da52da3c5c47269492cd9a624b8c97",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "tenant": "customer-0",
+            "plugin": "a",
+            "value": "ABC123XYABC123XYABC123XYABC123XYABC123XYABC123XYABC123XYABC123XY"
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.28333299997029826,
+          "cleanupMs": 0.10758300049928948,
+          "id": "0"
+        },
+        "queueMs": 0.0035000011848751456,
+        "startupMs": 276.82437499970547,
+        "retirementMs": 0.0,
+        "responseMs": 671.9507500019972,
+        "turnoverMs": 671.961291001935
+      },
+      {
+        "request": {
+          "id": "1",
+          "tenant": "customer-1",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "echo"
+        },
+        "container": "wp-matrix-a0da52da3c5c47269492cd9a624b8c97",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "tenant": "customer-1",
+            "plugin": "b",
+            "value": "yx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbA"
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.27870900157722645,
+          "cleanupMs": 0.10599999950500205,
+          "id": "1"
+        },
+        "queueMs": 0.009750001481734216,
+        "startupMs": 0.0,
+        "retirementMs": 0.0,
+        "responseMs": 305.18333299914957,
+        "turnoverMs": 305.18579199997475
+      },
+      {
+        "request": {
+          "id": "2",
+          "tenant": "customer-2",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "echo"
+        },
+        "container": "wp-matrix-a0da52da3c5c47269492cd9a624b8c97",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "tenant": "customer-2",
+            "plugin": "a",
+            "value": "ABC123XYABC123XYABC123XYABC123XYABC123XYABC123XYABC123XYABC123XY"
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.2651670001796447,
+          "cleanupMs": 0.10091600051964633,
+          "id": "2"
+        },
+        "queueMs": 0.0014170000213198364,
+        "startupMs": 0.0,
+        "retirementMs": 0.0,
+        "responseMs": 299.18104199896334,
+        "turnoverMs": 299.1839999995136
+      },
+      {
+        "request": {
+          "id": "3",
+          "tenant": "customer-3",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "echo"
+        },
+        "container": "wp-matrix-a0da52da3c5c47269492cd9a624b8c97",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "tenant": "customer-3",
+            "plugin": "b",
+            "value": "yx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbA"
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.2509580008336343,
+          "cleanupMs": 0.09954199776984751,
+          "id": "3"
+        },
+        "queueMs": 0.0026669986255001277,
+        "startupMs": 0.0,
+        "retirementMs": 0.0,
+        "responseMs": 293.90695899928687,
+        "turnoverMs": 293.909584001085
+      },
+      {
+        "request": {
+          "id": "4",
+          "tenant": "customer-4",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "stash"
+        },
+        "container": "wp-matrix-a0da52da3c5c47269492cd9a624b8c97",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "stored": true
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.19845799761242233,
+          "cleanupMs": 0.10362499961047433,
+          "id": "4"
+        },
+        "queueMs": 0.002416996721876785,
+        "startupMs": 0.0,
+        "retirementMs": 0.0,
+        "responseMs": 288.7230419983098,
+        "turnoverMs": 288.73095799644943
+      },
+      {
+        "request": {
+          "id": "5",
+          "tenant": "customer-5",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "probe"
+        },
+        "container": "wp-matrix-a0da52da3c5c47269492cd9a624b8c97",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "hidden": null,
+            "defaults": [],
+            "context": null,
+            "logger": null,
+            "cacheEntries": 0,
+            "extraFiles": []
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.21312500030035153,
+          "cleanupMs": 0.07825000284356065,
+          "id": "5"
+        },
+        "queueMs": 0.0028329995984677225,
+        "startupMs": 0.0,
+        "retirementMs": 0.0,
+        "responseMs": 288.2062080025207,
+        "turnoverMs": 288.2078750008077
+      },
+      {
+        "request": {
+          "id": "6",
+          "tenant": "customer-6",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "environment"
+        },
+        "container": "wp-matrix-a0da52da3c5c47269492cd9a624b8c97",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "changed": true
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.18154200006392784,
+          "cleanupMs": 0.08341700231540017,
+          "id": "6"
+        },
+        "queueMs": 0.0018339997041039169,
+        "startupMs": 0.0,
+        "retirementMs": 0.0,
+        "responseMs": 231.8522089990438,
+        "turnoverMs": 231.8550839991076
+      },
+      {
+        "request": {
+          "id": "7",
+          "tenant": "customer-7",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "environment_probe"
+        },
+        "container": "wp-matrix-a0da52da3c5c47269492cd9a624b8c97",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "environment": null,
+            "cwd": "/fixture",
+            "umask": 18,
+            "signalIgnored": false
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.16891699851839803,
+          "cleanupMs": 0.09495800259173848,
+          "id": "7"
+        },
+        "queueMs": 0.0025840017769951373,
+        "startupMs": 0.0,
+        "retirementMs": 0.0,
+        "responseMs": 289.74912500052596,
+        "turnoverMs": 289.75062500103377
+      },
+      {
+        "request": {
+          "id": "8",
+          "tenant": "customer-8",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "files"
+        },
+        "container": "wp-matrix-a0da52da3c5c47269492cd9a624b8c97",
+        "outcome": {
+          "status": "ok",
+          "value": null,
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.2279170003021136,
+          "cleanupMs": 0.10620800094329752,
+          "id": "8"
+        },
+        "queueMs": 0.0015000005078036338,
+        "startupMs": 0.0,
+        "retirementMs": 0.0,
+        "responseMs": 288.19545800070046,
+        "turnoverMs": 288.20099999938975
+      },
+      {
+        "request": {
+          "id": "9",
+          "tenant": "customer-9",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "probe"
+        },
+        "container": "wp-matrix-a0da52da3c5c47269492cd9a624b8c97",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "hidden": null,
+            "defaults": [],
+            "context": null,
+            "logger": null,
+            "cacheEntries": 0,
+            "extraFiles": []
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.22562500089406967,
+          "cleanupMs": 0.08216700007324107,
+          "id": "9"
+        },
+        "queueMs": 0.001667001924943179,
+        "startupMs": 0.0,
+        "retirementMs": 0.0,
+        "responseMs": 244.12420900262077,
+        "turnoverMs": 244.12695900173276
+      },
+      {
+        "request": {
+          "id": "10",
+          "tenant": "customer-10",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "authority"
+        },
+        "container": "wp-matrix-a0da52da3c5c47269492cd9a624b8c97",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "granted": "customer-10",
+            "denied": true,
+            "expired": true
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 1.147708000644343,
+          "cleanupMs": 0.09508400034974329,
+          "id": "10"
+        },
+        "queueMs": 0.0028329995984677225,
+        "startupMs": 0.0,
+        "retirementMs": 0.0,
+        "responseMs": 276.8703329966229,
+        "turnoverMs": 276.8719579980825
+      },
+      {
+        "request": {
+          "id": "11",
+          "tenant": "customer-11",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "forge_authority"
+        },
+        "container": "wp-matrix-a0da52da3c5c47269492cd9a624b8c97",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "forgedLocalGrantWorked": true
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.19654199786600657,
+          "cleanupMs": 0.10462499994901009,
+          "id": "11"
+        },
+        "queueMs": 0.0015410005289595574,
+        "startupMs": 0.0,
+        "retirementMs": 0.0,
+        "responseMs": 289.76375000274857,
+        "turnoverMs": 289.7650410013739
+      },
+      {
+        "request": {
+          "id": "12",
+          "tenant": "customer-12",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "fd_leak"
+        },
+        "container": "wp-matrix-a0da52da3c5c47269492cd9a624b8c97",
+        "outcome": {
+          "status": "failed",
+          "value": null,
+          "reusable": false,
+          "error": "cleanup-RuntimeError",
+          "executionMs": 0.19750000137719326,
+          "cleanupMs": 0.09845900058280677,
+          "id": "12"
+        },
+        "queueMs": 0.0015420009731315076,
+        "startupMs": 0.0,
+        "retirementMs": 43.12416600077995,
+        "responseMs": 285.139583000273,
+        "turnoverMs": 328.26858300177264
+      },
+      {
+        "request": {
+          "id": "13",
+          "tenant": "customer-13",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "echo"
+        },
+        "container": "wp-matrix-94b11948f0fb4303b0d90003da7f393b",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "tenant": "customer-13",
+            "plugin": "b",
+            "value": "yx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbA"
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.2544589988247026,
+          "cleanupMs": 0.09570799738867208,
+          "id": "13"
+        },
+        "queueMs": 0.002624998160172254,
+        "startupMs": 263.5742080019554,
+        "retirementMs": 0.0,
+        "responseMs": 498.62904099791194,
+        "turnoverMs": 498.6399579975114
+      },
+      {
+        "request": {
+          "id": "14",
+          "tenant": "customer-14",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "cleanup_failure"
+        },
+        "container": "wp-matrix-94b11948f0fb4303b0d90003da7f393b",
+        "outcome": {
+          "status": "failed",
+          "value": null,
+          "reusable": false,
+          "error": "cleanup-RuntimeError",
+          "executionMs": 1.1527909991855267,
+          "cleanupMs": 0.03091600228799507,
+          "id": "14"
+        },
+        "queueMs": 0.00987499879556708,
+        "startupMs": 0.0,
+        "retirementMs": 38.1130830028269,
+        "responseMs": 286.94020900002215,
+        "turnoverMs": 325.0568750008824
+      },
+      {
+        "request": {
+          "id": "15",
+          "tenant": "customer-15",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "echo"
+        },
+        "container": "wp-matrix-23a310ffe0a54b73930f658a69d2bbe1",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "tenant": "customer-15",
+            "plugin": "b",
+            "value": "yx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbA"
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.2522079994378146,
+          "cleanupMs": 0.09950000094249845,
+          "id": "15"
+        },
+        "queueMs": 0.0015830009942874312,
+        "startupMs": 318.067083000642,
+        "retirementMs": 0.0,
+        "responseMs": 608.8786250002158,
+        "turnoverMs": 608.8856669994129
+      },
+      {
+        "request": {
+          "id": "16",
+          "tenant": "customer-16",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "untracked_thread"
+        },
+        "container": "wp-matrix-23a310ffe0a54b73930f658a69d2bbe1",
+        "outcome": {
+          "status": "failed",
+          "value": null,
+          "reusable": false,
+          "error": "cleanup-RuntimeError",
+          "executionMs": 0.31112500073504634,
+          "cleanupMs": 0.08795800022198819,
+          "id": "16"
+        },
+        "queueMs": 0.007208000170066953,
+        "startupMs": 0.0,
+        "retirementMs": 39.87562499969499,
+        "responseMs": 301.7643749990384,
+        "turnoverMs": 341.6444579997915
+      },
+      {
+        "request": {
+          "id": "17",
+          "tenant": "customer-17",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "echo"
+        },
+        "container": "wp-matrix-83a4e58f12284cffba89d595e5b31a98",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "tenant": "customer-17",
+            "plugin": "b",
+            "value": "yx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbA"
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.7527079978899565,
+          "cleanupMs": 0.11295799777144566,
+          "id": "17"
+        },
+        "queueMs": 0.002583001332823187,
+        "startupMs": 258.17458299934515,
+        "retirementMs": 0.0,
+        "responseMs": 569.3621249993157,
+        "turnoverMs": 569.3734999986191
+      },
+      {
+        "request": {
+          "id": "18",
+          "tenant": "customer-18",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "thread_ignores_stop"
+        },
+        "container": "wp-matrix-83a4e58f12284cffba89d595e5b31a98",
+        "outcome": {
+          "status": "failed",
+          "value": null,
+          "reusable": false,
+          "error": "cleanup-RuntimeError",
+          "executionMs": 0.3002500016009435,
+          "cleanupMs": 210.5082499983837,
+          "id": "18"
+        },
+        "queueMs": 0.009332998160971329,
+        "startupMs": 0.0,
+        "retirementMs": 37.9410409987031,
+        "responseMs": 530.2127920003841,
+        "turnoverMs": 568.1588330007799
+      },
+      {
+        "request": {
+          "id": "19",
+          "tenant": "customer-19",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "echo"
+        },
+        "container": "wp-matrix-59ace0890afe4dc7894ebe45e8dd3d9e",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "tenant": "customer-19",
+            "plugin": "b",
+            "value": "yx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbA"
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.2844160007953178,
+          "cleanupMs": 0.10416599980089813,
+          "id": "19"
+        },
+        "queueMs": 0.0031669987947680056,
+        "startupMs": 300.08320799970534,
+        "retirementMs": 0.0,
+        "responseMs": 599.1636670005391,
+        "turnoverMs": 599.1685839981074
+      },
+      {
+        "request": {
+          "id": "20",
+          "tenant": "customer-20",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "escaped_child"
+        },
+        "container": "wp-matrix-59ace0890afe4dc7894ebe45e8dd3d9e",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "pid": 10
+          },
+          "reusable": false,
+          "error": "descendants-remain",
+          "executionMs": 1.3888749999750871,
+          "cleanupMs": 0.09754100028658286,
+          "id": "20"
+        },
+        "queueMs": 0.004833000275539234,
+        "startupMs": 0.0,
+        "retirementMs": 36.92658299769391,
+        "responseMs": 299.0915420014062,
+        "turnoverMs": 336.02158299981966
+      },
+      {
+        "request": {
+          "id": "21",
+          "tenant": "customer-21",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "echo"
+        },
+        "container": "wp-matrix-28b672d0b8dd414db33ac4cfcc92dbc8",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "tenant": "customer-21",
+            "plugin": "b",
+            "value": "yx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbA"
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.31695800134912133,
+          "cleanupMs": 0.11304199870210141,
+          "id": "21"
+        },
+        "queueMs": 0.0018329992599319667,
+        "startupMs": 265.6443749983737,
+        "retirementMs": 0.0,
+        "responseMs": 559.0107499992882,
+        "turnoverMs": 559.0189579997968
+      },
+      {
+        "request": {
+          "id": "22",
+          "tenant": "customer-22",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "crash"
+        },
+        "container": "wp-matrix-28b672d0b8dd414db33ac4cfcc92dbc8",
+        "outcome": {
+          "status": "failed",
+          "reusable": false,
+          "id": "22"
+        },
+        "queueMs": 0.009625000529922545,
+        "startupMs": 0.0,
+        "retirementMs": 39.627499998459825,
+        "responseMs": 291.1811670019233,
+        "turnoverMs": 330.81316700190655
+      },
+      {
+        "request": {
+          "id": "23",
+          "tenant": "customer-23",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "echo"
+        },
+        "container": "wp-matrix-1953f2c2b75046f381ec72b96a33ee8f",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "tenant": "customer-23",
+            "plugin": "b",
+            "value": "yx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbA"
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.2656249998835847,
+          "cleanupMs": 0.10324999675503932,
+          "id": "23"
+        },
+        "queueMs": 0.006792000931454822,
+        "startupMs": 253.39933299983386,
+        "retirementMs": 0.0,
+        "responseMs": 564.5360419985082,
+        "turnoverMs": 564.5483330008574
+      },
+      {
+        "request": {
+          "id": "24",
+          "tenant": "customer-24",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "hang"
+        },
+        "container": "wp-matrix-1953f2c2b75046f381ec72b96a33ee8f",
+        "outcome": {
+          "status": "failed",
+          "reusable": false,
+          "id": "24"
+        },
+        "queueMs": 0.009916999260894954,
+        "startupMs": 0.0,
+        "retirementMs": 50.90379200191819,
+        "responseMs": 1508.6406669979624,
+        "turnoverMs": 1559.5493750006426
+      },
+      {
+        "request": {
+          "id": "25",
+          "tenant": "customer-25",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "echo"
+        },
+        "container": "wp-matrix-45e536738e9f46fdb7ef92980e7f8aa3",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "tenant": "customer-25",
+            "plugin": "b",
+            "value": "yx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbA"
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.2451250002195593,
+          "cleanupMs": 0.09591599882696755,
+          "id": "25"
+        },
+        "queueMs": 0.0030420014809351414,
+        "startupMs": 244.87608300114516,
+        "retirementMs": 0.0,
+        "responseMs": 475.4488750004384,
+        "turnoverMs": 475.4545830001007
+      },
+      {
+        "request": {
+          "id": "26",
+          "tenant": "customer-26",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "cleanup_hang"
+        },
+        "container": "wp-matrix-45e536738e9f46fdb7ef92980e7f8aa3",
+        "outcome": {
+          "status": "failed",
+          "reusable": false,
+          "id": "26"
+        },
+        "queueMs": 0.005542002327274531,
+        "startupMs": 0.0,
+        "retirementMs": 62.36512499890523,
+        "responseMs": 1518.0913330004842,
+        "turnoverMs": 1580.4669169992849
+      },
+      {
+        "request": {
+          "id": "27",
+          "tenant": "customer-27",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "echo"
+        },
+        "container": "wp-matrix-64f45b6cdaa4484cbbaa1394f91dc066",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "tenant": "customer-27",
+            "plugin": "b",
+            "value": "yx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbA"
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.23908399816718884,
+          "cleanupMs": 0.09458299973630346,
+          "id": "27"
+        },
+        "queueMs": 0.0026670022634789348,
+        "startupMs": 232.3904170007154,
+        "retirementMs": 0.0,
+        "responseMs": 470.2912080028909,
+        "turnoverMs": 470.29625000141095
+      },
+      {
+        "request": {
+          "id": "28",
+          "tenant": "customer-28",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "memory_bomb"
+        },
+        "container": "wp-matrix-64f45b6cdaa4484cbbaa1394f91dc066",
+        "outcome": {
+          "status": "failed",
+          "reusable": false,
+          "id": "28"
+        },
+        "queueMs": 0.004917001206194982,
+        "startupMs": 0.0,
+        "retirementMs": 49.524250000104075,
+        "responseMs": 485.6852919983794,
+        "turnoverMs": 535.2144589996897
+      },
+      {
+        "request": {
+          "id": "29",
+          "tenant": "customer-29",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "echo"
+        },
+        "container": "wp-matrix-a3b8a275482d435abc9b1c8d9be692bb",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "tenant": "customer-29",
+            "plugin": "b",
+            "value": "yx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbA"
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.24841600315994583,
+          "cleanupMs": 0.09833299918682314,
+          "id": "29"
+        },
+        "queueMs": 0.0028750000637955964,
+        "startupMs": 235.29408299873467,
+        "retirementMs": 0.0,
+        "responseMs": 529.5542499989097,
+        "turnoverMs": 529.5598749980854
+      },
+      {
+        "request": {
+          "id": "30",
+          "tenant": "customer-30",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "stdout_forge"
+        },
+        "container": "wp-matrix-a3b8a275482d435abc9b1c8d9be692bb",
+        "outcome": {
+          "status": "failed",
+          "reusable": false,
+          "id": "30"
+        },
+        "queueMs": 0.0062920007621869445,
+        "startupMs": 0.0,
+        "retirementMs": 37.22641599961207,
+        "responseMs": 287.8092920000199,
+        "turnoverMs": 325.03887500206474
+      },
+      {
+        "request": {
+          "id": "31",
+          "tenant": "customer-31",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "echo"
+        },
+        "container": "wp-matrix-55032f6a3380455c86180323b9299bd7",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "tenant": "customer-31",
+            "plugin": "b",
+            "value": "yx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbA"
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.23941700055729598,
+          "cleanupMs": 0.094292001449503,
+          "id": "31"
+        },
+        "queueMs": 0.0016669982869643718,
+        "startupMs": 247.59854200237896,
+        "retirementMs": 0.0,
+        "responseMs": 488.81537499983096,
+        "turnoverMs": 488.825332999113
+      },
+      {
+        "request": {
+          "id": "32",
+          "tenant": "customer-32",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "environment"
+        },
+        "container": "wp-matrix-55032f6a3380455c86180323b9299bd7",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "changed": true
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.20979200053261593,
+          "cleanupMs": 0.08562500079278834,
+          "id": "32"
+        },
+        "queueMs": 0.009583000064594671,
+        "startupMs": 0.0,
+        "retirementMs": 0.0,
+        "responseMs": 286.5189170006488,
+        "turnoverMs": 286.5213750010298
+      },
+      {
+        "request": {
+          "id": "33",
+          "tenant": "customer-33",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "echo"
+        },
+        "container": "wp-matrix-55032f6a3380455c86180323b9299bd7",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "tenant": "customer-33",
+            "plugin": "b",
+            "value": "yx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbA"
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.2518340006645303,
+          "cleanupMs": 0.09904100079438649,
+          "id": "33"
+        },
+        "queueMs": 0.022166997950989753,
+        "startupMs": 0.0,
+        "retirementMs": 0.0,
+        "responseMs": 286.47729200019967,
+        "turnoverMs": 286.47991699835984
+      },
+      {
+        "request": {
+          "id": "34",
+          "tenant": "customer-34",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "environment"
+        },
+        "container": "wp-matrix-55032f6a3380455c86180323b9299bd7",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "changed": true
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.18412500139675103,
+          "cleanupMs": 0.08508400060236454,
+          "id": "34"
+        },
+        "queueMs": 0.002791999577311799,
+        "startupMs": 0.0,
+        "retirementMs": 0.0,
+        "responseMs": 290.70441700241645,
+        "turnoverMs": 290.70716700152843
+      },
+      {
+        "request": {
+          "id": "35",
+          "tenant": "customer-35",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "echo"
+        },
+        "container": "wp-matrix-55032f6a3380455c86180323b9299bd7",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "tenant": "customer-35",
+            "plugin": "b",
+            "value": "yx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbA"
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.2842499998223502,
+          "cleanupMs": 0.10183299673371948,
+          "id": "35"
+        },
+        "queueMs": 0.0026659981813281775,
+        "startupMs": 0.0,
+        "retirementMs": 0.0,
+        "responseMs": 237.95899999822723,
+        "turnoverMs": 237.9619579987775
+      },
+      {
+        "request": {
+          "id": "36",
+          "tenant": "customer-36",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "environment"
+        },
+        "container": "wp-matrix-55032f6a3380455c86180323b9299bd7",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "changed": true
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.1789579982869327,
+          "cleanupMs": 0.08633299876237288,
+          "id": "36"
+        },
+        "queueMs": 0.0028329995984677225,
+        "startupMs": 0.0,
+        "retirementMs": 0.0,
+        "responseMs": 285.7149580013356,
+        "turnoverMs": 285.71787500186474
+      },
+      {
+        "request": {
+          "id": "37",
+          "tenant": "customer-37",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "echo"
+        },
+        "container": "wp-matrix-55032f6a3380455c86180323b9299bd7",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "tenant": "customer-37",
+            "plugin": "b",
+            "value": "yx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbA"
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.24562500038882717,
+          "cleanupMs": 0.09629199848859571,
+          "id": "37"
+        },
+        "queueMs": 0.0026659981813281775,
+        "startupMs": 0.0,
+        "retirementMs": 0.0,
+        "responseMs": 278.3924579998711,
+        "turnoverMs": 278.3952079989831
+      },
+      {
+        "request": {
+          "id": "38",
+          "tenant": "customer-38",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "environment"
+        },
+        "container": "wp-matrix-55032f6a3380455c86180323b9299bd7",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "changed": true
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.22012499903212301,
+          "cleanupMs": 0.0897089994396083,
+          "id": "38"
+        },
+        "queueMs": 0.0025419976736884564,
+        "startupMs": 0.0,
+        "retirementMs": 0.0,
+        "responseMs": 297.4926669994602,
+        "turnoverMs": 297.49529199762037
+      },
+      {
+        "request": {
+          "id": "39",
+          "tenant": "customer-39",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "echo"
+        },
+        "container": "wp-matrix-55032f6a3380455c86180323b9299bd7",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "tenant": "customer-39",
+            "plugin": "b",
+            "value": "yx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbA"
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.25270800324506126,
+          "cleanupMs": 0.09649999992689118,
+          "id": "39"
+        },
+        "queueMs": 0.0024170003598555923,
+        "startupMs": 0.0,
+        "retirementMs": 0.0,
+        "responseMs": 233.52954200163367,
+        "turnoverMs": 233.53237500123214
+      },
+      {
+        "request": {
+          "id": "40",
+          "tenant": "customer-40",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "environment"
+        },
+        "container": "wp-matrix-55032f6a3380455c86180323b9299bd7",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "changed": true
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.2005420028581284,
+          "cleanupMs": 0.082208000094397,
+          "id": "40"
+        },
+        "queueMs": 0.0026669986255001277,
+        "startupMs": 0.0,
+        "retirementMs": 0.0,
+        "responseMs": 284.2654999985825,
+        "turnoverMs": 284.2674169987731
+      },
+      {
+        "request": {
+          "id": "41",
+          "tenant": "customer-41",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "echo"
+        },
+        "container": "wp-matrix-55032f6a3380455c86180323b9299bd7",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "tenant": "customer-41",
+            "plugin": "b",
+            "value": "yx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbA"
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.2502919996913988,
+          "cleanupMs": 0.09424999734619632,
+          "id": "41"
+        },
+        "queueMs": 0.0017499987734481692,
+        "startupMs": 0.0,
+        "retirementMs": 0.0,
+        "responseMs": 298.6090000013064,
+        "turnoverMs": 298.6117500004184
+      }
+    ],
+    "crossTenantMemoryLeakExpected": false
+  },
+  {
+    "mode": "trusted",
+    "checks": [
+      {
+        "name": "distinct customer / alternating plugin correctness",
+        "passed": true
+      },
+      {
+        "name": "distinct customer / alternating plugin correctness",
+        "passed": true
+      },
+      {
+        "name": "distinct customer / alternating plugin correctness",
+        "passed": true
+      },
+      {
+        "name": "distinct customer / alternating plugin correctness",
+        "passed": true
+      },
+      {
+        "name": "stash returned successfully",
+        "passed": true
+      },
+      {
+        "name": "probe returned successfully",
+        "passed": true
+      },
+      {
+        "name": "five memory-residue controls match isolation promise",
+        "passed": true
+      },
+      {
+        "name": "environment returned successfully",
+        "passed": true
+      },
+      {
+        "name": "environment_probe returned successfully",
+        "passed": true
+      },
+      {
+        "name": "environment/cwd/umask/signals restored",
+        "passed": true
+      },
+      {
+        "name": "files returned successfully",
+        "passed": true
+      },
+      {
+        "name": "probe returned successfully",
+        "passed": true
+      },
+      {
+        "name": "tmp/shm/symlink cleanup",
+        "passed": true
+      },
+      {
+        "name": "authority returned successfully",
+        "passed": true
+      },
+      {
+        "name": "cooperative grant and expiry",
+        "passed": true
+      },
+      {
+        "name": "forge_authority returned successfully",
+        "passed": true
+      },
+      {
+        "name": "negative control: local scope grants are NOT a security boundary",
+        "passed": true
+      },
+      {
+        "name": "fd_leak fails closed and next customer recovers",
+        "passed": true
+      },
+      {
+        "name": "cleanup_failure fails closed and next customer recovers",
+        "passed": true
+      },
+      {
+        "name": "untracked_thread fails closed and next customer recovers",
+        "passed": true
+      },
+      {
+        "name": "thread_ignores_stop fails closed and next customer recovers",
+        "passed": true
+      },
+      {
+        "name": "escaped_child fails closed and next customer recovers",
+        "passed": true
+      },
+      {
+        "name": "crash fails closed and next customer recovers",
+        "passed": true
+      },
+      {
+        "name": "hang fails closed and next customer recovers",
+        "passed": true
+      },
+      {
+        "name": "cleanup_hang fails closed and next customer recovers",
+        "passed": true
+      },
+      {
+        "name": "memory_bomb fails closed and next customer recovers",
+        "passed": true
+      },
+      {
+        "name": "stdout_forge fails closed and next customer recovers",
+        "passed": true
+      },
+      {
+        "name": "environment returned successfully",
+        "passed": true
+      },
+      {
+        "name": "normal call after state mutation",
+        "passed": true
+      },
+      {
+        "name": "environment returned successfully",
+        "passed": true
+      },
+      {
+        "name": "normal call after state mutation",
+        "passed": true
+      },
+      {
+        "name": "environment returned successfully",
+        "passed": true
+      },
+      {
+        "name": "normal call after state mutation",
+        "passed": true
+      },
+      {
+        "name": "environment returned successfully",
+        "passed": true
+      },
+      {
+        "name": "normal call after state mutation",
+        "passed": true
+      },
+      {
+        "name": "environment returned successfully",
+        "passed": true
+      },
+      {
+        "name": "normal call after state mutation",
+        "passed": true
+      }
+    ],
+    "rows": [
+      {
+        "request": {
+          "id": "0",
+          "tenant": "customer-0",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "echo"
+        },
+        "container": "wp-matrix-5e12d4a4564d412eaae7133fd8c96ded",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "tenant": "customer-0",
+            "plugin": "a",
+            "value": "ABC123XYABC123XYABC123XYABC123XYABC123XYABC123XYABC123XYABC123XY"
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.25016699873958714,
+          "cleanupMs": 0.094292001449503,
+          "id": "0"
+        },
+        "queueMs": 0.00291600008495152,
+        "startupMs": 253.94929100002628,
+        "retirementMs": 0.0,
+        "responseMs": 343.1295830014278,
+        "turnoverMs": 343.13866600132314
+      },
+      {
+        "request": {
+          "id": "1",
+          "tenant": "customer-1",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "echo"
+        },
+        "container": "wp-matrix-5e12d4a4564d412eaae7133fd8c96ded",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "tenant": "customer-1",
+            "plugin": "b",
+            "value": "yx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbA"
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.12145800064899959,
+          "cleanupMs": 0.05824999971082434,
+          "id": "1"
+        },
+        "queueMs": 0.009666997357271612,
+        "startupMs": 0.0,
+        "retirementMs": 0.0,
+        "responseMs": 0.7926670004962943,
+        "turnoverMs": 0.793333998444723
+      },
+      {
+        "request": {
+          "id": "2",
+          "tenant": "customer-2",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "echo"
+        },
+        "container": "wp-matrix-5e12d4a4564d412eaae7133fd8c96ded",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "tenant": "customer-2",
+            "plugin": "a",
+            "value": "ABC123XYABC123XYABC123XYABC123XYABC123XYABC123XYABC123XYABC123XY"
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.04637500023818575,
+          "cleanupMs": 0.05816699922434054,
+          "id": "2"
+        },
+        "queueMs": 0.0007500020728912205,
+        "startupMs": 0.0,
+        "retirementMs": 0.0,
+        "responseMs": 0.6439160024456214,
+        "turnoverMs": 0.6449160027841572
+      },
+      {
+        "request": {
+          "id": "3",
+          "tenant": "customer-3",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "echo"
+        },
+        "container": "wp-matrix-5e12d4a4564d412eaae7133fd8c96ded",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "tenant": "customer-3",
+            "plugin": "b",
+            "value": "yx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbA"
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.03616599860833958,
+          "cleanupMs": 0.04741700104204938,
+          "id": "3"
+        },
+        "queueMs": 0.000833999365568161,
+        "startupMs": 0.0,
+        "retirementMs": 0.0,
+        "responseMs": 0.5346670004655607,
+        "turnoverMs": 0.535375002073124
+      },
+      {
+        "request": {
+          "id": "4",
+          "tenant": "customer-4",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "stash"
+        },
+        "container": "wp-matrix-5e12d4a4564d412eaae7133fd8c96ded",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "stored": true
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.05316600072546862,
+          "cleanupMs": 0.05874999988009222,
+          "id": "4"
+        },
+        "queueMs": 0.0005830006557516754,
+        "startupMs": 0.0,
+        "retirementMs": 0.0,
+        "responseMs": 0.6389160007529426,
+        "turnoverMs": 0.6395000018528663
+      },
+      {
+        "request": {
+          "id": "5",
+          "tenant": "customer-5",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "probe"
+        },
+        "container": "wp-matrix-5e12d4a4564d412eaae7133fd8c96ded",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "hidden": "customer-4",
+            "defaults": [
+              "customer-4"
+            ],
+            "context": "customer-4",
+            "logger": "customer-4",
+            "cacheEntries": 1,
+            "extraFiles": []
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.06666700210189447,
+          "cleanupMs": 0.051125000027241185,
+          "id": "5"
+        },
+        "queueMs": 0.0007090020517352968,
+        "startupMs": 0.0,
+        "retirementMs": 0.0,
+        "responseMs": 0.5621250020340085,
+        "turnoverMs": 0.5627089994959533
+      },
+      {
+        "request": {
+          "id": "6",
+          "tenant": "customer-6",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "environment"
+        },
+        "container": "wp-matrix-5e12d4a4564d412eaae7133fd8c96ded",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "changed": true
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.037917001463938504,
+          "cleanupMs": 0.04620800245902501,
+          "id": "6"
+        },
+        "queueMs": 0.0005000001692678779,
+        "startupMs": 0.0,
+        "retirementMs": 0.0,
+        "responseMs": 0.6565830008185003,
+        "turnoverMs": 0.6587500029127114
+      },
+      {
+        "request": {
+          "id": "7",
+          "tenant": "customer-7",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "environment_probe"
+        },
+        "container": "wp-matrix-5e12d4a4564d412eaae7133fd8c96ded",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "environment": null,
+            "cwd": "/fixture",
+            "umask": 18,
+            "signalIgnored": false
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.03474999903119169,
+          "cleanupMs": 0.04495900066103786,
+          "id": "7"
+        },
+        "queueMs": 0.0019170001905877143,
+        "startupMs": 0.0,
+        "retirementMs": 0.0,
+        "responseMs": 0.7065419995342381,
+        "turnoverMs": 0.7084579992806539
+      },
+      {
+        "request": {
+          "id": "8",
+          "tenant": "customer-8",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "files"
+        },
+        "container": "wp-matrix-5e12d4a4564d412eaae7133fd8c96ded",
+        "outcome": {
+          "status": "ok",
+          "value": null,
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.0825829993118532,
+          "cleanupMs": 0.06495900015579537,
+          "id": "8"
+        },
+        "queueMs": 0.0020410006982274354,
+        "startupMs": 0.0,
+        "retirementMs": 0.0,
+        "responseMs": 0.7260829988808837,
+        "turnoverMs": 0.7274159979715478
+      },
+      {
+        "request": {
+          "id": "9",
+          "tenant": "customer-9",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "probe"
+        },
+        "container": "wp-matrix-5e12d4a4564d412eaae7133fd8c96ded",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "hidden": "customer-4",
+            "defaults": [
+              "customer-4"
+            ],
+            "context": "customer-4",
+            "logger": "customer-4",
+            "cacheEntries": 1,
+            "extraFiles": []
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.05587499981629662,
+          "cleanupMs": 0.04508300116867758,
+          "id": "9"
+        },
+        "queueMs": 0.0015000005078036338,
+        "startupMs": 0.0,
+        "retirementMs": 0.0,
+        "responseMs": 0.7065419995342381,
+        "turnoverMs": 0.7080830000631977
+      },
+      {
+        "request": {
+          "id": "10",
+          "tenant": "customer-10",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "authority"
+        },
+        "container": "wp-matrix-5e12d4a4564d412eaae7133fd8c96ded",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "granted": "customer-10",
+            "denied": true,
+            "expired": true
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.8887500007404014,
+          "cleanupMs": 0.04795800123247318,
+          "id": "10"
+        },
+        "queueMs": 0.0014999968698248267,
+        "startupMs": 0.0,
+        "retirementMs": 0.0,
+        "responseMs": 1.5005839995865244,
+        "turnoverMs": 1.5018339981907047
+      },
+      {
+        "request": {
+          "id": "11",
+          "tenant": "customer-11",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "forge_authority"
+        },
+        "container": "wp-matrix-5e12d4a4564d412eaae7133fd8c96ded",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "forgedLocalGrantWorked": true
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.031166000553639606,
+          "cleanupMs": 0.04462500146473758,
+          "id": "11"
+        },
+        "queueMs": 0.0013330027286428958,
+        "startupMs": 0.0,
+        "retirementMs": 0.0,
+        "responseMs": 0.5936660018051043,
+        "turnoverMs": 0.5945410011918284
+      },
+      {
+        "request": {
+          "id": "12",
+          "tenant": "customer-12",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "fd_leak"
+        },
+        "container": "wp-matrix-5e12d4a4564d412eaae7133fd8c96ded",
+        "outcome": {
+          "status": "failed",
+          "value": null,
+          "reusable": false,
+          "error": "cleanup-RuntimeError",
+          "executionMs": 0.043707997974706814,
+          "cleanupMs": 0.05075000080978498,
+          "id": "12"
+        },
+        "queueMs": 0.0012919990695081651,
+        "startupMs": 0.0,
+        "retirementMs": 46.709957998245955,
+        "responseMs": 0.6051669988664798,
+        "turnoverMs": 47.31862499829731
+      },
+      {
+        "request": {
+          "id": "13",
+          "tenant": "customer-13",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "echo"
+        },
+        "container": "wp-matrix-28d574934cae49ba8ca3eff00871fe4b",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "tenant": "customer-13",
+            "plugin": "b",
+            "value": "yx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbA"
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.2494590007700026,
+          "cleanupMs": 0.10087500049849041,
+          "id": "13"
+        },
+        "queueMs": 0.0019170001905877143,
+        "startupMs": 249.9605840021104,
+        "retirementMs": 0.0,
+        "responseMs": 356.89866699976847,
+        "turnoverMs": 356.9129999996221
+      },
+      {
+        "request": {
+          "id": "14",
+          "tenant": "customer-14",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "cleanup_failure"
+        },
+        "container": "wp-matrix-28d574934cae49ba8ca3eff00871fe4b",
+        "outcome": {
+          "status": "failed",
+          "value": null,
+          "reusable": false,
+          "error": "cleanup-RuntimeError",
+          "executionMs": 1.093750001018634,
+          "cleanupMs": 0.026040997909149155,
+          "id": "14"
+        },
+        "queueMs": 0.008999999408842996,
+        "startupMs": 0.0,
+        "retirementMs": 39.174665998871205,
+        "responseMs": 1.8357499975536484,
+        "turnoverMs": 41.013375001057284
+      },
+      {
+        "request": {
+          "id": "15",
+          "tenant": "customer-15",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "echo"
+        },
+        "container": "wp-matrix-acdcdc46948741e08c672d2672d5ad6e",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "tenant": "customer-15",
+            "plugin": "b",
+            "value": "yx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbA"
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.28574999669217505,
+          "cleanupMs": 0.11241699758102186,
+          "id": "15"
+        },
+        "queueMs": 0.0018749997252598405,
+        "startupMs": 285.0036249983532,
+        "retirementMs": 0.0,
+        "responseMs": 392.5156250006694,
+        "turnoverMs": 392.521375000797
+      },
+      {
+        "request": {
+          "id": "16",
+          "tenant": "customer-16",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "untracked_thread"
+        },
+        "container": "wp-matrix-acdcdc46948741e08c672d2672d5ad6e",
+        "outcome": {
+          "status": "failed",
+          "value": null,
+          "reusable": false,
+          "error": "cleanup-RuntimeError",
+          "executionMs": 0.19041699852095917,
+          "cleanupMs": 0.07908300176495686,
+          "id": "16"
+        },
+        "queueMs": 0.009457999112783,
+        "startupMs": 0.0,
+        "retirementMs": 44.0963750006631,
+        "responseMs": 0.9669579994806554,
+        "turnoverMs": 45.06804199991166
+      },
+      {
+        "request": {
+          "id": "17",
+          "tenant": "customer-17",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "echo"
+        },
+        "container": "wp-matrix-ae3f9407d0fb4cdf9d7cd41f13f5e40d",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "tenant": "customer-17",
+            "plugin": "b",
+            "value": "yx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbA"
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.2832079990184866,
+          "cleanupMs": 0.1138340012403205,
+          "id": "17"
+        },
+        "queueMs": 0.0026660018193069845,
+        "startupMs": 295.878332999564,
+        "retirementMs": 0.0,
+        "responseMs": 397.456291000708,
+        "turnoverMs": 397.4620830013009
+      },
+      {
+        "request": {
+          "id": "18",
+          "tenant": "customer-18",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "thread_ignores_stop"
+        },
+        "container": "wp-matrix-ae3f9407d0fb4cdf9d7cd41f13f5e40d",
+        "outcome": {
+          "status": "failed",
+          "value": null,
+          "reusable": false,
+          "error": "cleanup-RuntimeError",
+          "executionMs": 0.21791700055473484,
+          "cleanupMs": 202.58779199866694,
+          "id": "18"
+        },
+        "queueMs": 0.005457997758639976,
+        "startupMs": 0.0,
+        "retirementMs": 58.98962500214111,
+        "responseMs": 204.69658299771254,
+        "turnoverMs": 263.6907499982044
+      },
+      {
+        "request": {
+          "id": "19",
+          "tenant": "customer-19",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "echo"
+        },
+        "container": "wp-matrix-891d79f23903402ca0d452a09c630152",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "tenant": "customer-19",
+            "plugin": "b",
+            "value": "yx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbA"
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.2899999999499414,
+          "cleanupMs": 0.10920900240307674,
+          "id": "19"
+        },
+        "queueMs": 0.0027080022846348584,
+        "startupMs": 321.81320800009416,
+        "retirementMs": 0.0,
+        "responseMs": 423.90412500026287,
+        "turnoverMs": 423.9079160033725
+      },
+      {
+        "request": {
+          "id": "20",
+          "tenant": "customer-20",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "escaped_child"
+        },
+        "container": "wp-matrix-891d79f23903402ca0d452a09c630152",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "pid": 8
+          },
+          "reusable": false,
+          "error": "descendants-remain",
+          "executionMs": 1.3398330011114012,
+          "cleanupMs": 0.07616600123583339,
+          "id": "20"
+        },
+        "queueMs": 0.006375001248670742,
+        "startupMs": 0.0,
+        "retirementMs": 44.01029200016637,
+        "responseMs": 2.2060840019548777,
+        "turnoverMs": 46.21979200237547
+      },
+      {
+        "request": {
+          "id": "21",
+          "tenant": "customer-21",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "echo"
+        },
+        "container": "wp-matrix-54956d82ba9c4a6db4044ae329b7b057",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "tenant": "customer-21",
+            "plugin": "b",
+            "value": "yx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbA"
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.36508300036075525,
+          "cleanupMs": 0.13612499969894998,
+          "id": "21"
+        },
+        "queueMs": 0.0018329992599319667,
+        "startupMs": 339.7491670002637,
+        "retirementMs": 0.0,
+        "responseMs": 458.246499998495,
+        "turnoverMs": 458.25254199735355
+      },
+      {
+        "request": {
+          "id": "22",
+          "tenant": "customer-22",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "crash"
+        },
+        "container": "wp-matrix-54956d82ba9c4a6db4044ae329b7b057",
+        "outcome": {
+          "status": "failed",
+          "reusable": false,
+          "error": "JSONDecodeError"
+        },
+        "queueMs": 0.004458001058083028,
+        "startupMs": 0.0,
+        "retirementMs": 40.690582998649916,
+        "responseMs": 28.283749998081475,
+        "turnoverMs": 68.97945799937588
+      },
+      {
+        "request": {
+          "id": "23",
+          "tenant": "customer-23",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "echo"
+        },
+        "container": "wp-matrix-3f66f08e91644d52b1c1d0ac8506f301",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "tenant": "customer-23",
+            "plugin": "b",
+            "value": "yx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbA"
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.2533329970901832,
+          "cleanupMs": 0.10233299690298736,
+          "id": "23"
+        },
+        "queueMs": 0.003291999746579677,
+        "startupMs": 615.923749999638,
+        "retirementMs": 0.0,
+        "responseMs": 711.1912919972383,
+        "turnoverMs": 711.2018749976414
+      },
+      {
+        "request": {
+          "id": "24",
+          "tenant": "customer-24",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "hang"
+        },
+        "container": "wp-matrix-3f66f08e91644d52b1c1d0ac8506f301",
+        "outcome": {
+          "status": "failed",
+          "reusable": false,
+          "error": "TimeoutError"
+        },
+        "queueMs": 0.00799999907030724,
+        "startupMs": 0.0,
+        "retirementMs": 69.309541999246,
+        "responseMs": 2500.746874997276,
+        "turnoverMs": 2570.059957997728
+      },
+      {
+        "request": {
+          "id": "25",
+          "tenant": "customer-25",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "echo"
+        },
+        "container": "wp-matrix-cfc613365eea4aecabed8edab3bfc4c0",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "tenant": "customer-25",
+            "plugin": "b",
+            "value": "yx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbA"
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.23566599702462554,
+          "cleanupMs": 0.09549999958835542,
+          "id": "25"
+        },
+        "queueMs": 0.0028329995984677225,
+        "startupMs": 184.01175000326475,
+        "retirementMs": 0.0,
+        "responseMs": 281.5775420021964,
+        "turnoverMs": 281.5827080012241
+      },
+      {
+        "request": {
+          "id": "26",
+          "tenant": "customer-26",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "cleanup_hang"
+        },
+        "container": "wp-matrix-cfc613365eea4aecabed8edab3bfc4c0",
+        "outcome": {
+          "status": "failed",
+          "reusable": false,
+          "error": "TimeoutError"
+        },
+        "queueMs": 0.004624998837243766,
+        "startupMs": 0.0,
+        "retirementMs": 71.2535829989065,
+        "responseMs": 2502.2208749978745,
+        "turnoverMs": 2573.4836669980723
+      },
+      {
+        "request": {
+          "id": "27",
+          "tenant": "customer-27",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "echo"
+        },
+        "container": "wp-matrix-a28fe3a23b264549acc31923ca15ec76",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "tenant": "customer-27",
+            "plugin": "b",
+            "value": "yx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbA"
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.23070799943525344,
+          "cleanupMs": 0.09537500227452256,
+          "id": "27"
+        },
+        "queueMs": 0.0025410008674953133,
+        "startupMs": 203.5303330012539,
+        "retirementMs": 0.0,
+        "responseMs": 303.3222910016775,
+        "turnoverMs": 303.3292910004093
+      },
+      {
+        "request": {
+          "id": "28",
+          "tenant": "customer-28",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "memory_bomb"
+        },
+        "container": "wp-matrix-a28fe3a23b264549acc31923ca15ec76",
+        "outcome": {
+          "status": "failed",
+          "reusable": false,
+          "error": "JSONDecodeError"
+        },
+        "queueMs": 0.006209000275703147,
+        "startupMs": 0.0,
+        "retirementMs": 31.38395799760474,
+        "responseMs": 197.6939170017431,
+        "turnoverMs": 229.08116699909442
+      },
+      {
+        "request": {
+          "id": "29",
+          "tenant": "customer-29",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "echo"
+        },
+        "container": "wp-matrix-52fdbf2af1234fc6a06af2d3540427f0",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "tenant": "customer-29",
+            "plugin": "b",
+            "value": "yx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbA"
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.2512499995646067,
+          "cleanupMs": 0.09583400242263451,
+          "id": "29"
+        },
+        "queueMs": 0.0017909987946040928,
+        "startupMs": 241.6205830013496,
+        "retirementMs": 0.0,
+        "responseMs": 341.59245799673954,
+        "turnoverMs": 341.5991249967192
+      },
+      {
+        "request": {
+          "id": "30",
+          "tenant": "customer-30",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "stdout_forge"
+        },
+        "container": "wp-matrix-52fdbf2af1234fc6a06af2d3540427f0",
+        "outcome": {
+          "status": "failed",
+          "reusable": false,
+          "error": "RuntimeError"
+        },
+        "queueMs": 0.009416999091627076,
+        "startupMs": 0.0,
+        "retirementMs": 62.72762500157114,
+        "responseMs": 0.7657089990971144,
+        "turnoverMs": 63.49891699937871
+      },
+      {
+        "request": {
+          "id": "31",
+          "tenant": "customer-31",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "echo"
+        },
+        "container": "wp-matrix-974cd7d4ab9b444f9f5bc027d8db8d87",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "tenant": "customer-31",
+            "plugin": "b",
+            "value": "yx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbA"
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.2543340015108697,
+          "cleanupMs": 0.09904200123855844,
+          "id": "31"
+        },
+        "queueMs": 0.00291600008495152,
+        "startupMs": 320.56549999833805,
+        "retirementMs": 0.0,
+        "responseMs": 491.9351659991662,
+        "turnoverMs": 491.9447909996961
+      },
+      {
+        "request": {
+          "id": "32",
+          "tenant": "customer-32",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "environment"
+        },
+        "container": "wp-matrix-974cd7d4ab9b444f9f5bc027d8db8d87",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "changed": true
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.06587499956367537,
+          "cleanupMs": 0.06158299947855994,
+          "id": "32"
+        },
+        "queueMs": 0.010416999430162832,
+        "startupMs": 0.0,
+        "retirementMs": 0.0,
+        "responseMs": 0.8164999999280553,
+        "turnoverMs": 0.8173339992936235
+      },
+      {
+        "request": {
+          "id": "33",
+          "tenant": "customer-33",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "echo"
+        },
+        "container": "wp-matrix-974cd7d4ab9b444f9f5bc027d8db8d87",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "tenant": "customer-33",
+            "plugin": "b",
+            "value": "yx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbA"
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.04387499939184636,
+          "cleanupMs": 0.055917000281624496,
+          "id": "33"
+        },
+        "queueMs": 0.0009999967005569488,
+        "startupMs": 0.0,
+        "retirementMs": 0.0,
+        "responseMs": 0.6544579991896171,
+        "turnoverMs": 0.655415999062825
+      },
+      {
+        "request": {
+          "id": "34",
+          "tenant": "customer-34",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "environment"
+        },
+        "container": "wp-matrix-974cd7d4ab9b444f9f5bc027d8db8d87",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "changed": true
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.052999999752501026,
+          "cleanupMs": 0.056834000133676454,
+          "id": "34"
+        },
+        "queueMs": 0.0010000003385357559,
+        "startupMs": 0.0,
+        "retirementMs": 0.0,
+        "responseMs": 0.6345420006255154,
+        "turnoverMs": 0.6351669981086161
+      },
+      {
+        "request": {
+          "id": "35",
+          "tenant": "customer-35",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "echo"
+        },
+        "container": "wp-matrix-974cd7d4ab9b444f9f5bc027d8db8d87",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "tenant": "customer-35",
+            "plugin": "b",
+            "value": "yx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbA"
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.04358299702289514,
+          "cleanupMs": 0.0626660003035795,
+          "id": "35"
+        },
+        "queueMs": 0.0006250011210795492,
+        "startupMs": 0.0,
+        "retirementMs": 0.0,
+        "responseMs": 0.6092500007071067,
+        "turnoverMs": 0.6101670005591586
+      },
+      {
+        "request": {
+          "id": "36",
+          "tenant": "customer-36",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "environment"
+        },
+        "container": "wp-matrix-974cd7d4ab9b444f9f5bc027d8db8d87",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "changed": true
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.03879100040649064,
+          "cleanupMs": 0.04741599695989862,
+          "id": "36"
+        },
+        "queueMs": 0.0007499984349124134,
+        "startupMs": 0.0,
+        "retirementMs": 0.0,
+        "responseMs": 0.5746659990109038,
+        "turnoverMs": 0.5754999983764719
+      },
+      {
+        "request": {
+          "id": "37",
+          "tenant": "customer-37",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "echo"
+        },
+        "container": "wp-matrix-974cd7d4ab9b444f9f5bc027d8db8d87",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "tenant": "customer-37",
+            "plugin": "b",
+            "value": "yx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbA"
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.049791000492405146,
+          "cleanupMs": 0.060041998949600384,
+          "id": "37"
+        },
+        "queueMs": 0.0007079979695845395,
+        "startupMs": 0.0,
+        "retirementMs": 0.0,
+        "responseMs": 0.6408329973055515,
+        "turnoverMs": 0.6413749979401473
+      },
+      {
+        "request": {
+          "id": "38",
+          "tenant": "customer-38",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "environment"
+        },
+        "container": "wp-matrix-974cd7d4ab9b444f9f5bc027d8db8d87",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "changed": true
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.04120800076634623,
+          "cleanupMs": 0.04962499951943755,
+          "id": "38"
+        },
+        "queueMs": 0.0006250011210795492,
+        "startupMs": 0.0,
+        "retirementMs": 0.0,
+        "responseMs": 0.6183750010677613,
+        "turnoverMs": 0.6190830026753247
+      },
+      {
+        "request": {
+          "id": "39",
+          "tenant": "customer-39",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "echo"
+        },
+        "container": "wp-matrix-974cd7d4ab9b444f9f5bc027d8db8d87",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "tenant": "customer-39",
+            "plugin": "b",
+            "value": "yx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbA"
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.034583001252030954,
+          "cleanupMs": 0.04795900167664513,
+          "id": "39"
+        },
+        "queueMs": 0.000957999873207882,
+        "startupMs": 0.0,
+        "retirementMs": 0.0,
+        "responseMs": 0.5812079980387352,
+        "turnoverMs": 0.5822919993079267
+      },
+      {
+        "request": {
+          "id": "40",
+          "tenant": "customer-40",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "environment"
+        },
+        "container": "wp-matrix-974cd7d4ab9b444f9f5bc027d8db8d87",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "changed": true
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.036875000660074875,
+          "cleanupMs": 0.04829099998460151,
+          "id": "40"
+        },
+        "queueMs": 0.0009169998520519584,
+        "startupMs": 0.0,
+        "retirementMs": 0.0,
+        "responseMs": 0.5842919999849983,
+        "turnoverMs": 0.5849170011060778
+      },
+      {
+        "request": {
+          "id": "41",
+          "tenant": "customer-41",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "echo"
+        },
+        "container": "wp-matrix-974cd7d4ab9b444f9f5bc027d8db8d87",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "tenant": "customer-41",
+            "plugin": "b",
+            "value": "yx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbA"
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.03370800186530687,
+          "cleanupMs": 0.06187500184751116,
+          "id": "41"
+        },
+        "queueMs": 0.0008749993867240846,
+        "startupMs": 0.0,
+        "retirementMs": 0.0,
+        "responseMs": 0.5942080024397001,
+        "turnoverMs": 0.5949580008746125
+      }
+    ],
+    "crossTenantMemoryLeakExpected": true
+  },
+  {
+    "mode": "forkserver",
+    "checks": [
+      {
+        "name": "distinct customer / alternating plugin correctness",
+        "passed": true
+      },
+      {
+        "name": "distinct customer / alternating plugin correctness",
+        "passed": true
+      },
+      {
+        "name": "distinct customer / alternating plugin correctness",
+        "passed": true
+      },
+      {
+        "name": "distinct customer / alternating plugin correctness",
+        "passed": true
+      },
+      {
+        "name": "stash returned successfully",
+        "passed": true
+      },
+      {
+        "name": "probe returned successfully",
+        "passed": true
+      },
+      {
+        "name": "five memory-residue controls match isolation promise",
+        "passed": true
+      },
+      {
+        "name": "environment returned successfully",
+        "passed": true
+      },
+      {
+        "name": "environment_probe returned successfully",
+        "passed": true
+      },
+      {
+        "name": "environment/cwd/umask/signals restored",
+        "passed": true
+      },
+      {
+        "name": "files returned successfully",
+        "passed": true
+      },
+      {
+        "name": "probe returned successfully",
+        "passed": true
+      },
+      {
+        "name": "tmp/shm/symlink cleanup",
+        "passed": true
+      },
+      {
+        "name": "authority returned successfully",
+        "passed": true
+      },
+      {
+        "name": "cooperative grant and expiry",
+        "passed": true
+      },
+      {
+        "name": "forge_authority returned successfully",
+        "passed": true
+      },
+      {
+        "name": "negative control: local scope grants are NOT a security boundary",
+        "passed": true
+      },
+      {
+        "name": "supervisor returned successfully",
+        "passed": true
+      },
+      {
+        "name": "UID/capabilities/proc/signal boundary",
+        "passed": true
+      },
+      {
+        "name": "control_access returned successfully",
+        "passed": true
+      },
+      {
+        "name": "template socket directory inaccessible",
+        "passed": true
+      },
+      {
+        "name": "fd_leak fails closed and next customer recovers",
+        "passed": true
+      },
+      {
+        "name": "cleanup_failure fails closed and next customer recovers",
+        "passed": true
+      },
+      {
+        "name": "untracked_thread fails closed and next customer recovers",
+        "passed": true
+      },
+      {
+        "name": "thread_ignores_stop fails closed and next customer recovers",
+        "passed": true
+      },
+      {
+        "name": "escaped_child fails closed and next customer recovers",
+        "passed": true
+      },
+      {
+        "name": "crash fails closed and next customer recovers",
+        "passed": true
+      },
+      {
+        "name": "hang fails closed and next customer recovers",
+        "passed": true
+      },
+      {
+        "name": "cleanup_hang fails closed and next customer recovers",
+        "passed": true
+      },
+      {
+        "name": "memory_bomb fails closed and next customer recovers",
+        "passed": true
+      },
+      {
+        "name": "child stdout cannot forge coordinator frames",
+        "passed": true
+      },
+      {
+        "name": "environment returned successfully",
+        "passed": true
+      },
+      {
+        "name": "normal call after state mutation",
+        "passed": true
+      },
+      {
+        "name": "environment returned successfully",
+        "passed": true
+      },
+      {
+        "name": "normal call after state mutation",
+        "passed": true
+      },
+      {
+        "name": "environment returned successfully",
+        "passed": true
+      },
+      {
+        "name": "normal call after state mutation",
+        "passed": true
+      },
+      {
+        "name": "environment returned successfully",
+        "passed": true
+      },
+      {
+        "name": "normal call after state mutation",
+        "passed": true
+      },
+      {
+        "name": "environment returned successfully",
+        "passed": true
+      },
+      {
+        "name": "normal call after state mutation",
+        "passed": true
+      }
+    ],
+    "rows": [
+      {
+        "request": {
+          "id": "0",
+          "tenant": "customer-0",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "echo"
+        },
+        "container": "wp-matrix-49fc61c6e98b46488fefe6e66787d23b",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "tenant": "customer-0",
+            "plugin": "a",
+            "value": "ABC123XYABC123XYABC123XYABC123XYABC123XYABC123XYABC123XYABC123XY"
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.25370900038979016,
+          "cleanupMs": 0.11291700138826855,
+          "processTurnoverMs": 99.85925000000861,
+          "id": "0"
+        },
+        "queueMs": 0.003291999746579677,
+        "startupMs": 739.981082999293,
+        "retirementMs": 0.0,
+        "responseMs": 840.9765420001349,
+        "turnoverMs": 840.9868750022724
+      },
+      {
+        "request": {
+          "id": "1",
+          "tenant": "customer-1",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "echo"
+        },
+        "container": "wp-matrix-49fc61c6e98b46488fefe6e66787d23b",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "tenant": "customer-1",
+            "plugin": "b",
+            "value": "yx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbA"
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.2842920002876781,
+          "cleanupMs": 0.11074999929405749,
+          "processTurnoverMs": 160.80812500149477,
+          "id": "1"
+        },
+        "queueMs": 0.009833998774411157,
+        "startupMs": 0.0,
+        "retirementMs": 0.0,
+        "responseMs": 161.99950000009267,
+        "turnoverMs": 162.0022089991835
+      },
+      {
+        "request": {
+          "id": "2",
+          "tenant": "customer-2",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "echo"
+        },
+        "container": "wp-matrix-49fc61c6e98b46488fefe6e66787d23b",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "tenant": "customer-2",
+            "plugin": "a",
+            "value": "ABC123XYABC123XYABC123XYABC123XYABC123XYABC123XYABC123XYABC123XY"
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.3482920001260936,
+          "cleanupMs": 0.12458300261641853,
+          "processTurnoverMs": 196.84945799963316,
+          "id": "2"
+        },
+        "queueMs": 0.002916996891144663,
+        "startupMs": 0.0,
+        "retirementMs": 0.0,
+        "responseMs": 197.94270899728872,
+        "turnoverMs": 197.94420899779652
+      },
+      {
+        "request": {
+          "id": "3",
+          "tenant": "customer-3",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "echo"
+        },
+        "container": "wp-matrix-49fc61c6e98b46488fefe6e66787d23b",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "tenant": "customer-3",
+            "plugin": "b",
+            "value": "yx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbA"
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.22916699890629388,
+          "cleanupMs": 0.10837499939952977,
+          "processTurnoverMs": 105.23666600056458,
+          "id": "3"
+        },
+        "queueMs": 0.0015000005078036338,
+        "startupMs": 0.0,
+        "retirementMs": 0.0,
+        "responseMs": 106.19083300116472,
+        "turnoverMs": 106.19212500023423
+      },
+      {
+        "request": {
+          "id": "4",
+          "tenant": "customer-4",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "stash"
+        },
+        "container": "wp-matrix-49fc61c6e98b46488fefe6e66787d23b",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "stored": true
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.225499999942258,
+          "cleanupMs": 0.12420900020515546,
+          "processTurnoverMs": 206.26550000088173,
+          "id": "4"
+        },
+        "queueMs": 0.009665996913099661,
+        "startupMs": 0.0,
+        "retirementMs": 0.0,
+        "responseMs": 207.40004099934595,
+        "turnoverMs": 207.4030829971889
+      },
+      {
+        "request": {
+          "id": "5",
+          "tenant": "customer-5",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "probe"
+        },
+        "container": "wp-matrix-49fc61c6e98b46488fefe6e66787d23b",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "hidden": null,
+            "defaults": [],
+            "context": null,
+            "logger": null,
+            "cacheEntries": 0,
+            "extraFiles": []
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.18579099923954345,
+          "cleanupMs": 0.0931249996938277,
+          "processTurnoverMs": 103.17149999900721,
+          "id": "5"
+        },
+        "queueMs": 0.002624998160172254,
+        "startupMs": 0.0,
+        "retirementMs": 0.0,
+        "responseMs": 104.17658399819629,
+        "turnoverMs": 104.17791700092494
+      },
+      {
+        "request": {
+          "id": "6",
+          "tenant": "customer-6",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "environment"
+        },
+        "container": "wp-matrix-49fc61c6e98b46488fefe6e66787d23b",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "changed": true
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.1606660007382743,
+          "cleanupMs": 0.10166599895455875,
+          "processTurnoverMs": 109.09612500108778,
+          "id": "6"
+        },
+        "queueMs": 0.0015830009942874312,
+        "startupMs": 0.0,
+        "retirementMs": 0.0,
+        "responseMs": 110.13270799958264,
+        "turnoverMs": 110.1354580023326
+      },
+      {
+        "request": {
+          "id": "7",
+          "tenant": "customer-7",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "environment_probe"
+        },
+        "container": "wp-matrix-49fc61c6e98b46488fefe6e66787d23b",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "environment": null,
+            "cwd": "/fixture",
+            "umask": 18,
+            "signalIgnored": false
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.14274999921326526,
+          "cleanupMs": 0.1082500020856969,
+          "processTurnoverMs": 103.05262499969103,
+          "id": "7"
+        },
+        "queueMs": 0.00258299769484438,
+        "startupMs": 0.0,
+        "retirementMs": 0.0,
+        "responseMs": 104.0522500006773,
+        "turnoverMs": 104.05358299976797
+      },
+      {
+        "request": {
+          "id": "8",
+          "tenant": "customer-8",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "files"
+        },
+        "container": "wp-matrix-49fc61c6e98b46488fefe6e66787d23b",
+        "outcome": {
+          "status": "ok",
+          "value": null,
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.20016700000269338,
+          "cleanupMs": 0.12666699694818817,
+          "processTurnoverMs": 106.37341699839453,
+          "id": "8"
+        },
+        "queueMs": 0.0013749995559919626,
+        "startupMs": 0.0,
+        "retirementMs": 0.0,
+        "responseMs": 107.3806250024063,
+        "turnoverMs": 107.38270799993188
+      },
+      {
+        "request": {
+          "id": "9",
+          "tenant": "customer-9",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "probe"
+        },
+        "container": "wp-matrix-49fc61c6e98b46488fefe6e66787d23b",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "hidden": null,
+            "defaults": [],
+            "context": null,
+            "logger": null,
+            "cacheEntries": 0,
+            "extraFiles": []
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.18879100025515072,
+          "cleanupMs": 0.09395800225320272,
+          "processTurnoverMs": 113.89354099810589,
+          "id": "9"
+        },
+        "queueMs": 0.002125001628883183,
+        "startupMs": 0.0,
+        "retirementMs": 0.0,
+        "responseMs": 115.01220799982548,
+        "turnoverMs": 115.01395799859893
+      },
+      {
+        "request": {
+          "id": "10",
+          "tenant": "customer-10",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "authority"
+        },
+        "container": "wp-matrix-49fc61c6e98b46488fefe6e66787d23b",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "granted": "customer-10",
+            "denied": true,
+            "expired": true
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 1.1514580000948627,
+          "cleanupMs": 0.10866600132430904,
+          "processTurnoverMs": 151.38345800005482,
+          "id": "10"
+        },
+        "queueMs": 0.0021669984562322497,
+        "startupMs": 0.0,
+        "retirementMs": 0.0,
+        "responseMs": 152.4813340001856,
+        "turnoverMs": 152.4844169980497
+      },
+      {
+        "request": {
+          "id": "11",
+          "tenant": "customer-11",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "forge_authority"
+        },
+        "container": "wp-matrix-49fc61c6e98b46488fefe6e66787d23b",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "forgedLocalGrantWorked": true
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.14370799908647314,
+          "cleanupMs": 0.12187500033178367,
+          "processTurnoverMs": 104.6417500001553,
+          "id": "11"
+        },
+        "queueMs": 0.002749999111983925,
+        "startupMs": 0.0,
+        "retirementMs": 0.0,
+        "responseMs": 105.75716699895565,
+        "turnoverMs": 105.75962499933667
+      },
+      {
+        "request": {
+          "id": "12",
+          "tenant": "customer-12",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "supervisor"
+        },
+        "container": "wp-matrix-49fc61c6e98b46488fefe6e66787d23b",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "uid": 65532,
+            "gid": 65532,
+            "supervisorReadable": false,
+            "supervisorSignallable": false,
+            "effectiveCaps": "0000000000000000",
+            "hostMountPresent": false
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 2.015958998526912,
+          "cleanupMs": 0.12425000022631139,
+          "processTurnoverMs": 112.4730420015112,
+          "id": "12"
+        },
+        "queueMs": 0.00291700052912347,
+        "startupMs": 0.0,
+        "retirementMs": 0.0,
+        "responseMs": 113.60229199999594,
+        "turnoverMs": 113.60550000244984
+      },
+      {
+        "request": {
+          "id": "13",
+          "tenant": "customer-13",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "control_access"
+        },
+        "container": "wp-matrix-49fc61c6e98b46488fefe6e66787d23b",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "accessible": false
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.16116700135171413,
+          "cleanupMs": 0.10883399954764172,
+          "processTurnoverMs": 108.39254199891002,
+          "id": "13"
+        },
+        "queueMs": 0.002749999111983925,
+        "startupMs": 0.0,
+        "retirementMs": 0.0,
+        "responseMs": 109.52158299915027,
+        "turnoverMs": 109.52441599874874
+      },
+      {
+        "request": {
+          "id": "14",
+          "tenant": "customer-14",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "fd_leak"
+        },
+        "container": "wp-matrix-49fc61c6e98b46488fefe6e66787d23b",
+        "outcome": {
+          "status": "failed",
+          "value": null,
+          "reusable": false,
+          "error": "cleanup-RuntimeError",
+          "executionMs": 0.16504199811606668,
+          "cleanupMs": 0.11241699758102186,
+          "processTurnoverMs": 97.92508299869951,
+          "id": "14"
+        },
+        "queueMs": 0.002458997187204659,
+        "startupMs": 0.0,
+        "retirementMs": 48.88504100017599,
+        "responseMs": 98.94312499818625,
+        "turnoverMs": 147.83329199781292
+      },
+      {
+        "request": {
+          "id": "15",
+          "tenant": "customer-15",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "echo"
+        },
+        "container": "wp-matrix-970c28a6018749ba9d14cca6048511b1",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "tenant": "customer-15",
+            "plugin": "b",
+            "value": "yx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbA"
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.24258299890789203,
+          "cleanupMs": 0.6679999969492201,
+          "processTurnoverMs": 106.66883299927576,
+          "id": "15"
+        },
+        "queueMs": 0.003124998329440132,
+        "startupMs": 719.2078749976645,
+        "retirementMs": 0.0,
+        "responseMs": 827.0414170001459,
+        "turnoverMs": 827.0468750015425
+      },
+      {
+        "request": {
+          "id": "16",
+          "tenant": "customer-16",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "cleanup_failure"
+        },
+        "container": "wp-matrix-970c28a6018749ba9d14cca6048511b1",
+        "outcome": {
+          "status": "failed",
+          "value": null,
+          "reusable": false,
+          "error": "cleanup-RuntimeError",
+          "executionMs": 1.175542001874419,
+          "cleanupMs": 0.036249999538995326,
+          "processTurnoverMs": 106.2734589977481,
+          "id": "16"
+        },
+        "queueMs": 0.0051249990065116435,
+        "startupMs": 0.0,
+        "retirementMs": 94.66874999998254,
+        "responseMs": 107.26004099706188,
+        "turnoverMs": 201.93337499949848
+      },
+      {
+        "request": {
+          "id": "17",
+          "tenant": "customer-17",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "echo"
+        },
+        "container": "wp-matrix-1239e5fd80454296b83b02c60cbe0d49",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "tenant": "customer-17",
+            "plugin": "b",
+            "value": "yx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbA"
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.23120799960452132,
+          "cleanupMs": 0.1113339967560023,
+          "processTurnoverMs": 106.03833300046972,
+          "id": "17"
+        },
+        "queueMs": 0.002749999111983925,
+        "startupMs": 709.4852500013076,
+        "retirementMs": 0.0,
+        "responseMs": 816.6222910003853,
+        "turnoverMs": 816.6321659991809
+      },
+      {
+        "request": {
+          "id": "18",
+          "tenant": "customer-18",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "untracked_thread"
+        },
+        "container": "wp-matrix-1239e5fd80454296b83b02c60cbe0d49",
+        "outcome": {
+          "status": "failed",
+          "value": null,
+          "reusable": false,
+          "error": "cleanup-RuntimeError",
+          "executionMs": 0.26650000290828757,
+          "cleanupMs": 0.09362499986309558,
+          "processTurnoverMs": 105.94070800289046,
+          "id": "18"
+        },
+        "queueMs": 0.010042000212706625,
+        "startupMs": 0.0,
+        "retirementMs": 90.06895800121129,
+        "responseMs": 107.01787500147475,
+        "turnoverMs": 197.09125000008498
+      },
+      {
+        "request": {
+          "id": "19",
+          "tenant": "customer-19",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "echo"
+        },
+        "container": "wp-matrix-df97db5816724394946e335fc96e2f7b",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "tenant": "customer-19",
+            "plugin": "b",
+            "value": "yx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbA"
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.23583399888593704,
+          "cleanupMs": 0.11737499880837277,
+          "processTurnoverMs": 134.10825000028126,
+          "id": "19"
+        },
+        "queueMs": 0.002750002749962732,
+        "startupMs": 721.1516249990382,
+        "retirementMs": 0.0,
+        "responseMs": 856.4025840023533,
+        "turnoverMs": 856.4092090018676
+      },
+      {
+        "request": {
+          "id": "20",
+          "tenant": "customer-20",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "thread_ignores_stop"
+        },
+        "container": "wp-matrix-df97db5816724394946e335fc96e2f7b",
+        "outcome": {
+          "status": "failed",
+          "value": null,
+          "reusable": false,
+          "error": "cleanup-RuntimeError",
+          "executionMs": 0.2823750000970904,
+          "cleanupMs": 208.9520409972465,
+          "processTurnoverMs": 377.74200000058045,
+          "id": "20"
+        },
+        "queueMs": 0.005958001565886661,
+        "startupMs": 0.0,
+        "retirementMs": 55.37620800168952,
+        "responseMs": 379.79591700059245,
+        "turnoverMs": 435.17666700063273
+      },
+      {
+        "request": {
+          "id": "21",
+          "tenant": "customer-21",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "echo"
+        },
+        "container": "wp-matrix-d8671e1106824c9e9f78552e92d8f8bd",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "tenant": "customer-21",
+            "plugin": "b",
+            "value": "yx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbA"
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.2315420024388004,
+          "cleanupMs": 0.11208300202270038,
+          "processTurnoverMs": 103.95095800049603,
+          "id": "21"
+        },
+        "queueMs": 0.002459000825183466,
+        "startupMs": 739.1370830009691,
+        "retirementMs": 0.0,
+        "responseMs": 844.1823749999458,
+        "turnoverMs": 844.1869590023998
+      },
+      {
+        "request": {
+          "id": "22",
+          "tenant": "customer-22",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "escaped_child"
+        },
+        "container": "wp-matrix-d8671e1106824c9e9f78552e92d8f8bd",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "pid": 16
+          },
+          "reusable": false,
+          "error": "descendants-remain",
+          "executionMs": 1.3244580004538875,
+          "cleanupMs": 0.1071660008165054,
+          "processTurnoverMs": 105.53204200186883,
+          "id": "22"
+        },
+        "queueMs": 0.005540998245123774,
+        "startupMs": 0.0,
+        "retirementMs": 46.644957998069,
+        "responseMs": 106.58662499918137,
+        "turnoverMs": 153.2355829986045
+      },
+      {
+        "request": {
+          "id": "23",
+          "tenant": "customer-23",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "echo"
+        },
+        "container": "wp-matrix-e8e4ed340001412b8eda9e99459a1476",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "tenant": "customer-23",
+            "plugin": "b",
+            "value": "yx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbA"
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.22345799879985861,
+          "cleanupMs": 0.11404099859646522,
+          "processTurnoverMs": 97.61312499904307,
+          "id": "23"
+        },
+        "queueMs": 0.0028750000637955964,
+        "startupMs": 688.4864589992503,
+        "retirementMs": 0.0,
+        "responseMs": 787.2624580013508,
+        "turnoverMs": 787.2729580012674
+      },
+      {
+        "request": {
+          "id": "24",
+          "tenant": "customer-24",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "crash"
+        },
+        "container": "wp-matrix-e8e4ed340001412b8eda9e99459a1476",
+        "outcome": {
+          "status": "failed",
+          "reusable": false,
+          "error": "JSONDecodeError"
+        },
+        "queueMs": 0.010374998964834958,
+        "startupMs": 0.0,
+        "retirementMs": 30.824416000541532,
+        "responseMs": 220.4889999993611,
+        "turnoverMs": 251.3180409987399
+      },
+      {
+        "request": {
+          "id": "25",
+          "tenant": "customer-25",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "echo"
+        },
+        "container": "wp-matrix-cef2d95df70046fbabab10a3150b8f13",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "tenant": "customer-25",
+            "plugin": "b",
+            "value": "yx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbA"
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.26537500161794014,
+          "cleanupMs": 0.11720899783540517,
+          "processTurnoverMs": 157.50987499995972,
+          "id": "25"
+        },
+        "queueMs": 0.00291700052912347,
+        "startupMs": 744.8355000014999,
+        "retirementMs": 0.0,
+        "responseMs": 903.5454590011796,
+        "turnoverMs": 903.5598340014985
+      },
+      {
+        "request": {
+          "id": "26",
+          "tenant": "customer-26",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "hang"
+        },
+        "container": "wp-matrix-cef2d95df70046fbabab10a3150b8f13",
+        "outcome": {
+          "status": "failed",
+          "reusable": false,
+          "error": "JSONDecodeError"
+        },
+        "queueMs": 0.010208997991867363,
+        "startupMs": 0.0,
+        "retirementMs": 30.774666000070283,
+        "responseMs": 1719.9099169993133,
+        "turnoverMs": 1750.689208998665
+      },
+      {
+        "request": {
+          "id": "27",
+          "tenant": "customer-27",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "echo"
+        },
+        "container": "wp-matrix-6dcfe91c5bad4e2dae3651b74d0ff119",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "tenant": "customer-27",
+            "plugin": "b",
+            "value": "yx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbA"
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.21816700245835818,
+          "cleanupMs": 0.10970900257234462,
+          "processTurnoverMs": 112.37774999972316,
+          "id": "27"
+        },
+        "queueMs": 0.002791999577311799,
+        "startupMs": 660.6870420000632,
+        "retirementMs": 0.0,
+        "responseMs": 774.20520799933,
+        "turnoverMs": 774.2118749993097
+      },
+      {
+        "request": {
+          "id": "28",
+          "tenant": "customer-28",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "cleanup_hang"
+        },
+        "container": "wp-matrix-6dcfe91c5bad4e2dae3651b74d0ff119",
+        "outcome": {
+          "status": "failed",
+          "reusable": false,
+          "error": "JSONDecodeError"
+        },
+        "queueMs": 0.004999998054699972,
+        "startupMs": 0.0,
+        "retirementMs": 36.08320800049114,
+        "responseMs": 1709.6865829989838,
+        "turnoverMs": 1745.774374998291
+      },
+      {
+        "request": {
+          "id": "29",
+          "tenant": "customer-29",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "echo"
+        },
+        "container": "wp-matrix-c353d6709c194dd9821e048fbeecb8aa",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "tenant": "customer-29",
+            "plugin": "b",
+            "value": "yx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbA"
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.22824999905424193,
+          "cleanupMs": 0.11054100104956888,
+          "processTurnoverMs": 103.76162500324426,
+          "id": "29"
+        },
+        "queueMs": 0.0028750000637955964,
+        "startupMs": 723.3280410000589,
+        "retirementMs": 0.0,
+        "responseMs": 828.2894589974603,
+        "turnoverMs": 828.2986249978421
+      },
+      {
+        "request": {
+          "id": "30",
+          "tenant": "customer-30",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "memory_bomb"
+        },
+        "container": "wp-matrix-c353d6709c194dd9821e048fbeecb8aa",
+        "outcome": {
+          "status": "failed",
+          "reusable": false,
+          "error": "JSONDecodeError"
+        },
+        "queueMs": 0.0213330022234004,
+        "startupMs": 0.0,
+        "retirementMs": 29.134125001291977,
+        "responseMs": 311.0811670012481,
+        "turnoverMs": 340.22654200089164
+      },
+      {
+        "request": {
+          "id": "31",
+          "tenant": "customer-31",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "echo"
+        },
+        "container": "wp-matrix-d5fa270f5c974c668c60769043a515ee",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "tenant": "customer-31",
+            "plugin": "b",
+            "value": "yx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbA"
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.24058399867499247,
+          "cleanupMs": 0.11512499986565672,
+          "processTurnoverMs": 121.72091700267629,
+          "id": "31"
+        },
+        "queueMs": 0.0025000008463393897,
+        "startupMs": 819.4284580022213,
+        "retirementMs": 0.0,
+        "responseMs": 942.3196249990724,
+        "turnoverMs": 942.3265000004903
+      },
+      {
+        "request": {
+          "id": "32",
+          "tenant": "customer-32",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "stdout_forge"
+        },
+        "container": "wp-matrix-d5fa270f5c974c668c60769043a515ee",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "attempted": true
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.1418329993612133,
+          "cleanupMs": 0.10370800009695813,
+          "processTurnoverMs": 103.54399999778252,
+          "id": "32"
+        },
+        "queueMs": 0.006834001396782696,
+        "startupMs": 0.0,
+        "retirementMs": 0.0,
+        "responseMs": 104.70254200117779,
+        "turnoverMs": 104.70516699933796
+      },
+      {
+        "request": {
+          "id": "33",
+          "tenant": "customer-33",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "echo"
+        },
+        "container": "wp-matrix-d5fa270f5c974c668c60769043a515ee",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "tenant": "customer-33",
+            "plugin": "b",
+            "value": "yx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbA"
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.2895420002460014,
+          "cleanupMs": 0.10845799988601357,
+          "processTurnoverMs": 115.26500000036322,
+          "id": "33"
+        },
+        "queueMs": 0.002749999111983925,
+        "startupMs": 0.0,
+        "retirementMs": 0.0,
+        "responseMs": 116.43075000029057,
+        "turnoverMs": 116.43391699908534
+      },
+      {
+        "request": {
+          "id": "34",
+          "tenant": "customer-34",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "environment"
+        },
+        "container": "wp-matrix-d5fa270f5c974c668c60769043a515ee",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "changed": true
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.1720830005069729,
+          "cleanupMs": 0.10220900003332645,
+          "processTurnoverMs": 98.10920800009626,
+          "id": "34"
+        },
+        "queueMs": 0.0030410010367631912,
+        "startupMs": 0.0,
+        "retirementMs": 0.0,
+        "responseMs": 99.2489160016703,
+        "turnoverMs": 99.25145799934398
+      },
+      {
+        "request": {
+          "id": "35",
+          "tenant": "customer-35",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "echo"
+        },
+        "container": "wp-matrix-d5fa270f5c974c668c60769043a515ee",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "tenant": "customer-35",
+            "plugin": "b",
+            "value": "yx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbA"
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.2638750011101365,
+          "cleanupMs": 0.10479200136614963,
+          "processTurnoverMs": 156.27412499816273,
+          "id": "35"
+        },
+        "queueMs": 0.0024170003598555923,
+        "startupMs": 0.0,
+        "retirementMs": 0.0,
+        "responseMs": 157.34895800051163,
+        "turnoverMs": 157.3517079996236
+      },
+      {
+        "request": {
+          "id": "36",
+          "tenant": "customer-36",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "environment"
+        },
+        "container": "wp-matrix-d5fa270f5c974c668c60769043a515ee",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "changed": true
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.15291700037778355,
+          "cleanupMs": 0.09958299779100344,
+          "processTurnoverMs": 105.69658299937146,
+          "id": "36"
+        },
+        "queueMs": 0.0025420013116672635,
+        "startupMs": 0.0,
+        "retirementMs": 0.0,
+        "responseMs": 106.75970800002688,
+        "turnoverMs": 106.76204199990025
+      },
+      {
+        "request": {
+          "id": "37",
+          "tenant": "customer-37",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "echo"
+        },
+        "container": "wp-matrix-d5fa270f5c974c668c60769043a515ee",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "tenant": "customer-37",
+            "plugin": "b",
+            "value": "yx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbA"
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.23516600049333647,
+          "cleanupMs": 0.11258400263614021,
+          "processTurnoverMs": 107.06295899944962,
+          "id": "37"
+        },
+        "queueMs": 0.002583001332823187,
+        "startupMs": 0.0,
+        "retirementMs": 0.0,
+        "responseMs": 108.03245799979777,
+        "turnoverMs": 108.03391700028442
+      },
+      {
+        "request": {
+          "id": "38",
+          "tenant": "customer-38",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "environment"
+        },
+        "container": "wp-matrix-d5fa270f5c974c668c60769043a515ee",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "changed": true
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.17304199718637392,
+          "cleanupMs": 0.14158299745758995,
+          "processTurnoverMs": 209.0223339982913,
+          "id": "38"
+        },
+        "queueMs": 0.0015420009731315076,
+        "startupMs": 0.0,
+        "retirementMs": 0.0,
+        "responseMs": 210.09712500017486,
+        "turnoverMs": 210.099750001973
+      },
+      {
+        "request": {
+          "id": "39",
+          "tenant": "customer-39",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "echo"
+        },
+        "container": "wp-matrix-d5fa270f5c974c668c60769043a515ee",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "tenant": "customer-39",
+            "plugin": "b",
+            "value": "yx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbA"
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.22449999960372224,
+          "cleanupMs": 0.10999999722116627,
+          "processTurnoverMs": 107.35570900214952,
+          "id": "39"
+        },
+        "queueMs": 0.002624998160172254,
+        "startupMs": 0.0,
+        "retirementMs": 0.0,
+        "responseMs": 108.44179099876783,
+        "turnoverMs": 108.44333299974096
+      },
+      {
+        "request": {
+          "id": "40",
+          "tenant": "customer-40",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "environment"
+        },
+        "container": "wp-matrix-d5fa270f5c974c668c60769043a515ee",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "changed": true
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.1724579997244291,
+          "cleanupMs": 0.09695799963083118,
+          "processTurnoverMs": 115.89887499940232,
+          "id": "40"
+        },
+        "queueMs": 0.0014170000213198364,
+        "startupMs": 0.0,
+        "retirementMs": 0.0,
+        "responseMs": 116.94504199840594,
+        "turnoverMs": 116.94679199717939
+      },
+      {
+        "request": {
+          "id": "41",
+          "tenant": "customer-41",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "echo"
+        },
+        "container": "wp-matrix-d5fa270f5c974c668c60769043a515ee",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "tenant": "customer-41",
+            "plugin": "b",
+            "value": "yx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbA"
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.2266670016979333,
+          "cleanupMs": 0.11216699931537732,
+          "processTurnoverMs": 97.29716599758831,
+          "id": "41"
+        },
+        "queueMs": 0.0015829973563086241,
+        "startupMs": 0.0,
+        "retirementMs": 0.0,
+        "responseMs": 98.45370799666853,
+        "turnoverMs": 98.4562499979802
+      },
+      {
+        "request": {
+          "id": "42",
+          "tenant": "customer-42",
+          "plugin": "a",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "environment"
+        },
+        "container": "wp-matrix-d5fa270f5c974c668c60769043a515ee",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "changed": true
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.14837500202702358,
+          "cleanupMs": 0.09575000149197876,
+          "processTurnoverMs": 104.3815840021125,
+          "id": "42"
+        },
+        "queueMs": 0.0026660018193069845,
+        "startupMs": 0.0,
+        "retirementMs": 0.0,
+        "responseMs": 158.19529100190266,
+        "turnoverMs": 158.19787500004168
+      },
+      {
+        "request": {
+          "id": "43",
+          "tenant": "customer-43",
+          "plugin": "b",
+          "payload": "Abc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xyAbc123xy",
+          "grants": [
+            "read"
+          ],
+          "op": "echo"
+        },
+        "container": "wp-matrix-d5fa270f5c974c668c60769043a515ee",
+        "outcome": {
+          "status": "ok",
+          "value": {
+            "tenant": "customer-43",
+            "plugin": "b",
+            "value": "yx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbAyx321cbA"
+          },
+          "reusable": true,
+          "error": null,
+          "executionMs": 0.2304580011696089,
+          "cleanupMs": 0.11487499796203338,
+          "processTurnoverMs": 108.47554199790466,
+          "id": "43"
+        },
+        "queueMs": 0.0030000010156072676,
+        "startupMs": 0.0,
+        "retirementMs": 0.0,
+        "responseMs": 109.52774999896064,
+        "turnoverMs": 109.52950000137207
+      }
+    ],
+    "crossTenantMemoryLeakExpected": false
+  }
+]

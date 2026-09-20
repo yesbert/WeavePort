@@ -1,0 +1,5 @@
+# Design
+
+Use a pinned Python image, the same bounded JSON stdio channel and payload in all variants. Two distinct plugins alternate, each invocation uses a new synthetic tenant. The process variant has a resident supervisor, fresh child process group, deadline, writable-directory cleanup and descendant audit. The trusted variant uses a prototype SDK scope with registered cleanup, invocation-scoped permissions, environment restoration and residual-resource audit. A failed cleanup poisons the container; only host-confirmed removal permits replacement. Neither managed cleanup nor same-UID process replacement is claimed as a hostile-code security boundary.
+
+First compare single-lane turnover, including fresh-container removal before the next call. Then replay the same seeded arrival schedule: 500 customers, one call per minute, four sequential lanes, 60 seconds, with end-to-end queue latency. These four lanes are an experimental control, not a product worker limit. Preserve startup, execution/reset and retirement timing separately. Keep already-running services untouched. No plugin receives host mounts, credentials, Docker socket or network access.

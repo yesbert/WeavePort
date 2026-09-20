@@ -1,6 +1,7 @@
 """Collect real coverage from WeavePort's executable regression suites."""
 import json
 import os
+import shutil
 from pathlib import Path
 import subprocess
 import sys
@@ -8,14 +9,19 @@ import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parents[3]
 OUTPUT = ROOT / 'artifacts/analysis'
-SUITES = ('WeavePort.Hosting.Tests', 'WeavePort.Gateway.Tests')
+SUITES = ('WeavePort.Hosting.Tests', 'WeavePort.Gateway.Tests', 'WeavePort.Scheduling.Tests', 'WeavePort.ReuseTests', 'WeavePort.Optional.Tests')
 
 
 def execute():
     results = []
     for name in SUITES:
         with (OUTPUT / (name + '.log')).open('w') as log:
-            result = subprocess.run(['dotnet', str(ROOT / 'tests' / name / 'bin/Debug/net10.0' / (name + '.dll'))], stdout=log, stderr=subprocess.STDOUT)
+            command = ['dotnet', str(ROOT / 'tests' / name / 'bin/Debug/net10.0' / (name + '.dll'))]
+            if name == 'WeavePort.ReuseTests':
+                command += [str(ROOT), sys.executable, shutil.which('node')]
+            if name == 'WeavePort.Optional.Tests':
+                command += [str(ROOT), shutil.which('dotnet')]
+            result = subprocess.run(command, stdout=log, stderr=subprocess.STDOUT)
         print((OUTPUT / (name + '.log')).read_text(), flush=True)
         results.append({'suite': name, 'exitCode': result.returncode})
     (OUTPUT / 'tests.json').write_text(json.dumps(results, indent=2))
@@ -26,8 +32,12 @@ def collect():
     OUTPUT.mkdir(parents=True, exist_ok=True)
     (OUTPUT / 'tests.json').unlink(missing_ok=True)
     os.environ['DOTNET_COVERAGE_TELEMETRY_OPTOUT'] = '1'
+    subprocess.run(['npm', 'ci', '--prefix', 'sdks/typescript', '--ignore-scripts'], check=True)
+    subprocess.run(['npm', 'run', 'build', '--prefix', 'sdks/typescript'], check=True)
+    subprocess.run(['dotnet', 'publish', 'examples/gateway/Worker', '-c', 'Debug', '-p:UsePackedCore=false',
+                    '-o', 'artifacts/optional/worker', '--nologo'], check=True)
     for name in SUITES:
-        subprocess.run(['dotnet', 'build', str(ROOT / 'tests' / name), '-c', 'Debug', '--nologo'], check=True)
+        subprocess.run(['dotnet', 'build', str(ROOT / 'tests' / name), '-c', 'Debug', '-p:UsePackedCore=false', '--nologo'], check=True)
     report = OUTPUT / 'coverage.xml'
     tool = ROOT / 'artifacts/analysis-tools/dotnet-coverage'
     subprocess.run([str(tool), 'collect', '-f', 'xml', '-o', str(report), '--',

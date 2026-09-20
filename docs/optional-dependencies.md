@@ -1,6 +1,6 @@
 # Optional package dependency review
 
-Reviewed for the 0.4.0 source candidate on 2026-09-18. `compatibility/optional-dependencies.json` records exact NuGet dependency declarations, source restore closures and license expressions. The optional package verifier checks these identities against actual restored artifacts. WeavePort source remains MIT; dependencies keep their own licenses.
+Reviewed for the 0.5.0 source candidate on 2026-09-18. `compatibility/optional-dependencies.json` records exact NuGet dependency declarations, source restore closures and license expressions. The optional package verifier checks these identities against actual restored artifacts. WeavePort source remains MIT; dependencies keep their own licenses.
 
 | Dependency | Version | Use | License and redistribution obligations |
 |---|---|---|---|

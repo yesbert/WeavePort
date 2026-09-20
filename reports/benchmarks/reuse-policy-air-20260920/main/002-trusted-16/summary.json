@@ -1,0 +1,104 @@
+{
+  "config": {
+    "mode": "trusted",
+    "transport": "engine",
+    "cpus": 1,
+    "memory": 64,
+    "workers": 16,
+    "seconds": 30,
+    "arrival": "poisson",
+    "policy": "approved",
+    "workload": "session",
+    "pluginsPerCustomer": 2,
+    "seed": 1729,
+    "rate": 6000
+  },
+  "serialization": "one in-flight call per customer/plugin key",
+  "image": "sha256:1df84645ab74f677627134f1821b163dd5b9c2751cbef54d083369d86ee550b7",
+  "counts": {
+    "offered": 0,
+    "completed": 0,
+    "correct": 0,
+    "failed": 0,
+    "dropped": 0,
+    "withinOneSecond": 0,
+    "customersCompleted": 0,
+    "faultsExpected": 0,
+    "faultsContained": 0
+  },
+  "partiallyServedCustomers": 0,
+  "offeredCustomers": 0,
+  "elapsed": 8.04384562499763,
+  "preparedSeconds": 0,
+  "customersPerSecond": 0.0,
+  "requestsPerSecond": 0.0,
+  "hostCpuCores": 0.0020665488592098713,
+  "latency": {
+    "responseMs": {
+      "count": 0
+    },
+    "turnoverMs": {
+      "count": 0
+    },
+    "queueMs": {
+      "count": 0
+    },
+    "executionMs": {
+      "count": 0
+    },
+    "cleanupMs": {
+      "count": 0
+    },
+    "generatorLagMs": {
+      "count": 0
+    },
+    "pluginImportMs": {
+      "count": 0
+    },
+    "childWorkMs": {
+      "count": 0
+    },
+    "childStartMs": {
+      "count": 0
+    },
+    "childResponseWaitMs": {
+      "count": 0
+    },
+    "childExitWaitMs": {
+      "count": 0
+    },
+    "processTurnoverMs": {
+      "count": 0
+    }
+  },
+  "byWorkload": {},
+  "memorySamplesWithLiveContainers": 0,
+  "memoryPeakMiB": null,
+  "helperScope": "RSS of live owned Docker CLI PIDs only; observer children excluded",
+  "hostRssPeakMiB": null,
+  "helpersRssPeakMiB": null,
+  "memoryRawPeakMiB": null,
+  "starts": 3,
+  "retirements": 3,
+  "failure": "TimeoutError('timed out')",
+  "failedExamples": [],
+  "known": [
+    "wp-matrix-2302fa8df7164c36b1bf57602bc2032c",
+    "wp-matrix-292b01de41e64e1e8076a30ec5944897",
+    "wp-matrix-ecec1f4f46724f1bb83a99608fc0dcf1",
+    "wp-matrix-f609e28b0a2c4855ba6813160d44cf30"
+  ],
+  "remaining": [
+    "wp-matrix-f609e28b0a2c4855ba6813160d44cf30"
+  ],
+  "poolPolicy": {
+    "policy": "approved",
+    "warmBindingHits": 0,
+    "bindingReplacements": 0,
+    "pristineAssignments": 0,
+    "transitionExamples": []
+  },
+  "passed": false,
+  "meetsOneSecondSlo": false,
+  "normalEchoP99WithinOneSecond": false
+}

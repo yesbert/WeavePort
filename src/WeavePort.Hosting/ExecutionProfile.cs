@@ -19,6 +19,8 @@ public enum ExecutionProtections
 /// <param name = "IdleTimeout">Optional idle release policy.</param>
 public abstract record ExecutionProfile(int MemoryMiB, TimeSpan? Timeout, TimeSpan? IdleTimeout)
 {
+    /// <summary>Operator-approved reuse policy. Defaults to customer-bound execution; approval covers all code in the compatible deployment.</summary>
+    public WorkerReusePolicy ReusePolicy { get; init; }
     /// <summary>Restrictions requested by this adapter. Effective deployment policy must still be verified.</summary>
     public abstract ExecutionProtections Protection { get; }
 

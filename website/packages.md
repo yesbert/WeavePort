@@ -1,25 +1,25 @@
 # Packages and support
 
-Install the runtime in your .NET application and the author SDK in each C# plugin project. The current public NuGet release is **0.3.1**, licensed under MIT. Use the same exact version across the four core packages.
+Install the runtime in your .NET application and the author SDK in each C# plugin project. The current public NuGet release is **0.4.0**, licensed under MIT. Use the same exact version across the four core packages.
 
 | Package | Use it for |
 |---|---|
-| [WeavePort.Abstractions](https://www.nuget.org/packages/WeavePort.Abstractions/0.3.1) | Shared host, session and execution contracts |
-| [WeavePort.Hosting](https://www.nuget.org/packages/WeavePort.Hosting/0.3.1) | Binding, execution profiles, callbacks, admission and worker lifecycle |
-| [WeavePort.Sdk](https://www.nuget.org/packages/WeavePort.Sdk/0.3.1) | Authoring C# plugin functions and streams |
-| [WeavePort.Sdk.Client](https://www.nuget.org/packages/WeavePort.Sdk.Client/0.3.1) | Typed application calls over an authorized local session |
+| [WeavePort.Abstractions](https://www.nuget.org/packages/WeavePort.Abstractions/0.4.0) | Shared host, session and execution contracts |
+| [WeavePort.Hosting](https://www.nuget.org/packages/WeavePort.Hosting/0.4.0) | Binding, execution profiles, callbacks, admission and worker lifecycle |
+| [WeavePort.Sdk](https://www.nuget.org/packages/WeavePort.Sdk/0.4.0) | Authoring C# plugin functions and streams |
+| [WeavePort.Sdk.Client](https://www.nuget.org/packages/WeavePort.Sdk.Client/0.4.0) | Typed application calls over an authorized local session |
 
 In the application project:
 
 ```sh
-dotnet add package WeavePort.Hosting --version 0.3.1
-dotnet add package WeavePort.Sdk.Client --version 0.3.1
+dotnet add package WeavePort.Hosting --version 0.4.0
+dotnet add package WeavePort.Sdk.Client --version 0.4.0
 ```
 
 In a C# plugin project:
 
 ```sh
-dotnet add package WeavePort.Sdk --version 0.3.1
+dotnet add package WeavePort.Sdk --version 0.4.0
 ```
 
 Package installation supplies libraries. The application still composes a host, selects installed artifacts and binds authorized contexts. The [first example](getting-started.md) shows the complete wiring.
@@ -45,8 +45,8 @@ The API is pre-1.0 and evolving. The host API, wire protocol, package version an
 
 ## MCP support is included in Hosting
 
-`WeavePort.Hosting` 0.3.1 includes optional local MCP tools with no additional MCP runtime dependency. Use the low-level session contract for `tools/list` and `tools/call`; `WeavePort.Sdk.Client` remains the native typed/streaming client. Deploy the trusted server and its language dependencies separately. [Complete MCP guide](../docs/mcp-plugins.md).
+`WeavePort.Hosting` 0.4.0 includes optional local MCP tools with no additional MCP runtime dependency. Use the low-level session contract for `tools/list` and `tools/call`; `WeavePort.Sdk.Client` remains the native typed/streaming client. Deploy the trusted server and its language dependencies separately. [Complete MCP guide](../docs/mcp-plugins.md).
 
 ## Upcoming optional package family
 
-The 0.4.0 source candidate adds `WeavePort.Composition`, `WeavePort.Sdk.Gateway` and `WeavePort.Sdk.Gateway.Client`. The remote client requires only .NET 10; the gateway server requires ASP.NET Core. Until public publication, use the prepared repository NuGet feed. See [release status](../docs/releases.md), [HTTPS gateway](../docs/gateway.md) and [composition](../docs/bulk-composition.md). Testing remains internal.
+The 0.5.0 source candidate adds `WeavePort.Composition`, `WeavePort.Sdk.Gateway` and `WeavePort.Sdk.Gateway.Client`. The remote client requires only .NET 10; the gateway server requires ASP.NET Core. Until public publication, use the prepared repository NuGet feed. See [release status](../docs/releases.md), [HTTPS gateway](../docs/gateway.md) and [composition](../docs/bulk-composition.md). Testing remains internal.

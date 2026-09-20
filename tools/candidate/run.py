@@ -11,13 +11,15 @@ import sys
 import time
 import uuid
 
+import reuse
+
 
 def sha(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
 def inventory(checkout):
-    trees = ["artifacts/packages", "artifacts/sdk-version-tests/host",
+    trees = ["artifacts/reuse-source", "artifacts/reuse-packed", "artifacts/reuse-example", "artifacts/packages", "artifacts/sdk-version-tests/host",
              "artifacts/sdk-version-tests/wheel", "artifacts/sdk-version-tests/node_modules/@weaveport/sdk"]
     for app in ["decision-room", "document-workshop", "appointment-desk"]:
         trees += [f"artifacts/{app}/host", f"artifacts/{app}/releases"]
@@ -33,7 +35,7 @@ def inventory(checkout):
         assert path.is_dir(), "Missing frozen tree: " + tree
         files += [p for p in path.rglob("*") if p.is_file() and "__pycache__" not in p.parts]
     files += [checkout / f"artifacts/sdk-version-tests/{name}" for name in
-              ["worker.py", "worker.mjs", "weaveport-sdk-0.1.0.tgz"]]
+              ["worker.py", "worker.mjs", "weaveport-sdk-0.2.0.tgz"]]
     return {str(p.relative_to(checkout)): sha(p) for p in sorted(set(files))}
 
 
@@ -63,6 +65,7 @@ def verify_source(checkout, env, run):
 def build_candidate(checkout, env, run, stage):
     stage("core-packages", ["./scripts/prepare-core-packages.sh"])
     stage("packed-hosting-regressions", ["dotnet", "run", "--project", "tests/WeavePort.Hosting.Tests", "-c", "Release", "-p:UsePackedCore=true"])
+    stage("packed-scheduling-regressions", ["dotnet", "run", "--project", "tests/WeavePort.Scheduling.Tests", "-c", "Release", "-p:UsePackedCore=true"])
     stage("mcp-fixture-install", ["npm", "ci", "--prefix", "tests/mcp", "--ignore-scripts"])
     stage("packed-mcp-interop", ["dotnet", "tests/WeavePort.Hosting.Tests/bin/Release/net10.0/WeavePort.Hosting.Tests.dll", "--mcp-interop", shutil.which("node"), str(checkout / "tests/mcp/server.mjs")])
     stage("mcp-example-restore", ["dotnet", "restore", "examples/mcp", "--force", "--force-evaluate", "--no-cache"])
@@ -77,6 +80,8 @@ def build_candidate(checkout, env, run, stage):
     for app in ["decision-room", "document-workshop", "appointment-desk"]:
         stage(app + "-build", ["./scripts/" + app + ".sh", "--build", "--build-only"])
     stage("optional-build", ["python3", "scripts/verify-optional.py", "--build-only"])
+
+    reuse.build(checkout, stage)
     frozen = inventory(checkout)
     (run / "artifact-manifest.json").write_text(json.dumps(frozen, indent=2))
     stage("fixed-package-set", ["python3", "scripts/check-package-set.py", str(package_set)])
@@ -86,6 +91,7 @@ def build_candidate(checkout, env, run, stage):
 
 
 def verify_candidate(checkout, env, run, stage, package_set):
+    reuse.verify(checkout, stage)
     for app in ["decision-room", "document-workshop", "appointment-desk"]:
         stage(app + "-verify", ["./scripts/" + app + ".sh", "--verify"])
     env.update(WP_VERSION_ROOT=str(checkout / "artifacts/sdk-version-tests"),
@@ -149,6 +155,8 @@ def main():
         record["sharedRuntimes"] = [" ".join(line.split()[:2]) for line in runtimes.splitlines()]
         record["runtimeExecutables"] = {name: sha(Path(shutil.which(name)).resolve()) for name in ["dotnet", "python3", "node"]}
         stage("hosting-regressions", ["dotnet", "run", "--project", "tests/WeavePort.Hosting.Tests", "-c", "Release"])
+        stage("scheduling-regressions", ["dotnet", "run", "--project", "tests/WeavePort.Scheduling.Tests", "-c", "Release"])
+        stage("density-observer-controls", [sys.executable, "tools/performance/test_density.py"])
         stage("gateway-regressions", ["dotnet", "run", "--project", "tests/WeavePort.Gateway.Tests", "-c", "Release"])
         stage("code-style", ["dotnet", "run", "--project", "tools/WeavePort.CodeStyle", "-c", "Release", "--", str(checkout)])
         stage("documentation-regressions", ["python3", "tests/documentation/check-links.py"])

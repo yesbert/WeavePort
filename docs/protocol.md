@@ -41,3 +41,7 @@ Admission is coordinator-local and fail-fast, with a separate bounded callback l
 An application can expose a domain HTTP endpoint by calling its selected binding. WeavePort does not register arbitrary plugin HTTP routes or assume that a request's tenant field is authenticated. Public store installation, schema evolution negotiation and production packaging/signing are later product work.
 
 See the [hostile-plugin threat model](security-architecture.md) and [security evidence (historical) — pre-public record](history.md) before interpreting these controls as production security guarantees.
+
+## Approved session cleanup extension
+
+Updated native SDK workers advertise `sessionCleanup: 1` in `ready` and a boolean `reusable` in each successful `result`. An `ApprovedSessions` profile requires that capability at startup. `true` acknowledges completed registered cleanup; `false` retains the current session (for example an open stream). Missing, duplicate or invalid reserved fields fail the exchange. Explicit `cleanup-error` frames and invocation timeout retire the worker. Default customer-bound profiles ignore readiness for sharing and keep their previous ownership. This extension is additive to protocol 1 and does not apply to MCP. See [the ownership contract](reusable-plugins.md).

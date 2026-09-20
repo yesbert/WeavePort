@@ -4,8 +4,8 @@
     "net10.0": {
       "WeavePort.Sdk": {
         "type": "Direct",
-        "requested": "[0.4.0, )",
-        "resolved": "0.4.0",
+        "requested": "[0.5.0, )",
+        "resolved": "0.5.0",
         "contentHash": "OugI41z1e/LCfcImbO3T5u00e1jWjKCKVOzvd80L9y5NseklmDs0zrpp0Pxh5TFXjG8vSl+hudOvASZYELkHRw=="
       },
       "decisionroom.contracts": {

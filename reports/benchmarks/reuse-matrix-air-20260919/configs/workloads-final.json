@@ -1,0 +1,152 @@
+[
+  {
+    "mode": "trusted",
+    "workers": 8,
+    "seconds": 30,
+    "cpus": "1",
+    "transport": "engine",
+    "workload": "cpu",
+    "cpuMs": 10
+  },
+  {
+    "mode": "trusted",
+    "workers": 8,
+    "seconds": 30,
+    "cpus": "1",
+    "transport": "engine",
+    "workload": "io",
+    "ioMs": 100
+  },
+  {
+    "mode": "trusted",
+    "workers": 8,
+    "seconds": 30,
+    "cpus": "1",
+    "transport": "engine",
+    "workload": "memory",
+    "memoryMiB": 32
+  },
+  {
+    "mode": "trusted",
+    "workers": 8,
+    "seconds": 30,
+    "cpus": "1",
+    "transport": "engine",
+    "payload": 262144
+  },
+  {
+    "mode": "trusted",
+    "workers": 8,
+    "seconds": 30,
+    "cpus": "1",
+    "transport": "engine",
+    "workload": "blend",
+    "cpuMs": 10,
+    "ioMs": 500
+  },
+  {
+    "mode": "trusted",
+    "workers": 64,
+    "seconds": 30,
+    "cpus": "1",
+    "transport": "engine",
+    "memory": 64,
+    "workload": "io",
+    "ioMs": 100
+  },
+  {
+    "mode": "forkserver",
+    "workers": 8,
+    "seconds": 30,
+    "cpus": "1",
+    "transport": "engine",
+    "workload": "cpu",
+    "cpuMs": 10
+  },
+  {
+    "mode": "forkserver",
+    "workers": 8,
+    "seconds": 30,
+    "cpus": "1",
+    "transport": "engine",
+    "workload": "io",
+    "ioMs": 100
+  },
+  {
+    "mode": "forkserver",
+    "workers": 8,
+    "seconds": 30,
+    "cpus": "1",
+    "transport": "engine",
+    "workload": "memory",
+    "memoryMiB": 32
+  },
+  {
+    "mode": "forkserver",
+    "workers": 8,
+    "seconds": 30,
+    "cpus": "1",
+    "transport": "engine",
+    "payload": 262144
+  },
+  {
+    "mode": "forkserver",
+    "workers": 8,
+    "seconds": 30,
+    "cpus": "1",
+    "transport": "engine",
+    "workload": "blend",
+    "cpuMs": 10,
+    "ioMs": 500
+  },
+  {
+    "mode": "forkserver",
+    "workers": 64,
+    "seconds": 30,
+    "cpus": "1",
+    "transport": "engine",
+    "memory": 64,
+    "workload": "io",
+    "ioMs": 100
+  },
+  {
+    "mode": "trusted",
+    "workers": 128,
+    "memory": 64,
+    "seconds": 30,
+    "cpus": "1",
+    "transport": "engine",
+    "workload": "io",
+    "ioMs": 100
+  },
+  {
+    "mode": "forkserver",
+    "workers": 128,
+    "memory": 64,
+    "seconds": 30,
+    "cpus": "1",
+    "transport": "engine",
+    "workload": "io",
+    "ioMs": 100
+  },
+  {
+    "mode": "trusted",
+    "workers": 16,
+    "seconds": 30,
+    "cpus": "1",
+    "transport": "engine",
+    "workload": "echo",
+    "arrival": "burst",
+    "rate": 3000
+  },
+  {
+    "mode": "forkserver",
+    "workers": 16,
+    "seconds": 30,
+    "cpus": "1",
+    "transport": "engine",
+    "workload": "echo",
+    "arrival": "burst",
+    "rate": 600
+  }
+]

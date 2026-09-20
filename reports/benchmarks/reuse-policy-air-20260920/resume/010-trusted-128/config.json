@@ -1,0 +1,16 @@
+{
+  "mode": "trusted",
+  "transport": "engine",
+  "cpus": 1,
+  "memory": 64,
+  "workers": 128,
+  "seconds": 60,
+  "arrival": "periodic",
+  "policy": "bound",
+  "workload": "session",
+  "pluginsPerCustomer": 2,
+  "population": 128,
+  "periodSeconds": 30,
+  "callsPerCustomer": 2,
+  "seed": 1730
+}
