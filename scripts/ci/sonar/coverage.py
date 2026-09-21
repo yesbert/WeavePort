@@ -2,6 +2,7 @@
 import json
 import os
 import shutil
+import signal
 from pathlib import Path
 import subprocess
 import sys
@@ -10,6 +11,22 @@ import xml.etree.ElementTree as ET
 ROOT = Path(__file__).resolve().parents[3]
 OUTPUT = ROOT / 'artifacts/analysis'
 SUITES = ('WeavePort.Hosting.Tests', 'WeavePort.Gateway.Tests', 'WeavePort.Scheduling.Tests', 'WeavePort.ReuseTests', 'WeavePort.Optional.Tests', 'WeavePort.Shared.Tests', 'WeavePort.ConcurrentSdkTests')
+
+
+def run_suite(command, log, timeout=180):
+    # Each suite owns its process group, including native worker children. A
+    # deadlock must produce a bounded failure and retained diagnostics in CI.
+    with subprocess.Popen(command, stdout=log, stderr=subprocess.STDOUT, start_new_session=True) as process:
+        try:
+            return process.wait(timeout=timeout)
+        except subprocess.TimeoutExpired:
+            print(f'FAIL: suite exceeded the {timeout}-second watchdog; stopping its owned process group.', file=log, flush=True)
+            try:
+                os.killpg(process.pid, signal.SIGKILL)
+            except ProcessLookupError:
+                pass
+            process.wait()
+            return 124
 
 
 def execute():
@@ -25,13 +42,16 @@ def execute():
                 command += [str(ROOT), shutil.which('dotnet')]
             if mode:
                 command += [mode, str(ROOT)]
-            result = subprocess.run(command, stdout=log, stderr=subprocess.STDOUT)
+            exit_code = run_suite(command, log)
         print((OUTPUT / (label + '.log')).read_text(), flush=True)
-        results.append({'suite': label, 'exitCode': result.returncode})
+        results.append({'suite': label, 'exitCode': exit_code})
+        (OUTPUT / 'tests.json').write_text(json.dumps(results, indent=2))
+        if exit_code == 124:
+            return 1
     with (OUTPUT / 'concurrent-sdk-wire.log').open('w') as log:
-        wire = subprocess.run([sys.executable, 'tests/WeavePort.ConcurrentSdkTests/check.py'], stdout=log, stderr=subprocess.STDOUT)
+        wire_exit = run_suite([sys.executable, 'tests/WeavePort.ConcurrentSdkTests/check.py'], log)
     print((OUTPUT / 'concurrent-sdk-wire.log').read_text(), flush=True)
-    results.append({'suite': 'concurrent-sdk-wire', 'exitCode': wire.returncode})
+    results.append({'suite': 'concurrent-sdk-wire', 'exitCode': wire_exit})
     (OUTPUT / 'tests.json').write_text(json.dumps(results, indent=2))
     return int(any(item['exitCode'] != 0 for item in results))
 

@@ -15,6 +15,7 @@ export async function runConcurrent(
     const calls = new Map<string, Call>(), callbacks = new Map<string, Reply>();
     let callbackId = 0;
     const completed = new Set<string>();
+    const cancelledCallbacks = new Map<string, string>();
     const execute = async (request: any, call: Call): Promise<void> => {
         const pending: Promise<unknown>[] = [];
         const callback = <T>(operation: string, payload: unknown): Promise<T> => {
@@ -49,6 +50,14 @@ export async function runConcurrent(
                 const encoded = JSON.stringify(response);
                 if (Buffer.byteLength(encoded) > 1 << 20) throw new Error("Frame limit");
             } catch { response = { type: "error", id: request.id, code: "sdk-error" }; }
+            // A cancelled host callback can ignore cancellation and never reply. Keep
+            // only bounded identity tombstones after releasing invocation-owned closures.
+            for (const [id, reply] of callbacks) {
+                if (reply.owner !== request.id) continue;
+                callbacks.delete(id);
+                cancelledCallbacks.set(id, request.id);
+                if (cancelledCallbacks.size > 4096) cancelledCallbacks.delete(cancelledCallbacks.keys().next().value!);
+            }
             calls.delete(request.id);
             completed.add(request.id);
             if (completed.size > 4096) completed.delete(completed.values().next().value!);
@@ -69,7 +78,14 @@ export async function runConcurrent(
                 call.task = execute(frame, call);
             } else if (frame.type === 'callback-result') {
                 const reply = callbacks.get(frame.callbackId);
-                if (!reply || reply.owner !== frame.id) throw new Error('Unknown callback identity');
+                if (!reply) {
+                    if (cancelledCallbacks.has(frame.callbackId) && cancelledCallbacks.get(frame.callbackId) === frame.id) {
+                        cancelledCallbacks.delete(frame.callbackId);
+                        continue;
+                    }
+                    throw new Error('Unknown callback identity');
+                }
+                if (reply.owner !== frame.id) throw new Error('Unknown callback identity');
                 callbacks.delete(frame.callbackId);
                 if (frame.error != null || frame.success === false) reply.reject(new Error('Host callback failed'));
                 else reply.resolve(frame.value);

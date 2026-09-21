@@ -19,3 +19,5 @@ Cancellation returns promptly and revokes callback authority. Work that continue
 `MaximumRestarts` within `RestartWindow` bounds recovery. Exhaustion exposes a disabled instance instead of restarting forever. `ISharedPlugin.Snapshot` reports ready workers, active and abandoned calls, restart count and disabled state. Raw stderr remains off unless `ForwardStandardError` is explicitly enabled; it can contain tenant data.
 
 Choose memory reservations and concurrency from measurements on the deployment machine. Resident workers charge the host budget even when idle. A higher degree is not guaranteed to increase throughput: Python synchronous CPU libraries may release the GIL, async I/O can overlap, and TypeScript CPU work requires author-managed worker threads. Functional concurrency tests and performance benchmarks answer different questions.
+
+Concurrent SDKs release pending callback state before acknowledging a cancelled invocation. They retain at most 4096 exact callback identities to consume known late replies once; unknown, repeated or expired replies are protocol errors. Active invocations retain their own callbacks independently of this bound.

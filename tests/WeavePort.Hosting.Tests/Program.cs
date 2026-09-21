@@ -27,6 +27,7 @@ Console.WriteLine($"PASS {await McpChecks.RunAsync()} MCP protocol, authority an
 ManifestChecks.Run();
 await DisposalChecks.RunAsync();
 await ShutdownRaceChecks.RunAsync();
+await LockOrderChecks.RunAsync();
 await DockerCommandChecks.RunAsync();
 Console.WriteLine($"PASS {await QuarantineChecks.RunAsync()} quarantine age and reservation assertions");
 Console.WriteLine($"PASS {await AdmissionChecks.RunAsync()} concurrent-start admission assertions");

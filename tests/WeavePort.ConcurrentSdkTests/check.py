@@ -74,6 +74,27 @@ try:
     callback = w.read()
     w.send(dict(type="callback-result", id="denied", callbackId=callback["callbackId"], value=None, error="denied"))
     assert w.read()["code"] == "sdk-error"
+    # Keep an independent callback live while cancelled callbacks retire without replies.
+    w.call("still-active", "callback", {"owner": "B"}, "B")
+    active = w.read()
+    retired = []
+    for index in range(4100):
+        invocation = f"cancel-callback-{index}"
+        w.call(invocation, "callback", {})
+        pending = w.read()
+        assert pending["type"] == "callback"
+        retired.append((invocation, pending["callbackId"]))
+        w.send(dict(type="cancel", id=invocation))
+        assert w.read() == dict(type="cancelled", id=invocation)
+    w.send(dict(type="callback-result", id=active["id"], callbackId=active["callbackId"], value={"owner": "B"}))
+    assert w.read()["value"] == {"owner": "B"}
+    recent_id, recent_callback = retired[-1]
+    w.send(dict(type="callback-result", id=recent_id, callbackId=recent_callback, value={}))
+    w.call("after-late-reply", "identity", {"delay": 0})
+    assert w.read()["id"] == "after-late-reply"
+    expired_id, expired_callback = retired[0]
+    w.send(dict(type="callback-result", id=expired_id, callbackId=expired_callback, value={}))
+    assert w.process.wait(timeout=5) != 0, "Expired callback identities must retire the channel"
 finally:
     w.close()
 

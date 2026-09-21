@@ -823,6 +823,8 @@ Cancellation returns promptly and revokes callback authority. Work that continue
 
 Choose memory reservations and concurrency from measurements on the deployment machine. Resident workers charge the host budget even when idle. A higher degree is not guaranteed to increase throughput: Python synchronous CPU libraries may release the GIL, async I/O can overlap, and TypeScript CPU work requires author-managed worker threads. Functional concurrency tests and performance benchmarks answer different questions.
 
+Concurrent SDKs release pending callback state before acknowledging a cancelled invocation. They retain at most 4096 exact callback identities to consume known late replies once; unknown, repeated or expired replies are protocol errors. Active invocations retain their own callbacks independently of this bound.
+
 ---
 
 ## Installed clients
@@ -3300,6 +3302,10 @@ All three author SDKs SHALL support approved concurrent unary execution with iso
 #### Scenario: Callback immediately after an available item
 - **WHEN** a stream yields an item and then requests a callback before its next item
 - **THEN** the available item is delivered before waiting for that callback, and the callback retains its invocation authority in the next exchange
+
+#### Scenario: Late callback reply after cancellation
+- **WHEN** a concurrent invocation terminates with pending callbacks and their replies arrive later
+- **THEN** the SDK releases callback futures and closures before its terminal frame, retains at most 4096 exact retired callback identities, accepts each retained late reply once, and rejects unknown or evicted identities without evicting callbacks of active invocations
 
 ---
 

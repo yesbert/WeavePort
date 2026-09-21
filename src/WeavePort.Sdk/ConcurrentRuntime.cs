@@ -100,6 +100,12 @@ internal sealed partial class ConcurrentRuntime(PluginApplication application)
             return;
         }
 
+        if (type == "callback-result")
+        {
+            RouteCallback(frame, id);
+            return;
+        }
+
         if (!_calls.TryGetValue(id, out Invocation? existing))
         {
             if (type == "cancel" && _completed.ContainsKey(id))
@@ -110,25 +116,12 @@ internal sealed partial class ConcurrentRuntime(PluginApplication application)
             throw new InvalidDataException("Unknown invocation identity.");
         }
 
-        if (type == "cancel")
+        if (type != "cancel")
         {
-            existing.Cancel();
-            return;
+            throw new InvalidDataException("Invalid concurrent frame.");
         }
 
-        if (type != "callback-result" || !existing.Callbacks.TryRemove(frame.GetProperty("callbackId").GetString()!, out var reply))
-        {
-            throw new InvalidDataException("Invalid callback identity.");
-        }
-
-        if (frame.TryGetProperty("error", out var error) && error.ValueKind != JsonValueKind.Null)
-        {
-            reply.TrySetException(new InvalidOperationException("Host callback failed: " + error.GetString()));
-        }
-        else
-        {
-            reply.TrySetResult(frame.GetProperty("value"));
-        }
+        existing.Cancel();
     }
 
     private async Task ExecuteAsync(Invocation call, JsonElement request)
@@ -215,6 +208,7 @@ internal sealed partial class ConcurrentRuntime(PluginApplication application)
                 _completed.TryRemove(expired, out _);
             }
 
+            RetireCallbacks(call);
             _calls.TryRemove(call.Id, out _);
             await _channel.WriteAsync(terminal, _lifetime.Token);
             if (errorCode == "cleanup-error")
@@ -229,28 +223,8 @@ internal sealed partial class ConcurrentRuntime(PluginApplication application)
         finally
         {
             _calls.TryRemove(call.Id, out _);
-            foreach (var callback in call.Callbacks.Values)
-            {
-                callback.TrySetCanceled();
-            }
-
+            RetireCallbacks(call);
             call.Dispose();
         }
-    }
-
-    private async Task<JsonElement> CallbackAsync(Invocation call, string operation, JsonElement input, CancellationToken token)
-    {
-        using var linked = CancellationTokenSource.CreateLinkedTokenSource(token, call.Cancellation.Token);
-        linked.Token.ThrowIfCancellationRequested();
-        if (!call.Active)
-        {
-            throw new InvalidOperationException("Expired invocation.");
-        }
-
-        string callbackId = Interlocked.Increment(ref call.CallbackSequence).ToString(System.Globalization.CultureInfo.InvariantCulture);
-        var reply = new TaskCompletionSource<JsonElement>(TaskCreationOptions.RunContinuationsAsynchronously);
-        call.Callbacks.TryAdd(callbackId, reply);
-        await _channel.WriteAsync(new { type = "callback", id = call.Id, callbackId, operation, payload = input }, linked.Token);
-        return await reply.Task.WaitAsync(linked.Token);
     }
 }

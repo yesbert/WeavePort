@@ -10,3 +10,7 @@ All three author SDKs SHALL support approved concurrent unary execution with iso
 #### Scenario: Callback immediately after an available item
 - **WHEN** a stream yields an item and then requests a callback before its next item
 - **THEN** the available item is delivered before waiting for that callback, and the callback retains its invocation authority in the next exchange
+
+#### Scenario: Late callback reply after cancellation
+- **WHEN** a concurrent invocation terminates with pending callbacks and their replies arrive later
+- **THEN** the SDK releases callback futures and closures before its terminal frame, retains at most 4096 exact retired callback identities, accepts each retained late reply once, and rejects unknown or evicted identities without evicting callbacks of active invocations

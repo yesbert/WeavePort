@@ -99,23 +99,11 @@ internal sealed partial class SharedWorker(SharedPlugin plugin, WorkerPool pool,
 
     internal async Task<WeavePort.Abstractions.InvocationResult> InvokeAsync(SharedCall call)
     {
-        Worker worker;
-        lock (_sync)
+        if (!RegisterCall(call, out Worker worker))
         {
-            worker = _worker!;
-            if (!_ready)
-            {
-                _active--;
-                call.Finish("failed", Instance, Empty);
-                return call.Completion.Task.GetAwaiter().GetResult();
-            }
-
-            if (_calls.Count == 0)
-            {
-                _lastFrame = clock.GetTimestamp();
-            }
-
-            _calls.Add(call.Id, call);
+            // Finishing releases host admission; never acquire that lock while holding the worker lock.
+            call.Finish("failed", Instance, Empty);
+            return await call.Completion.Task;
         }
 
         bool dispatchCompleted = false;
@@ -158,6 +146,27 @@ internal sealed partial class SharedWorker(SharedPlugin plugin, WorkerPool pool,
         {
             Retire(worker);
             return await call.Completion.Task;
+        }
+    }
+
+    private bool RegisterCall(SharedCall call, out Worker worker)
+    {
+        lock (_sync)
+        {
+            worker = _worker!;
+            if (!_ready)
+            {
+                _active--;
+                return false;
+            }
+
+            if (_calls.Count == 0)
+            {
+                _lastFrame = clock.GetTimestamp();
+            }
+
+            _calls.Add(call.Id, call);
+            return true;
         }
     }
 

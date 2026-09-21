@@ -177,6 +177,53 @@ class ProtocolTests(unittest.TestCase):
                 worker.invoke('close', '$sdk.close', stream=stream)
                 self.assertEqual(worker.receive()['code'], 'cleanup-error')
 
+    def test_cancelled_callbacks_release_state_and_keep_bounded_late_identities(self):
+        for language, worker in self.workers():
+            with self.subTest(language=language):
+                # This live callback must survive all tombstone eviction below.
+                worker.invoke('active', operation='work', input={'callback': True})
+                active = worker.receive()
+                oldest = newest = None
+                for index in range(4100):
+                    identity = f'cancel-{index}'
+                    worker.invoke(identity, operation='work', input={'callback': True})
+                    callback = worker.receive()
+                    self.assertEqual(callback['type'], 'callback')
+                    if oldest is None:
+                        oldest = callback
+                    newest = callback
+                    worker.send(type='cancel', id=identity)
+                    self.assertEqual(worker.receive(), {'type': 'cancelled', 'id': identity})
+                worker.send(type='callback-result', id='active', callbackId=active['callbackId'], value='active-survived')
+                self.assertEqual(worker.receive()['value'], 'active-survived')
+                # A known recent cancelled callback may return once, without an active context.
+                worker.send(type='callback-result', id=newest['id'], callbackId=newest['callbackId'], value='late')
+                worker.invoke('healthy', operation='work', input={})
+                self.assertEqual(worker.receive()['value'], 'healthy')
+                # Older identities must have been evicted; retaining every cancelled future
+                # or closure would incorrectly accept this reply and grow indefinitely.
+                worker.send(type='callback-result', id=oldest['id'], callbackId=oldest['callbackId'], value='expired')
+                self.assertNotEqual(worker.process.wait(timeout=3), 0)
+
+    def test_late_callback_identity_is_consumed_once(self):
+        for language, worker in self.workers():
+            with self.subTest(language=language):
+                worker.invoke('cancel', operation='work', input={'callback': True})
+                callback = worker.receive()
+                worker.send(type='cancel', id='cancel')
+                self.assertEqual(worker.receive()['type'], 'cancelled')
+                worker.send(type='callback-result', id='cancel', callbackId=callback['callbackId'], value='late')
+                worker.invoke('healthy', operation='work', input={})
+                self.assertEqual(worker.receive()['value'], 'healthy')
+                worker.send(type='callback-result', id='cancel', callbackId=callback['callbackId'], value='duplicate')
+                self.assertNotEqual(worker.process.wait(timeout=3), 0)
+
+    def test_missing_callback_identity_is_channel_fatal(self):
+        for language, worker in self.workers():
+            with self.subTest(language=language):
+                worker.send(type='callback-result')
+                self.assertNotEqual(worker.process.wait(timeout=3), 0)
+
     def test_cancel_waits_for_actual_completion(self):
         for language, worker in self.workers():
             with self.subTest(language=language):
