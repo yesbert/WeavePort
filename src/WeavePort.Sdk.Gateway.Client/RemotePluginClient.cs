@@ -98,7 +98,7 @@ public sealed partial class RemotePluginClient : IBoundPluginClient
         request.Mode = Mode.Stream;
         request.StreamId = Guid.NewGuid().ToString("N");
         var session = await _sessions.RentAsync(stop.Token);
-        using var abort = stop.Token.Register(session.Dispose);
+        await using var abort = stop.Token.Register(session.Dispose);
         bool complete = false;
         long total = 0;
         try
@@ -142,7 +142,7 @@ public sealed partial class RemotePluginClient : IBoundPluginClient
         {
             // Abort an incomplete HTTP/2 stream before asking the server to confirm
             // plugin cleanup. Never reuse a reader that may contain abandoned items.
-            abort.Dispose();
+            await abort.DisposeAsync();
             _sessions.Return(session, complete && !stop.IsCancellationRequested);
             if (!complete && !_sessions.Lifetime.IsCancellationRequested)
             {

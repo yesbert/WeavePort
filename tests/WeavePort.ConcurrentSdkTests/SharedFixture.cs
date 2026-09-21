@@ -23,12 +23,13 @@ internal static class SharedFixture
             {
                 if (input.TryGetProperty("announce", out var announce) && announce.GetBoolean())
                 {
-                    await context.CallHostAsync("entered", JsonSerializer.SerializeToElement(new { }));
+                    await context.CallHostAsync("entered", JsonSerializer.SerializeToElement(new { }), CancellationToken.None);
                 }
             }
             finally
             {
-                await Task.Delay(input.TryGetProperty("milliseconds", out var milliseconds) ? milliseconds.GetInt32() : 150);
+                // The fixture proves that cancelled work retains its slot until it actually finishes.
+                await Task.Delay(input.TryGetProperty("milliseconds", out var milliseconds) ? milliseconds.GetInt32() : 150, CancellationToken.None);
             }
             return context.Tenant;
         });
@@ -40,7 +41,7 @@ internal static class SharedFixture
         });
         app.Function<JsonElement, object?>("crash", async (input, _, _) =>
         {
-            await Task.Delay(input.TryGetProperty("milliseconds", out var milliseconds) ? milliseconds.GetInt32() : 0);
+            await Task.Delay(input.TryGetProperty("milliseconds", out var milliseconds) ? milliseconds.GetInt32() : 0, CancellationToken.None);
             Environment.Exit(7);
             return null;
         });

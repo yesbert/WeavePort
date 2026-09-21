@@ -18,7 +18,8 @@ public sealed partial class PluginHost
 
         var resolved = (ProcessProfile)await ResolveAsync(profile, ExecutionProtections.None, cancellationToken);
         resolved = _scheduler?.PrepareSharedProfile(resolved) ?? resolved;
-        var plugin = new SharedPlugin(this, context with { Tenant = "", Configuration = context.Configuration.Clone() }, resolved, options, callbacks, grants.ToHashSet(StringComparer.Ordinal), _pool, _clock);
+        var binding = new SessionBinding(context with { Tenant = "", Configuration = context.Configuration.Clone() }, resolved, callbacks, grants.ToHashSet(StringComparer.Ordinal));
+        var plugin = new SharedPlugin(this, binding, options, _pool, _clock);
         lock (_sync)
         {
             ObjectDisposedException.ThrowIf(_disposed, this);

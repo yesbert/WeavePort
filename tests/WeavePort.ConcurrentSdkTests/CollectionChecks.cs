@@ -14,6 +14,7 @@ using WeavePort.Sdk.Gateway;
 
 internal static class CollectionChecks
 {
+    private static readonly JsonSerializerOptions ReportJson = new() { WriteIndented = true };
     internal static async Task RunAsync(string[] args)
     {
         string root = Path.Combine(Path.GetTempPath(), "wp-source-" + Guid.NewGuid().ToString("N"));
@@ -101,7 +102,7 @@ internal static class CollectionChecks
                 await app.StopAsync();
             }
 
-            Console.WriteLine(JsonSerializer.Serialize(new { runtime = Environment.Version.ToString(), os = System.Runtime.InteropServices.RuntimeInformation.OSDescription, rows }, new JsonSerializerOptions { WriteIndented = true }));
+            Console.WriteLine(JsonSerializer.Serialize(new { runtime = Environment.Version.ToString(), os = System.Runtime.InteropServices.RuntimeInformation.OSDescription, rows }, ReportJson));
             Assert(!Directory.EnumerateFileSystemEntries(Path.Combine(root, "results")).Any(), "No partial or committed files after scope disposal");
         }
         finally

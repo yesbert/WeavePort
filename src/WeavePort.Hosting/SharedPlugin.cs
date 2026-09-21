@@ -3,7 +3,7 @@ using WeavePort.Abstractions;
 using WeavePort.Sdk.Client;
 
 namespace WeavePort.Hosting;
-internal sealed class SharedPlugin(PluginHost host, PluginContext context, ProcessProfile profile, SharedWorkerOptions options, IHostCallbacks callbacks, HashSet<string> grants, WorkerPool pool, TimeProvider clock) : ISharedPlugin
+internal sealed class SharedPlugin(PluginHost host, SessionBinding binding, SharedWorkerOptions options, WorkerPool pool, TimeProvider clock) : ISharedPlugin
 {
     private readonly object _sync = new();
     private readonly List<SharedWorker> _workers = [];
@@ -13,10 +13,10 @@ internal sealed class SharedPlugin(PluginHost host, PluginContext context, Proce
     private string? _failure;
     private Task? _disposal;
     private Task? _startup;
-    internal ProcessProfile Profile => profile;
-    internal PluginContext Context => context;
-    internal IHostCallbacks Callbacks => callbacks;
-    internal HashSet<string> Grants => grants;
+    internal ProcessProfile Profile => (ProcessProfile)binding.Profile;
+    internal PluginContext Context => binding.Context;
+    internal IHostCallbacks Callbacks => binding.Callbacks;
+    internal HashSet<string> Grants => binding.Grants;
     internal SharedWorkerOptions Options => options;
     internal PluginHost Host => host;
     internal CancellationToken Lifetime => _lifetime.Token;
@@ -40,7 +40,7 @@ internal sealed class SharedPlugin(PluginHost host, PluginContext context, Proce
         lock (_sync)
         {
             ObjectDisposedException.ThrowIf(_disposal is not null, this);
-            return _startup ??= Task.Run(() => StartCoreAsync(token));
+            return _startup ??= Task.Run(() => StartCoreAsync(token), CancellationToken.None);
         }
     }
 
@@ -167,7 +167,7 @@ internal sealed class SharedPlugin(PluginHost host, PluginContext context, Proce
                 workers = _workers.ToArray();
             }
 
-            await Task.WhenAll(workers.Select(w => w.DrainAsync(profile.Timeout ?? TimeSpan.FromSeconds(5))));
+            await Task.WhenAll(workers.Select(w => w.DrainAsync(Profile.Timeout ?? TimeSpan.FromSeconds(5))));
             await WeavePort.Internal.Cleanup.RunAsync(() => _lifetime.CancelAsync(), () => Task.WhenAll(workers.Select(w => w.DisposeAsync().AsTask())));
         }
         finally

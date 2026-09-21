@@ -23,6 +23,7 @@ async Task<LocalPluginClient> BindAsync(string tenant) => new(await host.BindAsy
     new PluginContext(tenant, "optional-fixture", "1", "default", Check.Json(new { })), profile, new Callbacks(), []));
 await using (var local = await BindAsync("A"))
 {
+    await TransportChecks.VerifySourceArgumentsAsync(local);
     await VerifyMappingAsync(local, storage, "local SDK");
 }
 await using (var tls = new TlsFixture())

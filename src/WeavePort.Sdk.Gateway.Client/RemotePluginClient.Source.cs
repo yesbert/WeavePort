@@ -7,13 +7,18 @@ namespace WeavePort.Sdk.Gateway;
 public sealed partial class RemotePluginClient
 {
     /// <inheritdoc/>
-    public async IAsyncEnumerable<ReadOnlyMemory<byte>> SourceAsync(string operation, JsonElement input, int chunkBytes = 65536, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    public IAsyncEnumerable<ReadOnlyMemory<byte>> SourceAsync(string operation, JsonElement input, int chunkBytes = 65536, CancellationToken cancellationToken = default)
     {
         if (chunkBytes is < 4096 or > 262144)
         {
             throw new ArgumentOutOfRangeException(nameof(chunkBytes));
         }
 
+        return ReadSourceAsync(operation, input, chunkBytes, cancellationToken);
+    }
+
+    private async IAsyncEnumerable<ReadOnlyMemory<byte>> ReadSourceAsync(string operation, JsonElement input, int chunkBytes, [EnumeratorCancellation] CancellationToken cancellationToken)
+    {
         using var stop = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, _sessions.Lifetime);
         stop.CancelAfter(_streamOptions.TotalTimeout);
         var request = Request(operation, input);
@@ -21,7 +26,7 @@ public sealed partial class RemotePluginClient
         request.StreamId = Guid.NewGuid().ToString("N");
         request.ChunkBytes = chunkBytes;
         var session = await _sessions.RentAsync(stop.Token);
-        using var abort = stop.Token.Register(session.Dispose);
+        await using var abort = stop.Token.Register(session.Dispose);
         bool complete = false;
         try
         {
@@ -55,7 +60,7 @@ public sealed partial class RemotePluginClient
         }
         finally
         {
-            abort.Dispose();
+            await abort.DisposeAsync();
             _sessions.Return(session, complete && !stop.IsCancellationRequested);
             if (!complete && !_sessions.Lifetime.IsCancellationRequested)
             {

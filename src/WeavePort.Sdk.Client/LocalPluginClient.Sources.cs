@@ -7,10 +7,15 @@ namespace WeavePort.Sdk.Client;
 public sealed partial class LocalPluginClient
 {
     /// <summary>Reads bounded binary blocks from a plugin source while retaining exclusive worker residency.</summary>
-    public async IAsyncEnumerable<ReadOnlyMemory<byte>> SourceAsync(string operation, JsonElement input, int chunkBytes = 65536, [EnumeratorCancellation] CancellationToken cancellationToken = default)
+    public IAsyncEnumerable<ReadOnlyMemory<byte>> SourceAsync(string operation, JsonElement input, int chunkBytes = 65536, CancellationToken cancellationToken = default)
     {
         ArgumentOutOfRangeException.ThrowIfLessThan(chunkBytes, 4096);
         ArgumentOutOfRangeException.ThrowIfGreaterThan(chunkBytes, 262144);
+        return ReadSourceAsync(operation, input, chunkBytes, cancellationToken);
+    }
+
+    private async IAsyncEnumerable<ReadOnlyMemory<byte>> ReadSourceAsync(string operation, JsonElement input, int chunkBytes, [EnumeratorCancellation] CancellationToken cancellationToken)
+    {
         using var stop = CreateOperationSource(cancellationToken);
         _streamOptions.Validate();
         stop.CancelAfter(_streamOptions.TotalTimeout);
