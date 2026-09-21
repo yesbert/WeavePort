@@ -7,11 +7,12 @@ public sealed record PluginStreamOptions
     /// <summary>Maximum lifetime from enumeration start until completion.</summary>
     public TimeSpan TotalTimeout { get; init; } = TimeSpan.FromMinutes(5);
 
-    internal void Validate()
+    internal void Validate() => Validate(this);
+    private static void Validate(PluginStreamOptions options)
     {
-        if (ExchangeTimeout <= TimeSpan.Zero || ExchangeTimeout.TotalMilliseconds > uint.MaxValue - 1 || TotalTimeout <= TimeSpan.Zero || TotalTimeout.TotalMilliseconds > uint.MaxValue - 1)
+        if (options.ExchangeTimeout <= TimeSpan.Zero || options.ExchangeTimeout.TotalMilliseconds > uint.MaxValue - 1 || options.TotalTimeout <= TimeSpan.Zero || options.TotalTimeout.TotalMilliseconds > uint.MaxValue - 1)
         {
-            throw new ArgumentOutOfRangeException(nameof(PluginStreamOptions));
+            throw new ArgumentOutOfRangeException(nameof(options), "Stream exchange and total timeouts must be positive and at most 4294967294 milliseconds.");
         }
     }
 }

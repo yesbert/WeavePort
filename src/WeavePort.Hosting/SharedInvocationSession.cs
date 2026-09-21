@@ -9,7 +9,12 @@ internal sealed class SharedInvocationSession(SharedPlugin plugin, string tenant
     internal SharedPlugin Plugin => plugin;
     internal bool Available => plugin.Available;
 
-    internal bool Reserve() => (_worker = plugin.Reserve())is not null;
+    internal bool Reserve()
+    {
+        _worker = plugin.Reserve();
+        return _worker is not null;
+    }
+
     public string Tenant => tenant;
     public string Instance => _worker?.Instance ?? "";
 

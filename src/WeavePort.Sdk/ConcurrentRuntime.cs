@@ -96,7 +96,7 @@ internal sealed partial class ConcurrentRuntime(PluginApplication application)
 
             call.Completion = Task.Run(() => ExecuteAsync(call, frame));
             _running[id] = call.Completion;
-            _ = call.Completion.ContinueWith(_ => _running.TryRemove(id, out Task? completed), CancellationToken.None, TaskContinuationOptions.ExecuteSynchronously, TaskScheduler.Default);
+            _ = call.Completion.ContinueWith(completedTask => _running.TryRemove(id, out _), CancellationToken.None, TaskContinuationOptions.ExecuteSynchronously, TaskScheduler.Default);
             return;
         }
 
@@ -174,33 +174,7 @@ internal sealed partial class ConcurrentRuntime(PluginApplication application)
     {
         try
         {
-            object terminal = errorCode == "cleanup-error" ? new
-            {
-                type = "error",
-                id = call.Id,
-                code = errorCode
-            }
-
-            : call.Cancellation.IsCancellationRequested ? new
-            {
-                type = "cancelled",
-                id = call.Id
-            }
-
-            : errorCode is not null ? new
-            {
-                type = "error",
-                id = call.Id,
-                code = errorCode
-            }
-
-            : new
-            {
-                type = "result",
-                id = call.Id,
-                value,
-                reusable = true
-            };
+            object terminal = CreateTerminal(call, value, errorCode);
             _completed.TryAdd(call.Id, 0);
             _completedOrder.Enqueue(call.Id);
             while (_completedOrder.Count > 4096 && _completedOrder.TryDequeue(out string? expired))
@@ -226,5 +200,45 @@ internal sealed partial class ConcurrentRuntime(PluginApplication application)
             RetireCallbacks(call);
             call.Dispose();
         }
+    }
+
+    private static object CreateTerminal(Invocation call, object? value, string? errorCode)
+    {
+        if (errorCode == "cleanup-error")
+        {
+            return new
+            {
+                type = "error",
+                id = call.Id,
+                code = errorCode
+            };
+        }
+
+        if (call.Cancellation.IsCancellationRequested)
+        {
+            return new
+            {
+                type = "cancelled",
+                id = call.Id
+            };
+        }
+
+        if (errorCode is not null)
+        {
+            return new
+            {
+                type = "error",
+                id = call.Id,
+                code = errorCode
+            };
+        }
+
+        return new
+        {
+            type = "result",
+            id = call.Id,
+            value,
+            reusable = true
+        };
     }
 }

@@ -5,6 +5,10 @@ internal static class TransportChecks
 {
     internal static async Task RunAsync()
     {
+        await using (var client = new RemotePluginClient(new Uri("https://localhost"), "test"))
+        {
+            await VerifySourceArgumentsAsync(client);
+        }
         foreach (bool owned in new[] { false, true })
         {
             using var handler = new PendingHandler();
@@ -19,6 +23,18 @@ internal static class TransportChecks
             await client.DisposeAsync();
             Check.That(handler.Disposals == (owned ? 1 : 0), "repeated disposal does not dispose handler twice");
             await Check.Fails<OperationCanceledException>(() => client.GetTenantAsync(), "disposed client rejects discovery");
+        }
+    }
+
+    internal static async Task VerifySourceArgumentsAsync(WeavePort.Sdk.Client.IBoundPluginClient client)
+    {
+        foreach (int invalidSize in new[] { 4095, 262145 })
+        {
+            await Check.Fails<ArgumentOutOfRangeException>(() =>
+            {
+                _ = client.SourceAsync("source", Check.Json(new { }), invalidSize);
+                return Task.CompletedTask;
+            }, "source chunk bounds rejected before enumeration: " + invalidSize);
         }
     }
 

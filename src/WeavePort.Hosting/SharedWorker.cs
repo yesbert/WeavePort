@@ -71,8 +71,8 @@ internal sealed partial class SharedWorker(SharedPlugin plugin, WorkerPool pool,
             _lastFrame = clock.GetTimestamp();
         }
 
-        _reader = Task.Run(ReadLoopAsync);
-        _watch = Task.Run(WatchAsync);
+        _reader = Task.Run(ReadLoopAsync, CancellationToken.None);
+        _watch = Task.Run(WatchAsync, CancellationToken.None);
     }
 
     internal bool TryReserve()
@@ -269,6 +269,7 @@ internal sealed partial class SharedWorker(SharedPlugin plugin, WorkerPool pool,
         }
         catch (OperationCanceledException) when (_lifetime.IsCancellationRequested)
         {
+        // Owned shutdown ends the watchdog; the reader performs channel retirement.
         }
     }
 
@@ -287,6 +288,8 @@ internal sealed partial class SharedWorker(SharedPlugin plugin, WorkerPool pool,
         }
         catch (TimeoutException)
         {
+        // The drain grace expired. The owner proceeds to disposal, which retires
+        // the worker and completes any remaining calls through the reader.
         }
     }
 
@@ -294,7 +297,7 @@ internal sealed partial class SharedWorker(SharedPlugin plugin, WorkerPool pool,
     {
         lock (_sync)
         {
-            return new(_disposal ??= Task.Run(DisposeCoreAsync));
+            return new(_disposal ??= Task.Run(DisposeCoreAsync, CancellationToken.None));
         }
     }
 

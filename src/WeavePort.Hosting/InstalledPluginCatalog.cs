@@ -77,6 +77,19 @@ public sealed class InstalledPluginCatalog(string releases, IReadOnlyDictionary<
             VerifyFile(runtimeFiles[runtime.Key], runtime.Value);
         }
 
+        var entries = ResolveEntryPoints(root, manifest);
+        manifest.Launch?.Validate(entries, manifest.RuntimeFiles);
+        if (manifest.Launch is { } launch && manifest.Compatibility!.Protocol != (launch.Ownership.Contains(WorkerReusePolicy.Shared) ? 2 : 1))
+        {
+            throw new InvalidDataException("Launch ownership does not match its declared wire protocol.");
+        }
+
+        var selectedRuntimes = manifest.RuntimeFiles.Keys.ToDictionary(key => key, key => Path.GetFullPath(runtimeFiles[key]), StringComparer.Ordinal);
+        return new InstalledPlugin(identity, entries, selectedRuntimes, manifest.Launch);
+    }
+
+    private static Dictionary<string, string> ResolveEntryPoints(string root, Manifest manifest)
+    {
         var entries = new Dictionary<string, string>(StringComparer.Ordinal);
         foreach (var entry in manifest.EntryPoints)
         {
@@ -88,14 +101,7 @@ public sealed class InstalledPluginCatalog(string releases, IReadOnlyDictionary<
             entries.Add(entry.Key, BundlePath(root, entry.Value));
         }
 
-        manifest.Launch?.Validate(entries, manifest.RuntimeFiles);
-        if (manifest.Launch is { } launch && manifest.Compatibility!.Protocol != (launch.Ownership.Contains(WorkerReusePolicy.Shared) ? 2 : 1))
-        {
-            throw new InvalidDataException("Launch ownership does not match its declared wire protocol.");
-        }
-
-        var selectedRuntimes = manifest.RuntimeFiles.Keys.ToDictionary(key => key, key => Path.GetFullPath(runtimeFiles[key]), StringComparer.Ordinal);
-        return new InstalledPlugin(identity, entries, selectedRuntimes, manifest.Launch);
+        return entries;
     }
 
     /// <summary>Lists the verified selected release of each plugin matching the contract in root/plugin/releases/version layout.</summary>

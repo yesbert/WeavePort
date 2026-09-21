@@ -30,8 +30,9 @@ app.Function<JsonElement, object>("stats", (_, _, _) => ValueTask.FromResult<obj
 app.Function<JsonElement, object>("identity", async (input, context, token) =>
 {
     string tenant = context.Tenant;
-    context.OnClose(async () => await Task.Delay(input.TryGetProperty("cleanupDelay", out var delay) ? delay.GetInt32() : 0));
-    await Task.Delay(input.GetProperty("delay").GetInt32());
+    context.OnClose(async () => await Task.Delay(input.TryGetProperty("cleanupDelay", out var delay) ? delay.GetInt32() : 0, CancellationToken.None));
+    // Cancellation must not acknowledge completion before this deliberately uncooperative work.
+    await Task.Delay(input.GetProperty("delay").GetInt32(), CancellationToken.None);
     return new { tenant, current = context.Tenant };
 });
 app.Function<JsonElement, JsonElement>("callback", async (input, context, token) => await context.CallHostAsync("echo", input, token));
@@ -60,7 +61,8 @@ static async IAsyncEnumerable<int> Live(JsonElement input, PluginCallContext con
 static async IAsyncEnumerable<int> ImmediateCallback(JsonElement input, PluginCallContext context, [EnumeratorCancellation] CancellationToken token)
 {
     yield return 1;
-    await context.CallHostAsync("echo", input);
+    // Closing the stream must revoke this callback even without an author cancellation token.
+    await context.CallHostAsync("echo", input, CancellationToken.None);
     yield return 2;
 }
 

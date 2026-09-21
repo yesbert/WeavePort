@@ -35,26 +35,10 @@ internal sealed partial class Runtime
                 item = _enumerator!.Current;
             }
 
-            long size = JsonSize.Measure(item);
-            if (size > 128 << 10)
+            if (!TryAppendStreamItem(item, items, ref batchBytes))
             {
-                throw new InvalidDataException("Item limit.");
-            }
-
-            if (batchBytes + size + 1 > 256 << 10)
-            {
-                _pending = item;
                 break;
             }
-
-            batchBytes += size + 1;
-            _bytes += size;
-            if (_bytes > 64 << 20)
-            {
-                throw new InvalidDataException("Stream limit.");
-            }
-
-            items.Add(item);
         }
 
         if (done)
@@ -67,6 +51,31 @@ internal sealed partial class Runtime
             items,
             done
         };
+    }
+
+    private bool TryAppendStreamItem(JsonElement item, List<JsonElement> items, ref long batchBytes)
+    {
+        long size = JsonSize.Measure(item);
+        if (size > 128 << 10)
+        {
+            throw new InvalidDataException("Item limit.");
+        }
+
+        if (batchBytes + size + 1 > 256 << 10)
+        {
+            _pending = item;
+            return false;
+        }
+
+        batchBytes += size + 1;
+        _bytes += size;
+        if (_bytes > 64 << 20)
+        {
+            throw new InvalidDataException("Stream limit.");
+        }
+
+        items.Add(item);
+        return true;
     }
 
     private async Task<bool> AdvanceReadyAsync(bool hasItems)

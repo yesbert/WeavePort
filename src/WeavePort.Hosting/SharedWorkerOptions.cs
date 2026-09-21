@@ -19,25 +19,26 @@ public sealed record SharedWorkerOptions
     /// <summary>Maximum channel silence while work remains outstanding.</summary>
     public TimeSpan SilenceTimeout { get; init; } = TimeSpan.FromMinutes(5);
 
-    internal void Validate()
+    internal void Validate() => Validate(this);
+    private static void Validate(SharedWorkerOptions options)
     {
-        if (Degree is < 1 or > 1024 || Workers is < 1 or > 1024 || MaximumRestarts < 0 || MaximumAbandonedCalls < 1)
+        if (options.Degree is < 1 or > 1024 || options.Workers is < 1 or > 1024 || options.MaximumRestarts < 0 || options.MaximumAbandonedCalls < 1)
         {
-            throw new ArgumentOutOfRangeException(nameof(Degree));
+            throw new ArgumentOutOfRangeException(nameof(options), "Shared worker counts are outside their supported ranges.");
         }
 
         foreach (TimeSpan value in new[]
         {
-            RestartWindow,
-            CancellationGrace,
-            SilenceTimeout
+            options.RestartWindow,
+            options.CancellationGrace,
+            options.SilenceTimeout
         }
 
         )
         {
             if (value <= TimeSpan.Zero || value.TotalMilliseconds > uint.MaxValue - 1)
             {
-                throw new ArgumentOutOfRangeException(nameof(CancellationGrace));
+                throw new ArgumentOutOfRangeException(nameof(options), "Shared worker timeouts must be positive and fit the timer range.");
             }
         }
     }

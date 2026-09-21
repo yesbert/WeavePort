@@ -10,49 +10,59 @@ internal sealed partial class SharedWorker
         {
             try
             {
-                while (true)
-                {
-                    JsonElement frame = await _worker!.Reader.ReadAsync(_channelStop!.Token);
-                    WorkerEnvelope.Validate(frame);
-                    string id = frame.GetProperty("id").GetString() ?? "";
-                    SharedCall call;
-                    lock (_sync)
-                    {
-                        _lastFrame = clock.GetTimestamp();
-                        if (!_calls.TryGetValue(id, out call!))
-                        {
-                            throw new InvalidDataException("Unknown invocation identity.");
-                        }
-                    }
-
-                    DispatchFrame(call, frame);
-                }
+                await ReadFramesAsync();
             }
             catch (Exception error) when (error is IOException or InvalidDataException or JsonException or InvalidOperationException or KeyNotFoundException or OperationCanceledException or ObjectDisposedException)
             {
-                Retire(_worker);
-                FailPending();
-                try
-                {
-                    await pool.DestroyAsync(_worker!);
-                }
-                catch (Exception cleanup)
-                {
-                    plugin.Disable(cleanup.GetType().Name);
-                    throw;
-                }
-
-                if (_lifetime.IsCancellationRequested || !plugin.AllowRestart())
-                {
-                    return;
-                }
-
-                if (!await ReplaceAsync())
+                if (!await RecoverChannelAsync())
                 {
                     return;
                 }
             }
         }
+    }
+
+    private async Task ReadFramesAsync()
+    {
+        while (true)
+        {
+            JsonElement frame = await _worker!.Reader.ReadAsync(_channelStop!.Token);
+            WorkerEnvelope.Validate(frame);
+            string id = frame.GetProperty("id").GetString() ?? "";
+            SharedCall call;
+            lock (_sync)
+            {
+                _lastFrame = clock.GetTimestamp();
+                if (!_calls.TryGetValue(id, out call!))
+                {
+                    throw new InvalidDataException("Unknown invocation identity.");
+                }
+            }
+
+            DispatchFrame(call, frame);
+        }
+    }
+
+    private async Task<bool> RecoverChannelAsync()
+    {
+        Retire(_worker);
+        FailPending();
+        try
+        {
+            await pool.DestroyAsync(_worker!);
+        }
+        catch (Exception cleanup)
+        {
+            plugin.Disable(cleanup.GetType().Name);
+            throw;
+        }
+
+        if (_lifetime.IsCancellationRequested || !plugin.AllowRestart())
+        {
+            return false;
+        }
+
+        return await ReplaceAsync();
     }
 
     private void DispatchFrame(SharedCall call, JsonElement frame)
@@ -81,7 +91,13 @@ internal sealed partial class SharedWorker
             _active--;
         }
 
-        call.Finish(type == "result" ? "ok" : type == "cancelled" ? "cancelled" : "failed", Instance, value);
+        string status = type switch
+        {
+            "result" => "ok",
+            "cancelled" => "cancelled",
+            _ => "failed"
+        };
+        call.Finish(status, Instance, value);
     }
 
     private void FailPending()
@@ -181,29 +197,8 @@ internal sealed partial class SharedWorker
                 throw new InvalidDataException("Missing callback identity or operation.");
             }
 
-            string? error = null;
-            JsonElement value = Empty;
             CancellationToken channelToken = _channelStop!.Token;
-            if (!allowed)
-            {
-                error = "denied";
-            }
-            else
-            {
-                try
-                {
-                    value = await InvokeCallbackAsync(call, operation, frame.GetProperty("payload"), channelToken);
-                }
-                catch (OperationCanceledException) when (call.Token.IsCancellationRequested || channelToken.IsCancellationRequested)
-                {
-                    return;
-                }
-                catch (Exception)
-                {
-                    error = "callback-failed";
-                }
-            }
-
+            var(value, error) = await GetCallbackResultAsync(call, operation, frame, allowed, channelToken);
             if (call.Finished || !ReferenceEquals(worker, _worker))
             {
                 return;
@@ -213,13 +208,30 @@ internal sealed partial class SharedWorker
         }
         catch (OperationCanceledException)
         {
+        // Invocation/channel cancellation revokes the reply. A detached callback
+        // still retains its own admission until its actual completion.
         }
         catch (Exception failure) when (failure is IOException or InvalidDataException or InvalidOperationException or ObjectDisposedException or KeyNotFoundException or JsonException)
         {
-            if (ReferenceEquals(worker, _worker))
-            {
-                Retire(worker);
-            }
+            Retire(worker);
+        }
+    }
+
+    private async Task<(JsonElement Value, string? Error)> GetCallbackResultAsync(SharedCall call, string operation, JsonElement frame, bool allowed, CancellationToken channelToken)
+    {
+        if (!allowed)
+        {
+            return (Empty, "denied");
+        }
+
+        try
+        {
+            JsonElement value = await InvokeCallbackAsync(call, operation, frame.GetProperty("payload"), channelToken);
+            return (value, null);
+        }
+        catch (Exception error) when (error is not OperationCanceledException || !(call.Token.IsCancellationRequested || channelToken.IsCancellationRequested))
+        {
+            return (Empty, "callback-failed");
         }
     }
 

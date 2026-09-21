@@ -33,3 +33,7 @@ Publish a new pre-1.0 minor version after complete source/packed qualification, 
 - https://learn.microsoft.com/en-us/dotnet/standard/asynchronous-programming-patterns/cancel-non-cancelable-async-operations
 
 Cancellation of a wait is distinct from completion of the underlying operation. Buffers, slots and callback admission remain owned until actual completion.
+
+### Final static-analysis follow-up
+
+Gateway stream/source cancellation registrations are asynchronously disposed before transport return. This preserves the existing race boundary while avoiding a synchronous wait for an executing cancellation callback. The [.NET 10 CancellationTokenRegistration.DisposeAsync contract](https://learn.microsoft.com/en-us/dotnet/api/system.threading.cancellationtokenregistration.disposeasync?view=net-10.0) confirms completion only after unregistering or finishing the callback. Source chunk-size validation now runs at the public call boundary before returning the async iterator. Internal complexity and cancellation-intent findings are corrected without weakening analysis rules.
