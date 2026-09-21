@@ -15,23 +15,30 @@ foreach (var (language, executable, fixture) in new[] { ("python", python, "shar
     string? sdkPath = language == "csharp" ? null : Environment.GetEnvironmentVariable(language == "python" ? "WP_SHARED_PYTHON_SDK" : "WP_SHARED_NODE_SDK");
     if (sdkPath is not null) launch.AddRange(["--sdk-path", sdkPath]);
     var profile = new ProcessProfile(executable, launch, trustedCode: true, reservedMemoryMiB: 128, timeout: TimeSpan.FromSeconds(5)) { ReusePolicy = WorkerReusePolicy.Shared, MaximumCallbacks = 3 };
-    await OverlapAsync(profile);
-    await CallbacksAndErrorsAsync(profile);
-    await CancellationAsync(profile);
-    await CrashRecoveryAsync(profile);
-    await OwnershipAndCoexistenceAsync(profile);
-    await ShutdownAsync(profile);
-    await LargerCallbackBudgetAsync(profile);
-    await CancellationGraceAsync(profile);
-    await CleanupFailureAsync(profile);
-    await SilenceAsync(profile);
-    await DetachedCallbackCapacityAsync(profile);
-    if (language != "csharp") await MalformedAsync(profile);
+    await RunCaseAsync(language, "Overlap", () => OverlapAsync(profile));
+    await RunCaseAsync(language, "CallbacksAndErrors", () => CallbacksAndErrorsAsync(profile));
+    await RunCaseAsync(language, "Cancellation", () => CancellationAsync(profile));
+    await RunCaseAsync(language, "CrashRecovery", () => CrashRecoveryAsync(profile));
+    await RunCaseAsync(language, "OwnershipAndCoexistence", () => OwnershipAndCoexistenceAsync(profile));
+    await RunCaseAsync(language, "Shutdown", () => ShutdownAsync(profile));
+    await RunCaseAsync(language, "LargerCallbackBudget", () => LargerCallbackBudgetAsync(profile));
+    await RunCaseAsync(language, "CancellationGrace", () => CancellationGraceAsync(profile));
+    await RunCaseAsync(language, "CleanupFailure", () => CleanupFailureAsync(profile));
+    await RunCaseAsync(language, "Silence", () => SilenceAsync(profile));
+    await RunCaseAsync(language, "DetachedCallbackCapacity", () => DetachedCallbackCapacityAsync(profile));
+    if (language != "csharp") await RunCaseAsync(language, "Malformed", () => MalformedAsync(profile));
 }
 await BlockedWriterAsync(root, python);
 await CatalogChecks.RunAsync(root, python, node);
 await BoundedStateChecks.RunAsync(root, python);
 Console.WriteLine("PASS: real-host shared execution, callback identity, cancellation, failure, restart, ownership and shutdown.");
+
+static async Task RunCaseAsync(string language, string name, Func<Task> execute)
+{
+    Console.WriteLine($"BEGIN {language}: {name}");
+    await execute();
+    Console.WriteLine($"END {language}: {name}");
+}
 
 static string FindExecutable(string name) => (Environment.GetEnvironmentVariable("PATH") ?? "").Split(Path.PathSeparator).Select(directory => Path.Combine(directory, name)).First(File.Exists);
 static JsonElement Json(object value) => JsonSerializer.SerializeToElement(value);

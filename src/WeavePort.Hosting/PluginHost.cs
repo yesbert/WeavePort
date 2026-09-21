@@ -241,7 +241,8 @@ public sealed partial class PluginHost : IAsyncDisposable
     {
         lock (_sync)
         {
-            return new ValueTask(_disposal ??= DisposeCoreAsync());
+            _disposed = true;
+            return new ValueTask(_disposal ??= Task.Run(DisposeCoreAsync));
         }
     }
 

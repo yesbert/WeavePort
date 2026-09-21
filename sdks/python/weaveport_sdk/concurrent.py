@@ -13,6 +13,7 @@ async def run_concurrent(runtime, context_type, scope_variable):
         raise ValueError("Expected bounded concurrency configuration")
     calls, callbacks = {}, {}
     completed, completed_order = set(), deque()
+    cancelled_callbacks, cancelled_callback_order = set(), deque()
     loop = asyncio.get_running_loop()
     executor = ThreadPoolExecutor(max_workers=degree, thread_name_prefix="weaveport")
 
@@ -67,7 +68,14 @@ async def run_concurrent(runtime, context_type, scope_variable):
             if not scope["cancelled"] and any(isinstance(result, BaseException) for result in callback_results):
                 if response.get("code") != "cleanup-error":
                     response = dict(type="error", id=request["id"], code="sdk-error")
-            # Cancelled callback identities remain routable until the host supplies a reply.
+            # Host callbacks may outlive cancellation and may never reply. Release their
+            # futures at terminal completion; retain only bounded identities for late replies.
+            for key in [key for key in callbacks if key[0] == request["id"]]:
+                callbacks.pop(key)
+                cancelled_callbacks.add(key)
+                cancelled_callback_order.append(key)
+                if len(cancelled_callback_order) > 4096:
+                    cancelled_callbacks.discard(cancelled_callback_order.popleft())
             try:
                 await runtime.send(response)
             except (ValueError, TypeError, OverflowError):
@@ -94,8 +102,12 @@ async def run_concurrent(runtime, context_type, scope_variable):
                 calls[rid] = scope
                 scope["task"] = asyncio.create_task(execute(frame, scope))
             elif kind == "callback-result":
-                future = callbacks.pop((rid, frame.get("callbackId")), None)
+                key = (rid, frame.get("callbackId"))
+                future = callbacks.pop(key, None)
                 if future is None:
+                    if key in cancelled_callbacks:
+                        cancelled_callbacks.remove(key)
+                        continue
                     raise ValueError("Unknown callback identity")
                 if not future.done():
                     if frame.get("error") is not None or frame.get("success") is False:
