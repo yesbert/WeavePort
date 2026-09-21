@@ -15,7 +15,7 @@ python3 -m venv "$WP_VERSION_ROOT/python"
 npm ci --prefix sdks/typescript --ignore-scripts
 npm run build --prefix sdks/typescript
 npm pack ./sdks/typescript --pack-destination "$WP_VERSION_ROOT"
-npm install --prefix "$WP_VERSION_ROOT" --ignore-scripts --no-audit --no-fund "$WP_VERSION_ROOT/weaveport-sdk-0.2.0.tgz"
+npm install --prefix "$WP_VERSION_ROOT" --ignore-scripts --no-audit --no-fund "$WP_VERSION_ROOT/weaveport-sdk-0.3.0.tgz"
 cp tests/WeavePort.SdkVersionTests/worker.py tests/WeavePort.SdkVersionTests/worker.mjs "$WP_VERSION_ROOT/"
 dotnet publish tests/WeavePort.SdkVersionTests -c Release --self-contained false -o "$WP_VERSION_ROOT/host" --nologo
 if [[ "${1:-}" == "--build-only" ]]; then exit 0; fi

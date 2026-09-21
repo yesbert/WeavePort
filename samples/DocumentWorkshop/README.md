@@ -40,7 +40,7 @@ The host captures the source in its staging area, computes a SHA-256 digest and 
 
 The sample-owned `reader.open` / `reader.next` protocol consumes at most one source block per step and returns at most 32 ordered fragments. Strict incremental UTF-8 decoding preserves characters across blocks. Reader state is temporary and belongs to that worker. The host validates every page and writes it incrementally to staging; it never needs to accumulate the complete normalized document in memory.
 
-This pull protocol is deliberate: the current SDK's automatic stream batching can gather 16 items while a single invocation permits eight callbacks. Sparse documents could exceed that budget. Explicit bounded extraction steps fit the existing runtime without widening a generic callback limit. The document protocol remains part of this example's domain contract.
+This pull protocol keeps extraction checkpoints explicit in the example's domain contract. The SDK also supports live result streams with immediate available-item delivery, operation-wide residency and a configurable per-invocation callback budget (default eight). The example retains its explicit extraction steps for application-owned progress and recovery.
 
 ## Stored format and completion
 

@@ -82,3 +82,9 @@ The source MCP integration shares these local lifecycle policies, with explicit 
 ## Approved session reuse
 
 `ExecutionProfile.ReusePolicy` defaults to `CustomerBound`. `ApprovedSessions` requires native SDK cleanup capability and explicit operator approval of the complete deployment. Clean workers have no tenant assignment and retain global reservations until destroyed. `WorkerPoolOptions.ReusableIdleTimeout` defaults to 30 seconds, independently of pristine targets. `ReusableWorkers`, `ReuseHits`, `SessionReturns`, `SessionCleanupFailures` and `WorkersStarted` expose this lifecycle. Missing cleanup acknowledgement, SDK cleanup failure or an invocation deadline prevents transfer. Active streams remain bound until close/completion. This does not promise erasure of unregistered plugin state. See [operator and author guidance](reusable-plugins.md).
+
+## Shared residency and stream leases
+
+`WorkerReusePolicy.Shared` is a third explicit ownership policy. `ShareAsync` starts resident native workers under the same host budget; `For(tenant)` creates a cheap tenant-bound client. Shared memory is a reviewed trust boundary, not tenant heap isolation. Individual view disposal does not stop other views. The instance owner controls shared lifetime; failure can affect every in-flight invocation in that worker. See [shared execution](shared-execution.md).
+
+Queued exclusive bindings retain state by default. Set `Reconstructible = true` to permit idle/pressure eviction. SDK streams and binary sources hold an operation-wide lease, including consumer pauses, so scheduling cannot evict their worker between exchanges. Unary admission is controlled by the host instead of a separate client fail-fast gate.

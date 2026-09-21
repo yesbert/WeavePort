@@ -29,7 +29,7 @@ try
     await Parallel.ForEachAsync(Enumerable.Range(0, sessions.Length), new ParallelOptions { MaxDegreeOfParallelism = 8 }, async (i, token) =>
     {
         sessions[i] = await host.BindAsync(new PluginContext("lifecycle-" + i, "demo", "1", "default",
-            JsonSerializer.SerializeToElement(new { secret = "synthetic-" + i })), profile, new NoCallbacks(), [], token);
+            JsonSerializer.SerializeToElement(new { secret = "synthetic-" + i })), profile, new NoCallbacks(), [], cancellationToken: token);
         if (ContractChecks.Successful(await sessions[i]!.InvokeAsync("counter", JsonSerializer.SerializeToElement(new { }), token)).GetInt32() != 1)
             throw new Exception("Initial worker state was not fresh");
     });

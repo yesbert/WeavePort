@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <IsPackable>false</IsPackable>
+    <WeavePortSourceRoot Condition="'$(WeavePortSourceRoot)' == ''">$(MSBuildThisFileDirectory)../../</WeavePortSourceRoot>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="Worker/**/*.cs" />
+    <Compile Include="$(WeavePortSourceRoot)/tests/WeavePort.SdkFixture/Workload.cs" Link="Workload.cs" />
+    <ProjectReference Include="$(WeavePortSourceRoot)/src/WeavePort.Hosting/WeavePort.Hosting.csproj" />
+    <ProjectReference Include="$(WeavePortSourceRoot)/src/WeavePort.Sdk.Gateway/WeavePort.Sdk.Gateway.csproj" />
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+</Project>

@@ -12,6 +12,7 @@ import time
 import uuid
 
 import reuse
+import shared
 
 
 def sha(path):
@@ -19,7 +20,7 @@ def sha(path):
 
 
 def inventory(checkout):
-    trees = ["artifacts/reuse-source", "artifacts/reuse-packed", "artifacts/reuse-example", "artifacts/packages", "artifacts/sdk-version-tests/host",
+    trees = ["artifacts/shared-example", "examples/sources/bin/Release/net10.0", "artifacts/shared-source", "artifacts/shared-packed", "artifacts/concurrent-sdk-source", "artifacts/concurrent-sdk-packed", "artifacts/reuse-source", "artifacts/reuse-packed", "artifacts/reuse-example", "artifacts/packages", "artifacts/sdk-version-tests/host",
              "artifacts/sdk-version-tests/wheel", "artifacts/sdk-version-tests/node_modules/@weaveport/sdk"]
     for app in ["decision-room", "document-workshop", "appointment-desk"]:
         trees += [f"artifacts/{app}/host", f"artifacts/{app}/releases"]
@@ -35,7 +36,7 @@ def inventory(checkout):
         assert path.is_dir(), "Missing frozen tree: " + tree
         files += [p for p in path.rglob("*") if p.is_file() and "__pycache__" not in p.parts]
     files += [checkout / f"artifacts/sdk-version-tests/{name}" for name in
-              ["worker.py", "worker.mjs", "weaveport-sdk-0.2.0.tgz"]]
+              ["worker.py", "worker.mjs", "weaveport-sdk-0.3.0.tgz"]]
     return {str(p.relative_to(checkout)): sha(p) for p in sorted(set(files))}
 
 
@@ -82,6 +83,7 @@ def build_candidate(checkout, env, run, stage):
     stage("optional-build", ["python3", "scripts/verify-optional.py", "--build-only"])
 
     reuse.build(checkout, stage)
+    shared.build(checkout, stage)
     frozen = inventory(checkout)
     (run / "artifact-manifest.json").write_text(json.dumps(frozen, indent=2))
     stage("fixed-package-set", ["python3", "scripts/check-package-set.py", str(package_set)])
@@ -92,6 +94,7 @@ def build_candidate(checkout, env, run, stage):
 
 def verify_candidate(checkout, env, run, stage, package_set):
     reuse.verify(checkout, stage)
+    shared.verify(checkout, env, stage)
     for app in ["decision-room", "document-workshop", "appointment-desk"]:
         stage(app + "-verify", ["./scripts/" + app + ".sh", "--verify"])
     env.update(WP_VERSION_ROOT=str(checkout / "artifacts/sdk-version-tests"),

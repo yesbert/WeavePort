@@ -14,7 +14,7 @@ policy = json.loads((root / "compatibility/local-v1.json").read_text())
 packages = dict(policy["HostPackages"])
 packages[policy["AuthorSdks"]["dotnet"]["Package"]] = policy["AuthorSdks"]["dotnet"]["Version"]
 external = json.loads((root / "compatibility/external-packages.json").read_text())
-expected_deps = {"WeavePort.Abstractions": set(), "WeavePort.Hosting": {"WeavePort.Abstractions", "Microsoft.Extensions.Logging.Abstractions"},
+expected_deps = {"WeavePort.Abstractions": set(), "WeavePort.Hosting": {"WeavePort.Abstractions", "WeavePort.Sdk.Client", "Microsoft.Extensions.Logging.Abstractions"},
                  "WeavePort.Sdk.Client": {"WeavePort.Abstractions"}, "WeavePort.Sdk": set()}
 package_directory = Path(sys.argv[1]) if len(sys.argv) > 1 else root / "artifacts/packages"
 checks = 0

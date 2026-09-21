@@ -7,7 +7,11 @@ public sealed class PluginApplication
 {
     internal readonly Dictionary<string, Func<JsonElement, PluginCallContext, CancellationToken, ValueTask<JsonElement>>> Functions = [];
     internal readonly Dictionary<string, Func<JsonElement, PluginCallContext, CancellationToken, IAsyncEnumerable<JsonElement>>> Streams = [];
+    internal readonly Dictionary<string, Func<JsonElement, PluginCallContext, CancellationToken, ValueTask<System.IO.Stream>>> Sources = [];
     private readonly JsonSerializerOptions _json;
+    /// <summary>Opts into protocol 2 and concurrent unary invocations. Shared mutable state must be thread-safe.</summary>
+    public bool ConcurrentCalls { get; init; }
+
     private string _pluginVersion = "1";
     /// <summary>Author-declared artifact version sent during startup; the host verifies its expected binding version.</summary>
     public string PluginVersion
@@ -38,9 +42,17 @@ public sealed class PluginApplication
         return this;
     }
 
+    /// <summary>Registers a bounded byte source. The runtime disposes the returned stream when collection ends.</summary>
+    public PluginApplication Source<TInput>(string name, Func<TInput, PluginCallContext, CancellationToken, ValueTask<System.IO.Stream>> handler)
+    {
+        Validate(name);
+        Sources.Add(name, (input, context, token) => handler(input.Deserialize<TInput>(_json)!, context, token));
+        return this;
+    }
+
     private void Validate(string name)
     {
-        if (string.IsNullOrWhiteSpace(name) || name.StartsWith('$') || Functions.ContainsKey(name) || Streams.ContainsKey(name))
+        if (string.IsNullOrWhiteSpace(name) || name.StartsWith('$') || Functions.ContainsKey(name) || Streams.ContainsKey(name) || Sources.ContainsKey(name))
         {
             throw new ArgumentException("Invalid or duplicate operation.", nameof(name));
         }
@@ -54,6 +66,6 @@ public sealed class PluginApplication
         }
     }
 
-    /// <summary>Runs the launcher-selected local transport. Active-call cancellation is enforced by the host stopping this worker.</summary>
-    public Task RunAsync(CancellationToken cancellationToken = default) => new Runtime(this).RunAsync(cancellationToken);
+    /// <summary>Runs the launcher-selected transport. Concurrent handlers receive invocation cancellation; the host retires workers that do not acknowledge termination.</summary>
+    public Task RunAsync(CancellationToken cancellationToken = default) => ConcurrentCalls ? new ConcurrentRuntime(this).RunAsync(cancellationToken) : new Runtime(this).RunAsync(cancellationToken);
 }

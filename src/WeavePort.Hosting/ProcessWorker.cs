@@ -37,10 +37,10 @@ internal sealed class ProcessWorker(ProcessProfile profile, string version, Time
         }
 
         _pid = _process.Id;
-        _drain = DrainAsync(_process.StandardError);
+        _drain = ProcessDiagnostics.DrainAsync(_process.StandardError, Instance, profile.DiagnosticSink);
         if (_socket is not null)
         {
-            _drain = Task.WhenAll(_drain, DrainAsync(_process.StandardOutput));
+            _drain = Task.WhenAll(_drain, ProcessDiagnostics.DrainAsync(_process.StandardOutput, Instance, null));
             await _socket.AcceptAsync(token);
         }
 
@@ -181,15 +181,6 @@ internal sealed class ProcessWorker(ProcessProfile profile, string version, Time
         catch (Exception error) when (error is IOException or OperationCanceledException)
         {
         // The existing forced termination path follows when graceful shutdown cannot finish.
-        }
-    }
-
-    private static async Task DrainAsync(StreamReader reader)
-    {
-        var buffer = new char[4096];
-        while (await reader.ReadAsync(buffer) > 0)
-        {
-        // Consume stderr without retaining plugin-controlled diagnostic content.
         }
     }
 }

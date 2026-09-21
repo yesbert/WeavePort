@@ -10,6 +10,8 @@ if (args.Contains("--crash-stress"))
     return;
 }
 
+await ClientOperationChecks.RunAsync();
+
 int checks = 0;
 var outcomes = new List<object>();
 foreach (bool socket in new[] { false, true })

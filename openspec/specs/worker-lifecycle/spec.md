@@ -12,7 +12,7 @@ A coordinator SHALL hold a bounded reserve of pristine customer-unassigned worke
 - **THEN** each receives its own execution environment with no prior customer state
 
 ### Requirement: Accounted execution capacity
-The coordinator SHALL bound reserved worker count and configured memory reservations both globally and per tenant, simultaneous launches and pristine residency; cleanup-uncertain workers SHALL remain reserved and unavailable for assignment. Whether a memory reservation is also an enforced worker ceiling SHALL be identified by the execution profile.
+The host SHALL bound global worker and memory reservations, simultaneous starts and pristine residency. Exclusive allocations SHALL additionally obey tenant budgets; resident shared workers SHALL charge only the global budget at the configured concurrency memory estimate. Cleanup-uncertain reservations SHALL remain unavailable until confirmed removal.
 
 #### Scenario: Capacity exhausted
 - **WHEN** an invocation requires a new worker but the configured capacity is reserved
@@ -23,7 +23,7 @@ The coordinator SHALL bound reserved worker count and configured memory reservat
 - **THEN** further A allocations are rejected without dispatch and B can still allocate within its own allowance
 
 ### Requirement: Explicit idle policy
-Customer-bound bindings SHALL retain process state by default and permit opt-in idle release. Approved clean sessions SHALL instead follow shared reusable-idle retention and SHALL NOT promise binding-affine process state.
+Customer-bound bindings SHALL preserve state by default, with explicit opt-in idle or pressure eviction for reconstructible state. Approved clean sessions SHALL follow reusable retention. Shared workers SHALL remain resident outside pristine and idle eviction until disposal or failure.
 
 #### Scenario: Idle release and reuse
 - **WHEN** a customer-bound binding exceeds its configured idle duration

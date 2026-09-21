@@ -8,6 +8,7 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="../WeavePort.Abstractions/WeavePort.Abstractions.csproj" />
+    <ProjectReference Include="../WeavePort.Sdk.Client/WeavePort.Sdk.Client.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Include="../../docs/package.md" Pack="true" PackagePath="PACKAGE.md" />

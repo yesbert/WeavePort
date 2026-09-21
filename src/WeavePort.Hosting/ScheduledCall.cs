@@ -5,6 +5,9 @@ namespace WeavePort.Hosting;
 internal sealed class ScheduledCall(ScheduledPlugin plugin, string operation, JsonElement payload, long enqueued, CancellationToken token)
 {
     private static readonly JsonElement Empty = JsonSerializer.SerializeToElement(new { });
+    internal OperationSession? Lease { get; set; }
+    internal bool IsLease { get; init; }
+    internal TaskCompletionSource Released { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
     internal ScheduledPlugin Plugin { get; } = plugin;
     internal string Operation { get; } = operation;
     internal JsonElement Payload { get; } = payload;

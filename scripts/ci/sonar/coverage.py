@@ -9,21 +9,29 @@ import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parents[3]
 OUTPUT = ROOT / 'artifacts/analysis'
-SUITES = ('WeavePort.Hosting.Tests', 'WeavePort.Gateway.Tests', 'WeavePort.Scheduling.Tests', 'WeavePort.ReuseTests', 'WeavePort.Optional.Tests')
+SUITES = ('WeavePort.Hosting.Tests', 'WeavePort.Gateway.Tests', 'WeavePort.Scheduling.Tests', 'WeavePort.ReuseTests', 'WeavePort.Optional.Tests', 'WeavePort.Shared.Tests', 'WeavePort.ConcurrentSdkTests')
 
 
 def execute():
     results = []
-    for name in SUITES:
-        with (OUTPUT / (name + '.log')).open('w') as log:
+    cases = [(name, None) for name in SUITES if name != 'WeavePort.ConcurrentSdkTests'] + [('WeavePort.ConcurrentSdkTests', mode) for mode in ('collect', 'streams')]
+    for name, mode in cases:
+        label = name + ('-' + mode if mode else '')
+        with (OUTPUT / (label + '.log')).open('w') as log:
             command = ['dotnet', str(ROOT / 'tests' / name / 'bin/Debug/net10.0' / (name + '.dll'))]
-            if name == 'WeavePort.ReuseTests':
+            if name in ('WeavePort.ReuseTests', 'WeavePort.Shared.Tests'):
                 command += [str(ROOT), sys.executable, shutil.which('node')]
             if name == 'WeavePort.Optional.Tests':
                 command += [str(ROOT), shutil.which('dotnet')]
+            if mode:
+                command += [mode, str(ROOT)]
             result = subprocess.run(command, stdout=log, stderr=subprocess.STDOUT)
-        print((OUTPUT / (name + '.log')).read_text(), flush=True)
-        results.append({'suite': name, 'exitCode': result.returncode})
+        print((OUTPUT / (label + '.log')).read_text(), flush=True)
+        results.append({'suite': label, 'exitCode': result.returncode})
+    with (OUTPUT / 'concurrent-sdk-wire.log').open('w') as log:
+        wire = subprocess.run([sys.executable, 'tests/WeavePort.ConcurrentSdkTests/check.py'], stdout=log, stderr=subprocess.STDOUT)
+    print((OUTPUT / 'concurrent-sdk-wire.log').read_text(), flush=True)
+    results.append({'suite': 'concurrent-sdk-wire', 'exitCode': wire.returncode})
     (OUTPUT / 'tests.json').write_text(json.dumps(results, indent=2))
     return int(any(item['exitCode'] != 0 for item in results))
 
@@ -38,12 +46,14 @@ def collect():
                     '-o', 'artifacts/optional/worker', '--nologo'], check=True)
     for name in SUITES:
         subprocess.run(['dotnet', 'build', str(ROOT / 'tests' / name), '-c', 'Debug', '-p:UsePackedCore=false', '--nologo'], check=True)
+    os.environ['WP_SHARED_CSHARP_FIXTURE'] = str(ROOT / 'tests/WeavePort.ConcurrentSdkTests/bin/Debug/net10.0/WeavePort.ConcurrentSdkTests.dll')
+    os.environ['WP_CONCURRENT_SDK_DLL'] = os.environ['WP_SHARED_CSHARP_FIXTURE']
     report = OUTPUT / 'coverage.xml'
     tool = ROOT / 'artifacts/analysis-tools/dotnet-coverage'
     subprocess.run([str(tool), 'collect', '-f', 'xml', '-o', str(report), '--',
                     sys.executable, str(Path(__file__).resolve()), '--execute'], check=True)
     results = json.loads((OUTPUT / 'tests.json').read_text())
-    if len(results) != len(SUITES) or any(item['exitCode'] != 0 for item in results):
+    if len(results) != len(SUITES) + 2 or any(item['exitCode'] != 0 for item in results):
         raise SystemExit('Regression execution failed')
     tree = ET.parse(report)
     covered = sum(1 for element in tree.iter() if element.get('covered') == 'yes')

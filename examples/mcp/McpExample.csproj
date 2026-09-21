@@ -6,5 +6,5 @@
     <RestorePackagesPath>../../artifacts/mcp-example-packages</RestorePackagesPath>
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
   </PropertyGroup>
-  <ItemGroup><PackageReference Include="WeavePort.Hosting" Version="0.5.0" /></ItemGroup>
+  <ItemGroup><PackageReference Include="WeavePort.Hosting" Version="0.6.0" /></ItemGroup>
 </Project>

@@ -6,7 +6,7 @@ The GitHub delivery target is [yesbert/WeavePort](https://github.com/yesbert/Wea
 
 The release allowlist in `build/release-packages.json` contains the four core packages plus `WeavePort.Composition`, `WeavePort.Sdk.Gateway.Client` and `WeavePort.Sdk.Gateway`. Testing remains internal. The three optional packages have a separate API baseline and packed-consumer qualification. Python and TypeScript author SDK publication is separate from NuGet delivery.
 
-The release version is `0.5.0`, licensed under [MIT](../LICENSE). All seven .NET packages and the exact compatibility matrix use 0.5.0; host API and wire protocol remain 1. Python/TypeScript SDK versions are 0.2.0; the qualified wheel and tarball accompany the GitHub release without claiming PyPI/npm registry publication. Historical internal distribution and measurement evidence retain their original identities. Public releases require a complete clean candidate qualification; a tag override cannot substitute for updating compatibility inputs.
+The release version is `0.6.0`, licensed under [MIT](../LICENSE). All seven .NET packages and the exact compatibility matrix use 0.6.0; host API is 2, exclusive native protocol is 1 and concurrent native protocol is 2. Python/TypeScript SDK versions are 0.3.0; the qualified wheel and tarball accompany the GitHub release without claiming PyPI/npm registry publication. Historical internal distribution and measurement evidence retain their original identities. Public releases require a complete clean candidate qualification; a tag override cannot substitute for updating compatibility inputs.
 
 The [0.5.0 release report](../reports/release/0.5.0/README.md) records all seven public packages, tag qualification and download verification. The [0.4.0 release report](../reports/release/0.4.0/README.md) retains the exact qualification, artifact hashes and publication verification.
 
@@ -87,3 +87,11 @@ Clean candidate qualification now includes source and packed reuse consumers, ma
 The [implementation evidence](../reports/verification/approved-session-reuse-20260920/README.md) retains pre-release cold/warm measurements with their original hashes and version labels. It does not establish maximum Docker capacity. Docker cold-start and repeated image resolution at registration remain explicitly separate from warmed invocation throughput.
 
 The [0.4.0 audit](../reports/release/0.4.0/audit.md) records release findings and their corrections. Publication evidence is added only after successful gated delivery.
+
+## 0.6.0 unified execution and installed clients
+
+Use one PluginHost with either fail-fast or bounded fair admission. Replace ScheduledPluginHost/RegisterAsync with PluginHost(SchedulingOptions)/BindAsync; set Reconstructible only for bindings whose idle state can be discarded. Callback nesting is refused consistently. Shared is explicit operator-approved resident concurrent execution, with protocol 2 and invocation-scoped identity, cancellation and failure handling. Exclusive ownership retains protocol 1.
+
+Catalog discovery and PluginApproval remove manual launch-profile construction from the recommended path. Hosting now depends on Sdk.Client to return the same bound client type for installed exclusive and shared plugins. Upgrade the entire selected 0.6.0 .NET family and regenerate installation declarations for host API 2 and matching 0.3.0 Python/TypeScript artifacts. A launch selects one native protocol; shared launches cannot also advertise serial ownership.
+
+Exclusive streams hold an operation-wide worker lease, flush available items and use separate exchange/total deadlines. Composition.CollectAsync reads plugin-originated bytes in bounded blocks locally or through the Gateway. See [shared execution](shared-execution.md), [installed clients](installed-plugin-clients.md), [source sample](../examples/sources/README.md) and the [audit](../reports/release/0.6.0/audit.md). Public publication is complete only after the protected workflow succeeds and downloaded packages match the qualified artifacts.

@@ -27,3 +27,10 @@ The resolver SHALL distinguish integrity against trusted metadata from executabl
 #### Scenario: Installed startup mismatch
 - **WHEN** declared installation content launches a worker advertising a different release
 - **THEN** startup is rejected by the existing version guard rather than silently accepting the different worker
+
+### Requirement: Discover and launch approved installations
+The catalog SHALL list verified selected releases by contract from a multi-plugin root, preserving exact pins and release selectors. Runtime declarations SHALL be a verified subset of operator-approved runtimes. Launch metadata and operator approval SHALL determine one effective ownership, memory, degree, timeout and callback policy; incompatible declarations SHALL fail before launch.
+
+#### Scenario: Mixed language root
+- **WHEN** a root holds selected Python and Node installations for the same contract
+- **THEN** both can be discovered and bound without manually constructing a launch profile, and unapproved shared ownership is rejected

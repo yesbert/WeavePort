@@ -27,6 +27,12 @@ public sealed record WorkerPoolOptions(int MaximumWorkers = 64, long MemoryBudge
 /// <param name = "MaintenanceFailure">Last background maintenance failure type, if any.</param>
 public sealed record WorkerPoolSnapshot(int Workers, int Pristine, int Starting, int Quarantined, long ReservedMemoryMiB, int Bindings, int Tenants, string? MaintenanceFailure)
 {
+    /// <summary>Shared worker reservations, including startup but excluding quarantine.</summary>
+    public int SharedWorkers { get; init; }
+    /// <summary>Configured shared worker memory reservations, excluding quarantine.</summary>
+    public long SharedMemoryMiB { get; init; }
+    /// <summary>Memory reserved for uncertain removal across all ownership modes.</summary>
+    public long QuarantinedMemoryMiB { get; init; }
     /// <summary>Cleaned approved workers currently available for compatible sessions.</summary>
     public int ReusableWorkers { get; init; }
     /// <summary>Assignments from the cleaned approved pool.</summary>

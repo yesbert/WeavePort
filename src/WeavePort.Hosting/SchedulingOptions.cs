@@ -11,6 +11,8 @@ public enum PluginWorkClass
 /// <summary>Shared scheduler policy. Native memory budgets are reservations, not enforced RSS limits.</summary>
 public sealed record SchedulingOptions
 {
+    /// <summary>Maximum active invocations for one tenant across all ownership modes.</summary>
+    public int MaximumCallsPerTenant { get; init; } = 4;
     /// <summary>Optional explicit worker ceiling for controlled experiments. Null uses memory admission without an independent count limit.</summary>
     public int? MaximumWorkers { get; init; }
     /// <summary>Total configured worker memory reservation.</summary>
@@ -48,14 +50,18 @@ public sealed record SchedulingOptions
 
     internal static void Validate(SchedulingOptions options)
     {
-        if (options.MaximumWorkers < 1 || options.MemoryBudgetMiB < 64 || options.MaximumConcurrentStarts < 1 || options.MaximumHeavyCalls < 0 || options.MaximumHeavyCalls >= options.MaximumWorkers || options.MaximumHeavyCallsPerTenant < 1 || options.MaximumHeavyPluginsPerTenant < 1 || options.MaximumQueuedCalls < 1 || options.MaximumQueuedCallsPerTenant < 1 || options.MaximumRegistrations < 1 || options.MaximumPayloadBytes < 1 || options.MaximumPristineWorkers < 0 || options.MaximumPristineWorkers > options.MaximumWorkers)
+        if (options.MaximumCallsPerTenant < 1 || options.MaximumWorkers < 1 || options.MemoryBudgetMiB < 64 || options.MaximumConcurrentStarts < 1 || options.MaximumHeavyCalls < 0 || options.MaximumHeavyCalls >= options.MaximumWorkers || options.MaximumHeavyCallsPerTenant < 1 || options.MaximumHeavyPluginsPerTenant < 1 || options.MaximumQueuedCalls < 1 || options.MaximumQueuedCallsPerTenant < 1 || options.MaximumRegistrations < 1 || options.MaximumPayloadBytes < 1 || options.MaximumPristineWorkers < 0 || options.MaximumPristineWorkers > options.MaximumWorkers)
         {
             throw new ArgumentOutOfRangeException(nameof(options), "Scheduling limits must fit the configured budgets.");
         }
 
+        if (options.QueueTimeout < TimeSpan.Zero || options.QueueTimeout.TotalMilliseconds > uint.MaxValue - 1)
+        {
+            throw new ArgumentOutOfRangeException(nameof(options));
+        }
+
         foreach (TimeSpan duration in new[]
         {
-            options.QueueTimeout,
             options.NormalTimeout,
             options.HeavyTimeout,
             options.IdleTimeout,

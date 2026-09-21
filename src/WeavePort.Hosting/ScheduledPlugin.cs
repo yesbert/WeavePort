@@ -3,9 +3,9 @@ using WeavePort.Abstractions;
 
 namespace WeavePort.Hosting;
 /// <summary>Immutable customer-plugin registration. Queues concurrent calls onto one exclusive worker.</summary>
-public sealed class ScheduledPlugin : IPluginSession
+public sealed class ScheduledPlugin : IPluginOperationSession
 {
-    private readonly ScheduledPluginHost _owner;
+    private readonly PluginScheduler _owner;
     internal IPluginSession Session { get; }
     internal ExecutionProfile Profile { get; }
     internal string Plugin { get; }
@@ -20,7 +20,7 @@ public sealed class ScheduledPlugin : IPluginSession
     internal Task? Disposal { get; set; }
 
     internal static TaskCompletionSource NewSignal() => new(TaskCreationOptions.RunContinuationsAsynchronously);
-    internal ScheduledPlugin(ScheduledPluginHost owner, IPluginSession session, ExecutionProfile profile, PluginContext context, PluginWorkClass workClass)
+    internal ScheduledPlugin(PluginScheduler owner, IPluginSession session, ExecutionProfile profile, PluginContext context, PluginWorkClass workClass)
     {
         _owner = owner;
         Session = session;
@@ -31,6 +31,11 @@ public sealed class ScheduledPlugin : IPluginSession
         Idle.TrySetResult();
     }
 
+    /// <inheritdoc/>
+    public bool SupportsStreaming => true;
+
+    /// <inheritdoc/>
+    public ValueTask<IPluginSession> AcquireOperationAsync(CancellationToken cancellationToken = default) => _owner.AcquireOperationAsync(this, cancellationToken);
     /// <inheritdoc/>
     public string Tenant => Session.Tenant;
     /// <inheritdoc/>

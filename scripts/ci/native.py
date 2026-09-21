@@ -17,7 +17,7 @@ def run(*args):
     subprocess.run([str(arg) for arg in args], check=True)
 
 
-for project in ('Abstractions', 'Hosting', 'Testing'):
+for project in ('Abstractions', 'Sdk.Client', 'Hosting', 'Testing'):
     run('dotnet', 'pack', f'src/WeavePort.{project}', '-c', 'Release', '-o', 'artifacts/packages', '--nologo')
 run(sys.executable, 'scripts/copy-package-dependencies.py')
 run('dotnet', 'publish', 'plugins/csharp', '-c', 'Release', '--self-contained', 'false', '-o', 'artifacts/local/csharp', '--nologo')

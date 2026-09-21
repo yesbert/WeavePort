@@ -15,6 +15,8 @@ Your application already has a workflow, but part of it needs to vary. One custo
 
 Make that part a plugin. The application selects the approved artifact, supplies its context and calls a function. Plugins can request data or actions through callbacks that the host explicitly grants.
 
+For expensive shared computation, approve one resident installation and create tenant-bound client views with `For(tenant)`. For tenant-specific connectors, bind an exclusive client. Both use one host and the same application-facing client contract; see [installed clients](../docs/installed-plugin-clients.md).
+
 ## What you gain
 
 | Application need | WeavePort's part | Your part |
@@ -35,7 +37,7 @@ The [core concepts](concepts.md) explain bindings, callbacks and ownership. The 
 
 ## Start with the right expectations
 
-WeavePort's native execution is for **owner-controlled code**. Workers run with the application's OS-user rights; separate processes are not a hostile-plugin sandbox. The current public release is 0.5.0 under MIT, with an evolving API. Windows, Linux and macOS are supported targets for trusted stdio execution. Current release validation covers macOS arm64; Windows and Linux release validation is pending. See [platform support and validation](../docs/platform-qualification.md) for transport and tooling differences.
+WeavePort's native execution is for **owner-controlled code**. Workers run with the application's OS-user rights; separate processes are not a hostile-plugin sandbox. The current public release is 0.6.0 under MIT, with an evolving API. Windows, Linux and macOS are supported targets for trusted stdio execution. Current release validation covers macOS arm64; Windows and Linux release validation is pending. See [platform support and validation](../docs/platform-qualification.md) for transport and tooling differences.
 
 Your application keeps its database and workflow architecture. It also keeps responsibility for durable state, retries and the meaning of external effects. A cancelled call does not prove an action never happened.
 

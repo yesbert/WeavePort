@@ -1,6 +1,6 @@
 # Actual-host approved reuse tests
 
-The executable can act as a C# SDK provider or drive C#, Python and TypeScript providers through `PluginHost` and `ScheduledPluginHost`. It verifies bound defaults, approved compatible sharing, scoped files/cache cleanup, expired contexts, host callback identity, pinned streams, failed/hanging cleanup, explicit in-flight cancellation, idle expiry, concurrent admission and malformed cleanup protocol controls. Hidden-global retention is an expected negative control in approved mode.
+The executable can act as a C# SDK provider or drive C#, Python and TypeScript providers through `PluginHost` with immediate and queued admission. It verifies bound defaults, approved compatible sharing, scoped files/cache cleanup, expired contexts, host callback identity, pinned streams, failed/hanging cleanup, explicit in-flight cancellation, idle expiry, concurrent admission and malformed cleanup protocol controls. Hidden-global retention is an expected negative control in approved mode.
 
 Source run after building the TypeScript SDK:
 

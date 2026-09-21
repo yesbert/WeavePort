@@ -1,0 +1,91 @@
+using System.Security.Cryptography;
+using System.Text.Json;
+using System.Text.Json.Nodes;
+using WeavePort.Abstractions;
+using WeavePort.Hosting;
+using WeavePort.Sdk.Client;
+
+internal static class MixedLaunchChecks
+{
+    public static async Task RunAsync(string repository)
+    {
+        string root = Path.Combine(repository, "artifacts", "installation-tests", "mixed-" + Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(root);
+        var runtimes = new Dictionary<string, string>
+        {
+            ["python"] = Executable("python3"), ["node"] = Executable("node")
+        };
+        var pythonFiles = Directory.GetFiles(Path.Combine(repository, "sdks/python/weaveport_sdk"), "*.py");
+        var nodeFiles = Directory.GetFiles(Path.Combine(repository, "sdks/typescript/dist"), "*.js");
+        foreach (string path in pythonFiles.Concat(nodeFiles)) runtimes["sdk/" + Path.GetRelativePath(repository, path).Replace('\\', '/')] = path;
+        Seal(repository, root, "python-provider", "python", "plugin.py", """
+import sys
+sys.path.insert(0, sys.argv[1])
+from weaveport_sdk import PluginApplication
+app = PluginApplication(concurrent_calls=True)
+@app.function("who")
+def who(value, context):
+    return {"tenant": context.tenant, "language": "python"}
+app.run()
+""", [Path.Combine(repository, "sdks/python")], runtimes);
+        Seal(repository, root, "node-provider", "node", "plugin.mjs", """
+import { pathToFileURL } from 'node:url';
+const { PluginApplication } = await import(pathToFileURL(process.argv[2]).href);
+const app = new PluginApplication('1', { concurrentCalls: true });
+app.function('who', async (input, context) => ({tenant: context.tenant, language: 'node'}));
+await app.run();
+""", [Path.Combine(repository, "sdks/typescript/dist/index.js")], runtimes);
+        var catalog = new InstalledPluginCatalog(root, runtimes);
+        var installations = catalog.List("mixed-launch/v1");
+        if (installations.Count != 2) throw new InvalidOperationException("Mixed root discovery failed.");
+        await using var host = new PluginHost(new SchedulingOptions { MaximumWorkers = 2, MemoryBudgetMiB = 256, MaximumHeavyCalls = 0, MaximumPristineWorkers = 0 });
+        var approval = new PluginApproval { TrustedCode = true, Ownership = WorkerReusePolicy.Shared, MaximumMemoryMiB = 128, Degree = 2 };
+        foreach (InstalledPlugin installation in installations)
+        {
+            try
+            {
+                await using var denied = await host.ShareAsync(installation, approval with { Ownership = WorkerReusePolicy.CustomerBound }, Json(), new NoCallbacks(), []);
+                throw new InvalidOperationException("Missing Shared approval was accepted.");
+            }
+            catch (InvalidOperationException error) when (error.Message.StartsWith("Operator approval")) { }
+            await using var shared = await host.ShareAsync(installation, approval, Json(), new NoCallbacks(), []);
+            await using var first = shared.For("tenant-a");
+            await using var second = shared.For("tenant-b");
+            JsonElement[] replies = await Task.WhenAll(first.CallAsync("who", Json()), second.CallAsync("who", Json()));
+            if (replies[0].GetProperty("tenant").GetString() != "tenant-a" || replies[1].GetProperty("tenant").GetString() != "tenant-b")
+                throw new InvalidOperationException("Mixed catalog client identity failed.");
+        }
+        Console.WriteLine("PASS: mixed Python/Node verified catalog -> approval -> Shared clients; absent approval refused before launch");
+    }
+
+    private static void Seal(string repository, string root, string plugin, string runtime, string entry, string code, string[] arguments, Dictionary<string, string> runtimes)
+    {
+        string pluginRoot = Path.Combine(root, plugin);
+        string release = Path.Combine(pluginRoot, "releases", "1");
+        Directory.CreateDirectory(release);
+        File.WriteAllText(Path.Combine(release, entry), code);
+        var compatibility = JsonNode.Parse(File.ReadAllText(Path.Combine(repository, "compatibility/local-v1.json")))!;
+        compatibility.AsObject().Remove("Protocols");
+        compatibility["Protocol"] = 2;
+        var sdk = compatibility["AuthorSdks"]![runtime]!.DeepClone();
+        compatibility["AuthorSdks"] = new JsonObject { [runtime] = sdk };
+        var runtimeSubset = runtimes.Where(pair => pair.Key == runtime || pair.Key.Contains(runtime == "python" ? "sdks/python/" : "sdks/typescript/"));
+        var manifest = new
+        {
+            Schema = 1, Plugin = plugin, Version = "1", Contract = "mixed-launch/v1",
+            EntryPoints = new Dictionary<string, string> { [runtime] = entry },
+            Files = new Dictionary<string, string> { [entry] = Digest(Path.Combine(release, entry)) },
+            RuntimeFiles = runtimeSubset.ToDictionary(pair => pair.Key, pair => Digest(pair.Value)), Compatibility = compatibility,
+            Launch = new { Runtime = runtime, Arguments = arguments, MemoryMiB = 128, Ownership = new[] { "Shared" }, MaximumDegree = 2 }
+        };
+        File.WriteAllText(Path.Combine(release, "installation.json"), JsonSerializer.Serialize(manifest));
+        File.WriteAllText(Path.Combine(pluginRoot, "active.txt"), "1");
+    }
+    private static string Digest(string path) { using var file = File.OpenRead(path); return Convert.ToHexString(SHA256.HashData(file)); }
+    private static string Executable(string name) => (Environment.GetEnvironmentVariable("PATH") ?? "").Split(Path.PathSeparator).Select(path => Path.Combine(path, name)).First(File.Exists);
+    private static JsonElement Json() => JsonSerializer.SerializeToElement(new { });
+    private sealed class NoCallbacks : IHostCallbacks
+    {
+        public ValueTask<JsonElement> InvokeAsync(HostCall call, CancellationToken cancellationToken) => throw new UnauthorizedAccessException();
+    }
+}

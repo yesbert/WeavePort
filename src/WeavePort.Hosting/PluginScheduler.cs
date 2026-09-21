@@ -4,7 +4,7 @@ using WeavePort.Internal;
 
 namespace WeavePort.Hosting;
 /// <summary>Optional fair scheduler for reconstructible plugins. Owns one node budget; customer-bound workers never change tenants; reviewed sessions may explicitly opt into cleaned reuse.</summary>
-public sealed partial class ScheduledPluginHost : IAsyncDisposable
+internal sealed partial class PluginScheduler : IAsyncDisposable
 {
     private readonly object _sync = new();
     private readonly SchedulingOptions _options;
@@ -29,14 +29,14 @@ public sealed partial class ScheduledPluginHost : IAsyncDisposable
     private long _evictions;
     private long _coldCalls;
     /// <summary>Creates an independent coordinator. Register only trusted, host-authorized profiles and identities.</summary>
-    public ScheduledPluginHost(SchedulingOptions? options = null, TimeProvider? timeProvider = null)
+    internal PluginScheduler(PluginHost host, SchedulingOptions options, TimeProvider timeProvider)
     {
-        _options = options ?? new();
+        _options = options;
         SchedulingOptions.Validate(_options);
-        _clock = timeProvider ?? TimeProvider.System;
+        _clock = timeProvider;
         // Every supported profile reserves at least 64 MiB. This derived ceiling cannot bind before memory does.
         _workerLimit = _options.MaximumWorkers ?? (int)Math.Min(int.MaxValue, _options.MemoryBudgetMiB / 64);
-        _host = new PluginHost(_workerLimit, new WorkerPoolOptions(MaximumWorkers: _workerLimit, MemoryBudgetMiB: _options.MemoryBudgetMiB, MaximumPristineWorkers: Math.Min(_workerLimit, _options.MaximumPristineWorkers), MaximumConcurrentStarts: _options.MaximumConcurrentStarts, MaximumWorkersPerTenant: _workerLimit, MemoryBudgetPerTenantMiB: _options.MemoryBudgetMiB) { WaitForStartCapacity = true, ReusableIdleTimeout = _options.ReusableIdleTimeout }, _clock);
+        _host = host;
         _pump = Task.Run(PumpAsync);
     }
 
@@ -70,7 +70,7 @@ public sealed partial class ScheduledPluginHost : IAsyncDisposable
             IdleTimeout = null
         };
         profile = await profile.ResolveAsync(cancellationToken);
-        IPluginSession session = await _host.BindAsync(context, profile, callbacks, grants, requiredProtection, cancellationToken);
+        IPluginSession session = await _host.BindDirectAsync(context, profile, callbacks, grants, requiredProtection, cancellationToken);
         try
         {
             lock (_sync)
@@ -128,6 +128,17 @@ public sealed partial class ScheduledPluginHost : IAsyncDisposable
             }
 
             var call = new ScheduledCall(plugin, operation, payload.Clone(), _clock.GetTimestamp(), token);
+            if (_options.QueueTimeout == TimeSpan.Zero)
+            {
+                if (!Eligible(plugin, _active.ToArray()) || !Fits(plugin) || !Admit(call))
+                {
+                    _rejected++;
+                    return Task.FromResult(ScheduledCall.Rejected("busy"));
+                }
+
+                return call.Completion.Task;
+            }
+
             _queue.Add(call);
             plugin.LastDemand = call.Enqueued;
             Wake();
@@ -135,9 +146,10 @@ public sealed partial class ScheduledPluginHost : IAsyncDisposable
         }
     }
 
+    internal void NotifyCapacity() => Wake();
     private string? AdmissionFailure(ScheduledPlugin plugin, CancellationToken token)
     {
-        if (_closed || plugin.Closed)
+        if (_closed || plugin.Closed || plugin.Session is SharedInvocationSession shared && shared.Plugin.Snapshot.Disabled)
         {
             return "disabled";
         }
@@ -157,9 +169,12 @@ public sealed partial class ScheduledPluginHost : IAsyncDisposable
 
     private void Wake()
     {
-        if (_signal.CurrentCount == 0)
+        try
         {
             _signal.Release();
+        }
+        catch (SemaphoreFullException)
+        { /* An existing signal already schedules the next admission scan. */
         }
     }
 }

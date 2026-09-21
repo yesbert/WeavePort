@@ -1,0 +1,185 @@
+{
+  "label": "optimized-python-2",
+  "source": "<candidate-source>",
+  "sdkRuntime": "10.0.12",
+  "os": "macOS 27.0.0",
+  "cores": 24,
+  "serverGc": false,
+  "sourceBuilt": true,
+  "gatewaySameProcess": true,
+  "validation": "existing SDK Workload.Check over every result",
+  "rows": [
+    {
+      "language": "python",
+      "remote": false,
+      "workload": "list-64k",
+      "iterations": [
+        {
+          "count": 358,
+          "elapsedMs": 250.018,
+          "msPerRequest": 0.6983743016759777,
+          "hostAllocatedBytes": 76162704
+        },
+        {
+          "count": 354,
+          "elapsedMs": 250.3071,
+          "msPerRequest": 0.7070822033898305,
+          "hostAllocatedBytes": 74536464
+        },
+        {
+          "count": 346,
+          "elapsedMs": 250.1889,
+          "msPerRequest": 0.7230893063583814,
+          "hostAllocatedBytes": 73092112
+        },
+        {
+          "count": 346,
+          "elapsedMs": 250.0212,
+          "msPerRequest": 0.7226046242774566,
+          "hostAllocatedBytes": 72851344
+        },
+        {
+          "count": 318,
+          "elapsedMs": 250.2051,
+          "msPerRequest": 0.7868084905660377,
+          "hostAllocatedBytes": 66955584
+        },
+        {
+          "count": 313,
+          "elapsedMs": 250.3187,
+          "msPerRequest": 0.7997402555910543,
+          "hostAllocatedBytes": 65902824
+        }
+      ]
+    },
+    {
+      "language": "python",
+      "remote": false,
+      "workload": "list-8m",
+      "iterations": [
+        {
+          "count": 5,
+          "elapsedMs": 302.7793,
+          "msPerRequest": 60.555859999999996,
+          "hostAllocatedBytes": 128810472
+        },
+        {
+          "count": 5,
+          "elapsedMs": 301.9821,
+          "msPerRequest": 60.39642,
+          "hostAllocatedBytes": 128838312
+        },
+        {
+          "count": 5,
+          "elapsedMs": 295.6902,
+          "msPerRequest": 59.138040000000004,
+          "hostAllocatedBytes": 128840384
+        },
+        {
+          "count": 5,
+          "elapsedMs": 279.2522,
+          "msPerRequest": 55.850440000000006,
+          "hostAllocatedBytes": 128835520
+        },
+        {
+          "count": 5,
+          "elapsedMs": 276.559,
+          "msPerRequest": 55.311800000000005,
+          "hostAllocatedBytes": 128837760
+        },
+        {
+          "count": 5,
+          "elapsedMs": 269.4727,
+          "msPerRequest": 53.89453999999999,
+          "hostAllocatedBytes": 128829832
+        }
+      ]
+    },
+    {
+      "language": "python",
+      "remote": true,
+      "workload": "list-64k",
+      "iterations": [
+        {
+          "count": 263,
+          "elapsedMs": 250.0029,
+          "msPerRequest": 0.9505813688212928,
+          "hostAllocatedBytes": 110974224
+        },
+        {
+          "count": 266,
+          "elapsedMs": 250.5705,
+          "msPerRequest": 0.9419943609022556,
+          "hostAllocatedBytes": 112051080
+        },
+        {
+          "count": 262,
+          "elapsedMs": 250.274,
+          "msPerRequest": 0.9552442748091603,
+          "hostAllocatedBytes": 110361280
+        },
+        {
+          "count": 264,
+          "elapsedMs": 250.483,
+          "msPerRequest": 0.9487992424242424,
+          "hostAllocatedBytes": 111208904
+        },
+        {
+          "count": 256,
+          "elapsedMs": 250.4165,
+          "msPerRequest": 0.978189453125,
+          "hostAllocatedBytes": 107836688
+        },
+        {
+          "count": 251,
+          "elapsedMs": 250.6581,
+          "msPerRequest": 0.9986378486055777,
+          "hostAllocatedBytes": 105734408
+        }
+      ]
+    },
+    {
+      "language": "python",
+      "remote": true,
+      "workload": "list-8m",
+      "iterations": [
+        {
+          "count": 5,
+          "elapsedMs": 281.5127,
+          "msPerRequest": 56.30254,
+          "hostAllocatedBytes": 258454232
+        },
+        {
+          "count": 5,
+          "elapsedMs": 287.4719,
+          "msPerRequest": 57.49438,
+          "hostAllocatedBytes": 258021720
+        },
+        {
+          "count": 5,
+          "elapsedMs": 307.5784,
+          "msPerRequest": 61.515679999999996,
+          "hostAllocatedBytes": 258111144
+        },
+        {
+          "count": 5,
+          "elapsedMs": 282.2496,
+          "msPerRequest": 56.44992,
+          "hostAllocatedBytes": 258042344
+        },
+        {
+          "count": 5,
+          "elapsedMs": 274.2926,
+          "msPerRequest": 54.85852,
+          "hostAllocatedBytes": 258168928
+        },
+        {
+          "count": 5,
+          "elapsedMs": 265.9991,
+          "msPerRequest": 53.19982,
+          "hostAllocatedBytes": 258141776
+        }
+      ]
+    }
+  ]
+}

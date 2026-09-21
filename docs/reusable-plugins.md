@@ -16,7 +16,7 @@ Compatibility uses the resolved Docker image or frozen local launch profile, art
 ## Operator setup
 
 ```csharp
-await using var scheduler = new ScheduledPluginHost(new SchedulingOptions
+await using var host = new PluginHost(new SchedulingOptions
 {
     MemoryBudgetMiB = 4096,
     NormalTimeout = TimeSpan.FromSeconds(5),
@@ -30,7 +30,7 @@ var profile = new DockerProfile("your-reviewed-image:your-version", MemoryMiB: 1
 };
 
 // context, callbacks and grants come from the authenticated application.
-await using var plugin = await scheduler.RegisterAsync(context, profile, callbacks, grants);
+await using var plugin = await host.BindAsync(context, profile, callbacks, grants);
 var result = await plugin.InvokeAsync("$sdk.call",
     JsonSerializer.SerializeToElement(new { operation = "transform", input = new { text = "hello" } }),
     cancellationToken);
@@ -85,7 +85,7 @@ Cleanup cannot call host capabilities after context expiry. Finish required exte
 
 A stream owns its context/resources from `$sdk.start` until natural completion or `$sdk.close`. Intermediate batches cannot release its worker to another customer. Early consumer exit through the SDK client closes the stream; cancellation/failure can instead retire the worker. Cleanup failure at stream completion makes the operation fail even if earlier batches were delivered.
 
-Use a direct `PluginHost` / `LocalPluginClient` for result streams. `ScheduledPluginHost` still accepts complete unary SDK calls and rejects multi-exchange streams before dispatch. This existing limitation is not changed by approved reuse.
+Use `LocalPluginClient` or the installed client returned by `PluginHost.BindAsync` for result streams. Both queued and immediate host admission support operation-wide residency across stream exchanges and consumer pauses. Shared ownership remains unary-only.
 
 ## Review and tests before approval
 
@@ -97,7 +97,7 @@ Run tests against the actual packaged language SDK, host and deployment image. T
 
 ## Operations
 
-`PluginHost.Snapshot` and `ScheduledPluginHost.Snapshot.Runtime` expose `ReusableWorkers`, `ReuseHits`, `SessionReturns`, `SessionCleanupFailures` and `WorkersStarted`, alongside reservations and quarantine. `SessionCleanupFailures` counts explicit SDK cleanup errors and invalid cleanup acknowledgement shapes, not every timeout or arbitrary hidden-state leak. Scheduler queue/latency and failure counters remain available.
+`PluginHost.Snapshot` expose `ReusableWorkers`, `ReuseHits`, `SessionReturns`, `SessionCleanupFailures` and `WorkersStarted`, alongside reservations and quarantine. `SessionCleanupFailures` counts explicit SDK cleanup errors and invalid cleanup acknowledgement shapes, not every timeout or arbitrary hidden-state leak. Scheduler queue/latency and failure counters remain available.
 
 Watch low reuse hit rates, many worker starts, cleanup errors and queue tails. A falling hit rate can mean incompatible deployments or short idle retention; it is not automatically a lack of RAM. Hard Docker memory exhaustion retires a failed worker. There is no automatic leak detector or forced garbage collection that makes arbitrary libraries safe for reuse.
 
@@ -108,3 +108,7 @@ Updated SDKs advertise `sessionCleanup: 1` in the existing native ready envelope
 ## Restart and deployment changes
 
 `RestartAsync` stops a worker still owned by the binding and makes its next acquisition bypass previously used clean workers. A worker already returned to the shared pool may now belong to somebody else; restarting or disposing the old binding never destroys another customer's active worker. To revoke approval or discard all shared state after discovering an unsafe dependency, stop affected registrations and dispose/drain their owning host before deploying the corrected profile. A new image digest or local launch profile uses a separate compatibility key.
+
+## Simultaneous shared ownership
+
+`ApprovedSessions` remains sequential cleanup-based reuse. `Shared` instead keeps resident workers and allows concurrent tenant invocations under an approved degree. It requires protocol 2 and concurrency-safe plugin code. It does not clean global state between calls or offer shared streams. Choose explicitly using [one installation approval](installed-plugin-clients.md); review [shared failure and cancellation behavior](shared-execution.md).

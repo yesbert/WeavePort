@@ -6,7 +6,7 @@ A plugin call connects your application to one approved piece of extension code.
 
 A binding combines the host-selected tenant context, plugin artifact/version, execution profile and callback grants. Request payloads do not choose tenant authority or executable paths. A used worker is never reassigned to another tenant.
 
-A client binding is single-flight, including the entire enumeration of a stream. Use independent bindings for parallel work, subject to shared worker and admission limits.
+Exclusive client bindings serialize work under host admission policy; streams retain worker residency for their complete enumeration. Approved Shared installations support concurrent unary tenant calls in resident workers. See [shared execution](../docs/shared-execution.md) for the trust and failure boundaries.
 
 ## Callbacks connect plugins to application services
 

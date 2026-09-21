@@ -1,6 +1,6 @@
 # Large results and external composition
 
-Combine bounded plugin results under your application’s ordering and merge rules. `WeavePort.Composition` is an optional .NET package in the 0.5.0 release, depending on Sdk.Client and Abstractions. The product owns domain contracts, authentication, selected sessions, order and merge semantics. Plugins do not get peer addresses, result paths or authority to resolve arbitrary result handles. Existing invocation messages remain limited to 1 MiB; a logical result can span many bounded invocations.
+Combine bounded plugin results under your application’s ordering and merge rules. `WeavePort.Composition` is an optional .NET package in the 0.6.0 release, depending on Sdk.Client and Abstractions. The product owns domain contracts, authentication, selected sessions, order and merge semantics. Plugins do not get peer addresses, result paths or authority to resolve arbitrary result handles. Existing invocation messages remain limited to 1 MiB; a logical result can span many bounded invocations.
 
 ## Request-owned results
 
@@ -51,3 +51,16 @@ Pass a `LocalPluginClient` or `RemotePluginClient` to the SDK overload of `Compo
 SDK workers register a `bulk-map` function with an object containing base64 `data` as both input and output. Malformed/missing/non-base64 or oversized output fails without committing a result. This is separate from the legacy native direct-operation overload.
 
 If partial-file removal fails, producer and cleanup errors are aggregated and the quota reservation is retained conservatively until scope cleanup. Disposal attempts cancellation, drains active operations and attempts storage cleanup even if a cancellation callback fails. Repeated disposal observes the same completion or failure. A deletion failure is observable; no successful deletion or secure erasure is claimed. Applications own recovery of failed storage and process-crash remnants.
+
+## Collect a plugin-originated source
+
+Use `CollectAsync` when the plugin produces the bytes, such as a connector reading a remote file. The client must be bound to the result scope's authenticated tenant.
+
+```csharp
+ResultHandle imported = await Composition.CollectAsync(
+    scope, boundClient, "download", request, chunkBytes: 65536,
+    cancellationToken: cancellationToken);
+await scope.CopyToAsync(imported, destination, cancellationToken);
+```
+
+The author registers `Source<TInput>` in C#, `@app.source` in Python, or `plugin.source` in TypeScript. The runtime reads and cleans up the source under an exclusive operation lease. Each wire block contains at most 4–256 KiB of decoded bytes; `ResultScope` supplies the total quota and deletes partial files on failure or cancellation. Only a committed result handle escapes a successful collection. Shared worker clients refuse sources before dispatch. This source path does not raise the JSON stream's 64 MiB limit.

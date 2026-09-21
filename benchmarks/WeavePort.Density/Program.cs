@@ -74,7 +74,7 @@ internal static class DensityRun
             MaximumQueuedCallsPerTenant = config.MaxPending, QueueTimeout = TimeSpan.FromMilliseconds(config.QueueMs),
             NormalTimeout = TimeSpan.FromSeconds(10), IdleTimeout = TimeSpan.FromMilliseconds(config.IdleMs)
         };
-        var scheduled = new ScheduledPluginHost(options);
+        var scheduled = new PluginHost(options);
         int workerLimit = config.Workers ?? (int)Math.Min(int.MaxValue, config.MemoryBudgetMiB / 64);
         var direct = new PluginHost(workerLimit, new WorkerPoolOptions(MaximumWorkers: workerLimit,
             MemoryBudgetMiB: config.MemoryBudgetMiB, MaximumWorkersPerTenant: workerLimit, MaximumConcurrentStarts: config.ConcurrentStarts, MaximumPristineWorkers: 0));
@@ -94,14 +94,14 @@ internal static class DensityRun
         WorkerPoolSnapshot? cleanup = null;
         try
         {
-            ExecutionProfile profile = Profile(config) with { ReusePolicy = config.ApprovedSdk ? WorkerReusePolicy.ApprovedSessions : WorkerReusePolicy.CustomerBound };
+            ExecutionProfile profile = Profile(config) with { Reconstructible = true, ReusePolicy = config.ApprovedSdk ? WorkerReusePolicy.ApprovedSessions : WorkerReusePolicy.CustomerBound };
             var active = new IPluginSession[config.Clients];
             long registrationStart = Stopwatch.GetTimestamp();
             await Parallel.ForEachAsync(Enumerable.Range(0, Math.Max(config.Clients, config.RegisteredClients)),
                 new ParallelOptions { MaxDegreeOfParallelism = 8, CancellationToken = stop.Token }, async (i, registrationToken) =>
             {
                 var context = new PluginContext("tenant-" + i, "fixture", "1", "density", JsonSerializer.SerializeToElement(new { data = new string('x', config.PayloadBytes) }));
-                var binding = config.Mode == "scheduled" ? (IPluginSession)await scheduled.RegisterAsync(context, profile, new NoCallbacks(), [], cancellationToken: registrationToken) :
+                var binding = config.Mode == "scheduled" ? (IPluginSession)await scheduled.BindAsync(context, profile, new NoCallbacks(), [], cancellationToken: registrationToken) :
                     await direct.BindAsync(context, profile, new NoCallbacks(), [], cancellationToken: registrationToken);
                 if (i < config.Clients) active[i] = binding;
             });
@@ -115,8 +115,8 @@ internal static class DensityRun
             // Warm only the cache-sized working set. Oversubscribed tenants deliberately expose startup/eviction costs.
             if (config.Traffic != "population")
                 for (int i = 0; i < Math.Min(config.Clients, workerLimit); i++) Validate(await clients[i].InvokeAsync(Operation(config), Payload(config)), i, config.PayloadBytes);
-            before = scheduled.Snapshot;
-            resources = new DensityResources(config, stop, clients, () => config.Mode == "scheduled" ? scheduled.Snapshot.Runtime : direct.Snapshot);
+            before = scheduled.Scheduling;
+            resources = new DensityResources(config, stop, clients, () => config.Mode == "scheduled" ? scheduled.Snapshot : direct.Snapshot);
             sampling = resources.RunAsync();
             long start = Stopwatch.GetTimestamp();
             measurementStart = start;
@@ -124,7 +124,7 @@ internal static class DensityRun
             else if (config.Rate == 0) await ClosedAsync(config, clients, stats, stop, start);
             else await OpenAsync(config, clients, stats, stop, start);
             seconds = Stopwatch.GetElapsedTime(start).TotalSeconds;
-            after = scheduled.Snapshot;
+            after = scheduled.Scheduling;
             stop.Cancel();
             await sampling;
             failure = resources.Failure;
@@ -137,7 +137,7 @@ internal static class DensityRun
             await sampling;
             try { await scheduled.DisposeAsync(); } catch (Exception error) { failure = "scheduler-cleanup: " + error.GetType().Name; }
             try { await direct.DisposeAsync(); } catch (Exception error) { failure = "direct-cleanup: " + error.GetType().Name; }
-            cleanup = config.Mode == "scheduled" ? scheduled.Snapshot.Runtime : direct.Snapshot;
+            cleanup = config.Mode == "scheduled" ? scheduled.Snapshot : direct.Snapshot;
             Console.CancelKeyPress -= interrupt;
         }
         var total = DensityStats.Combine(stats);

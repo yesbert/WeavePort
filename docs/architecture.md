@@ -6,8 +6,8 @@ WeavePort adds plugin execution to the application you already own. It is a libr
 
 - Applications authenticate callers, select immutable tenant/plugin/profile identity and grant callback operations. Plugin payloads cannot establish authority.
 - Applications own business schemas, workflow state, journals, idempotency and reconciliation. Domain concepts stay out of the platform.
-- Hosting owns single-flight sessions, per-tenant admission, deadlines, pristine workers, idle release and cleanup accounting. Customer-bound workers are never reassigned. Operator-approved native SDK sessions may share compatible cleaned workers under the [cooperative reuse contract](reusable-plugins.md).
-- Author SDKs own protocol details; the client SDK owns bounded unary/stream calls. A gateway selects a preconfigured binding through a credential and cannot register executables remotely.
+- One Hosting coordinator owns exclusive sessions, resident shared workers, per-tenant admission, deadlines, pristine workers, explicit idle eviction and cleanup accounting. Customer-bound workers are never reassigned. Operator-approved native SDK sessions may share compatible cleaned workers under the [cooperative reuse contract](reusable-plugins.md).
+- Author SDKs own protocol details; the client SDK owns bounded unary/stream/source calls and stream residency leases. A gateway selects a preconfigured binding through a credential and cannot register executables remotely.
 
 ## Package boundaries
 
@@ -29,10 +29,12 @@ Cancellation means that the caller stopped waiting, not that an external action 
 
 ## Deferred work
 
-The 0.5.0 package family includes the four core packages and independently selectable Composition and Gateway server/client packages. Windows qualification, stronger native containment, distributed scheduling, application signing/notarization and automatic updates/migrations remain separate work. Integrations with the owner's applications follow their own development schedule.
+The 0.6.0 package family includes the four core packages and independently selectable Composition and Gateway server/client packages. Windows qualification, stronger native containment, distributed scheduling, application signing/notarization and automatic updates/migrations remain separate work. Integrations with the owner's applications follow their own development schedule.
 
 The [historical evidence guide](history.md) explains where earlier design alternatives, measurements and rejected experiments are retained, including the limits of public access to pre-baseline history. This guide retains the decisions that still govern current code.
 
 ## Optional MCP protocol
 
 Current source also supports explicitly selected local MCP tools through the same process lifecycle; native remains the default. See [MCP plugins](mcp-plugins.md) for exact revisions, result semantics and support limits. MCP does not introduce AI concepts or implicit host authority into native plugins.
+
+Shared ownership is an explicit trusted-code choice: several tenant invocations share process memory, while each invocation retains its own immutable callback authority. A worker crash can fail all of its in-flight calls. Cancellation revokes callbacks promptly but retains capacity until completion or retirement. See [shared execution and recovery](shared-execution.md).

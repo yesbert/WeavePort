@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
  <PropertyGroup><RestoreConfigFile>$(MSBuildThisFileDirectory)../adapter-nuget.config</RestoreConfigFile><OutputType>Exe</OutputType><RestoreSources>../../artifacts/packages</RestoreSources><RestorePackagesPath>../../artifacts/security-packages</RestorePackagesPath><RestorePackagesWithLockFile>true</RestorePackagesWithLockFile></PropertyGroup>
- <ItemGroup><PackageReference Include="WeavePort.Hosting" Version="0.5.0" /><PackageReference Include="WeavePort.Testing" Version="0.5.0" /></ItemGroup>
+ <ItemGroup><PackageReference Include="WeavePort.Hosting" Version="0.6.0" /><PackageReference Include="WeavePort.Testing" Version="0.6.0" /></ItemGroup>
  <ItemGroup>
   <Compile Include="../../tests/WeavePort.Docker.Tests/Evidence.cs" Link="Evidence.cs" />
   <Compile Include="../../tests/WeavePort.Docker.Tests/SecurityScenarios.cs" Link="SecurityScenarios.cs" />

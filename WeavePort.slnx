@@ -3,6 +3,7 @@
     <Project Path="benchmarks/WeavePort.Benchmarks/WeavePort.Benchmarks.csproj" />
     <Project Path="benchmarks/WeavePort.Density/WeavePort.Density.csproj" />
     <Project Path="benchmarks/WeavePort.Registry/WeavePort.Registry.csproj" />
+    <Project Path="benchmarks/WeavePort.Shared/WeavePort.Shared.csproj" />
   </Folder>
   <Folder Name="/examples/">
     <Project Path="examples/sdk/csharp/ExamplePlugin.csproj" />
@@ -33,7 +34,11 @@
   <Folder Name="/examples/reuse/">
     <Project Path="examples/reuse/csharp/ReusablePlugin.csproj" />
   </Folder>
+  <Folder Name="/examples/sources/">
+    <Project Path="examples/sources/SourceCollector.csproj" />
+  </Folder>
   <Folder Name="/tests/">
+    <Project Path="tests/WeavePort.ConcurrentSdkTests/WeavePort.ConcurrentSdkTests.csproj" />
     <Project Path="tests/WeavePort.ReuseTests/WeavePort.ReuseTests.csproj" />
     <Project Path="tests/WeavePort.CapacityTests/WeavePort.CapacityTests.csproj" />
     <Project Path="tests/WeavePort.Composition.Tests/WeavePort.BulkDemo.csproj" />
@@ -49,6 +54,7 @@
     <Project Path="tests/WeavePort.SdkTests/WeavePort.SdkTests.csproj" />
     <Project Path="tests/WeavePort.SdkVersionTests/WeavePort.SdkVersionTests.csproj" />
     <Project Path="tests/WeavePort.SecurityTests/WeavePort.SecurityTests.csproj" />
+    <Project Path="tests/WeavePort.Shared.Tests/WeavePort.Shared.Tests.csproj" />
     <Project Path="tests/WeavePort.WorkerHost/WeavePort.WorkerHost.csproj" />
     <Project Path="tests/compatibility/Compatibility.csproj" />
     <Project Path="tests/installations/Installations.csproj" />

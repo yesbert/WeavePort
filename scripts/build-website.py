@@ -16,10 +16,10 @@ REPOSITORY = 'https://github.com/yesbert/WeavePort/blob/main/'
 GROUPS = {
     'Getting started': [('website/introduction.md', 'Introduction'), ('website/getting-started.md', 'Quickstart'), ('website/concepts.md', 'Core concepts'), ('website/packages.md', 'Packages'), ('website/faq.md', 'FAQ')],
     'Build plugins': [('docs/mcp-plugins.md', 'MCP tools'), ('docs/plugin-sdk.md', 'Language SDKs'), ('docs/gateway.md', 'HTTPS gateway'), ('docs/installed-plugins.md', 'Installed artifacts'), ('docs/package-compatibility.md', 'Compatibility')],
-    'Integration': [('docs/embedded-coordinator.md', 'Shared coordinator'), ('docs/v1-integration-contract.md', 'Integration contract'), ('docs/local-execution.md', 'Local execution'), ('docs/bulk-composition.md', 'Bulk composition')],
+    'Integration': [('docs/installed-plugin-clients.md', 'Installed clients'), ('docs/shared-execution.md', 'Concurrent plugins'), ('docs/embedded-coordinator.md', 'Shared coordinator'), ('docs/v1-integration-contract.md', 'Integration contract'), ('docs/local-execution.md', 'Local execution'), ('docs/bulk-composition.md', 'Bulk composition')],
     'Operate': [('docs/continuous-integration.md', 'CI and deployment'), ('docs/native-operations.md', 'Recovery runbook'), ('docs/worker-lifecycle.md', 'Worker lifecycle'), ('docs/runtime-diagnostics.md', 'Diagnostics'), ('docs/internal-distribution.md', 'Offline distribution')],
     'Platform': [('docs/architecture.md', 'Architecture'), ('docs/security-architecture.md', 'Security'), ('docs/protocol.md', 'Protocol'), ('docs/status.md', 'Current status'), ('docs/platform-qualification.md', 'Platform qualification'), ('docs/benchmarking.md', 'Benchmarks'), ('docs/soak-testing.md', 'Soak testing')],
-    'Examples': [('samples/DecisionRoom/README.md', 'Decision Room'), ('samples/DocumentWorkshop/README.md', 'Document Workshop'), ('samples/AppointmentDesk/README.md', 'Appointment Desk')],
+    'Examples': [('examples/shared/README.md', 'Shared worker'), ('examples/sources/README.md', 'Binary sources'), ('samples/DecisionRoom/README.md', 'Decision Room'), ('samples/DocumentWorkshop/README.md', 'Document Workshop'), ('samples/AppointmentDesk/README.md', 'Appointment Desk')],
     'Reference': [('docs/api.md', 'Public API'), ('docs/releases.md', 'Releases'), ('docs/ai-documentation.md', 'AI documentation'), ('docs/history.md', 'Historical evidence'), ('docs/specifications.md', 'Behavioral specifications')],
 }
 LINK = re.compile(r'\[([^\]\n]*)\]\(([^)\n]+)\)')
@@ -30,6 +30,7 @@ def sources():
     mapping = {p.relative_to(ROOT).as_posix(): 'docs/' + p.name for p in sorted((ROOT / 'docs').glob('*.md'))}
     mapping.update({p.relative_to(ROOT).as_posix(): (p.name if p.name in {'index.md', 'imprint.md', 'privacy.md'} else 'docs/' + p.name) for p in sorted((ROOT / 'website').rglob('*.md')) if p.name != 'README.md'})
     mapping.update({f'samples/{name}/README.md': f'docs/examples/{name}.md' for name in ('DecisionRoom', 'DocumentWorkshop', 'AppointmentDesk')})
+    mapping.update({f'examples/{name}/README.md': f'docs/examples/{name}.md' for name in ('shared', 'sources')})
     return mapping
 
 

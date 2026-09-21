@@ -34,7 +34,27 @@ internal static class QuarantineChecks
         await retry;
         var empty = pool.Snapshot(2, 2, null);
         Check(empty.Quarantined == 0 && empty.OldestQuarantineSeconds == 0 && empty.ReservedMemoryMiB == 0, "confirmed cleanup resets age and capacity");
-        return 6;
+        await SharedAccountingAsync();
+        return 10;
+    }
+
+    private static async Task SharedAccountingAsync()
+    {
+        await using var pool = new WorkerPool(new WorkerPoolOptions(), TimeProvider.System, NullLogger.Instance);
+        var exclusive = (ControlledWorker)await pool.AcquireAsync(new ControlledProfile(), "1", "tenant", default);
+        var shared = (ControlledWorker)await pool.StartSharedAsync(new ControlledProfile { ReusePolicy = WorkerReusePolicy.Shared }, "1", default);
+        var initial = pool.Snapshot(1, 1, null);
+        Check(initial is { Workers: 2, SharedWorkers: 1, SharedMemoryMiB: 256, QuarantinedMemoryMiB: 0, ReservedMemoryMiB: 512 }, "mixed live reservations counted once");
+        Task<JsonElement> removeShared = pool.DestroyAsync(shared);
+        var one = pool.Snapshot(1, 1, null);
+        Task<JsonElement> removeExclusive = pool.DestroyAsync(exclusive);
+        var both = pool.Snapshot(1, 1, null);
+        shared.Removal.TrySetResult(JsonSerializer.SerializeToElement(new { removed = true }));
+        exclusive.Removal.TrySetResult(JsonSerializer.SerializeToElement(new { removed = true }));
+        await Task.WhenAll(removeShared, removeExclusive);
+        Check(one is { SharedWorkers: 0, SharedMemoryMiB: 0, Quarantined: 1, QuarantinedMemoryMiB: 256, ReservedMemoryMiB: 512 }, "quarantined shared reservation moves categories without double counting");
+        Check(both is { SharedWorkers: 0, SharedMemoryMiB: 0, Quarantined: 2, QuarantinedMemoryMiB: 512, ReservedMemoryMiB: 512 }, "quarantine includes shared and exclusive reservations exactly once");
+        Check(pool.Snapshot(0, 0, null) is { Workers: 0, SharedWorkers: 0, SharedMemoryMiB: 0, QuarantinedMemoryMiB: 0, ReservedMemoryMiB: 0 }, "confirmed mixed cleanup releases every category");
     }
 
     private static void Check(bool condition, string name)
