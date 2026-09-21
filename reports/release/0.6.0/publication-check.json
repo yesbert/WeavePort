@@ -1,0 +1,65 @@
+[
+  {
+    "package": "WeavePort.Abstractions",
+    "version": "0.6.0",
+    "qualifiedSha256": "c5f562765db1b17ccaed81cfae7e32860a6ec8bb6f7e5506a397cf18117975cd",
+    "publicSha256": "2d29fd9fd7d77d9b5fff561f055010cd7ef00d52b3b754c27cae17f633b9a4fd",
+    "payloadsMatch": true,
+    "sourceCommit": "aa69112c2e351c0de800808566022773b3813136",
+    "url": "https://www.nuget.org/packages/WeavePort.Abstractions/0.6.0"
+  },
+  {
+    "package": "WeavePort.Composition",
+    "version": "0.6.0",
+    "qualifiedSha256": "03a6e18f12449e501b6e61806bef4554f5074bac5fe79af4f799edefbe34b5fb",
+    "publicSha256": "8e7edab7782df3be70395f9d86cb422b21e78a63583b1b538383dc3f456b92b9",
+    "payloadsMatch": true,
+    "sourceCommit": "aa69112c2e351c0de800808566022773b3813136",
+    "url": "https://www.nuget.org/packages/WeavePort.Composition/0.6.0"
+  },
+  {
+    "package": "WeavePort.Hosting",
+    "version": "0.6.0",
+    "qualifiedSha256": "deed5e850385fefaeb555e7977ac3c1e1d0ebc0950a7bf10155298f290a02543",
+    "publicSha256": "296da87cc77963fb66536acbb4befe03baf3bbefbb0a55e979944ad20bd61081",
+    "payloadsMatch": true,
+    "sourceCommit": "aa69112c2e351c0de800808566022773b3813136",
+    "url": "https://www.nuget.org/packages/WeavePort.Hosting/0.6.0"
+  },
+  {
+    "package": "WeavePort.Sdk",
+    "version": "0.6.0",
+    "qualifiedSha256": "f2f93198c401ec9687c8f8fbcba34d0dc6458025dabf836f670e9971355d0035",
+    "publicSha256": "2c54dd6372ef1b2f627c792e6ae819d744429a0d340d5f6b7f470d06ebcf95fa",
+    "payloadsMatch": true,
+    "sourceCommit": "aa69112c2e351c0de800808566022773b3813136",
+    "url": "https://www.nuget.org/packages/WeavePort.Sdk/0.6.0"
+  },
+  {
+    "package": "WeavePort.Sdk.Client",
+    "version": "0.6.0",
+    "qualifiedSha256": "8b22eef1501c0dcef0d4854eefac81e30f031d2e1eba4e9466bcd92611b97675",
+    "publicSha256": "bcb7b55b5836df5b443162f8fdd980e046a33336e4c45ec954fe6143ee083f20",
+    "payloadsMatch": true,
+    "sourceCommit": "aa69112c2e351c0de800808566022773b3813136",
+    "url": "https://www.nuget.org/packages/WeavePort.Sdk.Client/0.6.0"
+  },
+  {
+    "package": "WeavePort.Sdk.Gateway",
+    "version": "0.6.0",
+    "qualifiedSha256": "bd91b06183cb7e2406529b1d528926259a2c8520168fdcdd2cd669f21edaf460",
+    "publicSha256": "f4763fbc00b88f44e1de0f7550d046e946ac1bd9bbcd5eb374730a1ae3b09b73",
+    "payloadsMatch": true,
+    "sourceCommit": "aa69112c2e351c0de800808566022773b3813136",
+    "url": "https://www.nuget.org/packages/WeavePort.Sdk.Gateway/0.6.0"
+  },
+  {
+    "package": "WeavePort.Sdk.Gateway.Client",
+    "version": "0.6.0",
+    "qualifiedSha256": "62676d9fc746ef467ad127302240adf7320ff64c3d6fffd8f89144326bbad5d4",
+    "publicSha256": "94033338e45726b3eaed846db64fe26664db55edd98005586d4105ad4b290cdf",
+    "payloadsMatch": true,
+    "sourceCommit": "aa69112c2e351c0de800808566022773b3813136",
+    "url": "https://www.nuget.org/packages/WeavePort.Sdk.Gateway.Client/0.6.0"
+  }
+]

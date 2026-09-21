@@ -22,6 +22,6 @@
 ## 4. Documentation and release
 
 - [x] 4.1 Update all maintained guides, migration documentation, samples, compatibility baselines and generated LLM text.
-- [ ] 4.2 Run strict specs, style, documentation, full clean candidate and packed-consumer qualification.
-- [ ] 4.3 Bump the complete package family and matching SDK/compatibility inputs, create reviewed PR and merge with green required CI.
-- [ ] 4.4 Publish an immutable qualified release through the existing protected workflow, verify all seven public package payloads and retain publication evidence; archive the completed change.
+- [x] 4.2 Run strict specs, style, documentation, full clean candidate and packed-consumer qualification.
+- [x] 4.3 Bump the complete package family and matching SDK/compatibility inputs, create reviewed PR and merge with green required CI.
+- [x] 4.4 Publish an immutable qualified release through the existing protected workflow, verify all seven public package payloads and retain publication evidence; archive the completed change.
