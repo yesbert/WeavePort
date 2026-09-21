@@ -40,4 +40,4 @@ def verify(checkout, env, stage):
     stage('sources-sample-run', ['dotnet', str(checkout / 'examples/sources/bin/Release/net10.0/SourceCollector.dll')])
     stage('shared-sample-run', ['dotnet', str(checkout / 'artifacts/shared-example/plugins/shared-example/releases/1/SharedExample.dll'),
         str(checkout / 'artifacts/shared-example/plugins'), shutil.which('dotnet')])
-    stage('multilingual-concurrent-wire', ['python3', 'sdks/python/tests/test_protocol.py'])
+    stage('multilingual-concurrent-wire', ['python3', '-m', 'unittest', 'discover', '-s', 'sdks/python/tests', '-p', 'test_*.py'])

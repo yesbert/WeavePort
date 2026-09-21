@@ -22,7 +22,15 @@ internal sealed partial class Runtime(PluginApplication application)
         internal JsonElement Request { get; set; } = request;
 
         internal bool Active = true;
+        internal bool Closing;
         internal TaskCompletionSource Ready = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        internal void PauseCallbacks()
+        {
+            if (Ready.Task.IsCompleted)
+            {
+                Ready = new(TaskCreationOptions.RunContinuationsAsynchronously);
+            }
+        }
     }
 
     internal async Task RunAsync(CancellationToken token)
@@ -37,6 +45,7 @@ internal sealed partial class Runtime(PluginApplication application)
                 _request = request;
                 var scope = _sessionScope ?? new CallScope(request);
                 scope.Request = request;
+                scope.Closing = request.GetProperty("operation").GetString()is SdkOperations.Close or SdkOperations.SourceClose;
                 scope.Ready.TrySetResult();
                 _scope.Value = scope;
                 try
@@ -46,7 +55,7 @@ internal sealed partial class Runtime(PluginApplication application)
                     try
                     {
                         scope.Request = default;
-                        scope.Ready = new(TaskCreationOptions.RunContinuationsAsynchronously);
+                        scope.PauseCallbacks();
                         await channel.WriteAsync(new { type = "result", id = request.GetProperty("id").GetString(), value = result, reusable = _context is null && _enumerator is null && _source is null }, token);
                     }
                     finally
@@ -144,6 +153,11 @@ internal sealed partial class Runtime(PluginApplication application)
             if (!scope.Active)
             {
                 throw new InvalidOperationException("Expired invocation.");
+            }
+
+            if (scope.Closing)
+            {
+                throw new OperationCanceledException("Stream is closing.");
             }
 
             string id = scope.Request.GetProperty("id").GetString()!;

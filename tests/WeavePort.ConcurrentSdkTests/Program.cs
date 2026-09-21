@@ -42,6 +42,7 @@ app.Function<JsonElement, JsonElement>("cleanupFailure", (input, context, _) =>
     return ValueTask.FromResult(input);
 });
 app.Stream<JsonElement, int>("live", Live);
+app.Stream<JsonElement, int>("immediateCallback", ImmediateCallback);
 app.Stream<JsonElement, object>("slow", StreamFixture.Slow);
 app.Source<JsonElement>("bytes", (input, _, _) => ValueTask.FromResult<Stream>(new MemoryStream(Enumerable.Range(0, input.GetProperty("bytes").GetInt32()).Select(i => (byte)i).ToArray())));
 app.Source<JsonElement>("large", (input, _, _) => ValueTask.FromResult<Stream>(new PatternSource(input.GetProperty("bytes").GetInt64())));
@@ -53,6 +54,13 @@ static async IAsyncEnumerable<int> Live(JsonElement input, PluginCallContext con
     yield return 1;
     await Task.Delay(300, token);
     await context.CallHostAsync("echo", input, token);
+    yield return 2;
+}
+
+static async IAsyncEnumerable<int> ImmediateCallback(JsonElement input, PluginCallContext context, [EnumeratorCancellation] CancellationToken token)
+{
+    yield return 1;
+    await context.CallHostAsync("echo", input);
     yield return 2;
 }
 

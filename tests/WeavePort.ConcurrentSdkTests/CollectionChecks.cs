@@ -84,7 +84,7 @@ internal static class CollectionChecks
                 started = Stopwatch.GetTimestamp();
                 var received = new List<int>();
                 using var liveDeadline = new CancellationTokenSource(TimeSpan.FromSeconds(5));
-                await foreach (var item in client.StreamAsync("live", JsonSerializer.SerializeToElement(new { }), liveDeadline.Token))
+                await foreach (var item in client.StreamAsync("immediateCallback", JsonSerializer.SerializeToElement(new { }), liveDeadline.Token))
                 {
                     if (received.Count == 0)
                     {

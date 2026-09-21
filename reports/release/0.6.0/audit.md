@@ -57,3 +57,9 @@ Two clean-candidate integration errors were reported before final qualification:
 ## Final source integration
 
 The complete solution builds with zero warnings/errors. Strict OpenSpec validation passes with nine capabilities synchronized to the verified implementation. The candidate runner now publishes and seals the shared example before calling it with catalog/runtime arguments, uses the installed wheel interpreter for every language integration lane, selects the matching frozen C# fixture, and inventories both new samples. Gateway pause tests for each language verify that caller cancellation and total deadlines release server admission before the old iterator is disposed; a later call survives that old disposal. The static website includes the new guides and both samples in navigation and its self-contained LLM resources. Final clean-checkout and public-release evidence will be linked separately.
+
+## Throughput and immediate-callback correction
+
+The matched source benchmark reproduced a Python stream regression from scheduling one task per item. A bounded retained producer replaces that overhead while preserving one generator advancement, frame/item/total bounds and prompt heartbeat delivery. A separate direct-callback regression exposed prefetched callbacks that could delay an already available item in all three SDKs; callbacks now wait for the next exchange when a batch is ready. Dedicated wire tests check both before-first-item callbacks and the new exchange identity. Raw before/after measurement and final qualification remain separate evidence.
+
+The first isolated candidate completed all functional stages but correctly refused final qualification because the MCP example lockfile still declared 0.5.0 and lacked Hosting’s new Client edge. Its refreshed 0.6.0 dependency graph is now tracked; the gate was preserved. Coverage execution now includes the real shared and source/stream suites rather than relying only on the older host suites.

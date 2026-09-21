@@ -93,6 +93,25 @@ try:
     assert frame["type"] == "callback" and frame["id"] == "second"
     w.send(dict(type="callback-result", id="second", callbackId=frame["callbackId"], value={}))
     assert w.read()["value"] == dict(items=[2], done=True)
+    w.invoke("immediate-start", "$sdk.start", dict(operation="immediateCallback", input={}))
+    immediate = w.read()["value"]["stream"]
+    w.invoke("immediate-first", "$sdk.next", dict(stream=immediate))
+    first = w.read()
+    assert first["type"] == "result" and first["value"] == dict(items=[1], done=False)
+    w.invoke("immediate-second", "$sdk.next", dict(stream=immediate))
+    callback = w.read()
+    assert callback["type"] == "callback" and callback["id"] == "immediate-second"
+    w.send(dict(type="callback-result", id="immediate-second", callbackId=callback["callbackId"], value={}))
+    assert w.read()["value"] == dict(items=[2], done=True)
+    w.invoke("early-start", "$sdk.start", dict(operation="immediateCallback", input={}))
+    early = w.read()["value"]["stream"]
+    w.invoke("early-first", "$sdk.next", dict(stream=early))
+    assert w.read()["value"] == dict(items=[1], done=False)
+    w.invoke("early-close", "$sdk.close", dict(stream=early))
+    closed = w.read()
+    assert closed["type"] == "result" and closed["reusable"]
+    w.call("after-early-close", "identity", {"delay": 0})
+    assert w.read()["type"] == "result"
     w.invoke("source", "$sdk.source.open", dict(operation="bytes", input=dict(bytes=1000000)))
     source = w.read()["value"]["source"]
     import base64

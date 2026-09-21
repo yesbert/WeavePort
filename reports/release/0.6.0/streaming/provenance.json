@@ -1,0 +1,81 @@
+{
+  "baselineRevision": "45ef50a",
+  "candidateRevision": "a1146a5",
+  "runOrder": [
+    "before-1",
+    "after-1",
+    "after-2",
+    "before-2"
+  ],
+  "assemblies": {
+    "before-runner": {
+      "WeavePort.Abstractions.dll": "ee12e4efbea4aa5b15c6d2c0e3b82248cfaab624d02e7cfbd7af44d275d48135",
+      "WeavePort.Hosting.dll": "37e5b218252399f1ed6c738d9ff8f6dea1c4a98c61b33c25a7270b3d0b5a46b1",
+      "WeavePort.Sdk.Client.dll": "59bbd5e987cdb875c8decfce2ecad748f9c757a53b12db4761237e671a16b64c",
+      "WeavePort.Sdk.Gateway.Client.dll": "1216b69b04d9dff0e6ec6b99e17b6e2d66b45839c9a4a3d5ad2ce564b5655dae",
+      "WeavePort.Sdk.Gateway.dll": "116f8ee6807df76c6bd0489fc40f5cda8eeb4a465ab74af35e88944598dd15be",
+      "WeavePort.Streaming.dll": "a02a86d442bc6ec84f44cd254ed62cb532b4c03532e8e2a20a7d4151205e1c13"
+    },
+    "after-runner": {
+      "WeavePort.Abstractions.dll": "a8b99817ec301e4d5983ae775040105a1e53913fb67441715f42b7ec165d1f95",
+      "WeavePort.Hosting.dll": "4aa14aaca8647231f20ca5302347577becf584260b010f370d3ceb4d38aae778",
+      "WeavePort.Sdk.Client.dll": "0ec873141409cceaf0b7e6c2b6035c6824800785001fb3b78ab7ac1319bee4e1",
+      "WeavePort.Sdk.Gateway.Client.dll": "9ad6b3c41124dc97c538028dc691405b4c00412f09a7b73924557057d360e46d",
+      "WeavePort.Sdk.Gateway.dll": "719bd181ca0b4cd7b3b9a0d7e9f5da6a8773efb62e7f8747c8ace1fd6c31aae0",
+      "WeavePort.Streaming.dll": "8041a8b42fbcce39207925cbcede385110916484a0e9bed880052e251d149e96"
+    },
+    "before-worker": {
+      "WeavePort.Sdk.dll": "5196eceb0e67021f797504a6c26fe3de94ca57ff3787bbe084d3ca58e4ac1e50",
+      "Worker.dll": "41fba1071c4016be0e8c6c7fea82868997a57df594b4920074b6164dddda1005"
+    },
+    "after-worker": {
+      "WeavePort.Sdk.dll": "274b1f7c02c05a386934f080a712ac6a0c1c5ff4b84131da4cab48e51e501396",
+      "Worker.dll": "21cf985d97b95d20897f50a0c7db6c2259ec45d44da021b78e0f2ff13ed943fd"
+    }
+  },
+  "pythonSdk": {
+    "45ef50a": "db9ab9d021020b6825579791cdc6b5deb473557decb0a25e55bd37f6cae125e2",
+    "a1146a5": "a2e4cc648acbac80e94cb7e1c79cea14ec33a2619322858a9f02daf561e11054"
+  },
+  "typescriptBuilt": {
+    "before": "515bea28f096a4d655d2cac53809e6c79c6dc1a6aec701b0d0466b2e6bbd428b",
+    "after": "194c27cc1e8f9c02131493eb9edde01fc214b00866d001eb86eed9bbf534271d"
+  },
+  "rawMeasurementSha256": {
+    "before-1": "185e7bd6705322b596ff1b47b174072404adc682353d1428e62494932ac8440f",
+    "before-2": "698722cb6fe7b9fa0089193b65dbdb62a0bf0d7aaf2486f9c80a99d9d986f0ae",
+    "after-1": "4eedbffaa2db7f6a67f60f62840a5f5348dbf8e30ea00f79d1c1d7abcdbf59f3",
+    "after-2": "6e85b7a703abc9831a5489104f60c5262aafa39cb2cb7e962f1a796384c83536",
+    "optimized-python-1": "f4cad4c32ee52d3f5caa7bdfb4d2d7a27eeab1fb9922020e28c3c42fd56a9f89",
+    "optimized-python-2": "b07048bb58b4739e4f47615b979486f691e1484dcd20156161f0635ea78322c2",
+    "final-1": "18dc569a78ba9ffbad84d18cb9e38f4f60da7b1f16b9ca236ba631f31a6f6938",
+    "final-2": "e370b842a9ecbfc55252a3b1e98d5e4ba535efa73899513d336c6fe32a92d140"
+  },
+  "publicCopies": "Only machine-local source path redacted; measurement arrays unchanged.",
+  "finalPythonSdk": {
+    "__init__.py": "d35ba727d3ccb227e04b3bea97347e185fbfa21089ca567cd79a1a338c39390b",
+    "concurrent.py": "1500cf020b571024f5b54195fd2e3c588fca248d86f05eb7b4960e35aee10505",
+    "source.py": "3ab972b686952cff2085eb0fe5999f8c286875c22239e784e517fcde1e0b1380",
+    "stream.py": "414da6bebb10544c35fdb05c54fe19beac5f20926570a92337e9466dd3b202ec"
+  },
+  "finalTypeScriptSdk": {
+    "concurrent.js": "05f2bcf393e9a4200028c6546f08973fcb09b4c6d300a619e6cdd9a7d41bac61",
+    "index.js": "a520329f806fdac234f2aa05ed81b48cf6e1f33df65281224f9621c4b0abc66e",
+    "session.js": "ee6d386e1898a4cc10c25e027d5ddab060e2fd8f2956774e187589f5c20db3fc",
+    "source.js": "b7016c0599f6f1d011413a7c4793def416fa4a903f2df0b9aec0e2aff89cebd1"
+  },
+  "finalAssemblies": {
+    "final-runner": {
+      "WeavePort.Abstractions.dll": "a8b99817ec301e4d5983ae775040105a1e53913fb67441715f42b7ec165d1f95",
+      "WeavePort.Hosting.dll": "4aa14aaca8647231f20ca5302347577becf584260b010f370d3ceb4d38aae778",
+      "WeavePort.Sdk.Client.dll": "0ec873141409cceaf0b7e6c2b6035c6824800785001fb3b78ab7ac1319bee4e1",
+      "WeavePort.Sdk.Gateway.Client.dll": "9ad6b3c41124dc97c538028dc691405b4c00412f09a7b73924557057d360e46d",
+      "WeavePort.Sdk.Gateway.dll": "719bd181ca0b4cd7b3b9a0d7e9f5da6a8773efb62e7f8747c8ace1fd6c31aae0",
+      "WeavePort.Streaming.dll": "b4dd0226c8afd1ff842d593e4d8a54b5772f9a6aefba9136ff0b1ec77fd8c3b9"
+    },
+    "final-worker": {
+      "WeavePort.Sdk.dll": "f956b1c28e677e4661d97265545c877158f58c311d17d887666573d9ffe2d963",
+      "Worker.dll": "8b7ba0980c83a817f2fa1a16910a427a065039cd8f9c7964c24bf6cc4b5cf80f"
+    }
+  }
+}

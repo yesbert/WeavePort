@@ -47,6 +47,12 @@ async def broken_close(value, context):
         yield 2
     finally:
         raise RuntimeError("iterator close failed")
+@app.stream("immediateCallback")
+async def immediate_callback(value, context):
+    if value.get("before"):
+        yield await context.call_host("echo", 0)
+    yield 1
+    yield await context.call_host("echo", 2)
 @app.stream("items")
 async def items(value, context):
     yield 1
@@ -76,6 +82,11 @@ app.function('invalid', async () => 1n);
 app.stream('brokenClose', async function*() {
     try { yield 1; await new Promise(resolve => setTimeout(resolve, 100)); yield 2; }
     finally { throw new Error('iterator close failed'); }
+});
+app.stream('immediateCallback', async function*(value, context) {
+    if (value.before) yield await context.callHost('echo', 0);
+    yield 1;
+    yield await context.callHost('echo', 2);
 });
 app.stream('items', async function*(value, context) {
     yield 1;
@@ -215,6 +226,54 @@ class ProtocolTests(unittest.TestCase):
         worker.invoke('cancel', operation='sync', input={'delay': .15})
         worker.send(type='cancel', id='cancel')
         self.assertEqual(worker.receive()['type'], 'cancelled')
+
+    def test_buffered_item_is_delivered_before_following_callback(self):
+        for language, worker in self.workers(False):
+            with self.subTest(language=language):
+                worker.invoke('start', '$sdk.start', operation='immediateCallback', input={})
+                stream = worker.receive()['value']['stream']
+                worker.invoke('first', '$sdk.next', stream=stream)
+                first = worker.receive()
+                self.assertEqual(first['type'], 'result')
+                self.assertEqual(first['value'], {'items': [1], 'done': False})
+                worker.invoke('second', '$sdk.next', stream=stream)
+                callback = worker.receive()
+                self.assertEqual(callback['type'], 'callback')
+                self.assertEqual(callback['id'], 'second')
+                worker.send(type='callback-result', id='second', callbackId=callback['callbackId'], value=2)
+                second = worker.receive()['value']
+                self.assertEqual(second['items'], [2])
+                if not second['done']:
+                    worker.invoke('end', '$sdk.next', stream=stream)
+                    self.assertTrue(worker.receive()['value']['done'])
+
+    def test_early_close_after_buffered_item_cancels_deferred_callback(self):
+        for language, worker in self.workers(False):
+            with self.subTest(language=language):
+                worker.invoke('start', '$sdk.start', operation='immediateCallback', input={})
+                stream = worker.receive()['value']['stream']
+                worker.invoke('first', '$sdk.next', stream=stream)
+                self.assertEqual(worker.receive()['value']['items'], [1])
+                started = time.monotonic()
+                worker.invoke('close', '$sdk.close', stream=stream)
+                closed = worker.receive()
+                self.assertEqual(closed['type'], 'result')
+                self.assertTrue(closed['reusable'])
+                self.assertLess(time.monotonic() - started, 2)
+                worker.invoke('healthy', operation='work', input={})
+                self.assertEqual(worker.receive()['value'], 'healthy')
+
+    def test_callback_before_first_item_is_not_deferred(self):
+        for language, worker in self.workers(False):
+            with self.subTest(language=language):
+                worker.invoke('start', '$sdk.start', operation='immediateCallback', input={'before': True})
+                stream = worker.receive()['value']['stream']
+                worker.invoke('first', '$sdk.next', stream=stream)
+                callback = worker.receive()
+                self.assertEqual(callback['type'], 'callback')
+                worker.send(type='callback-result', id='first', callbackId=callback['callbackId'], value=0)
+                first = worker.receive()['value']
+                self.assertEqual(first['items'], [0, 1])
 
     def test_stream_heartbeat_and_binary_source(self):
         for language, worker in self.workers(False):

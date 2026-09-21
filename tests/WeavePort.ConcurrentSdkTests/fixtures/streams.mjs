@@ -20,6 +20,11 @@ app.stream('live', async function* (value, context) {
     await context.callHost('echo', value);
     yield 2;
 });
+app.stream('immediateCallback', async function* (value, context) {
+    yield 1;
+    await context.callHost('echo', value);
+    yield 2;
+});
 app.source('large', async value => {
     let remaining = value.bytes;
     return {

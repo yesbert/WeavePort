@@ -6,3 +6,7 @@ All three author SDKs SHALL support approved concurrent unary execution with iso
 #### Scenario: Slow stream and bounded callbacks
 - **WHEN** a stream first yields after twelve seconds under a sufficient stream deadline and the same binding has a five-second unary deadline
 - **THEN** the stream completes, a hung unary call times out at five seconds, and an explicitly approved callback budget of 64 allows forty callbacks while the default rejects the ninth
+
+#### Scenario: Callback immediately after an available item
+- **WHEN** a stream yields an item and then requests a callback before its next item
+- **THEN** the available item is delivered before waiting for that callback, and the callback retains its invocation authority in the next exchange

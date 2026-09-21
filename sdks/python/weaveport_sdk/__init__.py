@@ -9,6 +9,7 @@ import uuid
 import inspect
 import threading
 from .source import SourceSession
+from .stream import LiveStream
 
 _SCOPE = contextvars.ContextVar("weaveport_invocation", default=None)
 
@@ -127,14 +128,11 @@ class _Runtime:
         self.context = None
         self.iterator = None
         self.stream_id = None
-        self.pending = None
-        self.has_pending = False
-        self.bytes = 0
         self.callback_id = 0
         self.callback_lock = asyncio.Lock()
         self.exchange_ready = asyncio.Event()
         self.stream_scope = None
-        self.advance = None
+        self.live_stream = None
         self.channel = None
         if endpoint := os.getenv("WEAVEPORT_SOCKET"):
             self.channel = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
@@ -164,6 +162,8 @@ class _Runtime:
     async def callback(self, operation, value):
         scope = _SCOPE.get()
         if scope is self.stream_scope:
+            if self.live_stream is not None:
+                await self.live_stream.wait_for_delivery()
             await self.exchange_ready.wait()
         async with self.callback_lock:
             if scope is None or not scope["active"]:
@@ -181,18 +181,16 @@ class _Runtime:
 
     async def close(self):
         iterator, self.iterator = self.iterator, None
-        advance, self.advance = self.advance, None
+        live_stream, self.live_stream = self.live_stream, None
         self.stream_scope = None
         self.stream_id = None
         self.source.release()
-        self.pending = None
-        self.has_pending = False
         try:
-            if advance is not None:
-                advance.cancel()
-                outcomes = await asyncio.gather(advance, return_exceptions=True)
-                if isinstance(outcomes[0], BaseException) and not isinstance(outcomes[0], (asyncio.CancelledError, StopAsyncIteration)):
-                    raise SessionCleanupError("Stream advancement cleanup failed") from outcomes[0]
+            if live_stream is not None:
+                try:
+                    await live_stream.close()
+                except BaseException as error:
+                    raise SessionCleanupError("Stream advancement cleanup failed") from error
             if iterator is not None:
                 try:
                     await iterator.aclose()
@@ -224,37 +222,10 @@ class _Runtime:
             if operation == "$sdk.close":
                 await self.close()
                 return {}
-            items, batch_bytes, done = [], 2, False
-            while len(items) < 16:
-                if self.has_pending:
-                    item, self.has_pending = self.pending, False
-                    self.pending = None
-                else:
-                    try:
-                        if self.advance is None:
-                            self.advance = asyncio.create_task(anext(self.iterator))
-                        completed, _ = await asyncio.wait([self.advance], timeout=0.025 if not items else 0)
-                        if not completed:
-                            break
-                        advance, self.advance = self.advance, None
-                        item = advance.result()
-                    except StopAsyncIteration:
-                        done = True
-                        break
-                size = len(_encode(item))
-                if size > 128 << 10:
-                    raise ValueError("Item limit")
-                if batch_bytes + size + 1 > 256 << 10:
-                    self.pending, self.has_pending = item, True
-                    break
-                batch_bytes += size + 1
-                self.bytes += size
-                if self.bytes > 64 << 20:
-                    raise ValueError("Stream limit")
-                items.append(item)
-            if done:
+            result = await self.live_stream.next_batch()
+            if result["done"]:
                 await self.close()
-            return dict(items=items, done=done)
+            return result
         if self.iterator is not None or self.source.identity is not None:
             raise RuntimeError("Session already active")
         context = self.context = PluginContext(request["context"]["tenant"], request["context"]["configuration"], self)
@@ -269,7 +240,8 @@ class _Runtime:
             raise ValueError("Unknown SDK operation")
         self.stream_scope = _SCOPE.get()
         self.iterator = self.app._streams[payload["operation"]](payload["input"], context).__aiter__()
-        self.stream_id, self.bytes = uuid.uuid4().hex, 0
+        self.live_stream = LiveStream(self.iterator, _encode)
+        self.stream_id = uuid.uuid4().hex
         return dict(stream=self.stream_id)
 
     async def run(self):

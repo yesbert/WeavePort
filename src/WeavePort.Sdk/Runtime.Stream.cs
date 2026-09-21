@@ -71,6 +71,12 @@ internal sealed partial class Runtime
 
     private async Task<bool> AdvanceReadyAsync(bool hasItems)
     {
+        if (hasItems)
+        {
+            // A prefetched callback must not hold already available items behind its reply.
+            _sessionScope!.PauseCallbacks();
+        }
+
         _advancement ??= _enumerator!.MoveNextAsync().AsTask();
         if (_advancement.IsCompleted)
         {

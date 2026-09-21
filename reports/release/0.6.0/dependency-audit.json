@@ -1,0 +1,150 @@
+{
+  "version": 1,
+  "parameters": "--vulnerable --include-transitive",
+  "sources": [
+    "artifacts/packages",
+    "https://api.nuget.org/v3/index.json"
+  ],
+  "projects": [
+    {
+      "path": "benchmarks/WeavePort.Benchmarks/WeavePort.Benchmarks.csproj"
+    },
+    {
+      "path": "benchmarks/WeavePort.Density/WeavePort.Density.csproj"
+    },
+    {
+      "path": "benchmarks/WeavePort.Registry/WeavePort.Registry.csproj"
+    },
+    {
+      "path": "benchmarks/WeavePort.Shared/WeavePort.Shared.csproj"
+    },
+    {
+      "path": "examples/sdk/csharp/ExamplePlugin.csproj"
+    },
+    {
+      "path": "examples/reuse/csharp/ReusablePlugin.csproj"
+    },
+    {
+      "path": "examples/sources/SourceCollector.csproj"
+    },
+    {
+      "path": "plugins/csharp/WeavePort.SamplePlugin.csproj"
+    },
+    {
+      "path": "samples/AppointmentDesk/Contracts/AppointmentDesk.Contracts.csproj"
+    },
+    {
+      "path": "samples/AppointmentDesk/Host/AppointmentDesk.Host.csproj"
+    },
+    {
+      "path": "samples/AppointmentDesk/Worker/AppointmentDesk.Worker.csproj"
+    },
+    {
+      "path": "samples/DecisionRoom/Contracts/DecisionRoom.Contracts.csproj"
+    },
+    {
+      "path": "samples/DecisionRoom/Host/DecisionRoom.Host.csproj"
+    },
+    {
+      "path": "samples/DecisionRoom/Plugin/DecisionRoom.Plugin.csproj"
+    },
+    {
+      "path": "samples/DocumentWorkshop/Contracts/DocumentWorkshop.Contracts.csproj"
+    },
+    {
+      "path": "samples/DocumentWorkshop/Host/DocumentWorkshop.Host.csproj"
+    },
+    {
+      "path": "samples/DocumentWorkshop/Worker/DocumentWorkshop.Worker.csproj"
+    },
+    {
+      "path": "src/WeavePort.Abstractions/WeavePort.Abstractions.csproj"
+    },
+    {
+      "path": "src/WeavePort.Composition/WeavePort.Composition.csproj"
+    },
+    {
+      "path": "src/WeavePort.Hosting/WeavePort.Hosting.csproj"
+    },
+    {
+      "path": "src/WeavePort.Sdk.Client/WeavePort.Sdk.Client.csproj"
+    },
+    {
+      "path": "src/WeavePort.Sdk.Gateway/WeavePort.Sdk.Gateway.csproj"
+    },
+    {
+      "path": "src/WeavePort.Sdk/WeavePort.Sdk.csproj"
+    },
+    {
+      "path": "src/WeavePort.Testing/WeavePort.Testing.csproj"
+    },
+    {
+      "path": "tests/compatibility/Compatibility.csproj"
+    },
+    {
+      "path": "tests/installations/Installations.csproj"
+    },
+    {
+      "path": "tests/WeavePort.CapacityTests/WeavePort.CapacityTests.csproj"
+    },
+    {
+      "path": "tests/WeavePort.Composition.Tests/WeavePort.BulkDemo.csproj"
+    },
+    {
+      "path": "tests/WeavePort.ConcurrentSdkTests/WeavePort.ConcurrentSdkTests.csproj"
+    },
+    {
+      "path": "tests/WeavePort.Docker.Tests/WeavePort.Demo.csproj"
+    },
+    {
+      "path": "tests/WeavePort.Gateway.Tests/WeavePort.Gateway.Tests.csproj"
+    },
+    {
+      "path": "tests/WeavePort.GatewayRegression/WeavePort.GatewayRegression.csproj"
+    },
+    {
+      "path": "tests/WeavePort.Hosting.Tests/WeavePort.Hosting.Tests.csproj"
+    },
+    {
+      "path": "tests/WeavePort.LifecycleTests/WeavePort.LifecycleTests.csproj"
+    },
+    {
+      "path": "tests/WeavePort.LoadTests/WeavePort.LoadTests.csproj"
+    },
+    {
+      "path": "tests/WeavePort.Local.Tests/WeavePort.LocalDemo.csproj"
+    },
+    {
+      "path": "tests/WeavePort.ReuseTests/WeavePort.ReuseTests.csproj"
+    },
+    {
+      "path": "tests/WeavePort.Scheduling.Tests/WeavePort.Scheduling.Tests.csproj"
+    },
+    {
+      "path": "tests/WeavePort.SdkFixture/WeavePort.SdkFixture.csproj"
+    },
+    {
+      "path": "tests/WeavePort.SdkTests/WeavePort.SdkTests.csproj"
+    },
+    {
+      "path": "tests/WeavePort.SdkVersionTests/WeavePort.SdkVersionTests.csproj"
+    },
+    {
+      "path": "tests/WeavePort.SecurityTests/WeavePort.SecurityTests.csproj"
+    },
+    {
+      "path": "tests/WeavePort.Shared.Tests/WeavePort.Shared.Tests.csproj"
+    },
+    {
+      "path": "tests/WeavePort.WorkerHost/WeavePort.WorkerHost.csproj"
+    },
+    {
+      "path": "tools/WeavePort.CodeStyle/WeavePort.CodeStyle.csproj"
+    },
+    {
+      "path": "tools/WeavePort.Runner/WeavePort.Runner.csproj"
+    }
+  ],
+  "checkedAtUtc": "2026-09-21T19:37:36.307745+00:00",
+  "scope": "Complete solution restore closure; advisory snapshot, not a guarantee against undisclosed vulnerabilities."
+}

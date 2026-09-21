@@ -62,6 +62,8 @@ class Runtime {
     private advance?: Promise<IteratorResult<unknown>>;
     private streamScope?: { request?: Invocation; active: boolean };
     private exchangeActive = false;
+    private bufferedStreamItems = false;
+    private closingStream = false;
     private exchangeWaiters: (() => void)[] = [];
     private callbackTail: Promise<void> = Promise.resolve();
     constructor(private functions: Map<string, Handler>, private streams: Map<string, Generator>, private sources: Map<string, SourceHandler>, private pluginVersion: string, private concurrentCalls: boolean) {}
@@ -78,9 +80,11 @@ class Runtime {
     }
     private async callback<T>(operation: string, payload: unknown): Promise<T> {
         const scope = scopes.getStore();
-        if (scope === this.streamScope && !this.exchangeActive) {
+        const streamCallback = scope === this.streamScope;
+        if (streamCallback && (!this.exchangeActive || this.bufferedStreamItems)) {
             await new Promise<void>(resolve => this.exchangeWaiters.push(resolve));
         }
+        if (streamCallback && this.closingStream) throw new Error("Stream closed");
         let release!: () => void;
         const previous = this.callbackTail;
         this.callbackTail = new Promise<void>(resolve => release = resolve);
@@ -97,9 +101,11 @@ class Runtime {
     }
     private async close(): Promise<void> {
         const iterator = this.iterator;
+        this.closingStream = true;
         this.source.release();
         const advance = this.advance; this.advance = undefined;
         this.streamScope = undefined;
+        this.bufferedStreamItems = false;
         this.iterator = undefined; this.streamId = undefined; this.pending = undefined; this.hasPending = false;
         this.abort?.abort(); this.abort = undefined;
         try {
@@ -128,6 +134,7 @@ class Runtime {
         if (operation === '$sdk.next' || operation === '$sdk.close') {
             if (!this.streamId || payload.stream !== this.streamId) throw new Error('Stream ownership');
             if (operation === '$sdk.close') { await this.close(); return {}; }
+            this.bufferedStreamItems = false;
             const items: unknown[] = [];
             let batchBytes = 2, done = false;
             while (items.length < 16) {
@@ -151,6 +158,7 @@ class Runtime {
                 batchBytes += size + 1; this.bytes += size;
                 if (this.bytes > 64 << 20) throw new Error('Stream limit');
                 items.push(item);
+                this.bufferedStreamItems = true;
             }
             if (done) await this.close();
             return { items, done };
@@ -168,6 +176,7 @@ class Runtime {
         }
         if (operation !== '$sdk.start') throw new Error('Unknown SDK operation');
         this.abort = abort;
+        this.closingStream = false;
         this.streamScope = scopes.getStore();
         this.iterator = this.streams.get(payload.operation)!(payload.input, context, abort.signal)[Symbol.asyncIterator]();
         this.streamId = randomUUID(); this.bytes = 0;

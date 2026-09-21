@@ -7,7 +7,7 @@ internal sealed partial class Runtime
         {
             await scope.Ready.Task.WaitAsync(token);
             await _callbackGate.WaitAsync(token);
-            if (!scope.Active || scope.Request.ValueKind != System.Text.Json.JsonValueKind.Undefined)
+            if (!scope.Active || scope.Ready.Task.IsCompleted && scope.Request.ValueKind != System.Text.Json.JsonValueKind.Undefined)
             {
                 return;
             }

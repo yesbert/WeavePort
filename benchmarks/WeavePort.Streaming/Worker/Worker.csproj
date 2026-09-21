@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <IsPackable>false</IsPackable>
+    <WeavePortSourceRoot Condition="'$(WeavePortSourceRoot)' == ''">$(MSBuildThisFileDirectory)../../../</WeavePortSourceRoot>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(WeavePortSourceRoot)/examples/sdk/csharp/Program.cs" Link="Program.cs" />
+    <ProjectReference Include="$(WeavePortSourceRoot)/src/WeavePort.Sdk/WeavePort.Sdk.csproj" />
+  </ItemGroup>
+</Project>

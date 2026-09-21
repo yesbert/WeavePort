@@ -57,3 +57,7 @@ The [MCP fixture measurement](../tests/mcp/README.md) compares complete C# host 
 For source-built experiments in customer turnover, trust boundaries, runtime preparation and Docker transport, see the [reuse matrix](../benchmarks/WeavePort.Reuse/MATRIX.md). The [registry diagnostic](../benchmarks/WeavePort.Registry/README.md) separately measures dormant-customer overhead. Neither is a delivered-release maximum-capacity promise.
 
 The [extended MacBook Air evidence](../reports/benchmarks/reuse-matrix-air-20260919/README.md) records pool scaling, repeated arrival-rate boundaries, grouped customers, fault recovery, long-run memory, production-host controls and the corrected kernel-IPC boundary. Experimental reuse remains separate from the production host contract.
+
+## Concurrent execution and live streams
+
+The [shared-worker comparison](../benchmarks/WeavePort.Shared/README.md) measures degree one versus sixteen with checked tenant identity, separate asynchronous-delay and native CPU workloads, artifact hashes, queue-inclusive latency and sampled worker memory. The [streaming comparison](../benchmarks/WeavePort.Streaming/README.md) retains matched 64 KiB and 8 MiB local/gateway measurements against the prior source revision. Both are development comparisons; exact-package qualification remains a separate gate. The 0.6.0 audit records the Python producer optimization and bounded 200 MiB source collection evidence without claiming universal throughput or memory ceilings.

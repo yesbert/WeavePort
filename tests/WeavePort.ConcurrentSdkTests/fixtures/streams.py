@@ -28,6 +28,11 @@ async def live(value, context):
     await asyncio.sleep(.3)
     await context.call_host('echo', value)
     yield 2
+@app.stream('immediateCallback')
+async def immediate_callback(value, context):
+    yield 1
+    await context.call_host('echo', value)
+    yield 2
 class PatternSource:
     def __init__(self, count):
         self.remaining = count
