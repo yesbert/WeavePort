@@ -35,7 +35,7 @@ internal sealed class LoadExperiment(PluginHost host, TimeProvider clock, Teleme
             var profile = new DockerProfile("weaveport-poc-" + language + ":1", Timeout: TimeSpan.FromSeconds(10));
             if (configureProfile is not null) profile = configureProfile(profile);
             IPluginSession session = await host.BindAsync(new PluginContext("capacity-" + index, "demo", "1", "default", JsonSerializer.SerializeToElement(new { })),
-                profile, new Callbacks(), [], token);
+                profile, new Callbacks(), [], cancellationToken: token);
             lock (Tenants) Tenants.Add(new Tenant(index, language, session, 0));
             ContractChecks.Successful(await session.InvokeAsync("echo", JsonSerializer.SerializeToElement(new { tenant = index }), token));
             lock (Tenants)

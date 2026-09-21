@@ -7,7 +7,7 @@ using WeavePort.Sdk.Gateway.Protocol;
 
 namespace WeavePort.Sdk.Gateway;
 /// <summary>Shared worker-host transport. Register the registry and map this gRPC service in the trusted application.</summary>
-public sealed class GatewayService(GatewayRegistry registry) : WorkerGateway.WorkerGatewayBase
+public sealed partial class GatewayService(GatewayRegistry registry) : WorkerGateway.WorkerGatewayBase
 {
     /// <summary>Binding-scoped sequential exchanges on a persistent HTTP/2 stream.</summary>
     public override async Task Session(IAsyncStreamReader<Request> requestStream, IServerStreamWriter<Reply> responseStream, ServerCallContext context)
@@ -30,6 +30,10 @@ public sealed class GatewayService(GatewayRegistry registry) : WorkerGateway.Wor
                         break;
                     case Mode.Stream:
                         await StreamAsync(request, responseStream, context);
+                        terminal = new Reply();
+                        break;
+                    case Mode.Source:
+                        await SourceAsync(request, responseStream, context);
                         terminal = new Reply();
                         break;
                     case Mode.Cancel:
@@ -77,33 +81,7 @@ public sealed class GatewayService(GatewayRegistry registry) : WorkerGateway.Wor
             var client = Authorize(context);
             active = registry.Begin(credential, request.StreamId, context.CancellationToken);
             CancellationToken token = active.Stop.Token;
-            var items = new List<JsonElement>();
-            long bytes = 2;
-            long total = 0;
-            await foreach (JsonElement item in client.StreamAsync(request.Operation, Decode(request), token))
-            {
-                long size = JsonSize.Measure(item);
-                total += size;
-                if (size > 128 << 10 || total > 64 << 20)
-                {
-                    throw new PluginCallException("stream-limit");
-                }
-
-                if (items.Count == 16 || bytes + size + 1 > 256 << 10)
-                {
-                    await output.WriteAsync(Encode(items), token);
-                    items.Clear();
-                    bytes = 2;
-                }
-
-                items.Add(item);
-                bytes += size + 1;
-            }
-
-            if (items.Count > 0)
-            {
-                await output.WriteAsync(Encode(items), token);
-            }
+            await WriteLiveBatchesAsync(client.StreamAsync(request.Operation, Decode(request), token), output, active);
         }
         catch (Exception error)
         {

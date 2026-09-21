@@ -6,7 +6,7 @@ using WeavePort.Abstractions;
 
 namespace WeavePort.Hosting;
 /// <summary>Owns immutable bindings and one shared worker budget. Deploy one coordinator per intended budget boundary.</summary>
-public sealed class PluginHost : IAsyncDisposable
+public sealed partial class PluginHost : IAsyncDisposable
 {
     private readonly object _sync = new();
     private readonly Dictionary<string, TenantAdmission> _tenants = new(StringComparer.Ordinal);
@@ -15,6 +15,7 @@ public sealed class PluginHost : IAsyncDisposable
     private readonly WorkerPool _pool;
     private readonly TimeProvider _clock;
     private readonly ILogger _logger;
+    private WorkerDiagnostics? _diagnostics;
     private readonly CancellationTokenSource _lifetime = new();
     private readonly Task _maintenance;
     private string? _maintenanceFailure;
@@ -69,14 +70,24 @@ public sealed class PluginHost : IAsyncDisposable
             ObjectDisposedException.ThrowIf(_disposed, this);
         }
 
+        if (profile.ReusePolicy == WorkerReusePolicy.Shared)
+        {
+            throw new NotSupportedException("Shared workers are started by ShareAsync, not a pristine target.");
+        }
+
         ExecutionProfile resolved = await ResolveAsync(profile, requiredProtection, cancellationToken);
         await _pool.PrewarmAsync(resolved, version, count, cancellationToken);
     }
 
     /// <summary>Resolves an execution profile and creates an independent binding with explicit callback grants. Idle release is opt-in.</summary>
-    public async Task<IPluginSession> BindAsync(PluginContext context, ExecutionProfile profile, IHostCallbacks callbacks, IEnumerable<string> grants, ExecutionProtections requiredProtection = ExecutionProtections.None, CancellationToken cancellationToken = default)
+    internal async Task<IPluginSession> BindDirectAsync(PluginContext context, ExecutionProfile profile, IHostCallbacks callbacks, IEnumerable<string> grants, ExecutionProtections requiredProtection = ExecutionProtections.None, CancellationToken cancellationToken = default)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(context.Tenant);
+        if (profile.ReusePolicy == WorkerReusePolicy.Shared)
+        {
+            throw new NotSupportedException("Use ShareAsync for shared ownership.");
+        }
+
         ExecutionProfile resolved = await ResolveAsync(profile, requiredProtection, cancellationToken);
         PluginContext immutable = context with
         {
@@ -104,7 +115,7 @@ public sealed class PluginHost : IAsyncDisposable
         }
     }
 
-    private static async Task<ExecutionProfile> ResolveAsync(ExecutionProfile profile, ExecutionProtections required, CancellationToken token)
+    private async Task<ExecutionProfile> ResolveAsync(ExecutionProfile profile, ExecutionProtections required, CancellationToken token)
     {
         ArgumentNullException.ThrowIfNull(profile);
         if (!Enum.IsDefined(profile.ReusePolicy) || profile.ReusePolicy == WorkerReusePolicy.ApprovedSessions && profile is ProcessProfile { Protocol: not ProcessProtocol.Native })
@@ -118,9 +129,28 @@ public sealed class PluginHost : IAsyncDisposable
         }
 
         ArgumentOutOfRangeException.ThrowIfLessThan(profile.MemoryMiB, 64);
+        ArgumentOutOfRangeException.ThrowIfLessThan(profile.MaximumCallbacks, 1);
+        if (profile.StartupTimeout <= TimeSpan.Zero || profile.StartupTimeout.TotalMilliseconds > uint.MaxValue - 1 || !Enum.IsDefined(profile.WorkClass))
+        {
+            throw new ArgumentOutOfRangeException(nameof(profile));
+        }
+
         if (profile.Timeout <= TimeSpan.Zero || profile.Timeout > TimeSpan.FromMilliseconds(uint.MaxValue - 1) || profile.IdleTimeout <= TimeSpan.Zero)
         {
             throw new ArgumentOutOfRangeException(nameof(profile));
+        }
+
+        if (profile is ProcessProfile { ForwardStandardError: true } process)
+        {
+            lock (_sync)
+            {
+                ObjectDisposedException.ThrowIf(_disposed, this);
+                _diagnostics ??= new WorkerDiagnostics(_logger);
+                profile = process with
+                {
+                    DiagnosticSink = _diagnostics.Write
+                };
+            }
         }
 
         using var deadline = CancellationTokenSource.CreateLinkedTokenSource(token);
@@ -221,6 +251,7 @@ public sealed class PluginHost : IAsyncDisposable
         lock (_sync)
         {
             _disposed = true;
+            _diagnostics?.Complete();
             sessions = _sessions.ToArray();
         }
 
@@ -237,6 +268,13 @@ public sealed class PluginHost : IAsyncDisposable
     private async Task ReleaseResourcesAsync(PluginSession[] sessions)
     {
         List<Exception> errors = [];
+        SharedPlugin[] shared;
+        lock (_sync)
+        {
+            shared = _shared.ToArray();
+        }
+
+        await DisposeSharedAsync(shared, errors);
         try
         {
             await _maintenance;
@@ -244,6 +282,18 @@ public sealed class PluginHost : IAsyncDisposable
         catch (Exception error)
         {
             errors.Add(error);
+        }
+
+        if (_scheduler is not null)
+        {
+            try
+            {
+                await _scheduler.DisposeAsync();
+            }
+            catch (Exception error)
+            {
+                errors.Add(error);
+            }
         }
 
         foreach (PluginSession session in sessions)
@@ -270,6 +320,21 @@ public sealed class PluginHost : IAsyncDisposable
         if (errors.Count != 0)
         {
             throw new AggregateException("Host cleanup was incomplete.", errors);
+        }
+    }
+
+    private static async Task DisposeSharedAsync(SharedPlugin[] shared, List<Exception> errors)
+    {
+        foreach (var plugin in shared)
+        {
+            try
+            {
+                await plugin.DisposeAsync();
+            }
+            catch (Exception error)
+            {
+                errors.Add(error);
+            }
         }
     }
 }

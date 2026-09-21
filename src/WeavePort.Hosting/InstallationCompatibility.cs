@@ -2,13 +2,13 @@ using System.Text.Json;
 
 namespace WeavePort.Hosting;
 internal sealed record AuthorSdk(string Package, string Version);
-internal sealed record CompatibilityDeclaration(int HostApi, int Protocol, Dictionary<string, string> HostPackages, Dictionary<string, AuthorSdk> AuthorSdks);
+internal sealed record CompatibilityDeclaration(int HostApi, int Protocol, Dictionary<string, string> HostPackages, Dictionary<string, AuthorSdk> AuthorSdks, int[]? Protocols = null);
 internal static class InstallationCompatibility
 {
     private static readonly CompatibilityDeclaration Supported = Load();
     internal static void Validate(CompatibilityDeclaration? declaration, IEnumerable<string> entries)
     {
-        if (declaration is null || declaration.HostApi != Supported.HostApi || declaration.Protocol != Supported.Protocol || declaration.HostPackages is null || declaration.AuthorSdks is null || !declaration.HostPackages.OrderBy(p => p.Key, StringComparer.Ordinal).SequenceEqual(Supported.HostPackages.OrderBy(p => p.Key, StringComparer.Ordinal)) || !declaration.AuthorSdks.Keys.ToHashSet(StringComparer.Ordinal).SetEquals(entries))
+        if (declaration is null || declaration.HostApi != Supported.HostApi || !(Supported.Protocols ?? [Supported.Protocol]).Contains(declaration.Protocol) || declaration.HostPackages is null || declaration.AuthorSdks is null || !declaration.HostPackages.OrderBy(p => p.Key, StringComparer.Ordinal).SequenceEqual(Supported.HostPackages.OrderBy(p => p.Key, StringComparer.Ordinal)) || !declaration.AuthorSdks.Keys.ToHashSet(StringComparer.Ordinal).SetEquals(entries))
         {
             throw new InvalidDataException("Unsupported installation host API, protocol or package declaration.");
         }

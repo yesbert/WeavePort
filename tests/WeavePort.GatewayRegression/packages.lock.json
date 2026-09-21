@@ -4,12 +4,12 @@
     "net10.0": {
       "WeavePort.Sdk.Gateway": {
         "type": "Direct",
-        "requested": "[0.5.0, )",
-        "resolved": "0.5.0",
-        "contentHash": "+QSKAnG9FrfnZoql3OvXUpJ+va5U4UUUDJ3a00ziUgtCL2nOu0EaqAWKY+NHsDLqFaajA8I36k/O0oFvkwOadw==",
+        "requested": "[0.6.0, )",
+        "resolved": "0.6.0",
+        "contentHash": "AFFX0ipj00unGIl0QJsjZoMqv7StPpLknDPNO43JO/HLDSfL+VuL67PT+fQ9xn2bZ5+zlqKC26ipZJT8q1pcoQ==",
         "dependencies": {
           "Grpc.AspNetCore.Server": "2.83.0",
-          "WeavePort.Sdk.Gateway.Client": "0.5.0"
+          "WeavePort.Sdk.Gateway.Client": "0.6.0"
         }
       },
       "Google.Protobuf": {
@@ -48,25 +48,25 @@
       },
       "WeavePort.Abstractions": {
         "type": "Transitive",
-        "resolved": "0.5.0",
-        "contentHash": "r+XHDJNkM5CvtMVla/Ofvw/r3LMouIOJg5t5jIT/Svflpld85/+FUujDZCnHCHIZFJ4192rPkljlNVczlkPD7g=="
+        "resolved": "0.6.0",
+        "contentHash": "BWw2x2+WLu8WiIZdZvT69Loz1P+IghMoXPmnlu9vahLVV7t5zvLdDt7RLodIE8ocPHY5QTH4fanDkxsngaVLFQ=="
       },
       "WeavePort.Sdk.Client": {
         "type": "Transitive",
-        "resolved": "0.5.0",
-        "contentHash": "F/jV5SO31bMMJYjxkAvsEOADFxw51h5jHzsmzxPto/p1Ow4JWwUYdYd1YCdcvDFMk66QKblbQbr6rBvNDfYwnA==",
+        "resolved": "0.6.0",
+        "contentHash": "+8pBJ5Qx/iwZk6oQZV5ISYBePPVcfi+rTiVV/gC/cj8ioVCFe3F6oCBVIszbqusNFhuFxE4Hwvl07LzElvxvDA==",
         "dependencies": {
-          "WeavePort.Abstractions": "0.5.0"
+          "WeavePort.Abstractions": "0.6.0"
         }
       },
       "WeavePort.Sdk.Gateway.Client": {
         "type": "Transitive",
-        "resolved": "0.5.0",
-        "contentHash": "rZFSCq7JpDOQnX1DAYmD04gqfcwG7YcOtq6IO0TvE9YeBrLgW7h4Fil1NpjttubemspVXG+0HatQ3DpU7O2tMQ==",
+        "resolved": "0.6.0",
+        "contentHash": "chuthyUFjqIzr6oC/fgDQPSRJz0FTBl+rbdYp5rlZo8Vq1EkBGy2abT4niKglP1Hvl3gO7Q2KAQyGjBKm4EhsQ==",
         "dependencies": {
           "Google.Protobuf": "3.36.1",
           "Grpc.Net.Client": "2.83.0",
-          "WeavePort.Sdk.Client": "0.5.0"
+          "WeavePort.Sdk.Client": "0.6.0"
         }
       }
     }

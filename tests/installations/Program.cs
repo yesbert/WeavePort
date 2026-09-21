@@ -7,6 +7,7 @@ using WeavePort.Sdk.Client;
 
 string root = Path.GetFullPath(args[0]);
 string dotnet = args[1];
+if (args.Contains("--mixed-only")) { await MixedLaunchChecks.RunAsync(root); return; }
 string work = Path.Combine(root, "artifacts", "installation-tests", Guid.NewGuid().ToString("N"));
 string releases = Path.Combine(work, "releases");
 foreach (string version in new[] { "1", "2" })
@@ -32,6 +33,17 @@ void Refused(Action action, string label)
 }
 InstalledPlugin Resolve(string version = "1", InstallationIdentity? pin = null) => catalog.Resolve("document-workshop", version, "document-workshop/v1", pin);
 var original = Resolve();
+var expandedRuntimes = new InstalledPluginCatalog(releases, new Dictionary<string, string> { ["dotnet"] = dotnet, ["unused-runtime"] = dotnet });
+Check(expandedRuntimes.Resolve("document-workshop", "1", "document-workshop/v1").Identity == original.Identity, "declared runtime subset accepts extra operator-approved aliases");
+string catalogRoot = Path.Combine(work, "catalog");
+string nestedRelease = Path.Combine(catalogRoot, "document-workshop", "releases", "1");
+Directory.CreateDirectory(nestedRelease);
+foreach (string file in Directory.GetFiles(Path.Combine(releases, "1"))) File.Copy(file, Path.Combine(nestedRelease, Path.GetFileName(file)));
+File.WriteAllText(Path.Combine(catalogRoot, "document-workshop", "active.txt"), "1");
+var discovery = new InstalledPluginCatalog(catalogRoot, new Dictionary<string, string> { ["dotnet"] = dotnet });
+Check(discovery.List("document-workshop/v1").Single().Identity == original.Identity, "contract listing returns verified selected release");
+Check(discovery.List("different/v1").Count == 0, "contract listing excludes other contracts");
+Check(discovery.Resolve("document-workshop", "1", "document-workshop/v1", original.Identity).Identity == original.Identity, "nested catalog preserves digest pins");
 string extra = Path.Combine(releases, "1", "injected.dll");
 File.WriteAllText(extra, "extra");
 Refused(() => Resolve(), "undeclared bundle dependency rejected");
@@ -68,7 +80,7 @@ Mutate(d => d["Compatibility"]!["AuthorSdks"]!["dotnet"]!["Package"] = "Unreview
 Mutate(d => d["Compatibility"]!["AuthorSdks"]!.AsObject().Remove("dotnet"), "missing entry-point SDK declaration rejected");
 Mutate(d => d["Compatibility"]!["AuthorSdks"]!["python"] = new JsonObject { ["Package"] = "weaveport-sdk", ["Version"] = "0.2.0" }, "SDK declaration without entry point rejected");
 Mutate(d => d["Compatibility"]!["AuthorSdks"]!["dotnet"] = null, "null SDK declaration rejected");
-File.WriteAllText(manifest, baseline.Replace("\"HostApi\": 1", "\"HostApi\": 1, \"HostApi\": 1"));
+File.WriteAllText(manifest, baseline.Replace("\"HostApi\": 2", "\"HostApi\": 2, \"HostApi\": 2"));
 Refused(() => Resolve(), "duplicate compatibility fields rejected");
 File.WriteAllText(manifest, baseline);
 var incompatible = JsonNode.Parse(baseline)!;
@@ -78,6 +90,11 @@ string oldSelector = File.ReadAllText(selector);
 Refused(() => catalog.Activate(selector, "document-workshop", "1", "document-workshop/v1"), "incompatible activation rejected");
 Check(File.ReadAllText(selector) == oldSelector, "refused compatibility activation preserves existing default");
 File.WriteAllText(manifest, baseline);
+Mutate(d => d["Launch"] = new JsonObject { ["Runtime"] = "unapproved", ["MemoryMiB"] = 256 }, "launch runtime must be verified");
+Mutate(d => d["Launch"] = new JsonObject { ["Runtime"] = "dotnet", ["MemoryMiB"] = 1 }, "launch reservation has a valid minimum");
+Mutate(d => d["Launch"] = new JsonObject { ["Runtime"] = "dotnet", ["MaximumDegree"] = 0 }, "launch degree must be positive");
+Mutate(d => { d["Launch"] = new JsonObject { ["Runtime"] = "dotnet", ["Ownership"] = new JsonArray("Shared") }; }, "shared launch requires protocol 2");
+Mutate(d => { d["Launch"] = new JsonObject { ["Runtime"] = "dotnet", ["Ownership"] = new JsonArray("Shared", "CustomerBound") }; d["Compatibility"]!["Protocol"] = 2; }, "one launch cannot mix serial and concurrent startup modes");
 Mutate(d => d["Schema"] = 99, "unsupported manifest schema rejected");
 Mutate(d => d["Version"] = "2", "wrong manifest release rejected");
 Mutate(d => d["EntryPoints"]!["dotnet"] = "not-declared.dll", "undeclared entry rejected");
@@ -120,6 +137,29 @@ await using (var host = new PluginHost(options: new WorkerPoolOptions(MaximumPri
         Check(true, "real v1 worker under trusted v2 metadata fails startup version guard");
     }
 }
+await using (var approvalHost = new PluginHost())
+{
+    var declared = Resolve();
+    async Task RejectApproval(PluginApproval approval, string label)
+    {
+        try
+        {
+            await using var unused = await approvalHost.BindAsync(declared, approval,
+                new TenantBinding("test", JsonSerializer.SerializeToElement(new { })), new Callbacks(), []);
+        }
+        catch (Exception error) when (error is InvalidOperationException or ArgumentOutOfRangeException)
+        {
+            Check(approvalHost.Snapshot.Workers == 0, label);
+            return;
+        }
+        throw new InvalidOperationException("Expected approval rejection: " + label);
+    }
+    await RejectApproval(new PluginApproval(), "untrusted approval refused before startup");
+    await RejectApproval(new PluginApproval { TrustedCode = true, MaximumCallbacks = 0 }, "callback budget validated before startup");
+    await RejectApproval(new PluginApproval { TrustedCode = true, StartupTimeout = TimeSpan.Zero }, "startup deadline validated before startup");
+    await RejectApproval(new PluginApproval { TrustedCode = true, MaximumMemoryMiB = 64 }, "memory approval must cover launch reservation");
+}
+await MixedLaunchChecks.RunAsync(root);
 Console.WriteLine($"Verification passed: {checks} assertions. Evidence: {work}");
 File.WriteAllText(Path.Combine(work, "result.txt"), $"{checks} assertions passed\n");
 

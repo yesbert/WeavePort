@@ -9,17 +9,18 @@ using WeavePort.Sdk.Gateway.Protocol;
 
 namespace WeavePort.Sdk.Gateway;
 /// <summary>Product client for a preconfigured worker-host binding; the plugin artifact stays unchanged.</summary>
-public sealed class RemotePluginClient : IBoundPluginClient
+public sealed partial class RemotePluginClient : IBoundPluginClient
 {
     private readonly GatewaySessions _sessions;
     private readonly TimeSpan _callTimeout;
-    /// <summary>Creates a binding client with at most eight leased sessions and a default 30-second operation timeout, including lease wait. Plain HTTP is permitted only on loopback; remote endpoints require HTTPS.</summary>
-    public RemotePluginClient(Uri endpoint, string bindingCredential, TimeSpan? callTimeout = null) : this(endpoint, bindingCredential, new GrpcChannelOptions(), callTimeout)
+    private readonly PluginStreamOptions _streamOptions;
+    /// <summary>Creates a binding client with at most eight leased sessions and a default 30-second unary timeout, including lease wait. Streams use separate exchange and total deadlines. Plain HTTP is permitted only on loopback; remote endpoints require HTTPS.</summary>
+    public RemotePluginClient(Uri endpoint, string bindingCredential, TimeSpan? callTimeout = null, PluginStreamOptions? streamOptions = null) : this(endpoint, bindingCredential, new GrpcChannelOptions(), callTimeout, streamOptions)
     {
     }
 
     /// <summary>Creates a client with transport configuration for trusted certificate/handler policy. Handler ownership follows DisposeHttpClient; transport message limits are enforced by this library.</summary>
-    public RemotePluginClient(Uri endpoint, string bindingCredential, GrpcChannelOptions channelOptions, TimeSpan? callTimeout = null)
+    public RemotePluginClient(Uri endpoint, string bindingCredential, GrpcChannelOptions channelOptions, TimeSpan? callTimeout, PluginStreamOptions? streamOptions = null)
     {
         ArgumentNullException.ThrowIfNull(endpoint);
         ArgumentNullException.ThrowIfNull(channelOptions);
@@ -35,6 +36,8 @@ public sealed class RemotePluginClient : IBoundPluginClient
             throw new ArgumentOutOfRangeException(nameof(callTimeout));
         }
 
+        _streamOptions = streamOptions ?? new PluginStreamOptions();
+        ValidateStreamOptions(_streamOptions);
         _sessions = new(endpoint, new() { { GatewayMetadata.BindingCredential, bindingCredential } }, channelOptions);
     }
 
@@ -55,13 +58,13 @@ public sealed class RemotePluginClient : IBoundPluginClient
     private async Task<JsonElement> ExchangeAsync(Request request, CancellationToken cancellationToken, bool cleanup = false)
     {
         using var stop = cleanup ? CancellationTokenSource.CreateLinkedTokenSource(cancellationToken) : CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, _sessions.Lifetime);
-        stop.CancelAfter(cleanup ? TimeSpan.FromSeconds(5) : _callTimeout);
+        stop.CancelAfter(cleanup ? _streamOptions.ExchangeTimeout : _callTimeout);
         var session = await _sessions.RentAsync(stop.Token);
         bool complete = false;
         try
         {
             await session.RequestStream.WriteAsync(request, stop.Token);
-            Reply reply = await ReadAsync(session, stop.Token);
+            Reply reply = await ReadStreamReplyAsync(session, stop.Token);
             complete = reply.Complete;
             if (!complete)
             {
@@ -90,30 +93,23 @@ public sealed class RemotePluginClient : IBoundPluginClient
     public async IAsyncEnumerable<JsonElement> StreamAsync(string operation, JsonElement input, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         using var stop = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, _sessions.Lifetime);
-        stop.CancelAfter(_callTimeout);
+        stop.CancelAfter(_streamOptions.TotalTimeout);
         var request = Request(operation, input);
         request.Mode = Mode.Stream;
         request.StreamId = Guid.NewGuid().ToString("N");
         var session = await _sessions.RentAsync(stop.Token);
+        using var abort = stop.Token.Register(session.Dispose);
         bool complete = false;
         long total = 0;
         try
         {
-            try
-            {
-                await session.RequestStream.WriteAsync(request, stop.Token);
-            }
-            catch (RpcException error)
-            {
-                throw Translate(error, stop.Token);
-            }
-
+            await WriteSourceRequestAsync(session, request, stop.Token);
             while (true)
             {
                 Reply reply;
                 try
                 {
-                    reply = await ReadAsync(session, stop.Token);
+                    reply = await ReadStreamReplyAsync(session, stop.Token);
                 }
                 catch (RpcException error)
                 {
@@ -146,7 +142,8 @@ public sealed class RemotePluginClient : IBoundPluginClient
         {
             // Abort an incomplete HTTP/2 stream before asking the server to confirm
             // plugin cleanup. Never reuse a reader that may contain abandoned items.
-            _sessions.Return(session, complete);
+            abort.Dispose();
+            _sessions.Return(session, complete && !stop.IsCancellationRequested);
             if (!complete && !_sessions.Lifetime.IsCancellationRequested)
             {
                 await ExchangeAsync(new Request { Mode = Mode.Cancel, StreamId = request.StreamId }, CancellationToken.None, cleanup: true);

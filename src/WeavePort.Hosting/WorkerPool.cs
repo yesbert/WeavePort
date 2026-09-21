@@ -24,6 +24,9 @@ internal sealed partial class WorkerPool(WorkerPoolOptions options, TimeProvider
         {
             return new(_workers.Count, _workers.Count(w => w.Pristine), _workers.Count(w => w.Starting), _workers.Count(w => w.Quarantined), _memory, bindings, tenants, failure)
             {
+                SharedWorkers = _workers.Count(w => w.Profile.ReusePolicy == WorkerReusePolicy.Shared && !w.Quarantined),
+                SharedMemoryMiB = _workers.Where(w => w.Profile.ReusePolicy == WorkerReusePolicy.Shared && !w.Quarantined).Sum(w => (long)w.Profile.MemoryMiB),
+                QuarantinedMemoryMiB = _workers.Where(w => w.Quarantined).Sum(w => (long)w.Profile.MemoryMiB),
                 ReusableWorkers = _workers.Count(w => w.Reusable),
                 ReuseHits = _reuseHits,
                 SessionReturns = _sessionReturns,

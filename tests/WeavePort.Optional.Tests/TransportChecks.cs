@@ -9,7 +9,7 @@ internal static class TransportChecks
         {
             using var handler = new PendingHandler();
             var client = new RemotePluginClient(new Uri("https://localhost"), "test",
-                new GrpcChannelOptions { HttpHandler = handler, DisposeHttpClient = owned });
+                new GrpcChannelOptions { HttpHandler = handler, DisposeHttpClient = owned }, callTimeout: null);
             var pending = client.GetTenantAsync();
             await handler.Started.Task.WaitAsync(TimeSpan.FromSeconds(5));
             await client.DisposeAsync();

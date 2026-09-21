@@ -12,7 +12,7 @@ A consumer SHALL invoke C#, Python and TypeScript implementations through the sa
 - **THEN** each result satisfies the same contract without consumer code changes
 
 ### Requirement: Host-owned authority
-Callbacks SHALL use immutable host-bound tenant identity and explicitly granted capabilities, with bounded calls and cancellation.
+Callbacks SHALL use immutable host-supplied invocation identity and explicitly granted capabilities. Exclusive bindings retain one tenant; shared views SHALL supply tenant identity per invocation without taking authority from plugin payloads. Callback count and cancellation SHALL remain bounded.
 
 #### Scenario: Forged callback context
 - **WHEN** a plugin requests another tenant or an ungranted operation

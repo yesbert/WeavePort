@@ -86,24 +86,24 @@ Console.WriteLine($"PASS {checks} reuse assertions");
 
 async Task Scheduler(ExecutionProfile original)
 {
-    await using var host = new ScheduledPluginHost(new SchedulingOptions { MemoryBudgetMiB=128, MaximumWorkers=2, MaximumPristineWorkers=0, MaximumHeavyCalls=0 });
+    await using var host = new PluginHost(new SchedulingOptions { MemoryBudgetMiB=128, MaximumWorkers=2, MaximumPristineWorkers=0, MaximumHeavyCalls=0 });
     var profile = original with { ReusePolicy=WorkerReusePolicy.ApprovedSessions };
-    var plugins = new List<ScheduledPlugin>();
+    var plugins = new List<IPluginSession>();
     try
     {
-        for (int i=0;i<20;i++) plugins.Add(await host.RegisterAsync(Context("scheduled-"+i), profile, callbacks,["who"]));
+        for (int i=0;i<20;i++) plugins.Add(await host.BindAsync(Context("scheduled-"+i), profile, callbacks,["who"]));
         var ids = new HashSet<string>();
         foreach(var plugin in plugins)
         {
             var result = await plugin.InvokeAsync("$sdk.call",JsonSerializer.SerializeToElement(new{operation="session", input=new{}}));
             CheckSession(result,plugin.Tenant);
-            Assert(host.Snapshot.Active == 0, "awaited completion releases scheduler activity before handoff");
+            Assert(host.Scheduling!.Active == 0, "awaited completion releases scheduler activity before handoff");
             ids.Add(result.Instance);
         }
-        Assert(ids.Count==1 && host.Snapshot.Runtime.ReuseHits==19,"scheduler shares clean worker across many registrations");
+        Assert(ids.Count==1 && host.Snapshot.ReuseHits==19,"scheduler shares clean worker across many registrations");
         var concurrent = await Task.WhenAll(plugins.Select(plugin => plugin.InvokeAsync("$sdk.call",JsonSerializer.SerializeToElement(new{operation="session",input=new{}}))));
         for(int i=0;i<concurrent.Length;i++) CheckSession(concurrent[i],plugins[i].Tenant);
-        Assert(host.Snapshot.Runtime.Workers<=2 && host.Snapshot.Failure is null,"concurrent scheduler respects global pool budget");
+        Assert(host.Snapshot.Workers<=2 && host.Scheduling!.Failure is null,"concurrent scheduler respects global pool budget");
     }
     finally { foreach(var plugin in plugins) await plugin.DisposeAsync(); }
 }

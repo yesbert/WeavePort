@@ -21,6 +21,14 @@ public abstract record ExecutionProfile(int MemoryMiB, TimeSpan? Timeout, TimeSp
 {
     /// <summary>Operator-approved reuse policy. Defaults to customer-bound execution; approval covers all code in the compatible deployment.</summary>
     public WorkerReusePolicy ReusePolicy { get; init; }
+    /// <summary>Host-authorized normal or heavy scheduling class.</summary>
+    public PluginWorkClass WorkClass { get; init; }
+    /// <summary>Explicit permission to discard idle state under scheduling pressure.</summary>
+    public bool Reconstructible { get; init; }
+    /// <summary>Maximum callback operations per invocation.</summary>
+    public int MaximumCallbacks { get; init; } = 8;
+    /// <summary>Maximum time allowed for worker readiness.</summary>
+    public TimeSpan StartupTimeout { get; init; } = TimeSpan.FromSeconds(10);
     /// <summary>Restrictions requested by this adapter. Effective deployment policy must still be verified.</summary>
     public abstract ExecutionProtections Protection { get; }
 

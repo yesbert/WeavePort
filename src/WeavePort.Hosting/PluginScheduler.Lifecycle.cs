@@ -1,7 +1,7 @@
 using WeavePort.Internal;
 
 namespace WeavePort.Hosting;
-public sealed partial class ScheduledPluginHost
+internal sealed partial class PluginScheduler
 {
     private readonly Dictionary<(ExecutionProfile Profile, string Version), int> _reserve = [];
     private long? _lastReserve;
@@ -153,7 +153,7 @@ public sealed partial class ScheduledPluginHost
                     plugins = _plugins.Values.ToArray();
                 }
 
-                await Cleanup.RunAsync(() => Task.WhenAll(plugins.Select(RemoveAsync)), () => _host.DisposeAsync().AsTask());
+                await Task.WhenAll(plugins.Select(RemoveAsync));
             });
         }
         finally

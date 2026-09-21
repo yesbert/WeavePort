@@ -5,14 +5,17 @@ using WeavePort.Abstractions;
 
 namespace WeavePort.Sdk.Client;
 /// <summary>Owns an existing host binding and exposes author-SDK operations over it.</summary>
-public sealed class LocalPluginClient(IPluginSession session, TimeSpan? streamTimeout = null) : IBoundPluginClient
+public sealed partial class LocalPluginClient(IPluginSession session, TimeSpan? streamTimeout = null, PluginStreamOptions? streamOptions = null) : IBoundPluginClient
 {
     private readonly object _disposeSync = new();
     private Task? _disposal;
     private bool _disposed;
     private readonly SemaphoreSlim _gate = new(1);
     private readonly CancellationTokenSource _lifetime = new();
-    private readonly TimeSpan _streamTimeout = streamTimeout ?? TimeSpan.FromSeconds(30);
+    private readonly PluginStreamOptions _streamOptions = streamOptions ?? new PluginStreamOptions
+    {
+        TotalTimeout = streamTimeout ?? TimeSpan.FromMinutes(5)
+    };
     /// <summary>The immutable host-bound customer, never taken from an operation input.</summary>
     public string Tenant => session.Tenant;
 
@@ -31,38 +34,24 @@ public sealed class LocalPluginClient(IPluginSession session, TimeSpan? streamTi
     public async Task<JsonElement> CallAsync(string operation, JsonElement input, CancellationToken cancellationToken = default)
     {
         using var stop = CreateOperationSource(cancellationToken);
-        if (!await _gate.WaitAsync(0, stop.Token))
+        await using IPluginSession? legacyLease = session is IPluginOperationSession ? null : await AcquireStreamAsync(stop.Token);
+        CheckInput(input);
+        JsonElement output = await ExchangeAsync(session, SdkOperations.Call, new { operation, input }, stop.Token);
+        if (Size(output) > 512 << 10)
         {
-            throw new PluginCallException("busy", false);
+            throw new PluginCallException("value-limit");
         }
 
-        try
-        {
-            CheckInput(input);
-            JsonElement output = await ExchangeAsync(SdkOperations.Call, new { operation, input }, stop.Token);
-            if (Size(output) > 512 << 10)
-            {
-                throw new PluginCallException("value-limit");
-            }
-
-            return output;
-        }
-        finally
-        {
-            _gate.Release();
-        }
+        return output;
     }
 
     /// <inheritdoc/>
     public async IAsyncEnumerable<JsonElement> StreamAsync(string operation, JsonElement input, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         using var stop = CreateOperationSource(cancellationToken);
-        stop.CancelAfter(_streamTimeout);
-        if (!await _gate.WaitAsync(0, stop.Token))
-        {
-            throw new PluginCallException("busy", false);
-        }
-
+        _streamOptions.Validate();
+        stop.CancelAfter(_streamOptions.TotalTimeout);
+        await using IPluginSession operationSession = await AcquireStreamAsync(stop.Token);
         string? stream = null;
         bool done = false;
         bool healthy = true;
@@ -70,16 +59,16 @@ public sealed class LocalPluginClient(IPluginSession session, TimeSpan? streamTi
         try
         {
             CheckInput(input);
-            JsonElement opened = await ExchangeAsync(SdkOperations.Start, new { operation, input }, stop.Token);
+            JsonElement opened = await StreamExchangeAsync(operationSession, SdkOperations.Start, new { operation, input }, stop.Token);
             stream = opened.GetProperty("stream").GetString() ?? throw new InvalidDataException("Missing stream.");
             while (!done)
             {
                 healthy = false;
-                JsonElement batch = await ExchangeAsync(SdkOperations.Next, new { stream }, stop.Token);
+                JsonElement batch = await StreamExchangeAsync(operationSession, SdkOperations.Next, new { stream }, stop.Token);
                 healthy = true;
                 JsonElement items = batch.GetProperty("items");
                 done = batch.GetProperty("done").GetBoolean();
-                ValidateBatch(items, done);
+                ValidateBatch(items);
                 foreach (JsonElement item in items.EnumerateArray())
                 {
                     stop.Token.ThrowIfCancellationRequested();
@@ -92,30 +81,18 @@ public sealed class LocalPluginClient(IPluginSession session, TimeSpan? streamTi
         }
         finally
         {
-            try
+            if (!done && stream is not null && !IsDisposed())
             {
-                if (!done && stream is not null && !IsDisposed())
-                {
-                    await CloseStreamAsync(stream, healthy && !stop.IsCancellationRequested);
-                }
-            }
-            finally
-            {
-                _gate.Release();
+                await CloseStreamAsync(operationSession, stream, healthy && !stop.IsCancellationRequested);
             }
         }
     }
 
-    private static void ValidateBatch(JsonElement items, bool done)
+    private static void ValidateBatch(JsonElement items)
     {
         if (items.GetArrayLength() > 16 || Size(items) > 256 << 10)
         {
             throw new InvalidDataException("Invalid batch.");
-        }
-
-        if (!done && items.GetArrayLength() == 0)
-        {
-            throw new InvalidDataException("Empty unfinished batch.");
         }
     }
 
@@ -129,29 +106,29 @@ public sealed class LocalPluginClient(IPluginSession session, TimeSpan? streamTi
         }
     }
 
-    private async Task CloseStreamAsync(string stream, bool healthy)
+    private async Task CloseStreamAsync(IPluginSession operationSession, string stream, bool healthy)
     {
         if (!healthy)
         {
-            await session.RestartAsync();
+            await operationSession.RestartAsync();
             return;
         }
 
-        using var cleanup = new CancellationTokenSource(TimeSpan.FromSeconds(2));
+        using var cleanup = new CancellationTokenSource(_streamOptions.ExchangeTimeout);
         try
         {
-            await ExchangeAsync(SdkOperations.Close, new { stream }, cleanup.Token);
+            await StreamExchangeAsync(operationSession, SdkOperations.Close, new { stream }, cleanup.Token);
         }
         catch (Exception error) when (error is IOException or OperationCanceledException)
         {
-            await session.RestartAsync();
+            await operationSession.RestartAsync();
         }
     }
 
-    private async Task<JsonElement> ExchangeAsync(string operation, object input, CancellationToken token)
+    private static async Task<JsonElement> ExchangeAsync(IPluginSession target, string operation, object input, CancellationToken token)
     {
         token.ThrowIfCancellationRequested();
-        InvocationResult reply = await session.InvokeAsync(operation, JsonSerializer.SerializeToElement(input), token);
+        InvocationResult reply = await target.InvokeAsync(operation, JsonSerializer.SerializeToElement(input), token);
         if (reply.Status == "cancelled")
         {
             throw new OperationCanceledException(token);

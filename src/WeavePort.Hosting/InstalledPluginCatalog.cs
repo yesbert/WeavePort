@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using System.Security.Cryptography;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace WeavePort.Hosting;
 /// <summary>Persistable identity of a trusted installation manifest, separate from domain state.</summary>
@@ -13,26 +14,48 @@ public sealed class InstalledPlugin
     /// <summary>Gets the resolved, verified entry points by trusted alias.</summary>
     public IReadOnlyDictionary<string, string> EntryPoints { get; }
 
-    internal InstalledPlugin(InstallationIdentity identity, Dictionary<string, string> entries)
+    private readonly PluginLaunchDeclaration? _launch;
+    /// <summary>Gets a copy of the verified launch declaration, when supplied by the installation.</summary>
+    public PluginLaunchDeclaration? Launch => _launch?.Freeze();
+    internal IReadOnlyDictionary<string, string> RuntimeFiles { get; }
+
+    internal InstalledPlugin(InstallationIdentity identity, Dictionary<string, string> entries, Dictionary<string, string> runtimes, PluginLaunchDeclaration? launch)
     {
         Identity = identity;
         EntryPoints = new ReadOnlyDictionary<string, string>(entries);
+        RuntimeFiles = new ReadOnlyDictionary<string, string>(runtimes);
+        _launch = launch?.Freeze();
     }
 }
 
 /// <summary>Validates trusted local release manifests; does not install code or provide an OS sandbox.</summary>
 public sealed class InstalledPluginCatalog(string releases, IReadOnlyDictionary<string, string> runtimeFiles)
 {
-    private sealed record Manifest(int Schema, string Plugin, string Version, string Contract, Dictionary<string, string> EntryPoints, Dictionary<string, string> Files, Dictionary<string, string> RuntimeFiles, CompatibilityDeclaration? Compatibility = null);
+    private static readonly JsonSerializerOptions ManifestJson = new()
+    {
+        Converters =
+        {
+            new JsonStringEnumConverter<WorkerReusePolicy>()
+        }
+    };
+    private sealed record Manifest(int Schema, string Plugin, string Version, string Contract, Dictionary<string, string> EntryPoints, Dictionary<string, string> Files, Dictionary<string, string> RuntimeFiles, CompatibilityDeclaration? Compatibility = null, PluginLaunchDeclaration? Launch = null);
     /// <summary>Resolves an exact release and optionally requires a previously persisted manifest identity.</summary>
     public InstalledPlugin Resolve(string plugin, string version, string contract, InstallationIdentity? pinned = null)
     {
+        ValidateSegment(plugin);
         ValidateSegment(version);
-        string root = Path.GetFullPath(Path.Combine(releases, version));
+        string nested = Path.Combine(releases, plugin, "releases");
+        if (Directory.Exists(nested))
+        {
+            RejectLink(Path.Combine(releases, plugin));
+            RejectLink(nested);
+        }
+
+        string root = Path.GetFullPath(Path.Combine(Directory.Exists(nested) ? nested : releases, version));
         string path = Path.Combine(root, "installation.json");
         (Manifest manifest, byte[] bytes) = ReadManifest(root, path);
         var identity = new InstallationIdentity(plugin, version, contract, Convert.ToHexString(SHA256.HashData(bytes)));
-        if (manifest.Schema != 1 || manifest.Plugin != plugin || manifest.Version != version || manifest.Contract != contract || (pinned is not null && identity != pinned) || manifest.Files is null || manifest.EntryPoints is null || manifest.RuntimeFiles is null || manifest.Files.Count is < 1 or > 4096 || manifest.EntryPoints.Count is < 1 or > 32 || !manifest.RuntimeFiles.Keys.ToHashSet(StringComparer.Ordinal).SetEquals(runtimeFiles.Keys))
+        if (manifest.Schema != 1 || manifest.Plugin != plugin || manifest.Version != version || manifest.Contract != contract || (pinned is not null && identity != pinned) || manifest.Files is null || manifest.EntryPoints is null || manifest.RuntimeFiles is null || manifest.Files.Count is < 1 or > 4096 || manifest.EntryPoints.Count is < 1 or > 32 || !manifest.RuntimeFiles.Keys.All(runtimeFiles.ContainsKey))
         {
             throw new InvalidDataException("Installation identity, schema, contract or runtime selection mismatch.");
         }
@@ -65,7 +88,50 @@ public sealed class InstalledPluginCatalog(string releases, IReadOnlyDictionary<
             entries.Add(entry.Key, BundlePath(root, entry.Value));
         }
 
-        return new InstalledPlugin(identity, entries);
+        manifest.Launch?.Validate(entries, manifest.RuntimeFiles);
+        if (manifest.Launch is { } launch && manifest.Compatibility!.Protocol != (launch.Ownership.Contains(WorkerReusePolicy.Shared) ? 2 : 1))
+        {
+            throw new InvalidDataException("Launch ownership does not match its declared wire protocol.");
+        }
+
+        var selectedRuntimes = manifest.RuntimeFiles.Keys.ToDictionary(key => key, key => Path.GetFullPath(runtimeFiles[key]), StringComparer.Ordinal);
+        return new InstalledPlugin(identity, entries, selectedRuntimes, manifest.Launch);
+    }
+
+    /// <summary>Lists the verified selected release of each plugin matching the contract in root/plugin/releases/version layout.</summary>
+    public IReadOnlyList<InstalledPlugin> List(string contract)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(contract);
+        var result = new List<InstalledPlugin>();
+        if (!Directory.Exists(releases))
+        {
+            return result;
+        }
+
+        foreach (string directory in Directory.EnumerateDirectories(releases).Order(StringComparer.Ordinal))
+        {
+            if ((File.GetAttributes(directory) & FileAttributes.ReparsePoint) != 0)
+            {
+                throw new InvalidDataException("Linked plugin roots are unsupported.");
+            }
+
+            string selector = Path.Combine(directory, "active.txt");
+            if (!File.Exists(selector))
+            {
+                continue;
+            }
+
+            string plugin = Path.GetFileName(directory);
+            string version = ReadSelection(selector);
+            string root = Path.Combine(directory, "releases", version);
+            (Manifest manifest, _) = ReadManifest(root, Path.Combine(root, "installation.json"));
+            if (manifest.Contract == contract)
+            {
+                result.Add(Resolve(plugin, version, contract));
+            }
+        }
+
+        return result.AsReadOnly();
     }
 
     private static (Manifest Manifest, byte[] Bytes) ReadManifest(string root, string path)
@@ -85,7 +151,7 @@ public sealed class InstalledPluginCatalog(string releases, IReadOnlyDictionary<
         try
         {
             RejectDuplicateFields(bytes);
-            manifest = JsonSerializer.Deserialize<Manifest>(bytes) ?? throw new InvalidDataException("Empty installation.");
+            manifest = JsonSerializer.Deserialize<Manifest>(bytes, ManifestJson) ?? throw new InvalidDataException("Empty installation.");
         }
         catch (JsonException error)
         {
@@ -103,6 +169,7 @@ public sealed class InstalledPluginCatalog(string releases, IReadOnlyDictionary<
             throw new InvalidDataException("Invalid installation selector.");
         }
 
+        RejectLink(path);
         string version = File.ReadAllText(path).Trim();
         ValidateSegment(version);
         return version;
@@ -126,6 +193,14 @@ public sealed class InstalledPluginCatalog(string releases, IReadOnlyDictionary<
             {
                 File.Delete(temporary);
             }
+        }
+    }
+
+    private static void RejectLink(string path)
+    {
+        if ((File.GetAttributes(path) & FileAttributes.ReparsePoint) != 0)
+        {
+            throw new InvalidDataException("Linked installation paths are unsupported.");
         }
     }
 

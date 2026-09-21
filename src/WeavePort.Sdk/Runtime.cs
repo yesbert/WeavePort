@@ -10,16 +10,19 @@ internal sealed partial class Runtime(PluginApplication application)
     private IAsyncEnumerator<JsonElement>? _enumerator;
     private CancellationTokenSource? _streamCancellation;
     private JsonElement? _pending;
+    private Task<bool>? _advancement;
     private string? _streamId;
     private long _bytes;
     private int _callback;
     private readonly SemaphoreSlim _callbackGate = new(1);
     private readonly AsyncLocal<CallScope?> _scope = new();
+    private CallScope? _sessionScope;
     private sealed class CallScope(JsonElement request)
     {
         internal JsonElement Request { get; set; } = request;
 
         internal bool Active = true;
+        internal TaskCompletionSource Ready = new(TaskCreationOptions.RunContinuationsAsynchronously);
     }
 
     internal async Task RunAsync(CancellationToken token)
@@ -32,15 +35,24 @@ internal sealed partial class Runtime(PluginApplication application)
             while (await channel.ReadAsync(token)is { } request)
             {
                 _request = request;
-                var scope = new CallScope(request);
+                var scope = _sessionScope ?? new CallScope(request);
+                scope.Request = request;
+                scope.Ready.TrySetResult();
                 _scope.Value = scope;
                 try
                 {
                     object result = await DispatchAsync(request.GetProperty("operation").GetString()!, request.GetProperty("payload"), token);
-                    scope.Active = false;
                     await _callbackGate.WaitAsync(token);
-                    _callbackGate.Release();
-                    await channel.WriteAsync(new { type = "result", id = request.GetProperty("id").GetString(), value = result, reusable = _context is null && _enumerator is null }, token);
+                    try
+                    {
+                        scope.Request = default;
+                        scope.Ready = new(TaskCreationOptions.RunContinuationsAsynchronously);
+                        await channel.WriteAsync(new { type = "result", id = request.GetProperty("id").GetString(), value = result, reusable = _context is null && _enumerator is null && _source is null }, token);
+                    }
+                    finally
+                    {
+                        _callbackGate.Release();
+                    }
                 }
                 catch (Exception error) when (error is not OutOfMemoryException && !token.IsCancellationRequested)
                 {
@@ -48,7 +60,7 @@ internal sealed partial class Runtime(PluginApplication application)
                 }
                 finally
                 {
-                    scope.Active = false;
+                    scope.Active = _sessionScope == scope;
                     scope.Request = default;
                     _scope.Value = null;
                     _request = default;
@@ -64,6 +76,11 @@ internal sealed partial class Runtime(PluginApplication application)
 
     private async Task<object> DispatchAsync(string operation, JsonElement payload, CancellationToken token)
     {
+        if (operation is SdkOperations.SourceOpen or SdkOperations.SourceRead or SdkOperations.SourceClose)
+        {
+            return await DispatchSourceAsync(operation, payload, token);
+        }
+
         if (operation is SdkOperations.Next or SdkOperations.Close)
         {
             if (_streamId is null || payload.GetProperty("stream").GetString() != _streamId)
@@ -82,13 +99,14 @@ internal sealed partial class Runtime(PluginApplication application)
             return await NextAsync();
         }
 
-        if (_enumerator is not null)
+        if (_enumerator is not null || _source is not null)
         {
             throw new InvalidOperationException("Stream already active.");
         }
 
         string name = payload.GetProperty("operation").GetString()!;
         JsonElement input = payload.GetProperty("input");
+        _sessionScope = _scope.Value;
         var context = _context = new PluginCallContext(_request.GetProperty("context"), CallbackAsync);
         if (operation == SdkOperations.Call)
         {
@@ -117,68 +135,10 @@ internal sealed partial class Runtime(PluginApplication application)
         };
     }
 
-    private async Task<object> NextAsync()
-    {
-        var items = new List<JsonElement>();
-        long batchBytes = 2;
-        bool done = false;
-        while (items.Count < 16)
-        {
-            JsonElement item;
-            if (_pending is { } pending)
-            {
-                item = pending;
-                _pending = null;
-            }
-            else
-            {
-                if (!await _enumerator!.MoveNextAsync())
-                {
-                    done = true;
-                    break;
-                }
-
-                item = _enumerator.Current;
-            }
-
-            long size = JsonSize.Measure(item);
-            if (size > 128 << 10)
-            {
-                throw new InvalidDataException("Item limit.");
-            }
-
-            if (batchBytes + size + 1 > 256 << 10)
-            {
-                _pending = item;
-                break;
-            }
-
-            batchBytes += size + 1;
-            _bytes += size;
-            if (_bytes > 64 << 20)
-            {
-                throw new InvalidDataException("Stream limit.");
-            }
-
-            items.Add(item);
-        }
-
-        if (done)
-        {
-            await CloseAsync();
-        }
-
-        return new
-        {
-            items,
-            done
-        };
-    }
-
     private async Task<JsonElement> CallbackAsync(string operation, JsonElement input, CancellationToken token)
     {
         CallScope scope = _scope.Value ?? throw new InvalidOperationException("No active invocation.");
-        await _callbackGate.WaitAsync(token);
+        await WaitForCallbackExchangeAsync(scope, token);
         try
         {
             if (!scope.Active)
@@ -193,6 +153,11 @@ internal sealed partial class Runtime(PluginApplication application)
             if (reply.GetProperty("type").GetString() != "callback-result" || reply.GetProperty("id").GetString() != id || reply.GetProperty("callbackId").GetString() != callbackId)
             {
                 throw new InvalidDataException("Callback identity.");
+            }
+
+            if (reply.TryGetProperty("error", out var error) && error.ValueKind != JsonValueKind.Null)
+            {
+                throw new InvalidOperationException("Host callback failed: " + error.GetString());
             }
 
             return reply.GetProperty("value");
@@ -218,8 +183,29 @@ internal sealed partial class Runtime(PluginApplication application)
 
             if (enumerator is not null)
             {
-                await enumerator.DisposeAsync();
+                try
+                {
+                    if (_advancement is not null)
+                    {
+                        await _advancement;
+                    }
+                }
+                catch (OperationCanceledException) when (_streamCancellation?.IsCancellationRequested == true)
+                {
+                // Cancellation has completed the outstanding iterator advancement.
+                }
+                catch (Exception error) when (error is not OutOfMemoryException)
+                {
+                    throw new SessionCleanupException([error]);
+                }
+                finally
+                {
+                    _advancement = null;
+                    await DisposeEnumeratorAsync(enumerator);
+                }
             }
+
+            await CloseSourceAsync();
         }
         finally
         {

@@ -1,1 +1,1 @@
-{"name":"weaveport-sdk-example","version":"0.2.0","private":true,"type":"module","scripts":{"build":"tsc"},"dependencies":{"@weaveport/sdk":"file:../../../artifacts/sdk-packages-js/weaveport-sdk-0.2.0.tgz"},"devDependencies":{"@types/node":"22.20.2","typescript":"7.0.2"}}
+{"name":"weaveport-sdk-example","version":"0.2.0","private":true,"type":"module","scripts":{"build":"tsc"},"dependencies":{"@weaveport/sdk":"file:../../../artifacts/sdk-packages-js/weaveport-sdk-0.3.0.tgz"},"devDependencies":{"@types/node":"22.20.2","typescript":"7.0.2"}}

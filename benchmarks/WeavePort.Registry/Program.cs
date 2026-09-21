@@ -29,14 +29,14 @@ internal static class RegistryRun
         string workspace = Path.Combine(output, "workers");
         var profile = new ProcessProfile(Environment.ProcessPath!, [typeof(RegistryRun).Assembly.Location, "--worker"],
             trustedCode: true, workspaceRoot: workspace, reservedMemoryMiB: 64);
-        await using var host = new ScheduledPluginHost(new SchedulingOptions { MaximumWorkers = 4, MaximumHeavyCalls = 0,
+        await using var host = new PluginHost(new SchedulingOptions { MaximumWorkers = 4, MaximumHeavyCalls = 0,
             MaximumPristineWorkers = 0, MaximumRegistrations = count, MemoryBudgetMiB = 256 });
-        var active = new ScheduledPlugin[4];
+        var active = new IPluginSession[4];
         long initialMemory = GC.GetTotalMemory(true), initialRss = Process.GetCurrentProcess().WorkingSet64;
         long began = Stopwatch.GetTimestamp();
         await Parallel.ForEachAsync(Enumerable.Range(0, count), new ParallelOptions { MaxDegreeOfParallelism = 8 }, async (i, _) =>
         {
-            var plugin = await host.RegisterAsync(new("customer-" + i, "fixture", "1", "registry", Empty), profile, new Callbacks(), []);
+            var plugin = await host.BindAsync(new("customer-" + i, "fixture", "1", "registry", Empty), profile, new Callbacks(), []);
             if (i < 4) active[i] = plugin;
         });
         double registrationSeconds = Stopwatch.GetElapsedTime(began).TotalSeconds;
@@ -60,12 +60,12 @@ internal static class RegistryRun
         var report = new { registrations = count, activeCustomers = 4, registrationSeconds, requestsPerSecond = counts.Sum() / elapsed,
             elapsed, counts, managedRegistrationDeltaMiB = (managedAfter - initialMemory) / 1048576.0,
             rssBeforeMiB = initialRss / 1048576.0, rssAfterRegistrationMiB = rssAfter / 1048576.0,
-            disposalSeconds = Stopwatch.GetElapsedTime(disposal).TotalSeconds, cleanup = host.Snapshot,
-            hostingSha256 = Convert.ToHexString(SHA256.HashData(File.ReadAllBytes(typeof(ScheduledPluginHost).Assembly.Location))),
+            disposalSeconds = Stopwatch.GetElapsedTime(disposal).TotalSeconds, cleanup = host.Scheduling,
+            hostingSha256 = Convert.ToHexString(SHA256.HashData(File.ReadAllBytes(typeof(PluginHost).Assembly.Location))),
             scope = "Diagnostic: four hot customers plus dormant registrations; NOT many-customer throughput." };
         await File.WriteAllTextAsync(Path.Combine(output, "summary.json"), JsonSerializer.Serialize(report, new JsonSerializerOptions { WriteIndented = true }));
         Console.WriteLine(JsonSerializer.Serialize(report));
-        if (host.Snapshot.Runtime is not { Workers: 0, Bindings: 0, Tenants: 0 } || host.Snapshot.Registrations != 0)
+        if (host.Snapshot is not { Workers: 0, Bindings: 0, Tenants: 0 } || host.Scheduling!.Registrations != 0)
             throw new InvalidOperationException("Incomplete registry cleanup");
     }
 

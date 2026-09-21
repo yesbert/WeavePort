@@ -5,6 +5,9 @@ namespace WeavePort.Hosting;
 public sealed record ProcessProfile : ExecutionProfile
 {
     private readonly string _arguments;
+    /// <summary>Explicitly forwards bounded raw stderr to the host logger. It can contain tenant data; disabled by default.</summary>
+    public bool ForwardStandardError { get; init; }
+    internal Action<string, string>? DiagnosticSink { get; init; }
     /// <summary>Explicit wire protocol. Native is the default; MCP revisions require stdio.</summary>
     public ProcessProtocol Protocol { get; init; }
     /// <summary>Absolute executable path; no PATH lookup or shell interpolation.</summary>

@@ -6,6 +6,36 @@ namespace WeavePort.Composition;
 /// <summary>Technical composition primitives. Products own contracts, session identity, ordering and merge semantics.</summary>
 public static class Composition
 {
+    /// <summary>Collects an exclusive plugin byte source into an atomic, quota-bound result. The caller retains client ownership.</summary>
+    public static async Task<ResultHandle> CollectAsync(ResultScope scope, IBoundPluginClient client, string operation, JsonElement input, int chunkBytes = 65536, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(scope);
+        ArgumentNullException.ThrowIfNull(client);
+        ArgumentException.ThrowIfNullOrWhiteSpace(operation);
+        if (chunkBytes is < 4096 or > 262144)
+        {
+            throw new ArgumentOutOfRangeException(nameof(chunkBytes));
+        }
+
+        if (!StringComparer.Ordinal.Equals(scope.Tenant, await client.GetTenantAsync(cancellationToken)))
+        {
+            throw new UnauthorizedAccessException("Plugin binding belongs to another tenant.");
+        }
+
+        return await scope.CreateAsync(async (destination, token) =>
+        {
+            await foreach (ReadOnlyMemory<byte> block in client.SourceAsync(operation, input, chunkBytes, token).WithCancellation(token))
+            {
+                if (block.Length > chunkBytes)
+                {
+                    throw new InvalidDataException("Source chunk exceeds bound.");
+                }
+
+                await destination.WriteAsync(block, token);
+            }
+        }, cancellationToken);
+    }
+
     private const string BulkMapOperation = "bulk-map";
     /// <summary>Executes one externally bound plugin over bounded base64 chunks. The plugin must implement the bulk-map contract.</summary>
     public static Task<ResultHandle> MapAsync(ResultScope scope, ResultHandle input, IPluginSession session, int chunkBytes = 65536, CancellationToken cancellationToken = default)

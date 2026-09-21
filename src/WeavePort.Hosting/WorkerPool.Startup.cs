@@ -1,6 +1,7 @@
 namespace WeavePort.Hosting;
 internal sealed partial class WorkerPool
 {
+    internal Task<Worker> StartSharedAsync(ExecutionProfile profile, string version, CancellationToken token) => StartAsync(profile, version, false, token);
     private async Task<Worker> StartAsync(ExecutionProfile profile, string version, bool pristine, CancellationToken token, string? tenant = null, bool freshOnly = false)
     {
         await EnterStartAsync(token);
@@ -25,7 +26,7 @@ internal sealed partial class WorkerPool
                 deadline = CancellationTokenSource.CreateLinkedTokenSource(token, _lifetime.Token);
             }
 
-            deadline.CancelAfter(TimeSpan.FromSeconds(10));
+            deadline.CancelAfter(profile.StartupTimeout);
             await worker.StartAsync(deadline.Token);
             MarkReady(worker, pristine);
             return worker;

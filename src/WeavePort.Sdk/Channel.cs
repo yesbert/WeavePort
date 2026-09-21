@@ -5,6 +5,7 @@ using System.Text.Json;
 namespace WeavePort.Sdk;
 internal sealed class Channel : IAsyncDisposable
 {
+    private readonly SemaphoreSlim _writeGate = new(1);
     private readonly Stream _input;
     private readonly Stream _output;
     private readonly StreamReader _reader;
@@ -59,9 +60,17 @@ internal sealed class Channel : IAsyncDisposable
             throw new InvalidDataException("Frame limit.");
         }
 
-        await _output.WriteAsync(bytes, token);
-        await _output.WriteAsync("\n"u8.ToArray(), token);
-        await _output.FlushAsync(token);
+        await _writeGate.WaitAsync(token);
+        try
+        {
+            await _output.WriteAsync(bytes, token);
+            await _output.WriteAsync("\n"u8.ToArray(), token);
+            await _output.FlushAsync(token);
+        }
+        finally
+        {
+            _writeGate.Release();
+        }
     }
 
     public async ValueTask DisposeAsync()

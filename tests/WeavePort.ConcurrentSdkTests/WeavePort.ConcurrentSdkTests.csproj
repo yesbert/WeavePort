@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(UsePackedCore)' != 'true'">
+    <ProjectReference Include="../../src/WeavePort.Sdk/WeavePort.Sdk.csproj" />
+    <ProjectReference Include="../../src/WeavePort.Hosting/WeavePort.Hosting.csproj" />
+    <ProjectReference Include="../../src/WeavePort.Sdk.Gateway/WeavePort.Sdk.Gateway.csproj" />
+    <ProjectReference Include="../../src/WeavePort.Composition/WeavePort.Composition.csproj" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(UsePackedCore)' == 'true'">
+    <PackageReference Include="WeavePort.Sdk" Version="0.6.0" />
+    <PackageReference Include="WeavePort.Hosting" Version="0.6.0" />
+    <PackageReference Include="WeavePort.Sdk.Gateway" Version="0.6.0" />
+    <PackageReference Include="WeavePort.Composition" Version="0.6.0" />
+  </ItemGroup>
+</Project>

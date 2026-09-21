@@ -8,7 +8,7 @@ Construct a catalog with a trusted releases directory and a mapping of runtime a
 
 `ReadSelection` reads a default only for a new logical operation. `Activate` validates a selected installation before atomically replacing the default selector. Existing pins do not reference that selector. The application owns when a logical operation begins and where its pin is committed.
 
-These APIs do not launch a worker. Use the returned entry point with the approved runtime in a `ProcessProfile`, and use the resolved artifact release in `PluginContext.Version`. The existing startup guard independently rejects a worker that advertises another version. See [the API source](../src/WeavePort.Hosting/InstalledPluginCatalog.cs) and [packed consumer checks](../tests/installations/Program.cs).
+For new integrations, use `catalog.List(contract)` over `root/plugin/releases/version` plus each plugin’s `active.txt`, then pass the selected installation and one `PluginApproval` to `host.BindAsync` or `host.ShareAsync`. The returned client already carries the installation identity. See [the complete integration path](installed-plugin-clients.md). The lower-level entry-point API remains available for custom launch composition. The existing startup guard independently rejects a worker that advertises another version. See [the API source](../src/WeavePort.Hosting/InstalledPluginCatalog.cs) and [packed consumer checks](../tests/installations/Program.cs).
 
 ## Manifest and identities
 
@@ -21,7 +21,8 @@ Each release directory contains `installation.json` with case-sensitive fields:
 | `Contract` | Application contract identifier, independent of artifact release |
 | `EntryPoints` | Trusted aliases mapped to declared relative bundle files |
 | `Files` | Complete bundle file inventory with uppercase SHA-256 hashes, excluding the manifest itself |
-| `RuntimeFiles` | Expected runtime aliases and file hashes; host supplies the corresponding local paths |
+| `RuntimeFiles` | Verified subset of approved runtime aliases and file hashes; host supplies paths |
+| `Launch` | Runtime alias, literal arguments, memory reservation, supported ownership and maximum degree; required by installed client binding |
 | `Compatibility` | Required exact host API/protocol/core packages and entry-specific SDK declarations; see [compatibility policy](package-compatibility.md) |
 
 An `InstallationIdentity` contains plugin, version, contract and SHA-256 of the exact manifest bytes. Even a manifest-only change invalidates an old pin. A directory may be relocated with unchanged content and approved equivalent runtime files; absolute paths are not the identity. Missing/extra bundle files, links, path traversal, duplicate JSON fields, unknown schema, mismatched contract/release and changed hashes are refused. The manifest is limited to 1 MiB, 4096 files and 32 entry points; traversal is bounded to 8192 directory entries.

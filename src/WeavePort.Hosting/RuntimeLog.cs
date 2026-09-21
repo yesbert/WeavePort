@@ -1,10 +1,13 @@
 using Microsoft.Extensions.Logging;
 
 namespace WeavePort.Hosting;
-// Event IDs 1001–1006 belong to WeavePort.Hosting. Deliberately omit Exception
+// Event IDs 1001–1007 belong to WeavePort.Hosting. Deliberately omit Exception
 // parameters: messages, stack traces and inner errors can contain customer data.
 internal static partial class RuntimeLog
 {
+    // Raw plugin content is only passed here after explicit operator opt-in.
+    [LoggerMessage(1007, LogLevel.Information, "Worker stderr: {WorkerInstance} {DiagnosticLine}")]
+    internal static partial void StandardError(ILogger logger, string workerInstance, string diagnosticLine);
     [LoggerMessage(1001, LogLevel.Warning, "Worker startup failed: {WorkerInstance} {ErrorType}")]
     internal static partial void StartupFailed(ILogger logger, string workerInstance, string errorType);
     [LoggerMessage(1002, LogLevel.Warning, "Host callback failed: {WorkerInstance} {CorrelationId} {ErrorType}")]

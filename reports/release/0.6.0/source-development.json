@@ -1,0 +1,78 @@
+{
+  "runtime": "10.0.12",
+  "os": "macOS 27.0.0",
+  "rows": [
+    {
+      "language": "csharp",
+      "remote": false,
+      "bytes": 209715200,
+      "collectMs": 651.4732,
+      "deliveredMs": 676.4963,
+      "hostAllocatedBytes": 501019448,
+      "HostPeakBytes": 103464960,
+      "WorkerPeakBytes": 71352320,
+      "HostInitialBytes": 85196800,
+      "WorkerInitialBytes": 51806208
+    },
+    {
+      "language": "csharp",
+      "remote": true,
+      "bytes": 209715200,
+      "collectMs": 822.3448,
+      "deliveredMs": 845.0753,
+      "hostAllocatedBytes": 926693096,
+      "HostPeakBytes": 147210240,
+      "WorkerPeakBytes": 86966272,
+      "HostInitialBytes": 129728512,
+      "WorkerInitialBytes": 51642368
+    },
+    {
+      "language": "python",
+      "remote": false,
+      "bytes": 209715200,
+      "collectMs": 1243.9354,
+      "deliveredMs": 1309.4537,
+      "hostAllocatedBytes": 494844752,
+      "HostPeakBytes": 153944064,
+      "WorkerPeakBytes": 29523968,
+      "HostInitialBytes": 145260544,
+      "WorkerInitialBytes": 25673728
+    },
+    {
+      "language": "python",
+      "remote": true,
+      "bytes": 209715200,
+      "collectMs": 1376.4774,
+      "deliveredMs": 1398.7796,
+      "hostAllocatedBytes": 922230624,
+      "HostPeakBytes": 166510592,
+      "WorkerPeakBytes": 29687808,
+      "HostInitialBytes": 154091520,
+      "WorkerInitialBytes": 25853952
+    },
+    {
+      "language": "typescript",
+      "remote": false,
+      "bytes": 209715200,
+      "collectMs": 760.034,
+      "deliveredMs": 781.8895,
+      "hostAllocatedBytes": 494778624,
+      "HostPeakBytes": 159989760,
+      "WorkerPeakBytes": 108036096,
+      "HostInitialBytes": 156565504,
+      "WorkerInitialBytes": 52461568
+    },
+    {
+      "language": "typescript",
+      "remote": true,
+      "bytes": 209715200,
+      "collectMs": 923.6415,
+      "deliveredMs": 946.0587,
+      "hostAllocatedBytes": 922271248,
+      "HostPeakBytes": 166854656,
+      "WorkerPeakBytes": 107741184,
+      "HostInitialBytes": 163758080,
+      "WorkerInitialBytes": 52396032
+    }
+  ]
+}

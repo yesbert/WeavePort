@@ -5,7 +5,7 @@
     <RestorePackagesPath>$(MSBuildThisFileDirectory)../../artifacts/installation-tests/packages</RestorePackagesPath>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="WeavePort.Hosting" Version="0.5.0" />
-    <PackageReference Include="WeavePort.Sdk.Client" Version="0.5.0" />
+    <PackageReference Include="WeavePort.Hosting" Version="0.6.0" />
+    <PackageReference Include="WeavePort.Sdk.Client" Version="0.6.0" />
   </ItemGroup>
 </Project>

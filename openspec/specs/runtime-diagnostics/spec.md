@@ -31,3 +31,10 @@ When caller-owned logging is enabled, host admission refusals SHALL identify the
 #### Scenario: Simultaneous start ceiling
 - **WHEN** all configured worker-start slots are occupied and another cold invocation arrives
 - **THEN** it is rejected before dispatch and logging identifies the concurrent-start gate
+
+### Requirement: Shared worker recovery visibility
+The host SHALL expose shared readiness, occupied slots, restart and disabled state. Optional raw plugin diagnostics SHALL require explicit operator opt-in and SHALL bound retained line size and delivery. Default logging SHALL continue to omit raw stderr and tenant data.
+
+#### Scenario: Crash budget exhausted
+- **WHEN** a resident shared plugin repeatedly crashes beyond its configured restart budget
+- **THEN** its state becomes disabled, pending callers complete boundedly, and default logs contain no raw plugin output

@@ -1,5 +1,5 @@
 namespace WeavePort.Hosting;
-public sealed partial class ScheduledPluginHost
+internal sealed partial class PluginScheduler
 {
     // Mutations share _sync with registration, dispatch, completion and cleanup.
     // Dormant customer registrations must not become per-invocation scan work.
@@ -18,6 +18,11 @@ public sealed partial class ScheduledPluginHost
 
     private void SetResident(ScheduledPlugin plugin, bool resident)
     {
+        if (plugin.Session is SharedInvocationSession)
+        {
+            return;
+        }
+
         plugin.Resident = resident;
         if (resident)
         {

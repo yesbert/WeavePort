@@ -4,21 +4,22 @@
     "net10.0": {
       "WeavePort.Hosting": {
         "type": "Direct",
-        "requested": "[0.5.0, )",
-        "resolved": "0.5.0",
-        "contentHash": "UM1CF/cXQr6hHvyWI6SXmiFpOqzuSeEMjZHllvFqex9WmnnurAAv5NAR3aJE9Y5/1JqrtbtDF7VGP6Kn6+a1NA==",
+        "requested": "[0.6.0, )",
+        "resolved": "0.6.0",
+        "contentHash": "+SRkKA9lu+pCIGxYc3JNo5MJFDhaOsBqo0P2cKt/UxzET0wrnQJeIOK7Ph0zgJ/4ygJVZLPczS1u3crqaQOWpg==",
         "dependencies": {
           "Microsoft.Extensions.Logging.Abstractions": "10.0.12",
-          "WeavePort.Abstractions": "0.5.0"
+          "WeavePort.Abstractions": "0.6.0",
+          "WeavePort.Sdk.Client": "0.6.0"
         }
       },
       "WeavePort.Testing": {
         "type": "Direct",
-        "requested": "[0.5.0, )",
-        "resolved": "0.5.0",
-        "contentHash": "ltLTCnv78NhjB7wrImZkWoYjp6/4/w8ktTo2FzcmA7i60p3X8y5PhbuJhyuouh7T4nNcH2T+PCx+PuYmdobqhw==",
+        "requested": "[0.6.0, )",
+        "resolved": "0.6.0",
+        "contentHash": "2F0gpLI8Hzm8CFfKIqKXECsF5MNc8rgLDBreVRGUbeI+l/Hv3FSy/O23wPf6Lk8cPGY47kJ6KVnbe7vMVJFOJA==",
         "dependencies": {
-          "WeavePort.Abstractions": "0.5.0"
+          "WeavePort.Abstractions": "0.6.0"
         }
       },
       "Microsoft.Extensions.DependencyInjection.Abstractions": {
@@ -36,8 +37,16 @@
       },
       "WeavePort.Abstractions": {
         "type": "Transitive",
-        "resolved": "0.5.0",
-        "contentHash": "3eQYExjK596HNIOrk62IcUw8QHnejSdgEjUbCG+EDZ/RBB7YsdlU2nKxC1+n1c7yrwfF9xu1TFWqb8aJBR+RVQ=="
+        "resolved": "0.6.0",
+        "contentHash": "BWw2x2+WLu8WiIZdZvT69Loz1P+IghMoXPmnlu9vahLVV7t5zvLdDt7RLodIE8ocPHY5QTH4fanDkxsngaVLFQ=="
+      },
+      "WeavePort.Sdk.Client": {
+        "type": "Transitive",
+        "resolved": "0.6.0",
+        "contentHash": "+8pBJ5Qx/iwZk6oQZV5ISYBePPVcfi+rTiVV/gC/cj8ioVCFe3F6oCBVIszbqusNFhuFxE4Hwvl07LzElvxvDA==",
+        "dependencies": {
+          "WeavePort.Abstractions": "0.6.0"
+        }
       }
     }
   }

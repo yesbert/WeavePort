@@ -27,6 +27,12 @@ type WeavePort.Abstractions.HostCall : System.Object [Public, Sealed]
   Property WeavePort.Abstractions.PluginContext Context
 type WeavePort.Abstractions.IHostCallbacks :  [Public, ClassSemanticsMask, Abstract]
   Method System.Threading.Tasks.ValueTask`1[System.Text.Json.JsonElement] InvokeAsync(WeavePort.Abstractions.HostCall, System.Threading.CancellationToken) [Public, Virtual, Abstract] (call, cancellationToken)
+type WeavePort.Abstractions.IPluginOperationSession :  [Public, ClassSemanticsMask, Abstract]
+  implements System.IAsyncDisposable
+  implements WeavePort.Abstractions.IPluginSession
+  Method Boolean get_SupportsStreaming() [Public, Virtual, Abstract] ()
+  Method System.Threading.Tasks.ValueTask`1[WeavePort.Abstractions.IPluginSession] AcquireOperationAsync(System.Threading.CancellationToken) [Public, Virtual, Abstract] (cancellationToken=null)
+  Property Boolean SupportsStreaming
 type WeavePort.Abstractions.IPluginSession :  [Public, ClassSemanticsMask, Abstract]
   implements System.IAsyncDisposable
   Method System.String get_Instance() [Public, Virtual, Abstract] ()
@@ -127,27 +133,39 @@ type WeavePort.Hosting.ExecutionProfile : System.Object [Public, Abstract]
   Method Boolean Equals(System.Object) [Public, Virtual] (obj)
   Method Boolean Equals(WeavePort.Hosting.ExecutionProfile) [Public, Virtual] (other)
   Method Boolean PrintMembers(System.Text.StringBuilder) [Family, Virtual] (builder)
+  Method Boolean get_Reconstructible() [Public] ()
   Method Boolean op_Equality(WeavePort.Hosting.ExecutionProfile, WeavePort.Hosting.ExecutionProfile) [Public, Static] (left, right)
   Method Boolean op_Inequality(WeavePort.Hosting.ExecutionProfile, WeavePort.Hosting.ExecutionProfile) [Public, Static] (left, right)
   Method Int32 GetHashCode() [Public, Virtual] ()
+  Method Int32 get_MaximumCallbacks() [Public] ()
   Method Int32 get_MemoryMiB() [Public] ()
   Method System.Nullable`1[System.TimeSpan] get_IdleTimeout() [Public] ()
   Method System.Nullable`1[System.TimeSpan] get_Timeout() [Public] ()
   Method System.String ToString() [Public, Virtual] ()
+  Method System.TimeSpan get_StartupTimeout() [Public] ()
   Method System.Type get_EqualityContract() [Family, Virtual] ()
   Method Void Deconstruct(Int32 ByRef, System.Nullable`1[System.TimeSpan] ByRef, System.Nullable`1[System.TimeSpan] ByRef) [Public] (MemoryMiB, Timeout, IdleTimeout)
   Method Void set_IdleTimeout(System.Nullable`1[System.TimeSpan]) [Public] (value)
+  Method Void set_MaximumCallbacks(Int32) [Public] (value)
   Method Void set_MemoryMiB(Int32) [Public] (value)
+  Method Void set_Reconstructible(Boolean) [Public] (value)
   Method Void set_ReusePolicy(WeavePort.Hosting.WorkerReusePolicy) [Public] (value)
+  Method Void set_StartupTimeout(System.TimeSpan) [Public] (value)
   Method Void set_Timeout(System.Nullable`1[System.TimeSpan]) [Public] (value)
+  Method Void set_WorkClass(WeavePort.Hosting.PluginWorkClass) [Public] (value)
   Method WeavePort.Hosting.ExecutionProfile <Clone>$() [Public, Virtual, Abstract] ()
   Method WeavePort.Hosting.ExecutionProtections get_Protection() [Public, Virtual, Abstract] ()
+  Method WeavePort.Hosting.PluginWorkClass get_WorkClass() [Public] ()
   Method WeavePort.Hosting.WorkerReusePolicy get_ReusePolicy() [Public] ()
+  Property Boolean Reconstructible
+  Property Int32 MaximumCallbacks
   Property Int32 MemoryMiB
   Property System.Nullable`1[System.TimeSpan] IdleTimeout
   Property System.Nullable`1[System.TimeSpan] Timeout
+  Property System.TimeSpan StartupTimeout
   Property System.Type EqualityContract
   Property WeavePort.Hosting.ExecutionProtections Protection
+  Property WeavePort.Hosting.PluginWorkClass WorkClass
   Property WeavePort.Hosting.WorkerReusePolicy ReusePolicy
 type WeavePort.Hosting.ExecutionProtections : System.Enum [Public, Sealed]
   implements System.IComparable
@@ -159,6 +177,11 @@ type WeavePort.Hosting.ExecutionProtections : System.Enum [Public, Sealed]
   Field WeavePort.Hosting.ExecutionProtections HardResourceLimits=4
   Field WeavePort.Hosting.ExecutionProtections None=0
   Field WeavePort.Hosting.ExecutionProtections RestrictedFileSystem=1
+type WeavePort.Hosting.ISharedPlugin :  [Public, ClassSemanticsMask, Abstract]
+  implements System.IAsyncDisposable
+  Method WeavePort.Hosting.SharedPluginSnapshot get_Snapshot() [Public, Virtual, Abstract] ()
+  Method WeavePort.Sdk.Client.IBoundPluginClient For(System.String) [Public, Virtual, Abstract] (tenant)
+  Property WeavePort.Hosting.SharedPluginSnapshot Snapshot
 type WeavePort.Hosting.InstallationIdentity : System.Object [Public, Sealed]
   implements System.IEquatable`1[WeavePort.Hosting.InstallationIdentity]
   Constructor Void .ctor(System.String, System.String, System.String, System.String) [Public] (Plugin, Version, Contract, Digest)
@@ -185,26 +208,125 @@ type WeavePort.Hosting.InstallationIdentity : System.Object [Public, Sealed]
 type WeavePort.Hosting.InstalledPlugin : System.Object [Public, Sealed]
   Method System.Collections.Generic.IReadOnlyDictionary`2[System.String,System.String] get_EntryPoints() [Public] ()
   Method WeavePort.Hosting.InstallationIdentity get_Identity() [Public] ()
+  Method WeavePort.Hosting.PluginLaunchDeclaration get_Launch() [Public] ()
   Property System.Collections.Generic.IReadOnlyDictionary`2[System.String,System.String] EntryPoints
   Property WeavePort.Hosting.InstallationIdentity Identity
+  Property WeavePort.Hosting.PluginLaunchDeclaration Launch
 type WeavePort.Hosting.InstalledPluginCatalog : System.Object [Public, Sealed]
   Constructor Void .ctor(System.String, System.Collections.Generic.IReadOnlyDictionary`2[System.String,System.String]) [Public] (releases, runtimeFiles)
+  Method System.Collections.Generic.IReadOnlyList`1[WeavePort.Hosting.InstalledPlugin] List(System.String) [Public] (contract)
   Method System.String ReadSelection(System.String) [Public, Static] (path)
   Method Void Activate(System.String, System.String, System.String, System.String) [Public] (selector, plugin, version, contract)
   Method WeavePort.Hosting.InstalledPlugin Resolve(System.String, System.String, System.String, WeavePort.Hosting.InstallationIdentity) [Public] (plugin, version, contract, pinned=null)
 type WeavePort.Hosting.McpMethods : System.Object [Public, Abstract, Sealed]
   Field System.String CallTool="tools/call"
   Field System.String ListTools="tools/list"
+type WeavePort.Hosting.PluginApproval : System.Object [Public, Sealed]
+  implements System.IEquatable`1[WeavePort.Hosting.PluginApproval]
+  Constructor Void .ctor() [Public] ()
+  Method Boolean Equals(System.Object) [Public, Virtual] (obj)
+  Method Boolean Equals(WeavePort.Hosting.PluginApproval) [Public, Final, Virtual] (other)
+  Method Boolean get_ForwardStandardError() [Public] ()
+  Method Boolean get_Reconstructible() [Public] ()
+  Method Boolean get_TrustedCode() [Public] ()
+  Method Boolean op_Equality(WeavePort.Hosting.PluginApproval, WeavePort.Hosting.PluginApproval) [Public, Static] (left, right)
+  Method Boolean op_Inequality(WeavePort.Hosting.PluginApproval, WeavePort.Hosting.PluginApproval) [Public, Static] (left, right)
+  Method Int32 GetHashCode() [Public, Virtual] ()
+  Method Int32 get_Degree() [Public] ()
+  Method Int32 get_MaximumAbandonedCalls() [Public] ()
+  Method Int32 get_MaximumCallbacks() [Public] ()
+  Method Int32 get_MaximumMemoryMiB() [Public] ()
+  Method Int32 get_MaximumRestarts() [Public] ()
+  Method Int32 get_Workers() [Public] ()
+  Method System.String ToString() [Public, Virtual] ()
+  Method System.String get_WorkspaceRoot() [Public] ()
+  Method System.TimeSpan get_CancellationGrace() [Public] ()
+  Method System.TimeSpan get_InvocationTimeout() [Public] ()
+  Method System.TimeSpan get_RestartWindow() [Public] ()
+  Method System.TimeSpan get_SilenceTimeout() [Public] ()
+  Method System.TimeSpan get_StartupTimeout() [Public] ()
+  Method Void set_CancellationGrace(System.TimeSpan) [Public] (value)
+  Method Void set_Degree(Int32) [Public] (value)
+  Method Void set_ForwardStandardError(Boolean) [Public] (value)
+  Method Void set_InvocationTimeout(System.TimeSpan) [Public] (value)
+  Method Void set_MaximumAbandonedCalls(Int32) [Public] (value)
+  Method Void set_MaximumCallbacks(Int32) [Public] (value)
+  Method Void set_MaximumMemoryMiB(Int32) [Public] (value)
+  Method Void set_MaximumRestarts(Int32) [Public] (value)
+  Method Void set_Ownership(WeavePort.Hosting.WorkerReusePolicy) [Public] (value)
+  Method Void set_Reconstructible(Boolean) [Public] (value)
+  Method Void set_RestartWindow(System.TimeSpan) [Public] (value)
+  Method Void set_SilenceTimeout(System.TimeSpan) [Public] (value)
+  Method Void set_StartupTimeout(System.TimeSpan) [Public] (value)
+  Method Void set_Streams(WeavePort.Sdk.Client.PluginStreamOptions) [Public] (value)
+  Method Void set_TrustedCode(Boolean) [Public] (value)
+  Method Void set_WorkClass(WeavePort.Hosting.PluginWorkClass) [Public] (value)
+  Method Void set_Workers(Int32) [Public] (value)
+  Method Void set_WorkspaceRoot(System.String) [Public] (value)
+  Method WeavePort.Hosting.PluginApproval <Clone>$() [Public] ()
+  Method WeavePort.Hosting.PluginWorkClass get_WorkClass() [Public] ()
+  Method WeavePort.Hosting.WorkerReusePolicy get_Ownership() [Public] ()
+  Method WeavePort.Sdk.Client.PluginStreamOptions get_Streams() [Public] ()
+  Property Boolean ForwardStandardError
+  Property Boolean Reconstructible
+  Property Boolean TrustedCode
+  Property Int32 Degree
+  Property Int32 MaximumAbandonedCalls
+  Property Int32 MaximumCallbacks
+  Property Int32 MaximumMemoryMiB
+  Property Int32 MaximumRestarts
+  Property Int32 Workers
+  Property System.String WorkspaceRoot
+  Property System.TimeSpan CancellationGrace
+  Property System.TimeSpan InvocationTimeout
+  Property System.TimeSpan RestartWindow
+  Property System.TimeSpan SilenceTimeout
+  Property System.TimeSpan StartupTimeout
+  Property WeavePort.Hosting.PluginWorkClass WorkClass
+  Property WeavePort.Hosting.WorkerReusePolicy Ownership
+  Property WeavePort.Sdk.Client.PluginStreamOptions Streams
 type WeavePort.Hosting.PluginHost : System.Object [Public, Sealed]
   implements System.IAsyncDisposable
   Constructor Void .ctor(Int32, WeavePort.Hosting.WorkerPoolOptions, System.TimeProvider) [Public] (maximumCallsPerTenant=4, options=null, timeProvider=null)
   Constructor Void .ctor(Microsoft.Extensions.Logging.ILogger`1[WeavePort.Hosting.PluginHost], Int32, WeavePort.Hosting.WorkerPoolOptions, System.TimeProvider) [Public] (logger, maximumCallsPerTenant=4, options=null, timeProvider=null)
+  Constructor Void .ctor(WeavePort.Hosting.SchedulingOptions, Microsoft.Extensions.Logging.ILogger`1[WeavePort.Hosting.PluginHost], System.TimeProvider) [Public] (options, logger, timeProvider=null)
+  Constructor Void .ctor(WeavePort.Hosting.SchedulingOptions, System.TimeProvider) [Public] (options, timeProvider=null)
   Method System.Threading.Tasks.Task MaintainAsync(System.Threading.CancellationToken) [Public] (cancellationToken=null)
   Method System.Threading.Tasks.Task PrewarmAsync(WeavePort.Hosting.ExecutionProfile, System.String, Int32, WeavePort.Hosting.ExecutionProtections, System.Threading.CancellationToken) [Public] (profile, version, count, requiredProtection=0, cancellationToken=null)
   Method System.Threading.Tasks.Task`1[WeavePort.Abstractions.IPluginSession] BindAsync(WeavePort.Abstractions.PluginContext, WeavePort.Hosting.ExecutionProfile, WeavePort.Abstractions.IHostCallbacks, System.Collections.Generic.IEnumerable`1[System.String], WeavePort.Hosting.ExecutionProtections, System.Threading.CancellationToken) [Public] (context, profile, callbacks, grants, requiredProtection=0, cancellationToken=null)
+  Method System.Threading.Tasks.Task`1[WeavePort.Hosting.ISharedPlugin] ShareAsync(WeavePort.Abstractions.PluginContext, WeavePort.Hosting.ProcessProfile, WeavePort.Hosting.SharedWorkerOptions, WeavePort.Abstractions.IHostCallbacks, System.Collections.Generic.IEnumerable`1[System.String], System.Threading.CancellationToken) [Public] (context, profile, options, callbacks, grants, cancellationToken=null)
+  Method System.Threading.Tasks.Task`1[WeavePort.Hosting.ISharedPlugin] ShareAsync(WeavePort.Hosting.InstalledPlugin, WeavePort.Hosting.PluginApproval, System.Text.Json.JsonElement, WeavePort.Abstractions.IHostCallbacks, System.Collections.Generic.IEnumerable`1[System.String], System.Threading.CancellationToken) [Public] (installation, approval, configuration, callbacks, grants, cancellationToken=null)
+  Method System.Threading.Tasks.Task`1[WeavePort.Sdk.Client.IBoundPluginClient] BindAsync(WeavePort.Hosting.InstalledPlugin, WeavePort.Hosting.PluginApproval, WeavePort.Hosting.TenantBinding, WeavePort.Abstractions.IHostCallbacks, System.Collections.Generic.IEnumerable`1[System.String], System.Threading.CancellationToken) [Public] (installation, approval, binding, callbacks, grants, cancellationToken=null)
   Method System.Threading.Tasks.ValueTask DisposeAsync() [Public, Final, Virtual] ()
+  Method WeavePort.Hosting.SchedulingSnapshot get_Scheduling() [Public] ()
   Method WeavePort.Hosting.WorkerPoolSnapshot get_Snapshot() [Public] ()
+  Property WeavePort.Hosting.SchedulingSnapshot Scheduling
   Property WeavePort.Hosting.WorkerPoolSnapshot Snapshot
+type WeavePort.Hosting.PluginLaunchDeclaration : System.Object [Public, Sealed]
+  implements System.IEquatable`1[WeavePort.Hosting.PluginLaunchDeclaration]
+  Constructor Void .ctor() [Public] ()
+  Method Boolean Equals(System.Object) [Public, Virtual] (obj)
+  Method Boolean Equals(WeavePort.Hosting.PluginLaunchDeclaration) [Public, Final, Virtual] (other)
+  Method Boolean op_Equality(WeavePort.Hosting.PluginLaunchDeclaration, WeavePort.Hosting.PluginLaunchDeclaration) [Public, Static] (left, right)
+  Method Boolean op_Inequality(WeavePort.Hosting.PluginLaunchDeclaration, WeavePort.Hosting.PluginLaunchDeclaration) [Public, Static] (left, right)
+  Method Int32 GetHashCode() [Public, Virtual] ()
+  Method Int32 get_MaximumDegree() [Public] ()
+  Method Int32 get_MemoryMiB() [Public] ()
+  Method System.String ToString() [Public, Virtual] ()
+  Method System.String get_Runtime() [Public] ()
+  Method System.String[] get_Arguments() [Public] ()
+  Method Void set_Arguments(System.String[]) [Public] (value)
+  Method Void set_MaximumDegree(Int32) [Public] (value)
+  Method Void set_MemoryMiB(Int32) [Public] (value)
+  Method Void set_Ownership(WeavePort.Hosting.WorkerReusePolicy[]) [Public] (value)
+  Method Void set_Runtime(System.String) [Public] (value)
+  Method WeavePort.Hosting.PluginLaunchDeclaration <Clone>$() [Public] ()
+  Method WeavePort.Hosting.WorkerReusePolicy[] get_Ownership() [Public] ()
+  Property Int32 MaximumDegree
+  Property Int32 MemoryMiB
+  Property System.String Runtime
+  Property System.String[] Arguments
+  Property WeavePort.Hosting.WorkerReusePolicy[] Ownership
 type WeavePort.Hosting.PluginWorkClass : System.Enum [Public, Sealed]
   implements System.IComparable
   implements System.IConvertible
@@ -221,6 +343,7 @@ type WeavePort.Hosting.ProcessProfile : WeavePort.Hosting.ExecutionProfile [Publ
   Method Boolean Equals(WeavePort.Hosting.ExecutionProfile) [Public, Final, Virtual] (other)
   Method Boolean Equals(WeavePort.Hosting.ProcessProfile) [Public, Final, Virtual] (other)
   Method Boolean PrintMembers(System.Text.StringBuilder) [Family, Virtual] (builder)
+  Method Boolean get_ForwardStandardError() [Public] ()
   Method Boolean get_TrustedCode() [Public] ()
   Method Boolean get_UseUnixSocket() [Public] ()
   Method Boolean op_Equality(WeavePort.Hosting.ProcessProfile, WeavePort.Hosting.ProcessProfile) [Public, Static] (left, right)
@@ -233,6 +356,7 @@ type WeavePort.Hosting.ProcessProfile : WeavePort.Hosting.ExecutionProfile [Publ
   Method System.String[] get_Arguments() [Public] ()
   Method System.Type get_EqualityContract() [Family, Virtual] ()
   Method Void set_Executable(System.String) [Public] (value)
+  Method Void set_ForwardStandardError(Boolean) [Public] (value)
   Method Void set_Protocol(WeavePort.Hosting.ProcessProtocol) [Public] (value)
   Method Void set_SocketBufferBytes(System.Nullable`1[System.Int32]) [Public] (value)
   Method Void set_TrustedCode(Boolean) [Public] (value)
@@ -241,6 +365,7 @@ type WeavePort.Hosting.ProcessProfile : WeavePort.Hosting.ExecutionProfile [Publ
   Method WeavePort.Hosting.ExecutionProtections get_Protection() [Public, Virtual] ()
   Method WeavePort.Hosting.ProcessProfile <Clone>$() [Public, Virtual] ()
   Method WeavePort.Hosting.ProcessProtocol get_Protocol() [Public] ()
+  Property Boolean ForwardStandardError
   Property Boolean TrustedCode
   Property Boolean UseUnixSocket
   Property System.Nullable`1[System.Int32] SocketBufferBytes
@@ -284,22 +409,19 @@ type WeavePort.Hosting.ScheduledInvocationResult : System.Object [Public, Sealed
   Property WeavePort.Abstractions.InvocationResult Result
 type WeavePort.Hosting.ScheduledPlugin : System.Object [Public, Sealed]
   implements System.IAsyncDisposable
+  implements WeavePort.Abstractions.IPluginOperationSession
   implements WeavePort.Abstractions.IPluginSession
+  Method Boolean get_SupportsStreaming() [Public, Final, Virtual] ()
   Method System.String get_Instance() [Public, Final, Virtual] ()
   Method System.String get_Tenant() [Public, Final, Virtual] ()
   Method System.Threading.Tasks.Task RestartAsync(System.Threading.CancellationToken) [Public, Final, Virtual] (cancellationToken=null)
   Method System.Threading.Tasks.Task`1[WeavePort.Abstractions.InvocationResult] InvokeAsync(System.String, System.Text.Json.JsonElement, System.Threading.CancellationToken) [Public, Final, Virtual] (operation, payload, cancellationToken=null)
   Method System.Threading.Tasks.Task`1[WeavePort.Hosting.ScheduledInvocationResult] InvokeMeasuredAsync(System.String, System.Text.Json.JsonElement, System.Threading.CancellationToken) [Public] (operation, payload, cancellationToken=null)
   Method System.Threading.Tasks.ValueTask DisposeAsync() [Public, Final, Virtual] ()
+  Method System.Threading.Tasks.ValueTask`1[WeavePort.Abstractions.IPluginSession] AcquireOperationAsync(System.Threading.CancellationToken) [Public, Final, Virtual] (cancellationToken=null)
+  Property Boolean SupportsStreaming
   Property System.String Instance
   Property System.String Tenant
-type WeavePort.Hosting.ScheduledPluginHost : System.Object [Public, Sealed]
-  implements System.IAsyncDisposable
-  Constructor Void .ctor(WeavePort.Hosting.SchedulingOptions, System.TimeProvider) [Public] (options=null, timeProvider=null)
-  Method System.Threading.Tasks.Task`1[WeavePort.Hosting.ScheduledPlugin] RegisterAsync(WeavePort.Abstractions.PluginContext, WeavePort.Hosting.ExecutionProfile, WeavePort.Abstractions.IHostCallbacks, System.Collections.Generic.IEnumerable`1[System.String], WeavePort.Hosting.PluginWorkClass, WeavePort.Hosting.ExecutionProtections, System.Threading.CancellationToken) [Public] (context, profile, callbacks, grants, workClass=0, requiredProtection=0, cancellationToken=null)
-  Method System.Threading.Tasks.ValueTask DisposeAsync() [Public, Final, Virtual] ()
-  Method WeavePort.Hosting.SchedulingSnapshot get_Snapshot() [Public] ()
-  Property WeavePort.Hosting.SchedulingSnapshot Snapshot
 type WeavePort.Hosting.SchedulingOptions : System.Object [Public, Sealed]
   implements System.IEquatable`1[WeavePort.Hosting.SchedulingOptions]
   Constructor Void .ctor() [Public] ()
@@ -308,6 +430,7 @@ type WeavePort.Hosting.SchedulingOptions : System.Object [Public, Sealed]
   Method Boolean op_Equality(WeavePort.Hosting.SchedulingOptions, WeavePort.Hosting.SchedulingOptions) [Public, Static] (left, right)
   Method Boolean op_Inequality(WeavePort.Hosting.SchedulingOptions, WeavePort.Hosting.SchedulingOptions) [Public, Static] (left, right)
   Method Int32 GetHashCode() [Public, Virtual] ()
+  Method Int32 get_MaximumCallsPerTenant() [Public] ()
   Method Int32 get_MaximumConcurrentStarts() [Public] ()
   Method Int32 get_MaximumHeavyCalls() [Public] ()
   Method Int32 get_MaximumHeavyCallsPerTenant() [Public] ()
@@ -329,6 +452,7 @@ type WeavePort.Hosting.SchedulingOptions : System.Object [Public, Sealed]
   Method Void set_DemandWindow(System.TimeSpan) [Public] (value)
   Method Void set_HeavyTimeout(System.TimeSpan) [Public] (value)
   Method Void set_IdleTimeout(System.TimeSpan) [Public] (value)
+  Method Void set_MaximumCallsPerTenant(Int32) [Public] (value)
   Method Void set_MaximumConcurrentStarts(Int32) [Public] (value)
   Method Void set_MaximumHeavyCalls(Int32) [Public] (value)
   Method Void set_MaximumHeavyCallsPerTenant(Int32) [Public] (value)
@@ -344,6 +468,7 @@ type WeavePort.Hosting.SchedulingOptions : System.Object [Public, Sealed]
   Method Void set_QueueTimeout(System.TimeSpan) [Public] (value)
   Method Void set_ReusableIdleTimeout(System.TimeSpan) [Public] (value)
   Method WeavePort.Hosting.SchedulingOptions <Clone>$() [Public] ()
+  Property Int32 MaximumCallsPerTenant
   Property Int32 MaximumConcurrentStarts
   Property Int32 MaximumHeavyCalls
   Property Int32 MaximumHeavyCallsPerTenant
@@ -402,6 +527,83 @@ type WeavePort.Hosting.SchedulingSnapshot : System.Object [Public, Sealed]
   Property Int64 Rejected
   Property System.String Failure
   Property WeavePort.Hosting.WorkerPoolSnapshot Runtime
+type WeavePort.Hosting.SharedPluginSnapshot : System.Object [Public, Sealed]
+  implements System.IEquatable`1[WeavePort.Hosting.SharedPluginSnapshot]
+  Constructor Void .ctor(Int32, Int32, Int32, Int32, Boolean) [Public] (ReadyWorkers, ActiveCalls, AbandonedCalls, Restarts, Disabled)
+  Method Boolean Equals(System.Object) [Public, Virtual] (obj)
+  Method Boolean Equals(WeavePort.Hosting.SharedPluginSnapshot) [Public, Final, Virtual] (other)
+  Method Boolean get_Disabled() [Public] ()
+  Method Boolean op_Equality(WeavePort.Hosting.SharedPluginSnapshot, WeavePort.Hosting.SharedPluginSnapshot) [Public, Static] (left, right)
+  Method Boolean op_Inequality(WeavePort.Hosting.SharedPluginSnapshot, WeavePort.Hosting.SharedPluginSnapshot) [Public, Static] (left, right)
+  Method Int32 GetHashCode() [Public, Virtual] ()
+  Method Int32 get_AbandonedCalls() [Public] ()
+  Method Int32 get_ActiveCalls() [Public] ()
+  Method Int32 get_ReadyWorkers() [Public] ()
+  Method Int32 get_Restarts() [Public] ()
+  Method System.String ToString() [Public, Virtual] ()
+  Method System.String get_Failure() [Public] ()
+  Method Void Deconstruct(Int32 ByRef, Int32 ByRef, Int32 ByRef, Int32 ByRef, Boolean ByRef) [Public] (ReadyWorkers, ActiveCalls, AbandonedCalls, Restarts, Disabled)
+  Method Void set_AbandonedCalls(Int32) [Public] (value)
+  Method Void set_ActiveCalls(Int32) [Public] (value)
+  Method Void set_Disabled(Boolean) [Public] (value)
+  Method Void set_Failure(System.String) [Public] (value)
+  Method Void set_ReadyWorkers(Int32) [Public] (value)
+  Method Void set_Restarts(Int32) [Public] (value)
+  Method WeavePort.Hosting.SharedPluginSnapshot <Clone>$() [Public] ()
+  Property Boolean Disabled
+  Property Int32 AbandonedCalls
+  Property Int32 ActiveCalls
+  Property Int32 ReadyWorkers
+  Property Int32 Restarts
+  Property System.String Failure
+type WeavePort.Hosting.SharedWorkerOptions : System.Object [Public, Sealed]
+  implements System.IEquatable`1[WeavePort.Hosting.SharedWorkerOptions]
+  Constructor Void .ctor() [Public] ()
+  Method Boolean Equals(System.Object) [Public, Virtual] (obj)
+  Method Boolean Equals(WeavePort.Hosting.SharedWorkerOptions) [Public, Final, Virtual] (other)
+  Method Boolean op_Equality(WeavePort.Hosting.SharedWorkerOptions, WeavePort.Hosting.SharedWorkerOptions) [Public, Static] (left, right)
+  Method Boolean op_Inequality(WeavePort.Hosting.SharedWorkerOptions, WeavePort.Hosting.SharedWorkerOptions) [Public, Static] (left, right)
+  Method Int32 GetHashCode() [Public, Virtual] ()
+  Method Int32 get_Degree() [Public] ()
+  Method Int32 get_MaximumAbandonedCalls() [Public] ()
+  Method Int32 get_MaximumRestarts() [Public] ()
+  Method Int32 get_Workers() [Public] ()
+  Method System.String ToString() [Public, Virtual] ()
+  Method System.TimeSpan get_CancellationGrace() [Public] ()
+  Method System.TimeSpan get_RestartWindow() [Public] ()
+  Method System.TimeSpan get_SilenceTimeout() [Public] ()
+  Method Void set_CancellationGrace(System.TimeSpan) [Public] (value)
+  Method Void set_Degree(Int32) [Public] (value)
+  Method Void set_MaximumAbandonedCalls(Int32) [Public] (value)
+  Method Void set_MaximumRestarts(Int32) [Public] (value)
+  Method Void set_RestartWindow(System.TimeSpan) [Public] (value)
+  Method Void set_SilenceTimeout(System.TimeSpan) [Public] (value)
+  Method Void set_Workers(Int32) [Public] (value)
+  Method WeavePort.Hosting.SharedWorkerOptions <Clone>$() [Public] ()
+  Property Int32 Degree
+  Property Int32 MaximumAbandonedCalls
+  Property Int32 MaximumRestarts
+  Property Int32 Workers
+  Property System.TimeSpan CancellationGrace
+  Property System.TimeSpan RestartWindow
+  Property System.TimeSpan SilenceTimeout
+type WeavePort.Hosting.TenantBinding : System.Object [Public, Sealed]
+  implements System.IEquatable`1[WeavePort.Hosting.TenantBinding]
+  Constructor Void .ctor(System.String, System.Text.Json.JsonElement) [Public] (Tenant, Configuration)
+  Method Boolean Equals(System.Object) [Public, Virtual] (obj)
+  Method Boolean Equals(WeavePort.Hosting.TenantBinding) [Public, Final, Virtual] (other)
+  Method Boolean op_Equality(WeavePort.Hosting.TenantBinding, WeavePort.Hosting.TenantBinding) [Public, Static] (left, right)
+  Method Boolean op_Inequality(WeavePort.Hosting.TenantBinding, WeavePort.Hosting.TenantBinding) [Public, Static] (left, right)
+  Method Int32 GetHashCode() [Public, Virtual] ()
+  Method System.String ToString() [Public, Virtual] ()
+  Method System.String get_Tenant() [Public] ()
+  Method System.Text.Json.JsonElement get_Configuration() [Public] ()
+  Method Void Deconstruct(System.String ByRef, System.Text.Json.JsonElement ByRef) [Public] (Tenant, Configuration)
+  Method Void set_Configuration(System.Text.Json.JsonElement) [Public] (value)
+  Method Void set_Tenant(System.String) [Public] (value)
+  Method WeavePort.Hosting.TenantBinding <Clone>$() [Public] ()
+  Property System.String Tenant
+  Property System.Text.Json.JsonElement Configuration
 type WeavePort.Hosting.UnixSocketTransport : System.Object [Public, Sealed]
   implements System.IEquatable`1[WeavePort.Hosting.UnixSocketTransport]
   Constructor Void .ctor(System.String, System.String) [Public] (LocalDirectory, DockerDirectory)
@@ -473,13 +675,16 @@ type WeavePort.Hosting.WorkerPoolSnapshot : System.Object [Public, Sealed]
   Method Int32 get_Pristine() [Public] ()
   Method Int32 get_Quarantined() [Public] ()
   Method Int32 get_ReusableWorkers() [Public] ()
+  Method Int32 get_SharedWorkers() [Public] ()
   Method Int32 get_Starting() [Public] ()
   Method Int32 get_Tenants() [Public] ()
   Method Int32 get_Workers() [Public] ()
+  Method Int64 get_QuarantinedMemoryMiB() [Public] ()
   Method Int64 get_ReservedMemoryMiB() [Public] ()
   Method Int64 get_ReuseHits() [Public] ()
   Method Int64 get_SessionCleanupFailures() [Public] ()
   Method Int64 get_SessionReturns() [Public] ()
+  Method Int64 get_SharedMemoryMiB() [Public] ()
   Method Int64 get_WorkersStarted() [Public] ()
   Method System.String ToString() [Public, Virtual] ()
   Method System.String get_MaintenanceFailure() [Public] ()
@@ -489,11 +694,14 @@ type WeavePort.Hosting.WorkerPoolSnapshot : System.Object [Public, Sealed]
   Method Void set_OldestQuarantineSeconds(Double) [Public] (value)
   Method Void set_Pristine(Int32) [Public] (value)
   Method Void set_Quarantined(Int32) [Public] (value)
+  Method Void set_QuarantinedMemoryMiB(Int64) [Public] (value)
   Method Void set_ReservedMemoryMiB(Int64) [Public] (value)
   Method Void set_ReusableWorkers(Int32) [Public] (value)
   Method Void set_ReuseHits(Int64) [Public] (value)
   Method Void set_SessionCleanupFailures(Int64) [Public] (value)
   Method Void set_SessionReturns(Int64) [Public] (value)
+  Method Void set_SharedMemoryMiB(Int64) [Public] (value)
+  Method Void set_SharedWorkers(Int32) [Public] (value)
   Method Void set_Starting(Int32) [Public] (value)
   Method Void set_Tenants(Int32) [Public] (value)
   Method Void set_Workers(Int32) [Public] (value)
@@ -504,13 +712,16 @@ type WeavePort.Hosting.WorkerPoolSnapshot : System.Object [Public, Sealed]
   Property Int32 Pristine
   Property Int32 Quarantined
   Property Int32 ReusableWorkers
+  Property Int32 SharedWorkers
   Property Int32 Starting
   Property Int32 Tenants
   Property Int32 Workers
+  Property Int64 QuarantinedMemoryMiB
   Property Int64 ReservedMemoryMiB
   Property Int64 ReuseHits
   Property Int64 SessionCleanupFailures
   Property Int64 SessionReturns
+  Property Int64 SharedMemoryMiB
   Property Int64 WorkersStarted
   Property System.String MaintenanceFailure
 type WeavePort.Hosting.WorkerReusePolicy : System.Enum [Public, Sealed]
@@ -521,13 +732,18 @@ type WeavePort.Hosting.WorkerReusePolicy : System.Enum [Public, Sealed]
   Field Int32 value__
   Field WeavePort.Hosting.WorkerReusePolicy ApprovedSessions=1
   Field WeavePort.Hosting.WorkerReusePolicy CustomerBound=0
+  Field WeavePort.Hosting.WorkerReusePolicy Shared=2
 type WeavePort.Sdk.PluginApplication : System.Object [Public, Sealed]
   Constructor Void .ctor(System.Text.Json.JsonSerializerOptions) [Public] (json=null)
+  Method Boolean get_ConcurrentCalls() [Public] ()
   Method System.String get_PluginVersion() [Public] ()
   Method System.Threading.Tasks.Task RunAsync(System.Threading.CancellationToken) [Public] (cancellationToken=null)
+  Method Void set_ConcurrentCalls(Boolean) [Public] (value)
   Method Void set_PluginVersion(System.String) [Public] (value)
   Method WeavePort.Sdk.PluginApplication Function[TInput,TOutput](System.String, System.Func`4[TInput,WeavePort.Sdk.PluginCallContext,System.Threading.CancellationToken,System.Threading.Tasks.ValueTask`1[TOutput]]) [Public] (name, handler)
+  Method WeavePort.Sdk.PluginApplication Source[TInput](System.String, System.Func`4[TInput,WeavePort.Sdk.PluginCallContext,System.Threading.CancellationToken,System.Threading.Tasks.ValueTask`1[System.IO.Stream]]) [Public] (name, handler)
   Method WeavePort.Sdk.PluginApplication Stream[TInput,TItem](System.String, System.Func`4[TInput,WeavePort.Sdk.PluginCallContext,System.Threading.CancellationToken,System.Collections.Generic.IAsyncEnumerable`1[TItem]]) [Public] (name, handler)
+  Property Boolean ConcurrentCalls
   Property System.String PluginVersion
 type WeavePort.Sdk.PluginCallContext : System.Object [Public, Sealed]
   Method System.String get_Tenant() [Public] ()
@@ -541,6 +757,7 @@ type WeavePort.Sdk.PluginCallContext : System.Object [Public, Sealed]
 type WeavePort.Sdk.Client.IBoundPluginClient :  [Public, ClassSemanticsMask, Abstract]
   implements System.IAsyncDisposable
   implements WeavePort.Sdk.Client.IPluginClient
+  Method System.Collections.Generic.IAsyncEnumerable`1[System.ReadOnlyMemory`1[System.Byte]] SourceAsync(System.String, System.Text.Json.JsonElement, Int32, System.Threading.CancellationToken) [Public, Virtual] (operation, input, chunkBytes=65536, cancellationToken=null)
   Method System.Threading.Tasks.Task`1[System.String] GetTenantAsync(System.Threading.CancellationToken) [Public, Virtual, Abstract] (cancellationToken=null)
 type WeavePort.Sdk.Client.IPluginClient :  [Public, ClassSemanticsMask, Abstract]
   implements System.IAsyncDisposable
@@ -550,7 +767,8 @@ type WeavePort.Sdk.Client.LocalPluginClient : System.Object [Public, Sealed]
   implements System.IAsyncDisposable
   implements WeavePort.Sdk.Client.IBoundPluginClient
   implements WeavePort.Sdk.Client.IPluginClient
-  Constructor Void .ctor(WeavePort.Abstractions.IPluginSession, System.Nullable`1[System.TimeSpan]) [Public] (session, streamTimeout=null)
+  Constructor Void .ctor(WeavePort.Abstractions.IPluginSession, System.Nullable`1[System.TimeSpan], WeavePort.Sdk.Client.PluginStreamOptions) [Public] (session, streamTimeout=null, streamOptions=null)
+  Method System.Collections.Generic.IAsyncEnumerable`1[System.ReadOnlyMemory`1[System.Byte]] SourceAsync(System.String, System.Text.Json.JsonElement, Int32, System.Threading.CancellationToken) [Public, Final, Virtual] (operation, input, chunkBytes=65536, cancellationToken=null)
   Method System.Collections.Generic.IAsyncEnumerable`1[System.Text.Json.JsonElement] StreamAsync(System.String, System.Text.Json.JsonElement, System.Threading.CancellationToken) [Public, Final, Virtual] (operation, input, cancellationToken=null)
   Method System.String get_Instance() [Public] ()
   Method System.String get_Tenant() [Public] ()
@@ -569,3 +787,19 @@ type WeavePort.Sdk.Client.PluginCallException : System.IO.IOException [Public, S
 type WeavePort.Sdk.Client.PluginClientExtensions : System.Object [Public, Abstract, Sealed]
   Method System.Collections.Generic.IAsyncEnumerable`1[TItem] StreamAsync[TInput,TItem](WeavePort.Sdk.Client.IPluginClient, System.String, TInput, System.Threading.CancellationToken) [Public, Static] (client, operation, input, cancellationToken=null)
   Method System.Threading.Tasks.Task`1[TOutput] CallAsync[TInput,TOutput](WeavePort.Sdk.Client.IPluginClient, System.String, TInput, System.Threading.CancellationToken) [Public, Static] (client, operation, input, cancellationToken=null)
+type WeavePort.Sdk.Client.PluginStreamOptions : System.Object [Public, Sealed]
+  implements System.IEquatable`1[WeavePort.Sdk.Client.PluginStreamOptions]
+  Constructor Void .ctor() [Public] ()
+  Method Boolean Equals(System.Object) [Public, Virtual] (obj)
+  Method Boolean Equals(WeavePort.Sdk.Client.PluginStreamOptions) [Public, Final, Virtual] (other)
+  Method Boolean op_Equality(WeavePort.Sdk.Client.PluginStreamOptions, WeavePort.Sdk.Client.PluginStreamOptions) [Public, Static] (left, right)
+  Method Boolean op_Inequality(WeavePort.Sdk.Client.PluginStreamOptions, WeavePort.Sdk.Client.PluginStreamOptions) [Public, Static] (left, right)
+  Method Int32 GetHashCode() [Public, Virtual] ()
+  Method System.String ToString() [Public, Virtual] ()
+  Method System.TimeSpan get_ExchangeTimeout() [Public] ()
+  Method System.TimeSpan get_TotalTimeout() [Public] ()
+  Method Void set_ExchangeTimeout(System.TimeSpan) [Public] (value)
+  Method Void set_TotalTimeout(System.TimeSpan) [Public] (value)
+  Method WeavePort.Sdk.Client.PluginStreamOptions <Clone>$() [Public] ()
+  Property System.TimeSpan ExchangeTimeout
+  Property System.TimeSpan TotalTimeout
