@@ -7,7 +7,7 @@ internal static class RuntimeRequirementChecks
     {
         foreach (var (range, version, expected) in new (string, string, bool)[]
         {
-            (">=3.11,<4", "3.12.1", true), (">=3.11,<4", "3.10.9", false),
+            (">=3.11,<4", "3.12.1", true), (">=3.11,", "3.12.1", true), ("===3.11", "v3.11", true), ("===v3.11", "v3.11", false), (">=3.11,<4", "3.10.9", false),
             ("~=3.11.0", "3.12.0", false), ("~=3.11", "3.12.0", true),
             ("==3.11.*", "3.11.9", true), ("!=3.11.*", "3.11.9", false),
             (">=3.11", "3.12.0rc1", false), (">=3.12.0rc1", "3.12.0rc2", true),

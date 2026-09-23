@@ -11,7 +11,13 @@ internal sealed record PythonSpecifier(string Operator, string Text, PythonVersi
             throw new FormatException("Python requirement exceeds limit.");
         }
 
-        return requirement.Split(',').Select(ParseOne).ToArray();
+        string[] parts = requirement.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+        if (parts.Length == 0)
+        {
+            throw new FormatException("Python requirement contains no specifiers.");
+        }
+
+        return parts.Select(ParseOne).ToArray();
     }
 
     private static PythonSpecifier ParseOne(string text)

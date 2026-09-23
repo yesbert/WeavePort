@@ -22,6 +22,11 @@ for version in [core[-1], '99.0.0', f'{minimum_major}.0.999']:
     cases.append({'runtimeOptions': {'rollForward': 'Disable', 'framework': {'name': 'Microsoft.NETCore.App', 'version': version}}})
 cases.append({'runtimeOptions': {'frameworks': [{'name': 'Microsoft.NETCore.App', 'version': minimum}, {'name': 'Microsoft.AspNetCore.App', 'version': minimum}]}})
 cases.append({'runtimeOptions': {'frameworks': [{'name': 'Microsoft.NETCore.App', 'version': minimum}, {'name': 'Missing.Framework', 'version': minimum}]}})
+for policy in ['Disable', 'LatestPatch', 'Minor', 'LatestMinor', 'Major', 'LatestMajor']:
+    for core_version, aspnet_version in [('8.0.0', '10.0.0'), ('10.0.0', '8.0.0'), ('8.0.28', '8.0.0'), ('9.0.0', '9.0.0')]:
+        cases.append({'runtimeOptions': {'rollForward': policy, 'frameworks': [
+            {'name': 'Microsoft.NETCore.App', 'version': core_version},
+            {'name': 'Microsoft.AspNetCore.App', 'version': aspnet_version}]}})
 results = []
 for config in cases:
     (output / 'Oracle.runtimeconfig.json').write_text(json.dumps(config))
