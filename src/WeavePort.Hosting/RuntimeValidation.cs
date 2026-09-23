@@ -65,23 +65,25 @@ internal sealed class RuntimeValidation(string root, IReadOnlyDictionary<string,
 
     private static void Match(string alias, RuntimeDeclaration requirement, string observed)
     {
+        bool accepted;
         try
         {
-            bool accepted = requirement.Ecosystem switch
+            accepted = requirement.Ecosystem switch
             {
                 "dotnet" => DotnetFrameworks.Matches(requirement.Requirement, observed),
                 "python" => observed.StartsWith("Python ", StringComparison.Ordinal) && PythonSpecifier.Matches(requirement.Requirement, observed[7..]),
                 "node" => observed.StartsWith('v') && VersionRange.Parse(requirement.Requirement).IsSatisfiedBy(SemanticVersion.Parse(observed[1..])),
                 _ => false
             };
-            if (!accepted)
-            {
-                throw Failure(alias, requirement, observed);
-            }
         }
-        catch (Exception error) when (error is FormatException or ArgumentException or System.Text.Json.JsonException or KeyNotFoundException or InvalidOperationException)
+        catch (Exception error) when (error is FormatException or ArgumentException or System.Text.Json.JsonException or KeyNotFoundException or InvalidOperationException or InvalidDataException or IOException or UnauthorizedAccessException or TimeoutException)
         {
             throw Failure(alias, requirement, "invalid version output or installed framework configuration", error);
+        }
+
+        if (!accepted)
+        {
+            throw Failure(alias, requirement, observed);
         }
     }
 

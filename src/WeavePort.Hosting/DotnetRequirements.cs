@@ -68,7 +68,7 @@ internal static class DotnetRequirements
 
     internal static Version? Select(FrameworkRequirement requirement, IEnumerable<Version> available)
     {
-        Version minimum = ParseVersion(requirement.Version);
+        _ = ParseVersion(requirement.Version);
         Version[] candidates = available.Where(v => Allows(requirement, v)).Order().ToArray();
         if (candidates.Length == 0)
         {
@@ -77,9 +77,9 @@ internal static class DotnetRequirements
 
         return requirement.RollForward switch
         {
-            "Disable" => candidates.First(),
-            "LatestPatch" or "LatestMinor" or "LatestMajor" => candidates.Last(),
-            _ => candidates.Where(v => v.Major == candidates[0].Major && v.Minor == candidates[0].Minor).Last()};
+            "Disable" => candidates[0],
+            "LatestPatch" or "LatestMinor" or "LatestMajor" => candidates[^1],
+            _ => candidates.Last(v => v.Major == candidates[0].Major && v.Minor == candidates[0].Minor)};
     }
 
     internal static bool Allows(FrameworkRequirement requirement, Version candidate)

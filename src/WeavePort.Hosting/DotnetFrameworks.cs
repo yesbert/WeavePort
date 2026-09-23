@@ -7,6 +7,42 @@ internal static class DotnetFrameworks
     private sealed record Installed(string Name, Version Version, string Directory);
     internal static bool Matches(string requirement, string output)
     {
+        List<Installed> available = ReadInventory(output);
+        var constraints = JsonSerializer.Deserialize<FrameworkRequirement[]>(requirement)!.ToList();
+        var expanded = new HashSet<(string, Version)>();
+        for (int iteration = 0; iteration < 128; iteration++)
+        {
+            bool added = false;
+            // GroupBy buffers this iteration's constraints before the first group is yielded.
+            foreach (var group in constraints.GroupBy(f => f.Name, StringComparer.Ordinal))
+            {
+                Installed[] installed = available.Where(f => f.Name == group.Key).ToArray();
+                var versions = installed.Select(f => f.Version).Where(v => group.All(r => DotnetRequirements.Allows(r, v))).ToArray();
+                Version? selected = group.Select(r => DotnetRequirements.Select(r, versions)).Max();
+                if (selected is null)
+                {
+                    return false;
+                }
+
+                if (expanded.Add((group.Key, selected)))
+                {
+                    FrameworkRequirement[] dependencies = ReadDependencies(installed.First(f => f.Version == selected));
+                    constraints.AddRange(dependencies);
+                    added |= dependencies.Length > 0;
+                }
+            }
+
+            if (!added)
+            {
+                return true;
+            }
+        }
+
+        throw new InvalidDataException("Installed framework dependency resolution exceeds limit.");
+    }
+
+    private static List<Installed> ReadInventory(string output)
+    {
         var available = new List<Installed>();
         foreach (string line in output.Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
         {
@@ -24,52 +60,25 @@ internal static class DotnetFrameworks
             available.Add(new(match.Groups[1].Value, DotnetRequirements.ParseVersion(match.Groups[2].Value), match.Groups[3].Value));
         }
 
-        var original = JsonSerializer.Deserialize<FrameworkRequirement[]>(requirement)!;
-        var constraints = original.ToList();
-        var expanded = new HashSet<(string, Version)>();
-        for (int iteration = 0; iteration < 128; iteration++)
+        return available;
+    }
+
+    private static FrameworkRequirement[] ReadDependencies(Installed framework)
+    {
+        string path = Path.Combine(framework.Directory, framework.Version.ToString(), framework.Name + ".runtimeconfig.json");
+        if (!File.Exists(path))
         {
-            bool added = false;
-            foreach (var group in constraints.ToArray().GroupBy(f => f.Name, StringComparer.Ordinal))
-            {
-                Installed[] installed = available.Where(f => f.Name == group.Key).ToArray();
-                var versions = installed.Select(f => f.Version).Where(v => group.All(r => DotnetRequirements.Allows(r, v))).ToArray();
-                Version? selected = group.Select(r => DotnetRequirements.Select(r, versions)).Max();
-                if (selected is null)
-                {
-                    return false;
-                }
-
-                if (!expanded.Add((group.Key, selected)))
-                {
-                    continue;
-                }
-
-                string path = Path.Combine(installed.First(f => f.Version == selected).Directory, selected.ToString(), group.Key + ".runtimeconfig.json");
-                if (File.Exists(path))
-                {
-                    if (new FileInfo(path).Length > 65536)
-                    {
-                        throw new InvalidDataException("Installed framework configuration exceeds limit.");
-                    }
-
-                    string content = File.ReadAllText(path);
-                    using var config = JsonDocument.Parse(content);
-                    JsonElement options = config.RootElement.GetProperty("runtimeOptions");
-                    if (options.TryGetProperty("framework", out _) || options.TryGetProperty("frameworks", out _))
-                    {
-                        constraints.AddRange(JsonSerializer.Deserialize<FrameworkRequirement[]>(DotnetRequirements.Read(content))!);
-                        added = true;
-                    }
-                }
-            }
-
-            if (!added)
-            {
-                return true;
-            }
+            return[];
         }
 
-        throw new InvalidDataException("Installed framework dependency resolution exceeds limit.");
+        if (new FileInfo(path).Length > 65536)
+        {
+            throw new InvalidDataException("Installed framework configuration exceeds limit.");
+        }
+
+        string content = File.ReadAllText(path);
+        using var config = JsonDocument.Parse(content);
+        JsonElement options = config.RootElement.GetProperty("runtimeOptions");
+        return options.TryGetProperty("framework", out _) || options.TryGetProperty("frameworks", out _) ? JsonSerializer.Deserialize<FrameworkRequirement[]>(DotnetRequirements.Read(content))! : [];
     }
 }

@@ -39,8 +39,15 @@ internal static class ConsumerFindingChecks
                 File.WriteAllText(probe, "#!/bin/sh\nprintf '%s\\n' 'Microsoft.NETCore.App 10.0.0 [" + frameworkRoot + "]'\n");
                 File.SetUnixFileMode(probe, UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.UserExecute);
                 var malformedFramework = new InstalledPluginCatalog(root, new Dictionary<string, string> { ["dotnet"] = probe });
-                foreach (var entries in new[] { malformedFramework.ListAll(), await malformedFramework.ListAllAsync() })
-                    if (entries.Single(e => Path.GetFileName(e.Directory) == "valid").Refusal != "invalid-installation") throw new Exception("Malformed runtime interrupted discovery.");
+                foreach (string content in new[] { "{}", new string(' ', 65537) })
+                {
+                    File.WriteAllText(Path.Combine(frameworkRoot, "10.0.0", "Microsoft.NETCore.App.runtimeconfig.json"), content);
+                    foreach (var entries in new[] { malformedFramework.ListAll(), await malformedFramework.ListAllAsync() })
+                    {
+                        var refusal = entries.Single(e => Path.GetFileName(e.Directory) == "valid");
+                        if (refusal.Refusal != "invalid-installation" || !refusal.Diagnostic!.Contains("Runtime 'dotnet' requires")) throw new Exception("Malformed runtime interrupted discovery or lost runtime context.");
+                    }
+                }
             }
             using var cancelled = new CancellationTokenSource();
             cancelled.Cancel();

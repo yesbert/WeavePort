@@ -7,6 +7,11 @@ namespace WeavePort.Hosting;
 /// <summary>Creates deterministic schema-2 manifests for offline, owner-controlled plugin releases.</summary>
 public static class PluginInstallationSealer
 {
+    private static readonly JsonSerializerOptions ManifestJson = new JsonSerializerOptions(InstalledPluginCatalog.ManifestJson)
+    {
+        WriteIndented = true,
+        DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+    };
     /// <summary>Validates and hashes a built release, then atomically replaces its manifest. Does not execute code or update selectors and pins.</summary>
     public static InstallationIdentity Seal(PluginSealOptions options)
     {
@@ -40,12 +45,7 @@ public static class PluginInstallationSealer
         }
 
         var manifest = new InstalledPluginCatalog.Manifest(2, options.Plugin, options.Version, options.Contract, entries, files, null, compatibility, launch, runtimes, external);
-        var json = new JsonSerializerOptions(InstalledPluginCatalog.ManifestJson)
-        {
-            WriteIndented = true,
-            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
-        };
-        byte[] bytes = JsonSerializer.SerializeToUtf8Bytes(manifest, json);
+        byte[] bytes = JsonSerializer.SerializeToUtf8Bytes(manifest, ManifestJson);
         if (bytes.Length > 1024 * 1024)
         {
             throw new InvalidDataException("Installation manifest exceeds 1 MiB.");
