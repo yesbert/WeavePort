@@ -58,6 +58,7 @@ if (args.Contains("--portable"))
     await PortableInstallationChecks.RunAsync();
     return;
 }
+await ConsumerFindingChecks.RunAsync();
 await PortableInstallationChecks.RunAsync();
 Console.WriteLine($"PASS {await McpChecks.RunAsync()} MCP protocol, authority and lifecycle assertions");
 ManifestChecks.Run();

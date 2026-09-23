@@ -1,6 +1,6 @@
 # Direct HTTPS gateway and composition
 
-This example uses the 0.6.0 packages. Until public publication, build the repository feed with `./scripts/prepare-core-packages.sh`; the repository NuGet configuration maps WeavePort packages to that feed. External consumers can add that feed explicitly. After publication, use NuGet.org without the repository source mapping.
+This example uses the 0.7.0 packages. For repository development, build the local feed with `./scripts/prepare-core-packages.sh`; the repository NuGet configuration maps WeavePort packages to that feed. External consumers can add that feed explicitly. For a published release, use NuGet.org without the repository source mapping.
 
 Publish Worker, Server and Client with `dotnet publish <project-directory> -c Release --self-contained false -o <output-directory>`. The worker and server run on the server machine; the client can run on another machine. Server requires .NET 10 and ASP.NET Core, while Client requires only .NET 10. Worker is explicitly trusted same-user code.
 

@@ -72,7 +72,7 @@ Adapt the sample-owned wish, slot and command contracts to the consuming applica
 
 ## Shared installation identity
 
-This sample now uses the packaged [installed-plugin resolver](../../docs/installed-plugins.md). Builds seal release directories; resolution validates content and contract identity. Activation changes future operations only. Do not modify or rebuild executing release/runtime files. The offline build now requires Python 3.11+ for manifest sealing.
+This sample now uses the packaged [installed-plugin resolver](../../docs/installed-plugins.md). Builds seal release directories; resolution validates content and contract identity. Activation changes future operations only. Do not modify or rebuild executing release/runtime files. Manifest sealing uses the .NET Hosting API and requires no Python. The C# providers require only the documented .NET build/runtime prerequisites.
 
 Both release 1 and release 2 implement the same domain contract. Use `--activate 2` to change the default or `--version 1` for explicit selection. The selected installation is recorded with the result or persistent intent.
 

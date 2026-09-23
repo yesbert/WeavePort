@@ -54,7 +54,7 @@ internal static class AdmissionScenarios
         await evidence.Check("worker version handshake rejects mismatch", async () =>
         {
             await using IPluginSession wrong = await Bind(host, callbacks, "C", "2", "weaveport-poc-python:1");
-            if ((await Call(wrong, "echo", new { })).Status != "protocol-error") throw new InvalidOperationException("Wrong worker version accepted");
+            if ((await Call(wrong, "echo", new { })).Status != "version-mismatch") throw new InvalidOperationException("Wrong worker version accepted");
         });
         await evidence.Check("resolved image survives mutable tag replacement", async () =>
         {

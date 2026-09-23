@@ -132,7 +132,7 @@ await using (var host = new PluginHost(options: new WorkerPoolOptions(MaximumPri
         await client.CallAsync<object, JsonElement>("reader.describe", new { });
         throw new InvalidOperationException("Expected startup mismatch.");
     }
-    catch (PluginCallException error) when (error.Status == "protocol-error")
+    catch (PluginCallException error) when (error.Status == "version-mismatch")
     {
         Check(true, "real v1 worker under trusted v2 metadata fails startup version guard");
     }

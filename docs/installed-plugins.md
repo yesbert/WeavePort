@@ -16,7 +16,7 @@ Each release directory contains `installation.json` with case-sensitive fields:
 
 | Field | Meaning |
 |---|---|
-| `Schema` | Manifest format: legacy 1 or portable 2 in current source |
+| `Schema` | Manifest format: legacy 1 or portable 2 |
 | `Plugin`, `Version` | Expected plugin installation ID and exact artifact release |
 | `Contract` | Application contract identifier, independent of artifact release |
 | `EntryPoints` | Trusted aliases mapped to declared relative bundle files |
@@ -29,7 +29,7 @@ Each release directory contains `installation.json` with case-sensitive fields:
 
 An `InstallationIdentity` contains plugin, version, contract and SHA-256 of the exact manifest bytes. Even a manifest-only change invalidates an old pin. A schema-1 directory may be relocated with unchanged content and approved equivalent runtime files. A schema-2 portable directory can retain its pin across supported hosts with compatible approved runtimes even when executable hashes differ. Absolute paths are not the identity. Missing/extra bundle files, links, path traversal, duplicate JSON fields, unknown schema, mismatched contract/release and changed hashes are refused. The manifest is limited to 1 MiB, 4096 files and 32 entry points; traversal is bounded to 8192 directory entries.
 
-Current source adds a [public .NET sealing API](portable-installations.md), using the compatibility matrix embedded in Hosting. Published 0.6.0 installations remain schema 1; schema 2 requires the updated host. The [repository sealing driver](../scripts/seal-installation.sh) calls this API. The old Python script delegates to that driver and no longer owns manifest policy. Build cleanup belongs to the build caller, not the sealer. Runtime declaration files and consumer metadata are hashed like every other bundle file; explicitly external SDK files retain separate hashes.
+Version 0.7.0 adds a [public .NET sealing API](portable-installations.md), using the compatibility matrix embedded in Hosting. Hosts through 0.6.0 support schema 1; schema 2 requires the updated host. The [repository sealing driver](../scripts/seal-installation.sh) calls this API. The old Python script delegates to that driver and no longer owns manifest policy. Build cleanup belongs to the build caller, not the sealer. Runtime declaration files and consumer metadata are hashed like every other bundle file; explicitly external SDK files retain separate hashes.
 
 ## Stable deployment precondition
 

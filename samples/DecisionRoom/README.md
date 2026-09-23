@@ -95,6 +95,6 @@ Activation changes only `active-version.txt`. A run resolves it once, stores its
 
 ## Shared installation identity
 
-This sample now uses the packaged [installed-plugin resolver](../../docs/installed-plugins.md). Builds seal release directories; resolution validates content and contract identity. Activation changes future operations only. Do not modify or rebuild executing release/runtime files. The offline build now requires Python 3.11+ for manifest sealing.
+This sample now uses the packaged [installed-plugin resolver](../../docs/installed-plugins.md). Builds seal release directories; resolution validates content and contract identity. Activation changes future operations only. Do not modify or rebuild executing release/runtime files. Manifest sealing uses the .NET Hosting API and requires no Python. Decision Room still requires Python for its Python strategy provider.
 
 Journals created before this resolver lack its manifest digest and are refused unchanged. Use a fresh `--journal` or retain the original build for those development journals.

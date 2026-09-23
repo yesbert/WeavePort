@@ -1,4 +1,4 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup><RestoreConfigFile>$(MSBuildThisFileDirectory)../adapter-nuget.config</RestoreConfigFile><OutputType>Exe</OutputType><IsPackable>false</IsPackable><RestoreSources>$(MSBuildThisFileDirectory)../../artifacts/packages</RestoreSources><RestorePackagesPath>$(MSBuildThisFileDirectory)../../artifacts/consumer-packages</RestorePackagesPath></PropertyGroup>
-  <ItemGroup><PackageReference Include="WeavePort.Hosting" Version="0.6.0" /><PackageReference Include="WeavePort.Testing" Version="0.6.0" /></ItemGroup>
+  <ItemGroup><PackageReference Include="WeavePort.Hosting" Version="0.7.0" /><PackageReference Include="WeavePort.Testing" Version="0.7.0" /></ItemGroup>
 </Project>

@@ -79,9 +79,9 @@ internal sealed class RuntimeValidation(string root, IReadOnlyDictionary<string,
                 throw Failure(alias, requirement, observed);
             }
         }
-        catch (Exception error) when (error is FormatException or ArgumentException or System.Text.Json.JsonException)
+        catch (Exception error) when (error is FormatException or ArgumentException or System.Text.Json.JsonException or KeyNotFoundException or InvalidOperationException)
         {
-            throw Failure(alias, requirement, "invalid version output", error);
+            throw Failure(alias, requirement, "invalid version output or installed framework configuration", error);
         }
     }
 

@@ -1,3 +1,4 @@
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 
@@ -22,6 +23,26 @@ public sealed class PluginApplication
             ArgumentException.ThrowIfNullOrWhiteSpace(value);
             _pluginVersion = value;
         }
+    }
+
+    /// <summary>Reads the supplied or entry assembly's informational version. By default removes the + build metadata suffix, preserving prerelease labels. Missing metadata is refused.</summary>
+    public static string VersionFromAssembly(Assembly? assembly = null, bool includeBuildMetadata = false)
+    {
+        assembly ??= Assembly.GetEntryAssembly() ?? throw new InvalidOperationException("No entry assembly is available; supply the plugin assembly explicitly.");
+        string? version = assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion;
+        if (string.IsNullOrWhiteSpace(version))
+        {
+            throw new InvalidOperationException("The plugin assembly has no informational version.");
+        }
+
+        int suffix = version.IndexOf('+');
+        string selected = !includeBuildMetadata && suffix >= 0 ? version[..suffix] : version;
+        if (string.IsNullOrWhiteSpace(selected))
+        {
+            throw new InvalidOperationException("The plugin assembly has no release version before build metadata.");
+        }
+
+        return selected;
     }
 
     /// <summary>Creates an application with web JSON conventions or supplied serializer metadata/options.</summary>

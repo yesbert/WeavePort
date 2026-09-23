@@ -1,6 +1,6 @@
 # Product status
 
-Release version: **0.6.0**, under MIT, with four core packages and optional Composition, Gateway server and Gateway client packages. Windows, Linux and macOS are supported targets for trusted stdio execution. Current release validation covers macOS arm64; Windows and Linux release validation is pending. See [platform support and validation](platform-qualification.md). This pre-1.0 API remains subject to evolution. Python/TypeScript registry publication and a new offline distribution are outside this release. The historical internal distribution remains **0.1.0-internal.2**.
+Release version: **0.7.0**, under MIT, with four core packages and optional Composition, Gateway server and Gateway client packages. Windows, Linux and macOS are supported targets for trusted stdio execution. Current release validation covers macOS arm64; Windows and Linux release validation is pending. See [platform support and validation](platform-qualification.md). This pre-1.0 API remains subject to evolution. Python/TypeScript registry publication and a new offline distribution are outside this release. The historical internal distribution remains **0.1.0-internal.2**.
 
 The previous [0.5.0 release evidence](../reports/release/0.5.0/README.md) records all seven published packages, 3,496 qualification assertions, artifact provenance and public download verification.
 
@@ -44,6 +44,8 @@ Version 0.4.0 adds a memory-led fair scheduler and opt-in `WorkerReusePolicy.App
 
 The current source exposes one `PluginHost` with queued or immediate admission, explicit reconstructible eviction, operation-wide stream/source residency, verified installation approvals and opt-in resident Shared execution. Shared invocation authority, cancellation retention and bounded recovery are separate from sequential `ApprovedSessions` cleanup. New functionality must be qualified against the candidate package family before release claims; historical reports above remain tied to their recorded versions and machines. See [shared execution](shared-execution.md) and [installed clients](installed-plugin-clients.md).
 
-## Portable installation source changes
+## Portable installations and consumer diagnostics
 
 Current source adds schema-2 runtime requirements derived from .NET, Python and Node declarations, bounded runtime checks at resolution and worker startup, and a public .NET sealing API using embedded compatibility metadata. Legacy manifests retain strict runtime hashes. A managed-only bundle was sealed on macOS and invoked unchanged from an external plugin-root mount in a Linux container; this does not replace full Linux release qualification. See [portable installation guidance](portable-installations.md) and [verification evidence](../reports/verification/portable-runtime-20260923/summary.md). Package publication remains a separate release operation.
+
+Version 0.7.0 also adds complete `ListAll` diagnostics, explicit assembly-derived author versions, structured startup mismatch details and immutable per-call local/gateway timing. See the [release audit](../reports/release/0.7.0/audit.md) and [client guide](plugin-sdk.md#per-call-timing).

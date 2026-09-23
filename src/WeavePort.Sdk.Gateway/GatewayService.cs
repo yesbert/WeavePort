@@ -52,6 +52,11 @@ public sealed partial class GatewayService(GatewayRegistry registry) : WorkerGat
                     MayHaveExecuted = mapped.StatusCode != StatusCode.Unauthenticated && mapped.Trailers.GetValue(GatewayMetadata.MayHaveExecuted) != "false",
                     Cancelled = mapped.StatusCode == StatusCode.Cancelled
                 };
+                if (error is PluginCallException { VersionMismatch: { } mismatch })
+                {
+                    terminal.ExpectedVersion = mismatch.Expected;
+                    terminal.AdvertisedVersion = mismatch.Advertised;
+                }
             }
 
             terminal.Complete = true;
@@ -61,15 +66,15 @@ public sealed partial class GatewayService(GatewayRegistry registry) : WorkerGat
 
     private async Task<Reply> CallAsync(Request request, ServerCallContext context)
     {
-        try
+        var client = Authorize(context);
+        var result = await client.CallWithMetadataAsync(request.Operation, Decode(request), context.CancellationToken);
+        Reply reply = Encode(result.Value);
+        if (result.ElapsedMs is { } elapsed)
         {
-            var client = Authorize(context);
-            return Encode(await client.CallAsync(request.Operation, Decode(request), context.CancellationToken));
+            reply.ElapsedMs = elapsed;
         }
-        catch (Exception error)
-        {
-            throw Map(error);
-        }
+
+        return reply;
     }
 
     private async Task StreamAsync(Request request, IServerStreamWriter<Reply> output, ServerCallContext context)

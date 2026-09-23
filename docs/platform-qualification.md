@@ -7,7 +7,7 @@ WeavePort's contracts, tenant binding and protocol are shared .NET code. Process
 | Environment | Execution and evidence | Remaining limits |
 | --- | --- | --- |
 | macOS arm64 | Trusted process stdio/socket; qualified packaged multilingual checks; current benchmarks are linked from [status](status.md) | No hostile-code sandbox; unsigned developer bundle; system-wide memory/swap includes background applications |
-| Linux arm64, Docker Desktop VM | Historical container and trusted-process comparisons; no current delivered-package qualification | Ordinary children still live inside the trusted coordinator container; not bare metal or independent hardware |
+| Linux arm64, Docker Desktop VM | Historical comparisons plus a [portable schema-2 bundle invoked unchanged from macOS](../reports/verification/portable-runtime-20260923/summary.md); full current package qualification remains separate | Ordinary children still live inside the trusted coordinator container; not bare metal or independent hardware |
 | Windows x64, GitHub-hosted Windows Server 2025 | Native stdio adapter fixtures passed: 38 checks across C#, Python and TypeScript | Current public-package installation, performance and stronger security qualification remain separate |
 | Linux x64, GitHub-hosted Ubuntu 24.04 | Native adapter fixtures passed: 38 stdio and 39 socket checks | Current release installation, other distributions/architectures and performance remain separate |
 | Other CPU architectures/distributions | Intended platform targets where .NET and required plugin runtimes are available | Not implied by arm64 results |
@@ -31,7 +31,7 @@ Select an explicit supported transport; never silently downgrade a requested sec
 Use a Windows machine with the repository SDK, Python 3.14+ and Node 24.12+. Keep interpreter paths explicit in a local JSON configuration if `python3`/`node` discovery does not resolve the intended installation. Execute the existing C# consumer, not a reimplementation of its tests:
 
 ```powershell
-# After packing the three src packages into artifacts/packages and publishing the C# fixture:
+# After packing the core packages into artifacts/packages and publishing the C# fixture:
 dotnet restore tests/WeavePort.Local.Tests --force --no-cache
 dotnet build tests/WeavePort.Local.Tests -c Release
 # Configure writes fixture paths relative to this checkout; doctor checks actual prerequisites.

@@ -41,9 +41,14 @@ internal static class WorkerEnvelope
     internal static void ValidateReady(JsonElement frame, string version, WorkerReusePolicy reusePolicy = WorkerReusePolicy.CustomerBound)
     {
         Validate(frame);
-        if (!frame.TryGetProperty("type", out JsonElement type) || type.ValueKind != JsonValueKind.String || type.GetString() != "ready" || !frame.TryGetProperty("protocol", out JsonElement protocol) || protocol.ValueKind != JsonValueKind.Number || !protocol.TryGetInt32(out int number) || number != (reusePolicy == WorkerReusePolicy.Shared ? 2 : 1) || !frame.TryGetProperty("pluginVersion", out JsonElement pluginVersion) || pluginVersion.ValueKind != JsonValueKind.String || pluginVersion.GetString() != version)
+        if (!frame.TryGetProperty("type", out JsonElement type) || type.ValueKind != JsonValueKind.String || type.GetString() != "ready" || !frame.TryGetProperty("protocol", out JsonElement protocol) || protocol.ValueKind != JsonValueKind.Number || !protocol.TryGetInt32(out int number) || number != (reusePolicy == WorkerReusePolicy.Shared ? 2 : 1) || !frame.TryGetProperty("pluginVersion", out JsonElement pluginVersion) || pluginVersion.ValueKind != JsonValueKind.String)
         {
             throw new InvalidDataException("Unsupported worker protocol.");
+        }
+
+        if (pluginVersion.GetString() != version)
+        {
+            throw new PluginVersionMismatchException(version, pluginVersion.GetString()!);
         }
 
         if (reusePolicy == WorkerReusePolicy.Shared && (!frame.TryGetProperty("concurrentCalls", out var concurrent) || concurrent.ValueKind != JsonValueKind.Number || !concurrent.TryGetInt32(out int degreeRevision) || degreeRevision != 1))

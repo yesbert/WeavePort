@@ -35,6 +35,20 @@ await using IBoundPluginClient client = await host.BindAsync(installation, appro
 var result = await client.CallAsync("describe", input, cancellationToken);
 ```
 
+For administrative discovery, use `ListAll()` or `await ListAllAsync(contract, cancellationToken)`. Every immediate plugin directory produces an `InstallationDiscovery`: either `Installation` or `Refusal` with `Diagnostic`. Missing `active.txt`, malformed manifests, contract mismatches and incompatible runtimes remain visible alongside healthy siblings. `Directory` is absolute. Categories are `missing-file`, `access-denied`, `invalid-installation` and `io-error`; diagnostics can contain local deployment paths and should not be exposed to untrusted callers. Cancellation and failures to enumerate the root propagate. Existing `List(contract)` keeps its filtered behavior and may stop on an invalid selected installation.
+
+```csharp
+foreach (InstallationDiscovery entry in await catalog.ListAllAsync("text-tools/v1", cancellationToken))
+{
+    if (entry.Installation is { } available)
+        Console.WriteLine(available.Identity.Plugin);
+    else
+        Console.WriteLine($"{entry.Directory}: {entry.Refusal}: {entry.Diagnostic}");
+}
+```
+
+To retain per-call timing, use `client.CallWithMetadataAsync(...)`; the returned immutable result pairs `Value` with nullable host `ElapsedMs`. See [typed calls and timing](plugin-sdk.md#per-call-timing).
+
 The installation declares a `Launch` object with `Runtime`, literal `Arguments` following the verified entry point, `MemoryMiB`, supported `Ownership` values, and `MaximumDegree`. A Shared launch uses protocol 2 and declares only Shared ownership; exclusive launches use protocol 1. These declarations describe requirements; they never grant permission. An approval that exceeds declared concurrency or chooses unsupported ownership is rejected. The installation supplies plugin, version and profile identity, so callers do not repeat them.
 
 The sealing script accepts an optional `launch.json` inside the release. It copies that reviewed object into the manifest and includes the input file in bundle integrity checks. Without it, the script declares a customer-bound .NET entry point with no arguments and a 256 MiB reservation.

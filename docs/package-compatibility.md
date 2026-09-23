@@ -2,7 +2,7 @@
 
 Keep the host, SDKs and plugin artifacts on a known-compatible combination. This guide defines the exact identities checked during installation and startup.
 
-**Package policy for 0.6.0, reviewed 2026-09-21.** The [machine-readable matrix](../compatibility/local-v1.json) defines one exact combination. It is embedded in `WeavePort.Hosting` and consumed by the offline installation sealer. The public NuGet package set uses this exact matrix; no general SemVer range is accepted.
+**Package policy for 0.7.0, reviewed 2026-09-23.** The [machine-readable matrix](../compatibility/local-v1.json) defines one exact combination. It is embedded in `WeavePort.Hosting` and consumed by the offline installation sealer. The public NuGet package set uses this exact matrix; no general SemVer range is accepted.
 
 ## Separate compatibility identities
 
@@ -10,8 +10,8 @@ Keep the host, SDKs and plugin artifacts on a known-compatible combination. This
 |---|---|---|
 | Local host API level | `2` | Installation compatibility declaration against the embedded matrix |
 | Transport protocol | `1` exclusive, `2` shared | Compatibility declaration and existing worker startup protocol checks |
-| Core host packages | Abstractions, Hosting, Sdk.Client, each `0.6.0` | Exact declaration plus actual packed/loaded metadata checks |
-| C# author SDK (`dotnet`) | `WeavePort.Sdk` `0.6.0` | Entry-specific declaration, packed metadata and native startup/call checks |
+| Core host packages | Abstractions, Hosting, Sdk.Client, each `0.7.0` | Exact declaration plus actual packed/loaded metadata checks |
+| C# author SDK (`dotnet`) | `WeavePort.Sdk` `0.7.0` | Entry-specific declaration, packed metadata and native startup/call checks |
 | Python author SDK (`python`) | `weaveport-sdk` `0.3.0` | Entry-specific declaration, wheel/installed metadata and native startup/call checks |
 | TypeScript author SDK (`node`) | `@weaveport/sdk` `0.3.0` | Entry-specific declaration, npm/installed metadata and native startup/call checks |
 | Plugin artifact release | Exact chosen installation, e.g. `1` or `2` | Manifest identity/content pin and worker's advertised release |
@@ -27,11 +27,11 @@ The sealer generates this block from the reviewed matrix; plugins do not choose 
 
 The metadata is a trusted deployment declaration, not runtime package attestation. The gate inspects real packed package metadata and loaded assembly versions; the installation resolver validates declarations and file hashes. It does not interrogate every transitive runtime dependency inside a running worker. Same development version labels across different development builds do not prove identical bytes or behavior. Keep one coherent tested deployment and its pinned content; stable-file requirements in [installed-plugin resolution](installed-plugins.md) still apply.
 
-Old manifests without `Compatibility` fail closed. Rebuild/reseal only offline. This changes manifest identity, so existing pins require the original deployment or new application state; recovery never upgrades a pin automatically. Manifest schema is 1 for the first public release. Future format evolution requires an explicit migration/format decision.
+Old manifests without `Compatibility` fail closed. Rebuild/reseal only offline. This changes manifest identity, so existing pins require the original deployment or new application state; recovery never upgrades a pin automatically. Schema 1 preserves the original executable hash policy; portable schema 2 derives runtime requirements from hashed ecosystem declarations. See [portable installations](portable-installations.md) for explicit resealing and unchanged-pin recovery rules.
 
 ## Reviewed package/API surface
 
-Version 0.6.0 introduces the unified host, explicit reconstructible eviction, resident shared calls, stream/source operation leases and installed approvals. It removes the separate scheduled-host API. Upgrade all selected .NET packages and exact installation declarations together; use matching Python/TypeScript 0.3.0 author artifacts. The matrix lists supported protocols 1 and 2; each installation declares the single protocol used by its launch. Shared launches declare only Shared ownership and protocol 2. Earlier protocol-1 hosts refuse protocol 2 rather than interpreting concurrent workers as serial providers. Download exact author SDK artifacts from the release; PyPI/npm registry publication remains separate.
+Version 0.6.0 introduced the unified host, explicit reconstructible eviction, resident shared calls, stream/source operation leases and installed approvals. It removed the separate scheduled-host API. Version 0.7.0 adds portable sealing, complete diagnostic discovery, explicit assembly-version selection and per-call timing. Artifact mismatches now report `version-mismatch` with expected/advertised values instead of generic `protocol-error`; callers matching status codes should handle it as a pre-dispatch refusal. Upgrade all selected .NET packages and exact installation declarations together; use matching Python/TypeScript 0.3.0 author artifacts. The matrix lists supported protocols 1 and 2; each installation declares the single protocol used by its launch. Shared launches declare only Shared ownership and protocol 2. Earlier protocol-1 hosts refuse protocol 2 rather than interpreting concurrent workers as serial providers. Download exact author SDK artifacts from the release; PyPI/npm registry publication remains separate.
 
 The [API baseline](../compatibility/public-api.txt) records exported types and public/protected signatures across the four core .NET packages. It includes parameter names and optional defaults, inheritance/interfaces and enum values. The [packed consumer](../tests/compatibility/Program.cs) detects drift without rewriting the baseline. All four packages target `net10.0` in this candidate.
 
@@ -70,4 +70,4 @@ From the repository root:
 
 The final script checks actual NuGet identity/dependency closure/target libraries, installed and packed author SDK metadata, loaded versions, embedded policy, the API baseline and installation compatibility/refusal cases. Negative checks use copies to prove that real package dependency drift and an API mismatch fail. Separate sample processes verify state preservation. Historical internal-candidate evidence is in the [retained report](../reports/release/0.1.0-internal.2/candidate/report.md).
 
-The 0.6.0 package family includes Abstractions, Hosting, Sdk, Sdk.Client, Composition, Sdk.Gateway and Sdk.Gateway.Client. All selected .NET packages must come from the same qualified delivery. Hosting now depends on Sdk.Client so installed bindings return ready-to-use clients; Client depends only on Abstractions, so this introduces no dependency cycle or new third-party package. Optional package identities remain outside mandatory installation declarations.
+The 0.7.0 package family includes Abstractions, Hosting, Sdk, Sdk.Client, Composition, Sdk.Gateway and Sdk.Gateway.Client. All selected .NET packages must come from the same qualified delivery. Hosting now depends on Sdk.Client so installed bindings return ready-to-use clients; Client depends only on Abstractions, so this introduces no dependency cycle or new third-party package. Optional package identities remain outside mandatory installation declarations.

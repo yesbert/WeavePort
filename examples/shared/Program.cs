@@ -37,11 +37,15 @@ var approval = new PluginApproval
 await using var plugin = await host.ShareAsync(installation, approval, JsonSerializer.SerializeToElement(new { }), new NoCallbacks(), []);
 await using var alice = plugin.For("alice");
 await using var bob = plugin.For("bob");
-Response[] results = await Task.WhenAll(
-    alice.CallAsync<Request, Response>("describe", new("hello")),
-    bob.CallAsync<Request, Response>("describe", new("world")));
-if (results[0].Tenant != "alice" || results[1].Tenant != "bob") throw new InvalidOperationException("Tenant identity mismatch.");
-foreach (Response result in results) Console.WriteLine($"{result.Tenant}: {result.Text}");
+PluginCallResult<Response>[] results = await Task.WhenAll(
+    alice.CallWithMetadataAsync<Request, Response>("describe", new("hello")),
+    bob.CallWithMetadataAsync<Request, Response>("describe", new("world")));
+if (results[0].Value.Tenant != "alice" || results[1].Value.Tenant != "bob") throw new InvalidOperationException("Tenant identity mismatch.");
+foreach (var result in results)
+{
+    if (result.ElapsedMs is not >= 0) throw new InvalidOperationException("Host timing unavailable.");
+    Console.WriteLine($"{result.Value.Tenant}: {result.Value.Text} ({result.ElapsedMs:F2} ms at host)");
+}
 Console.WriteLine($"Ready shared workers: {plugin.Snapshot.ReadyWorkers}");
 
 internal sealed record Request(string Text);

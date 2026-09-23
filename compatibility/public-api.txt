@@ -61,12 +61,15 @@ type WeavePort.Abstractions.InvocationResult : System.Object [Public, Sealed]
   Method Void set_MayHaveExecuted(Boolean) [Public] (value)
   Method Void set_Status(System.String) [Public] (value)
   Method Void set_Value(System.Text.Json.JsonElement) [Public] (value)
+  Method Void set_VersionMismatch(WeavePort.Abstractions.PluginVersionMismatch) [Public] (value)
   Method WeavePort.Abstractions.InvocationResult <Clone>$() [Public] ()
+  Method WeavePort.Abstractions.PluginVersionMismatch get_VersionMismatch() [Public] ()
   Property Boolean MayHaveExecuted
   Property Double ElapsedMs
   Property System.String Instance
   Property System.String Status
   Property System.Text.Json.JsonElement Value
+  Property WeavePort.Abstractions.PluginVersionMismatch VersionMismatch
 type WeavePort.Abstractions.PluginContext : System.Object [Public, Sealed]
   implements System.IEquatable`1[WeavePort.Abstractions.PluginContext]
   Constructor Void .ctor(System.String, System.String, System.String, System.String, System.Text.Json.JsonElement) [Public] (Tenant, Plugin, Version, Profile, Configuration)
@@ -93,6 +96,23 @@ type WeavePort.Abstractions.PluginContext : System.Object [Public, Sealed]
   Property System.String Tenant
   Property System.String Version
   Property System.Text.Json.JsonElement Configuration
+type WeavePort.Abstractions.PluginVersionMismatch : System.Object [Public, Sealed]
+  implements System.IEquatable`1[WeavePort.Abstractions.PluginVersionMismatch]
+  Constructor Void .ctor(System.String, System.String) [Public] (Expected, Advertised)
+  Method Boolean Equals(System.Object) [Public, Virtual] (obj)
+  Method Boolean Equals(WeavePort.Abstractions.PluginVersionMismatch) [Public, Final, Virtual] (other)
+  Method Boolean op_Equality(WeavePort.Abstractions.PluginVersionMismatch, WeavePort.Abstractions.PluginVersionMismatch) [Public, Static] (left, right)
+  Method Boolean op_Inequality(WeavePort.Abstractions.PluginVersionMismatch, WeavePort.Abstractions.PluginVersionMismatch) [Public, Static] (left, right)
+  Method Int32 GetHashCode() [Public, Virtual] ()
+  Method System.String ToString() [Public, Virtual] ()
+  Method System.String get_Advertised() [Public] ()
+  Method System.String get_Expected() [Public] ()
+  Method Void Deconstruct(System.String ByRef, System.String ByRef) [Public] (Expected, Advertised)
+  Method Void set_Advertised(System.String) [Public] (value)
+  Method Void set_Expected(System.String) [Public] (value)
+  Method WeavePort.Abstractions.PluginVersionMismatch <Clone>$() [Public] ()
+  Property System.String Advertised
+  Property System.String Expected
 type WeavePort.Hosting.DockerProfile : WeavePort.Hosting.ExecutionProfile [Public, Sealed]
   implements System.IEquatable`1[WeavePort.Hosting.DockerProfile]
   implements System.IEquatable`1[WeavePort.Hosting.ExecutionProfile]
@@ -182,6 +202,29 @@ type WeavePort.Hosting.ISharedPlugin :  [Public, ClassSemanticsMask, Abstract]
   Method WeavePort.Hosting.SharedPluginSnapshot get_Snapshot() [Public, Virtual, Abstract] ()
   Method WeavePort.Sdk.Client.IBoundPluginClient For(System.String) [Public, Virtual, Abstract] (tenant)
   Property WeavePort.Hosting.SharedPluginSnapshot Snapshot
+type WeavePort.Hosting.InstallationDiscovery : System.Object [Public, Sealed]
+  implements System.IEquatable`1[WeavePort.Hosting.InstallationDiscovery]
+  Constructor Void .ctor(System.String, WeavePort.Hosting.InstalledPlugin, System.String, System.String) [Public] (Directory, Installation, Refusal, Diagnostic)
+  Method Boolean Equals(System.Object) [Public, Virtual] (obj)
+  Method Boolean Equals(WeavePort.Hosting.InstallationDiscovery) [Public, Final, Virtual] (other)
+  Method Boolean op_Equality(WeavePort.Hosting.InstallationDiscovery, WeavePort.Hosting.InstallationDiscovery) [Public, Static] (left, right)
+  Method Boolean op_Inequality(WeavePort.Hosting.InstallationDiscovery, WeavePort.Hosting.InstallationDiscovery) [Public, Static] (left, right)
+  Method Int32 GetHashCode() [Public, Virtual] ()
+  Method System.String ToString() [Public, Virtual] ()
+  Method System.String get_Diagnostic() [Public] ()
+  Method System.String get_Directory() [Public] ()
+  Method System.String get_Refusal() [Public] ()
+  Method Void Deconstruct(System.String ByRef, WeavePort.Hosting.InstalledPlugin ByRef, System.String ByRef, System.String ByRef) [Public] (Directory, Installation, Refusal, Diagnostic)
+  Method Void set_Diagnostic(System.String) [Public] (value)
+  Method Void set_Directory(System.String) [Public] (value)
+  Method Void set_Installation(WeavePort.Hosting.InstalledPlugin) [Public] (value)
+  Method Void set_Refusal(System.String) [Public] (value)
+  Method WeavePort.Hosting.InstallationDiscovery <Clone>$() [Public] ()
+  Method WeavePort.Hosting.InstalledPlugin get_Installation() [Public] ()
+  Property System.String Diagnostic
+  Property System.String Directory
+  Property System.String Refusal
+  Property WeavePort.Hosting.InstalledPlugin Installation
 type WeavePort.Hosting.InstallationIdentity : System.Object [Public, Sealed]
   implements System.IEquatable`1[WeavePort.Hosting.InstallationIdentity]
   Constructor Void .ctor(System.String, System.String, System.String, System.String) [Public] (Plugin, Version, Contract, Digest)
@@ -214,9 +257,11 @@ type WeavePort.Hosting.InstalledPlugin : System.Object [Public, Sealed]
   Property WeavePort.Hosting.PluginLaunchDeclaration Launch
 type WeavePort.Hosting.InstalledPluginCatalog : System.Object [Public, Sealed]
   Constructor Void .ctor(System.String, System.Collections.Generic.IReadOnlyDictionary`2[System.String,System.String]) [Public] (releases, runtimeFiles)
+  Method System.Collections.Generic.IReadOnlyList`1[WeavePort.Hosting.InstallationDiscovery] ListAll(System.String) [Public] (contract=null)
   Method System.Collections.Generic.IReadOnlyList`1[WeavePort.Hosting.InstalledPlugin] List(System.String) [Public] (contract)
   Method System.String ReadSelection(System.String) [Public, Static] (path)
   Method System.Threading.Tasks.Task ActivateAsync(System.String, System.String, System.String, System.String, System.Threading.CancellationToken) [Public] (selector, plugin, version, contract, cancellationToken=null)
+  Method System.Threading.Tasks.Task`1[System.Collections.Generic.IReadOnlyList`1[WeavePort.Hosting.InstallationDiscovery]] ListAllAsync(System.String, System.Threading.CancellationToken) [Public] (contract=null, cancellationToken=null)
   Method System.Threading.Tasks.Task`1[System.Collections.Generic.IReadOnlyList`1[WeavePort.Hosting.InstalledPlugin]] ListAsync(System.String, System.Threading.CancellationToken) [Public] (contract, cancellationToken=null)
   Method System.Threading.Tasks.Task`1[WeavePort.Hosting.InstalledPlugin] ResolveAsync(System.String, System.String, System.String, WeavePort.Hosting.InstallationIdentity, System.Threading.CancellationToken) [Public] (plugin, version, contract, pinned=null, cancellationToken=null)
   Method Void Activate(System.String, System.String, System.String, System.String) [Public] (selector, plugin, version, contract)
@@ -369,6 +414,11 @@ type WeavePort.Hosting.PluginSealOptions : System.Object [Public, Sealed]
   Property System.String ReleaseDirectory
   Property System.String Version
   Property WeavePort.Hosting.PluginLaunchDeclaration Launch
+type WeavePort.Hosting.PluginVersionMismatchException : System.IO.IOException [Public, Sealed]
+  implements System.Runtime.Serialization.ISerializable
+  Constructor Void .ctor(System.String, System.String) [Public] (expected, advertised)
+  Method WeavePort.Abstractions.PluginVersionMismatch get_Mismatch() [Public] ()
+  Property WeavePort.Abstractions.PluginVersionMismatch Mismatch
 type WeavePort.Hosting.PluginWorkClass : System.Enum [Public, Sealed]
   implements System.IComparable
   implements System.IConvertible
@@ -778,6 +828,7 @@ type WeavePort.Hosting.WorkerReusePolicy : System.Enum [Public, Sealed]
 type WeavePort.Sdk.PluginApplication : System.Object [Public, Sealed]
   Constructor Void .ctor(System.Text.Json.JsonSerializerOptions) [Public] (json=null)
   Method Boolean get_ConcurrentCalls() [Public] ()
+  Method System.String VersionFromAssembly(System.Reflection.Assembly, Boolean) [Public, Static] (assembly=null, includeBuildMetadata=False)
   Method System.String get_PluginVersion() [Public] ()
   Method System.Threading.Tasks.Task RunAsync(System.Threading.CancellationToken) [Public] (cancellationToken=null)
   Method Void set_ConcurrentCalls(Boolean) [Public] (value)
@@ -805,6 +856,7 @@ type WeavePort.Sdk.Client.IPluginClient :  [Public, ClassSemanticsMask, Abstract
   implements System.IAsyncDisposable
   Method System.Collections.Generic.IAsyncEnumerable`1[System.Text.Json.JsonElement] StreamAsync(System.String, System.Text.Json.JsonElement, System.Threading.CancellationToken) [Public, Virtual, Abstract] (operation, input, cancellationToken=null)
   Method System.Threading.Tasks.Task`1[System.Text.Json.JsonElement] CallAsync(System.String, System.Text.Json.JsonElement, System.Threading.CancellationToken) [Public, Virtual, Abstract] (operation, input, cancellationToken=null)
+  Method System.Threading.Tasks.Task`1[WeavePort.Sdk.Client.PluginCallResult`1[System.Text.Json.JsonElement]] CallWithMetadataAsync(System.String, System.Text.Json.JsonElement, System.Threading.CancellationToken) [Public, Virtual] (operation, input, cancellationToken=null)
 type WeavePort.Sdk.Client.LocalPluginClient : System.Object [Public, Sealed]
   implements System.IAsyncDisposable
   implements WeavePort.Sdk.Client.IBoundPluginClient
@@ -816,6 +868,7 @@ type WeavePort.Sdk.Client.LocalPluginClient : System.Object [Public, Sealed]
   Method System.String get_Tenant() [Public] ()
   Method System.Threading.Tasks.Task`1[System.String] GetTenantAsync(System.Threading.CancellationToken) [Public, Final, Virtual] (cancellationToken=null)
   Method System.Threading.Tasks.Task`1[System.Text.Json.JsonElement] CallAsync(System.String, System.Text.Json.JsonElement, System.Threading.CancellationToken) [Public, Final, Virtual] (operation, input, cancellationToken=null)
+  Method System.Threading.Tasks.Task`1[WeavePort.Sdk.Client.PluginCallResult`1[System.Text.Json.JsonElement]] CallWithMetadataAsync(System.String, System.Text.Json.JsonElement, System.Threading.CancellationToken) [Public, Final, Virtual] (operation, input, cancellationToken=null)
   Method System.Threading.Tasks.ValueTask DisposeAsync() [Public, Final, Virtual] ()
   Property System.String Instance
   Property System.String Tenant
@@ -824,11 +877,32 @@ type WeavePort.Sdk.Client.PluginCallException : System.IO.IOException [Public, S
   Constructor Void .ctor(System.String, Boolean) [Public] (status, mayHaveExecuted=True)
   Method Boolean get_MayHaveExecuted() [Public] ()
   Method System.String get_Status() [Public] ()
+  Method Void set_VersionMismatch(WeavePort.Abstractions.PluginVersionMismatch) [Public] (value)
+  Method WeavePort.Abstractions.PluginVersionMismatch get_VersionMismatch() [Public] ()
   Property Boolean MayHaveExecuted
   Property System.String Status
+  Property WeavePort.Abstractions.PluginVersionMismatch VersionMismatch
+type WeavePort.Sdk.Client.PluginCallResult`1 : System.Object [Public, Sealed]
+  implements System.IEquatable`1[WeavePort.Sdk.Client.PluginCallResult`1[T]]
+  Constructor Void .ctor(T, System.Nullable`1[System.Double]) [Public] (Value, ElapsedMs)
+  Method Boolean Equals(System.Object) [Public, Virtual] (obj)
+  Method Boolean Equals(WeavePort.Sdk.Client.PluginCallResult`1[T]) [Public, Final, Virtual] (other)
+  Method Boolean op_Equality(WeavePort.Sdk.Client.PluginCallResult`1[T], WeavePort.Sdk.Client.PluginCallResult`1[T]) [Public, Static] (left, right)
+  Method Boolean op_Inequality(WeavePort.Sdk.Client.PluginCallResult`1[T], WeavePort.Sdk.Client.PluginCallResult`1[T]) [Public, Static] (left, right)
+  Method Int32 GetHashCode() [Public, Virtual] ()
+  Method System.Nullable`1[System.Double] get_ElapsedMs() [Public] ()
+  Method System.String ToString() [Public, Virtual] ()
+  Method T get_Value() [Public] ()
+  Method Void Deconstruct(T ByRef, System.Nullable`1[System.Double] ByRef) [Public] (Value, ElapsedMs)
+  Method Void set_ElapsedMs(System.Nullable`1[System.Double]) [Public] (value)
+  Method Void set_Value(T) [Public] (value)
+  Method WeavePort.Sdk.Client.PluginCallResult`1[T] <Clone>$() [Public] ()
+  Property System.Nullable`1[System.Double] ElapsedMs
+  Property T Value
 type WeavePort.Sdk.Client.PluginClientExtensions : System.Object [Public, Abstract, Sealed]
   Method System.Collections.Generic.IAsyncEnumerable`1[TItem] StreamAsync[TInput,TItem](WeavePort.Sdk.Client.IPluginClient, System.String, TInput, System.Threading.CancellationToken) [Public, Static] (client, operation, input, cancellationToken=null)
   Method System.Threading.Tasks.Task`1[TOutput] CallAsync[TInput,TOutput](WeavePort.Sdk.Client.IPluginClient, System.String, TInput, System.Threading.CancellationToken) [Public, Static] (client, operation, input, cancellationToken=null)
+  Method System.Threading.Tasks.Task`1[WeavePort.Sdk.Client.PluginCallResult`1[TOutput]] CallWithMetadataAsync[TInput,TOutput](WeavePort.Sdk.Client.IPluginClient, System.String, TInput, System.Threading.CancellationToken) [Public, Static] (client, operation, input, cancellationToken=null)
 type WeavePort.Sdk.Client.PluginStreamOptions : System.Object [Public, Sealed]
   implements System.IEquatable`1[WeavePort.Sdk.Client.PluginStreamOptions]
   Constructor Void .ctor() [Public] ()

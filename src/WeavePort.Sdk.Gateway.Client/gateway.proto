@@ -6,4 +6,4 @@ service WorkerGateway {
 }
 message Request { string operation = 1; bytes input = 2; string stream_id = 3; Mode mode = 4; int32 chunk_bytes = 5; }
 enum Mode { CALL = 0; STREAM = 1; CANCEL = 2; DESCRIBE = 3; SOURCE = 4; }
-message Reply { bytes json = 1; bool complete = 2; string error = 3; bool may_have_executed = 4; bool cancelled = 5; bytes data = 6; }
+message Reply { bytes json = 1; bool complete = 2; string error = 3; bool may_have_executed = 4; bool cancelled = 5; bytes data = 6; optional double elapsed_ms = 7; optional string expected_version = 8; optional string advertised_version = 9; }
