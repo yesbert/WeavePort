@@ -33,7 +33,7 @@ internal sealed partial record PythonVersion(BigInteger Epoch, BigInteger[] Rele
         string publicText = text.Split('+')[0];
         bool post = m.Groups["post"].Success || Regex.IsMatch(publicText, @"(?:post|rev|r)[-_.]?\s*$", RegexOptions.IgnoreCase, TimeSpan.FromSeconds(1));
         bool dev = publicText.Contains("dev", StringComparison.OrdinalIgnoreCase);
-        return new(Number(m, "epoch"), m.Groups["release"].Value.Split('.').Select(BigInteger.Parse).ToArray(), kind, Number(m, "pren"), post ? Number(m, "post") : null, dev ? Number(m, "dev") : null, m.Groups["local"].Success ? m.Groups["local"].Value.ToLowerInvariant().Split(['-', '_', '.']) : []);
+        return new(Number(m, "epoch"), m.Groups["release"].Value.Split('.').Select(BigInteger.Parse).ToArray(), kind, Number(m, "pren"), post ? Number(m, "post") : null, dev ? Number(m, "dev") : null, m.Groups["local"].Success ? m.Groups["local"].Value.ToLowerInvariant().Split('-', '_', '.') : []);
     }
 
     private static BigInteger Number(Match match, string group) => match.Groups[group].Value is { Length: > 0 } text ? BigInteger.Parse(text) : BigInteger.Zero;
