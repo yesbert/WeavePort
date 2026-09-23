@@ -8,7 +8,7 @@ The release allowlist in `build/release-packages.json` contains the four core pa
 
 The release version is `0.7.0`, licensed under [MIT](../LICENSE). All seven .NET packages and the exact compatibility matrix use 0.7.0; host API is 2, exclusive native protocol is 1 and concurrent native protocol is 2. Python/TypeScript SDK versions are 0.3.0; the qualified wheel and tarball accompany the GitHub release without claiming PyPI/npm registry publication. Historical internal distribution and measurement evidence retain their original identities. Public releases require a complete clean candidate qualification; a tag override cannot substitute for updating compatibility inputs.
 
-The [0.5.0 release report](../reports/release/0.5.0/README.md) records all seven public packages, tag qualification and download verification. The [0.4.0 release report](../reports/release/0.4.0/README.md) retains the exact qualification, artifact hashes and publication verification.
+The current [0.7.0 release report](../reports/release/0.7.0/README.md) records exact-tag qualification, the completed audit and verified public downloads. The [0.5.0 release report](../reports/release/0.5.0/README.md) records all seven public packages, tag qualification and download verification. The [0.4.0 release report](../reports/release/0.4.0/README.md) retains the exact qualification, artifact hashes and publication verification.
 
 ## Trusted Publishing setup
 
@@ -102,4 +102,4 @@ Hosting now seals deterministic schema-2 bundles through a public .NET API with 
 
 `ListAll`/`ListAllAsync` report every plugin directory, including refusal diagnostics. The author SDK offers `VersionFromAssembly`, and startup mismatches expose expected/advertised versions with `version-mismatch` and no dispatch. `CallWithMetadataAsync` pairs typed or JSON values with nullable host timing locally and over the gateway. This adds optional protobuf fields without changing native protocol numbers. Default author version remains `1`.
 
-The [release audit](../reports/release/0.7.0/audit.md) records corrections and evidence. Publication is established by the [release record](../reports/release/0.7.0/README.md), not by this source version declaration.
+The [release audit](../reports/release/0.7.0/audit.md) records corrections and evidence. The [release record](../reports/release/0.7.0/README.md) retains successful publication and verification of all seven NuGet packages and 16 GitHub downloads.

@@ -2,6 +2,8 @@
 
 Release version: **0.7.0**, under MIT, with four core packages and optional Composition, Gateway server and Gateway client packages. Windows, Linux and macOS are supported targets for trusted stdio execution. Current release validation covers macOS arm64; Windows and Linux release validation is pending. See [platform support and validation](platform-qualification.md). This pre-1.0 API remains subject to evolution. Python/TypeScript registry publication and a new offline distribution are outside this release. The historical internal distribution remains **0.1.0-internal.2**.
 
+The current [0.7.0 release evidence](../reports/release/0.7.0/README.md) records 3,533 reported qualification assertions, the clean static audit and verified downloads for all seven NuGet packages and 16 GitHub artifacts.
+
 The previous [0.5.0 release evidence](../reports/release/0.5.0/README.md) records all seven published packages, 3,496 qualification assertions, artifact provenance and public download verification.
 
 The [0.3.0 release evidence](../reports/release/0.3.0/README.md) records 1,088 assertion executions, exact tested package/symbol provenance, successful Trusted Publishing and measurements of the released Hosting assembly. Earlier [0.2.1 evidence](../reports/release/0.2.1/README.md) remains available as historical release data.
@@ -46,6 +48,6 @@ The current source exposes one `PluginHost` with queued or immediate admission, 
 
 ## Portable installations and consumer diagnostics
 
-Current source adds schema-2 runtime requirements derived from .NET, Python and Node declarations, bounded runtime checks at resolution and worker startup, and a public .NET sealing API using embedded compatibility metadata. Legacy manifests retain strict runtime hashes. A managed-only bundle was sealed on macOS and invoked unchanged from an external plugin-root mount in a Linux container; this does not replace full Linux release qualification. See [portable installation guidance](portable-installations.md) and [verification evidence](../reports/verification/portable-runtime-20260923/summary.md). Package publication remains a separate release operation.
+Current source adds schema-2 runtime requirements derived from .NET, Python and Node declarations, bounded runtime checks at resolution and worker startup, and a public .NET sealing API using embedded compatibility metadata. Legacy manifests retain strict runtime hashes. A managed-only bundle was sealed on macOS and invoked unchanged from an external plugin-root mount in a Linux container; this does not replace full Linux release qualification. See [portable installation guidance](portable-installations.md) and [verification evidence](../reports/verification/portable-runtime-20260923/summary.md). The [0.7.0 release record](../reports/release/0.7.0/README.md) retains successful publication and download verification.
 
 Version 0.7.0 also adds complete `ListAll` diagnostics, explicit assembly-derived author versions, structured startup mismatch details and immutable per-call local/gateway timing. See the [release audit](../reports/release/0.7.0/audit.md) and [client guide](plugin-sdk.md#per-call-timing).

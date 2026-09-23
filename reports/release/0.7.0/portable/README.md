@@ -1,0 +1,5 @@
+# Portable installation cross-host check
+
+The development package build at `cd070a9969548a47988bf520016daf436342aae7` was sealed on macOS and invoked unchanged in an isolated Ubuntu 24.04.4 container. [Local](local.json) and [Linux](linux.json) records retain the same installation identity and different runtime executable hashes; [seal.json](seal.json) records the original identity. The later params-argument cleanup does not change the .NET selection implementation, but this experiment is not relabeled as an exact-tag Linux release qualification.
+
+The run also passed real Python and Node execution for CustomerBound, ApprovedSessions and Shared ownership, strict executable checks, incompatible-runtime refusal and initial/replacement validation. [Framework comparisons](framework-conformance.txt) record 35 actual .NET host decisions. The final release qualification separately verifies the tagged package family on macOS. Native Linux/Windows CI fixtures do not establish full package/platform or containment qualification.

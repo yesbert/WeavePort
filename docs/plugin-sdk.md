@@ -83,7 +83,7 @@ var plugin = new PluginApplication
 };
 ```
 
-The helper reads the entry assembly's `AssemblyInformationalVersionAttribute`, or an explicitly supplied plugin assembly. By default it removes the `+` build metadata suffix appended by Source Link, so `1.2.3-beta+commit` becomes `1.2.3-beta`; `includeBuildMetadata: true` retains it. Missing informational metadata is refused. Match the resulting string exactly to the sealed installation version; the four-part assembly binding version is not substituted. Omission of this helper still defaults to `"1"`.
+The helper reads the entry assembly's `AssemblyInformationalVersionAttribute`, or an explicitly supplied plugin assembly. By default it removes the `+` build metadata suffix appended by Source Link, so `1.2.3-beta+commit` becomes `1.2.3-beta`; `includeBuildMetadata: true` retains the full informational version. Installed catalog release identifiers do not accept `+`, so use the default for installed plugins. Missing informational metadata is refused. Match the resulting string exactly to the sealed installation version; the four-part assembly binding version is not substituted. Omission of this helper still defaults to `"1"`.
 
 A startup mismatch returns status `version-mismatch` and structured `VersionMismatch.Expected`/`Advertised` on `InvocationResult` or `PluginCallException`, with `MayHaveExecuted = false`. Shared startup and prewarming throw `PluginVersionMismatchException` with the same information in `Mismatch`. These values are not added to standard logs.
 

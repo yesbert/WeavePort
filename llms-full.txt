@@ -448,6 +448,8 @@ Source: https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/status.md
 
 Release version: **0.7.0**, under MIT, with four core packages and optional Composition, Gateway server and Gateway client packages. Windows, Linux and macOS are supported targets for trusted stdio execution. Current release validation covers macOS arm64; Windows and Linux release validation is pending. See [platform support and validation](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/platform-qualification.md). This pre-1.0 API remains subject to evolution. Python/TypeScript registry publication and a new offline distribution are outside this release. The historical internal distribution remains **0.1.0-internal.2**.
 
+The current [0.7.0 release evidence](https://raw.githubusercontent.com/yesbert/WeavePort/main/reports/release/0.7.0/README.md) records 3,533 reported qualification assertions, the clean static audit and verified downloads for all seven NuGet packages and 16 GitHub artifacts.
+
 The previous [0.5.0 release evidence](https://raw.githubusercontent.com/yesbert/WeavePort/main/reports/release/0.5.0/README.md) records all seven published packages, 3,496 qualification assertions, artifact provenance and public download verification.
 
 The [0.3.0 release evidence](https://raw.githubusercontent.com/yesbert/WeavePort/main/reports/release/0.3.0/README.md) records 1,088 assertion executions, exact tested package/symbol provenance, successful Trusted Publishing and measurements of the released Hosting assembly. Earlier [0.2.1 evidence](https://raw.githubusercontent.com/yesbert/WeavePort/main/reports/release/0.2.1/README.md) remains available as historical release data.
@@ -492,7 +494,7 @@ The current source exposes one `PluginHost` with queued or immediate admission, 
 
 ## Portable installations and consumer diagnostics
 
-Current source adds schema-2 runtime requirements derived from .NET, Python and Node declarations, bounded runtime checks at resolution and worker startup, and a public .NET sealing API using embedded compatibility metadata. Legacy manifests retain strict runtime hashes. A managed-only bundle was sealed on macOS and invoked unchanged from an external plugin-root mount in a Linux container; this does not replace full Linux release qualification. See [portable installation guidance](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/portable-installations.md) and [verification evidence](https://raw.githubusercontent.com/yesbert/WeavePort/main/reports/verification/portable-runtime-20260923/summary.md). Package publication remains a separate release operation.
+Current source adds schema-2 runtime requirements derived from .NET, Python and Node declarations, bounded runtime checks at resolution and worker startup, and a public .NET sealing API using embedded compatibility metadata. Legacy manifests retain strict runtime hashes. A managed-only bundle was sealed on macOS and invoked unchanged from an external plugin-root mount in a Linux container; this does not replace full Linux release qualification. See [portable installation guidance](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/portable-installations.md) and [verification evidence](https://raw.githubusercontent.com/yesbert/WeavePort/main/reports/verification/portable-runtime-20260923/summary.md). The [0.7.0 release record](https://raw.githubusercontent.com/yesbert/WeavePort/main/reports/release/0.7.0/README.md) retains successful publication and download verification.
 
 Version 0.7.0 also adds complete `ListAll` diagnostics, explicit assembly-derived author versions, structured startup mismatch details and immutable per-call local/gateway timing. See the [release audit](https://raw.githubusercontent.com/yesbert/WeavePort/main/reports/release/0.7.0/audit.md) and [client guide](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/plugin-sdk.md#per-call-timing).
 
@@ -1055,7 +1057,7 @@ var plugin = new PluginApplication
 };
 ```
 
-The helper reads the entry assembly's `AssemblyInformationalVersionAttribute`, or an explicitly supplied plugin assembly. By default it removes the `+` build metadata suffix appended by Source Link, so `1.2.3-beta+commit` becomes `1.2.3-beta`; `includeBuildMetadata: true` retains it. Missing informational metadata is refused. Match the resulting string exactly to the sealed installation version; the four-part assembly binding version is not substituted. Omission of this helper still defaults to `"1"`.
+The helper reads the entry assembly's `AssemblyInformationalVersionAttribute`, or an explicitly supplied plugin assembly. By default it removes the `+` build metadata suffix appended by Source Link, so `1.2.3-beta+commit` becomes `1.2.3-beta`; `includeBuildMetadata: true` retains the full informational version. Installed catalog release identifiers do not accept `+`, so use the default for installed plugins. Missing informational metadata is refused. Match the resulting string exactly to the sealed installation version; the four-part assembly binding version is not substituted. Omission of this helper still defaults to `"1"`.
 
 A startup mismatch returns status `version-mismatch` and structured `VersionMismatch.Expected`/`Advertised` on `InvocationResult` or `PluginCallException`, with `MayHaveExecuted = false`. Shared startup and prewarming throw `PluginVersionMismatchException` with the same information in `Mismatch`. These values are not added to standard logs.
 
@@ -2018,7 +2020,7 @@ The release allowlist in `build/release-packages.json` contains the four core pa
 
 The release version is `0.7.0`, licensed under [MIT](https://raw.githubusercontent.com/yesbert/WeavePort/main/LICENSE). All seven .NET packages and the exact compatibility matrix use 0.7.0; host API is 2, exclusive native protocol is 1 and concurrent native protocol is 2. Python/TypeScript SDK versions are 0.3.0; the qualified wheel and tarball accompany the GitHub release without claiming PyPI/npm registry publication. Historical internal distribution and measurement evidence retain their original identities. Public releases require a complete clean candidate qualification; a tag override cannot substitute for updating compatibility inputs.
 
-The [0.5.0 release report](https://raw.githubusercontent.com/yesbert/WeavePort/main/reports/release/0.5.0/README.md) records all seven public packages, tag qualification and download verification. The [0.4.0 release report](https://raw.githubusercontent.com/yesbert/WeavePort/main/reports/release/0.4.0/README.md) retains the exact qualification, artifact hashes and publication verification.
+The current [0.7.0 release report](https://raw.githubusercontent.com/yesbert/WeavePort/main/reports/release/0.7.0/README.md) records exact-tag qualification, the completed audit and verified public downloads. The [0.5.0 release report](https://raw.githubusercontent.com/yesbert/WeavePort/main/reports/release/0.5.0/README.md) records all seven public packages, tag qualification and download verification. The [0.4.0 release report](https://raw.githubusercontent.com/yesbert/WeavePort/main/reports/release/0.4.0/README.md) retains the exact qualification, artifact hashes and publication verification.
 
 ## Trusted Publishing setup
 
@@ -2112,7 +2114,7 @@ Hosting now seals deterministic schema-2 bundles through a public .NET API with 
 
 `ListAll`/`ListAllAsync` report every plugin directory, including refusal diagnostics. The author SDK offers `VersionFromAssembly`, and startup mismatches expose expected/advertised versions with `version-mismatch` and no dispatch. `CallWithMetadataAsync` pairs typed or JSON values with nullable host timing locally and over the gateway. This adds optional protobuf fields without changing native protocol numbers. Default author version remains `1`.
 
-The [release audit](https://raw.githubusercontent.com/yesbert/WeavePort/main/reports/release/0.7.0/audit.md) records corrections and evidence. Publication is established by the [release record](https://raw.githubusercontent.com/yesbert/WeavePort/main/reports/release/0.7.0/README.md), not by this source version declaration.
+The [release audit](https://raw.githubusercontent.com/yesbert/WeavePort/main/reports/release/0.7.0/audit.md) records corrections and evidence. The [release record](https://raw.githubusercontent.com/yesbert/WeavePort/main/reports/release/0.7.0/README.md) retains successful publication and verification of all seven NuGet packages and 16 GitHub downloads.
 
 ---
 
