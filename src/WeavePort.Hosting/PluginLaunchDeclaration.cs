@@ -21,6 +21,14 @@ public sealed record PluginLaunchDeclaration
         }
     }
 
+    internal void ValidatePortable()
+    {
+        if (Runtime == "dotnet" && Arguments is not null && Arguments.Any(a => a is "--roll-forward" or "--fx-version" or "--runtimeconfig" or "--depsfile" or "--additionalprobingpath" or "--additional-deps" || a is not null && (a.StartsWith("--roll-forward=", StringComparison.Ordinal) || a.StartsWith("--fx-version=", StringComparison.Ordinal) || a.StartsWith("--runtimeconfig=", StringComparison.Ordinal))))
+        {
+            throw new InvalidDataException("Installation arguments cannot override sealed .NET runtime selection.");
+        }
+    }
+
     internal PluginLaunchDeclaration Freeze() => this with
     {
         Arguments = [..Arguments],

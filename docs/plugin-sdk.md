@@ -4,7 +4,7 @@ Write a plugin as ordinary asynchronous functions and result streams in C#, Pyth
 
 ## C#
 
-Reference the public `WeavePort.Sdk` NuGet package at version 0.4.0, or the matching locally packed package when working from source. Register ordinary async handlers; the delegate return uses ValueTask, so an async lambda needs no wrapper. Asynchronous iterators use normal `IAsyncEnumerable<T>` and cancellation tokens.
+Reference the public `WeavePort.Sdk` NuGet package at the version declared in the [compatibility matrix](package-compatibility.md), or the matching locally packed package when working from source. Register ordinary async handlers; the delegate return uses ValueTask, so an async lambda needs no wrapper. Asynchronous iterators use normal `IAsyncEnumerable<T>` and cancellation tokens.
 
 ```csharp
 var plugin = new PluginApplication();
@@ -74,6 +74,19 @@ const plugin = new PluginApplication('2');
 
 The declaration is sent in the startup handshake. The host's expected `PluginContext.Version` must match; a mismatch is rejected before calling a function. Empty/whitespace declarations are refused. Exclusive workers use protocol 1; explicitly concurrent workers use protocol 2. Authors set this from their build/release metadata, not from caller arguments or host request data. This identifies an artifact; it is not package signing or a compatibility negotiation scheme.
 
+For an installed C# release, opt into build metadata explicitly:
+
+```csharp
+var plugin = new PluginApplication
+{
+    PluginVersion = PluginApplication.VersionFromAssembly()
+};
+```
+
+The helper reads the entry assembly's `AssemblyInformationalVersionAttribute`, or an explicitly supplied plugin assembly. By default it removes the `+` build metadata suffix appended by Source Link, so `1.2.3-beta+commit` becomes `1.2.3-beta`; `includeBuildMetadata: true` retains it. Missing informational metadata is refused. Match the resulting string exactly to the sealed installation version; the four-part assembly binding version is not substituted. Omission of this helper still defaults to `"1"`.
+
+A startup mismatch returns status `version-mismatch` and structured `VersionMismatch.Expected`/`Advertised` on `InvocationResult` or `PluginCallException`, with `MayHaveExecuted = false`. Shared startup and prewarming throw `PluginVersionMismatchException` with the same information in `Mismatch`. These values are not added to standard logs.
+
 Run `./scripts/sdk-versions.sh` for packed C#/Python/TypeScript startup and call checks. The [Decision Room version walkthrough](../samples/DecisionRoom/README.md#parallel-plugin-versions) demonstrates application-owned version selection and journals.
 
 ## Product integration
@@ -89,7 +102,7 @@ await foreach (SearchHit hit in plugin.StreamAsync<SearchRequest, SearchHit>("re
 
 For a worker host, the trusted application registers that same local client in `GatewayRegistry`, adds gRPC services and maps `GatewayService`. Registration returns a random credential that authorizes only that preconfigured binding. The caller constructs `RemotePluginClient(endpoint, credential)` and uses the same IPluginClient methods. The binding client owns a reusable channel and up to eight binding-scoped duplex sessions to avoid a demonstrated Kestrel stream-reuse defect without per-call TCP churn; see [the cause and compatibility correction (historical) — pre-public record](history.md). No provider edit or gRPC import is necessary. RPC requests cannot register executable paths, select tenant identity or assign grants.
 
-The 0.4.0 candidate separates `WeavePort.Sdk.Gateway` hosting (ASP.NET Core required) from `WeavePort.Sdk.Gateway.Client` (plain .NET). See [HTTPS deployment and package usage](gateway.md). The [worker-host sample](../tests/WeavePort.WorkerHost/Program.cs) binds loopback and configures 1-MiB gRPC limits. Its stdin bootstrap and snapshot commands belong to the test launcher, not to plugin authors or the public remote protocol. Deployment registration, credential distribution/rotation and remote TLS termination belong to the trusted application. HTTPS is required by the client for non-loopback endpoints; the exact executed TLS topology and deployment-site checks are documented in the gateway guide.
+The package family separates `WeavePort.Sdk.Gateway` hosting (ASP.NET Core required) from `WeavePort.Sdk.Gateway.Client` (plain .NET). See [HTTPS deployment and package usage](gateway.md). The [worker-host sample](../tests/WeavePort.WorkerHost/Program.cs) binds loopback and configures 1-MiB gRPC limits. Its stdin bootstrap and snapshot commands belong to the test launcher, not to plugin authors or the public remote protocol. Deployment registration, credential distribution/rotation and remote TLS termination belong to the trusted application. HTTPS is required by the client for non-loopback endpoints; the exact executed TLS topology and deployment-site checks are documented in the gateway guide.
 
 Callbacks execute **where PluginHost is hosted**. Supply the application's `IHostCallbacks` implementation there. The sample uses identical application callback code in both locations. This first gateway does not serialize or forward arbitrary closures from the calling product process. For a remote node, that callback implementation needs access to the appropriate application services. The plugin API remains `context.CallHostAsync`, `context.call_host` or `context.callHost`.
 
@@ -105,9 +118,20 @@ Callbacks execute **where PluginHost is hosted**. Supply the application's `IHos
 
 The [compatibility policy](package-compatibility.md) defines the exact core package surface; optional Gateway deployment remains separate. Native SDK workers remain explicitly trusted same-user processes. Windows/Linux and remote production deployment still require qualification. Build and verification instructions are in [the SDK harness guide](../tests/README.md); earlier measurements remain in [the SDK result report (historical) — pre-public record](history.md).
 
-The gateway packages must be updated together: the unreleased wire protocol now uses duplex exchanges. Session lease waits count against the operation timeout. An incomplete exchange is discarded, not returned to the session pool; every exchange rechecks the binding credential. Idle transport sessions remain until client disposal.
+Use matching gateway package versions. The gateway wire protocol uses duplex exchanges. Session lease waits count against the operation timeout. An incomplete exchange is discarded, not returned to the session pool; every exchange rechecks the binding credential. Idle transport sessions remain until client disposal.
 
 See [current performance evidence](../reports/benchmarks/current/README.md) for the current delivered core and optional loopback Gateway measurements.
+
+## Per-call timing
+
+```csharp
+PluginCallResult<SearchResult> measured =
+    await plugin.CallWithMetadataAsync<SearchRequest, SearchResult>("search", request);
+SearchResult value = measured.Value;
+double? elapsedMs = measured.ElapsedMs;
+```
+
+Untyped calls return `PluginCallResult<JsonElement>`. `ElapsedMs` is the host's monotonic `InvocationResult.ElapsedMs`, including host admission/startup and worker transport within that invocation. It excludes the outer gateway network round trip. Every concurrent call owns its result; there is no shared last-result state. Existing `CallAsync` remains value-only. Custom clients using the default interface implementation and older gateways without the optional timing field return `null`, never a fabricated zero. Failures still throw `PluginCallException`, preserve `MayHaveExecuted`, and must not be automatically retried merely because they failed.
 
 ## Session-owned resources
 

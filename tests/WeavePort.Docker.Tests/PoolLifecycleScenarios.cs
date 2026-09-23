@@ -89,7 +89,7 @@ internal static class PoolLifecycleScenarios
             await host.PrewarmAsync(profile, "1", 0);
             Assert(host.Snapshot.Workers == 0, "target removed");
             try { await host.PrewarmAsync(profile, "wrong-version", 1); throw new Exception("version accepted"); }
-            catch (InvalidDataException) { Assert(host.Snapshot.Workers == 0, "failed startup released"); }
+            catch (PluginVersionMismatchException error) { Assert(error.Mismatch.Expected == "wrong-version" && error.Mismatch.Advertised == "1" && host.Snapshot.Workers == 0, "failed startup released with diagnostic"); }
             await host.PrewarmAsync(profile, "wrong-version", 0);
             for (int i = 0; i < 100; i++)
             {

@@ -9,12 +9,21 @@ namespace WeavePort.Abstractions;
 /// <param name = "Configuration">Configuration for this binding, including scoped test secrets.</param>
 public sealed record PluginContext(string Tenant, string Plugin, string Version, string Profile, JsonElement Configuration);
 /// <summary>An observable result of a bounded invocation.</summary>
-/// <param name = "Status">ok, busy, disabled, cancelled, timeout, failed, denied, or protocol-error.</param>
+/// <param name = "Status">ok, busy, disabled, cancelled, timeout, failed, denied, protocol-error, or version-mismatch.</param>
 /// <param name = "Value">The contract-specific output.</param>
 /// <param name = "Instance">Execution instance identifier.</param>
 /// <param name = "ElapsedMs">Monotonic invocation duration including transport.</param>
 /// <param name = "MayHaveExecuted">True once dispatch begins; failed or timed-out calls may already have caused effects.</param>
-public sealed record InvocationResult(string Status, JsonElement Value, string Instance, double ElapsedMs, bool MayHaveExecuted = false);
+public sealed record InvocationResult(string Status, JsonElement Value, string Instance, double ElapsedMs, bool MayHaveExecuted = false)
+{
+    /// <summary>Expected and advertised artifact versions when startup rejected a mismatched worker.</summary>
+    public PluginVersionMismatch? VersionMismatch { get; init; }
+}
+
+/// <summary>Artifact identity disagreement observed before plugin dispatch.</summary>
+/// <param name = "Expected">The host binding's required artifact version.</param>
+/// <param name = "Advertised">The worker's advertised artifact version.</param>
+public sealed record PluginVersionMismatch(string Expected, string Advertised);
 /// <summary>A host-authorized callback. Tenant identity is never taken from plugin data.</summary>
 /// <param name = "Context">The binding's trusted authority.</param>
 /// <param name = "InvocationId">The host-generated invocation identifier.</param>

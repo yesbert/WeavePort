@@ -31,18 +31,21 @@ public sealed partial class LocalPluginClient(IPluginSession session, TimeSpan? 
     public string Instance => session.Instance;
 
     /// <inheritdoc/>
-    public async Task<JsonElement> CallAsync(string operation, JsonElement input, CancellationToken cancellationToken = default)
+    public async Task<JsonElement> CallAsync(string operation, JsonElement input, CancellationToken cancellationToken = default) => (await CallWithMetadataAsync(operation, input, cancellationToken)).Value;
+    /// <inheritdoc/>
+    public async Task<PluginCallResult<JsonElement>> CallWithMetadataAsync(string operation, JsonElement input, CancellationToken cancellationToken = default)
     {
         using var stop = CreateOperationSource(cancellationToken);
         await using IPluginSession? legacyLease = session is IPluginOperationSession ? null : await AcquireStreamAsync(stop.Token);
         CheckInput(input);
-        JsonElement output = await ExchangeAsync(session, SdkOperations.Call, new { operation, input }, stop.Token);
+        InvocationResult reply = await ExchangeResultAsync(session, SdkOperations.Call, new { operation, input }, stop.Token);
+        JsonElement output = reply.Value;
         if (Size(output) > 512 << 10)
         {
             throw new PluginCallException("value-limit");
         }
 
-        return output;
+        return new(output, reply.ElapsedMs);
     }
 
     /// <inheritdoc/>
@@ -125,7 +128,8 @@ public sealed partial class LocalPluginClient(IPluginSession session, TimeSpan? 
         }
     }
 
-    private static async Task<JsonElement> ExchangeAsync(IPluginSession target, string operation, object input, CancellationToken token)
+    private static async Task<JsonElement> ExchangeAsync(IPluginSession target, string operation, object input, CancellationToken token) => (await ExchangeResultAsync(target, operation, input, token)).Value;
+    private static async Task<InvocationResult> ExchangeResultAsync(IPluginSession target, string operation, object input, CancellationToken token)
     {
         token.ThrowIfCancellationRequested();
         InvocationResult reply = await target.InvokeAsync(operation, JsonSerializer.SerializeToElement(input), token);
@@ -136,10 +140,13 @@ public sealed partial class LocalPluginClient(IPluginSession session, TimeSpan? 
 
         if (reply.Status != "ok")
         {
-            throw new PluginCallException(reply.Status, reply.MayHaveExecuted);
+            throw new PluginCallException(reply.Status, reply.MayHaveExecuted)
+            {
+                VersionMismatch = reply.VersionMismatch
+            };
         }
 
-        return reply.Value;
+        return reply;
     }
 
     private static long Size(JsonElement value) => JsonSize.Measure(value);

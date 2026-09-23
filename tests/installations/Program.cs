@@ -99,9 +99,9 @@ Mutate(d => d["Schema"] = 99, "unsupported manifest schema rejected");
 Mutate(d => d["Version"] = "2", "wrong manifest release rejected");
 Mutate(d => d["EntryPoints"]!["dotnet"] = "not-declared.dll", "undeclared entry rejected");
 Mutate(d => d["Files"]!["../outside.dll"] = new string('A', 64), "bundle traversal rejected");
-Mutate(d => d["RuntimeFiles"]!["dotnet"] = new string('A', 64), "changed runtime executable rejected");
-Mutate(d => d["RuntimeFiles"]!["unexpected"] = new string('A', 64), "unapproved runtime alias rejected");
-File.WriteAllText(manifest, baseline.Replace("\"Schema\": 1", "\"Schema\": 1, \"Schema\": 1"));
+Mutate(d => d["Runtimes"]!["dotnet"]!["Sha256"] = new string('A', 64), "changed runtime executable rejected");
+Mutate(d => d["Runtimes"]!["unexpected"] = d["Runtimes"]!["dotnet"]!.DeepClone(), "unapproved runtime alias rejected");
+File.WriteAllText(manifest, baseline.Replace("\"Schema\": 2", "\"Schema\": 2, \"Schema\": 2"));
 Refused(() => Resolve(), "duplicate manifest fields rejected");
 File.WriteAllText(manifest, baseline + " ");
 Refused(() => Resolve("1", original.Identity), "changed manifest cannot replace persisted content identity");
@@ -132,7 +132,7 @@ await using (var host = new PluginHost(options: new WorkerPoolOptions(MaximumPri
         await client.CallAsync<object, JsonElement>("reader.describe", new { });
         throw new InvalidOperationException("Expected startup mismatch.");
     }
-    catch (PluginCallException error) when (error.Status == "protocol-error")
+    catch (PluginCallException error) when (error.Status == "version-mismatch")
     {
         Check(true, "real v1 worker under trusted v2 metadata fails startup version guard");
     }

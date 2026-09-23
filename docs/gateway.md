@@ -17,7 +17,7 @@ string boundTenant = await client.GetTenantAsync();
 var result = await client.CallAsync<MyInput, MyResult>("operation", input, cancellationToken);
 ```
 
-`GetTenantAsync` authenticates a describe exchange and checks gateway protocol version 1 without invoking plugins. Use coherent 0.6.0 endpoints; arbitrary version combinations are not qualified. Generated public protocol types and field numbers are included in the optional API baseline. The additive describe operation does not change native worker protocol version 1.
+`GetTenantAsync` authenticates a describe exchange and checks gateway protocol version 1 without invoking plugins. Use coherent 0.7.0 endpoints; arbitrary version combinations are not qualified. Unary `CallWithMetadataAsync` preserves optional host elapsed timing, including `null` when an older server or custom client cannot provide it. Artifact mismatch fields also reach authorized remote callers. These additive fields do not change native worker protocol numbers. Generated public protocol types and field numbers are included in the optional API baseline. The additive describe operation does not change native worker protocol version 1.
 
 ## TLS and transport ownership
 

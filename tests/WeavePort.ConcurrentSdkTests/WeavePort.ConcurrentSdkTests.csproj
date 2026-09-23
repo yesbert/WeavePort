@@ -13,9 +13,9 @@
     <ProjectReference Include="../../src/WeavePort.Composition/WeavePort.Composition.csproj" />
   </ItemGroup>
   <ItemGroup Condition="'$(UsePackedCore)' == 'true'">
-    <PackageReference Include="WeavePort.Sdk" Version="0.6.0" />
-    <PackageReference Include="WeavePort.Hosting" Version="0.6.0" />
-    <PackageReference Include="WeavePort.Sdk.Gateway" Version="0.6.0" />
-    <PackageReference Include="WeavePort.Composition" Version="0.6.0" />
+    <PackageReference Include="WeavePort.Sdk" Version="0.7.0" />
+    <PackageReference Include="WeavePort.Hosting" Version="0.7.0" />
+    <PackageReference Include="WeavePort.Sdk.Gateway" Version="0.7.0" />
+    <PackageReference Include="WeavePort.Composition" Version="0.7.0" />
   </ItemGroup>
 </Project>

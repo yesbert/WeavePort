@@ -1,0 +1,1 @@
+{"operation":"executed","os":"Ubuntu 24.04.4 LTS","identity":{"Plugin":"portable","Version":"1.0.0","Contract":"portable/v1","Digest":"D74114E5017A6C1304167A1B7F3022953940508B327F4B6F1F6AD555955BB04D"},"runtimeSha256":"C2D76BBE9B8DAD554AC209AC66E6C692FBE907B8D54DD682E291667D8EEF1A6A","resolveMs":61.8329,"startAndCallMs":85.0397}

@@ -7,5 +7,5 @@
     <RestorePackagesPath>../../artifacts/sdk-packages</RestorePackagesPath>
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
   </PropertyGroup>
-  <ItemGroup><PackageReference Include="WeavePort.Sdk.Gateway" Version="0.6.0" /></ItemGroup>
+  <ItemGroup><PackageReference Include="WeavePort.Sdk.Gateway" Version="0.7.0" /></ItemGroup>
 </Project>

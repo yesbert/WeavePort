@@ -33,3 +33,7 @@ After `./scripts/prepare-core-packages.sh`, run `python3 scripts/verify-optional
 ## Approved-session reuse
 
 `tests/WeavePort.ReuseTests` exercises all three SDKs through the actual host: default affinity, approved sharing, registered cleanup, expired contexts, callback authority, pinned streams, cleanup failure/timeout, idle expiry, malformed capability/acknowledgements and a small shared scheduler. See its [reproduction guide](WeavePort.ReuseTests/README.md). Repeat with fresh locally packed candidates; source-only tests do not qualify the package boundary.
+
+## Portable installations
+
+`./scripts/verify-portable.sh` exercises the public sealer from freshly extracted packages, local execution, Python/Node ownership modes and initial/replacement runtime refusal. Add `--docker` to run the exact macOS-sealed managed bundle in a Linux runtime-only host with an external plugin-root mount. It does not reconfigure Docker. Run `python3 tests/portable/verify-frameworks.py "$(command -v dotnet)"` for real .NET framework selection conformance (the small oracle targets an installed .NET 8 runtime). Hosting regressions also execute independent Python packaging/npm fixtures and probe/manifest boundary checks. See [portable installation guidance](../docs/portable-installations.md).

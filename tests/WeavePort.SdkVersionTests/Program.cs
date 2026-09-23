@@ -10,6 +10,14 @@ if (args.Length == 2 && args[0] == "worker")
     await app.Function<JsonElement, JsonElement>("echo", (input, _, _) => ValueTask.FromResult(input)).RunAsync();
     return;
 }
+var entryVersion = typeof(Callbacks).Assembly.GetCustomAttributes(typeof(System.Reflection.AssemblyInformationalVersionAttribute), false).Cast<System.Reflection.AssemblyInformationalVersionAttribute>().Single().InformationalVersion;
+if (PluginApplication.VersionFromAssembly() != entryVersion.Split('+')[0] || PluginApplication.VersionFromAssembly(includeBuildMetadata: true) != entryVersion) throw new Exception("Assembly version selection failed.");
+var versionedAssembly = System.Reflection.Emit.AssemblyBuilder.DefineDynamicAssembly(new System.Reflection.AssemblyName("VersionFixture"), System.Reflection.Emit.AssemblyBuilderAccess.Run);
+versionedAssembly.SetCustomAttribute(new System.Reflection.Emit.CustomAttributeBuilder(typeof(System.Reflection.AssemblyInformationalVersionAttribute).GetConstructor([typeof(string)])!, ["1.2.3-beta+commit"]));
+if (PluginApplication.VersionFromAssembly(versionedAssembly) != "1.2.3-beta" || PluginApplication.VersionFromAssembly(versionedAssembly, true) != "1.2.3-beta+commit") throw new Exception("Prerelease or metadata changed.");
+var missingVersion = System.Reflection.Emit.AssemblyBuilder.DefineDynamicAssembly(new System.Reflection.AssemblyName("MissingVersionFixture"), System.Reflection.Emit.AssemblyBuilderAccess.Run);
+try { PluginApplication.VersionFromAssembly(missingVersion); throw new Exception("Missing informational metadata guessed."); }
+catch (InvalidOperationException) { }
 string Required(string name) => Environment.GetEnvironmentVariable(name) ?? throw new InvalidOperationException(name);
 string root = Required("WP_VERSION_ROOT");
 string dotnet = Required("WP_VERSION_DOTNET");
@@ -39,9 +47,10 @@ foreach (string language in new[] { "csharp", "python", "typescript" })
             if (!mustSucceed || result.GetProperty("value").GetString() != "version-check")
                 throw new InvalidDataException("Unexpected version acceptance/result.");
         }
-        catch (PluginCallException error) when (!mustSucceed && error.Status is "protocol-error" or "failed")
+        catch (PluginCallException error) when (!mustSucceed && error.Status is "version-mismatch" or "failed")
         {
-            // No SDK function can be dispatched before a valid startup envelope.
+            if (error.MayHaveExecuted) throw new Exception("Version failure dispatched work.");
+            if (pair.Declared.Length > 0 && (error.VersionMismatch?.Expected != pair.Expected || error.VersionMismatch.Advertised != pair.Declared)) throw new Exception("Version diagnostic lost.");
         }
         Console.WriteLine($"PASS: {language}, declared='{pair.Declared}', expected='{pair.Expected}'");
         checks++;

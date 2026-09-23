@@ -110,7 +110,7 @@ internal sealed partial class PluginSession(SessionBinding binding, TenantAdmiss
         {
             RuntimeLog.InvocationFailed(logger, Instance, id, _dispatched ? "exchange" : "prepare", error.GetType().Name);
             await StopAsync();
-            return Result(FailureStatus(error)!, started);
+            return FailureResult(error, started);
         }
         finally
         {
@@ -121,8 +121,13 @@ internal sealed partial class PluginSession(SessionBinding binding, TenantAdmiss
         }
     }
 
+    private InvocationResult FailureResult(Exception error, long started) => Result(FailureStatus(error)!, started)with
+    {
+        VersionMismatch = (error as PluginVersionMismatchException)?.Mismatch
+    };
     private static string? FailureStatus(Exception error) => error switch
     {
+        PluginVersionMismatchException => "version-mismatch",
         UnauthorizedAccessException => "denied",
         InvalidDataException or JsonException or KeyNotFoundException or InvalidOperationException => "protocol-error",
         IOException or System.Net.Http.HttpRequestException or System.Net.Sockets.SocketException => "failed",

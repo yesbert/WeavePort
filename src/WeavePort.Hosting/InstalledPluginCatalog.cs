@@ -1,3 +1,4 @@
+using static WeavePort.Hosting.InstallationFiles;
 using System.Collections.ObjectModel;
 using System.Security.Cryptography;
 using System.Text.Json;
@@ -18,6 +19,7 @@ public sealed class InstalledPlugin
     /// <summary>Gets a copy of the verified launch declaration, when supplied by the installation.</summary>
     public PluginLaunchDeclaration? Launch => _launch?.Freeze();
     internal IReadOnlyDictionary<string, string> RuntimeFiles { get; }
+    internal RuntimeValidation? RuntimeValidation { get; init; }
 
     internal InstalledPlugin(InstallationIdentity identity, Dictionary<string, string> entries, Dictionary<string, string> runtimes, PluginLaunchDeclaration? launch)
     {
@@ -29,18 +31,25 @@ public sealed class InstalledPlugin
 }
 
 /// <summary>Validates trusted local release manifests; does not install code or provide an OS sandbox.</summary>
-public sealed class InstalledPluginCatalog(string releases, IReadOnlyDictionary<string, string> runtimeFiles)
+public sealed partial class InstalledPluginCatalog(string releases, IReadOnlyDictionary<string, string> runtimeFiles)
 {
-    private static readonly JsonSerializerOptions ManifestJson = new()
+    internal static readonly JsonSerializerOptions ManifestJson = new()
     {
         Converters =
         {
             new JsonStringEnumConverter<WorkerReusePolicy>()
         }
     };
-    private sealed record Manifest(int Schema, string Plugin, string Version, string Contract, Dictionary<string, string> EntryPoints, Dictionary<string, string> Files, Dictionary<string, string> RuntimeFiles, CompatibilityDeclaration? Compatibility = null, PluginLaunchDeclaration? Launch = null);
+    internal sealed record Manifest(int Schema, string Plugin, string Version, string Contract, Dictionary<string, string> EntryPoints, Dictionary<string, string> Files, Dictionary<string, string>? RuntimeFiles, CompatibilityDeclaration? Compatibility = null, PluginLaunchDeclaration? Launch = null, Dictionary<string, RuntimeDeclaration>? Runtimes = null, Dictionary<string, string>? ExternalFiles = null);
     /// <summary>Resolves an exact release and optionally requires a previously persisted manifest identity.</summary>
     public InstalledPlugin Resolve(string plugin, string version, string contract, InstallationIdentity? pinned = null)
+    {
+        InstalledPlugin result = ResolveContent(plugin, version, contract, pinned);
+        result.RuntimeValidation?.Validate();
+        return result;
+    }
+
+    private InstalledPlugin ResolveContent(string plugin, string version, string contract, InstallationIdentity? pinned)
     {
         ValidateSegment(plugin);
         ValidateSegment(version);
@@ -55,7 +64,7 @@ public sealed class InstalledPluginCatalog(string releases, IReadOnlyDictionary<
         string path = Path.Combine(root, "installation.json");
         (Manifest manifest, byte[] bytes) = ReadManifest(root, path);
         var identity = new InstallationIdentity(plugin, version, contract, Convert.ToHexString(SHA256.HashData(bytes)));
-        if (manifest.Schema != 1 || manifest.Plugin != plugin || manifest.Version != version || manifest.Contract != contract || (pinned is not null && identity != pinned) || manifest.Files is null || manifest.EntryPoints is null || manifest.RuntimeFiles is null || manifest.Files.Count is < 1 or > 4096 || manifest.EntryPoints.Count is < 1 or > 32 || !manifest.RuntimeFiles.Keys.All(runtimeFiles.ContainsKey))
+        if (manifest.Schema is not (1 or 2) || manifest.Plugin != plugin || manifest.Version != version || manifest.Contract != contract || (pinned is not null && identity != pinned) || manifest.Files is null || manifest.EntryPoints is null || manifest.Files.Count is < 1 or > 4096 || manifest.EntryPoints.Count is < 1 or > 32)
         {
             throw new InvalidDataException("Installation identity, schema, contract or runtime selection mismatch.");
         }
@@ -72,20 +81,18 @@ public sealed class InstalledPluginCatalog(string releases, IReadOnlyDictionary<
             VerifyFile(BundlePath(root, file.Key), file.Value);
         }
 
-        foreach (var runtime in manifest.RuntimeFiles)
-        {
-            VerifyFile(runtimeFiles[runtime.Key], runtime.Value);
-        }
-
+        Dictionary<string, string> selectedRuntimes = SelectRuntimes(root, manifest);
         var entries = ResolveEntryPoints(root, manifest);
-        manifest.Launch?.Validate(entries, manifest.RuntimeFiles);
+        manifest.Launch?.Validate(entries, selectedRuntimes);
         if (manifest.Launch is { } launch && manifest.Compatibility!.Protocol != (launch.Ownership.Contains(WorkerReusePolicy.Shared) ? 2 : 1))
         {
             throw new InvalidDataException("Launch ownership does not match its declared wire protocol.");
         }
 
-        var selectedRuntimes = manifest.RuntimeFiles.Keys.ToDictionary(key => key, key => Path.GetFullPath(runtimeFiles[key]), StringComparer.Ordinal);
-        return new InstalledPlugin(identity, entries, selectedRuntimes, manifest.Launch);
+        return new InstalledPlugin(identity, entries, selectedRuntimes, manifest.Launch)
+        {
+            RuntimeValidation = manifest.Schema == 2 ? new RuntimeValidation(root, manifest.Runtimes!, selectedRuntimes, manifest.Files) : null
+        };
     }
 
     private static Dictionary<string, string> ResolveEntryPoints(string root, Manifest manifest)
@@ -185,6 +192,11 @@ public sealed class InstalledPluginCatalog(string releases, IReadOnlyDictionary<
     public void Activate(string selector, string plugin, string version, string contract)
     {
         _ = Resolve(plugin, version, contract);
+        WriteSelection(selector, version);
+    }
+
+    private static void WriteSelection(string selector, string version)
+    {
         string path = Path.GetFullPath(selector);
         Directory.CreateDirectory(Path.GetDirectoryName(path)!);
         string temporary = path + ".tmp-" + Guid.NewGuid().ToString("N");
@@ -198,120 +210,6 @@ public sealed class InstalledPluginCatalog(string releases, IReadOnlyDictionary<
             if (File.Exists(temporary))
             {
                 File.Delete(temporary);
-            }
-        }
-    }
-
-    private static void RejectLink(string path)
-    {
-        if ((File.GetAttributes(path) & FileAttributes.ReparsePoint) != 0)
-        {
-            throw new InvalidDataException("Linked installation paths are unsupported.");
-        }
-    }
-
-    private static void ValidateSegment(string value)
-    {
-        if (string.IsNullOrWhiteSpace(value) || value.Length > 64 || value is "." or ".." || value.Any(c => !char.IsAsciiLetterOrDigit(c) && c is not '.' and not '-' and not '_'))
-        {
-            throw new InvalidDataException("Invalid installation release identifier.");
-        }
-    }
-
-    private static string BundlePath(string root, string relative)
-    {
-        if (string.IsNullOrWhiteSpace(relative) || Path.IsPathRooted(relative) || relative.Contains('\\') || relative.Split('/').Any(p => p is "" or "." or ".."))
-        {
-            throw new InvalidDataException("Invalid bundle path.");
-        }
-
-        string current = root;
-        foreach (string part in relative.Split('/'))
-        {
-            current = Path.Combine(current, part);
-            if (!File.Exists(current) && !Directory.Exists(current))
-            {
-                throw new InvalidDataException("Missing bundle file.");
-            }
-
-            if ((File.GetAttributes(current) & FileAttributes.ReparsePoint) != 0)
-            {
-                throw new InvalidDataException("Bundle links are unsupported.");
-            }
-        }
-
-        return current;
-    }
-
-    private static HashSet<string> Inventory(string root)
-    {
-        var files = new HashSet<string>(StringComparer.Ordinal);
-        var pending = new Stack<string>();
-        pending.Push(root);
-        int entries = 0;
-        while (pending.TryPop(out string? directory))
-        {
-            foreach (string path in Directory.EnumerateFileSystemEntries(directory))
-            {
-                if (++entries > 8192)
-                {
-                    throw new InvalidDataException("Installation inventory exceeds limit.");
-                }
-
-                var attributes = File.GetAttributes(path);
-                if ((attributes & FileAttributes.ReparsePoint) != 0)
-                {
-                    throw new InvalidDataException("Bundle links are unsupported.");
-                }
-
-                if ((attributes & FileAttributes.Directory) != 0)
-                {
-                    pending.Push(path);
-                }
-                else if (path != Path.Combine(root, "installation.json"))
-                {
-                    files.Add(Path.GetRelativePath(root, path).Replace(Path.DirectorySeparatorChar, '/'));
-                }
-            }
-        }
-
-        return files;
-    }
-
-    private static void VerifyFile(string path, string digest)
-    {
-        if (!File.Exists(path) || digest is null || digest.Length != 64)
-        {
-            throw new InvalidDataException("Missing installation file or digest.");
-        }
-
-        using var input = File.OpenRead(path);
-        if (Convert.ToHexString(SHA256.HashData(input)) != digest)
-        {
-            throw new InvalidDataException("Installation content changed.");
-        }
-    }
-
-    private static void RejectDuplicateFields(byte[] bytes)
-    {
-        using var document = JsonDocument.Parse(bytes, new JsonDocumentOptions { MaxDepth = 8 });
-        Check(document.RootElement);
-        static void Check(JsonElement element)
-        {
-            if (element.ValueKind != JsonValueKind.Object)
-            {
-                return;
-            }
-
-            var names = new HashSet<string>(StringComparer.Ordinal);
-            foreach (var property in element.EnumerateObject())
-            {
-                if (!names.Add(property.Name))
-                {
-                    throw new InvalidDataException("Duplicate installation field.");
-                }
-
-                Check(property.Value);
             }
         }
     }

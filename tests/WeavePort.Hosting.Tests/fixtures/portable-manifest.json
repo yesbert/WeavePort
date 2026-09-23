@@ -1,0 +1,47 @@
+{
+  "Schema": 2,
+  "Plugin": "test",
+  "Version": "1",
+  "Contract": "test/v1",
+  "EntryPoints": {
+    "dotnet": "worker.dll"
+  },
+  "Files": {
+    "worker.dll": "21D60387DB4A3B653B15F3F5FE1398BA42A78E6EE21739C93DF568AFE1373750",
+    "worker.runtimeconfig.json": "89C9C9566460587D6279AE5A599AF7F675D47AAD215AEC124FB617C990BE6568"
+  },
+  "Compatibility": {
+    "HostApi": 2,
+    "Protocol": 1,
+    "HostPackages": {
+      "WeavePort.Abstractions": "0.7.0",
+      "WeavePort.Hosting": "0.7.0",
+      "WeavePort.Sdk.Client": "0.7.0"
+    },
+    "AuthorSdks": {
+      "dotnet": {
+        "Package": "WeavePort.Sdk",
+        "Version": "0.7.0"
+      }
+    }
+  },
+  "Launch": {
+    "Runtime": "dotnet",
+    "Ownership": [
+      "CustomerBound"
+    ],
+    "MemoryMiB": 256,
+    "MaximumDegree": 1,
+    "Arguments": []
+  },
+  "Runtimes": {
+    "dotnet": {
+      "Ecosystem": "dotnet",
+      "Source": "worker.runtimeconfig.json",
+      "Requirement": "[{\"Name\":\"Microsoft.NETCore.App\",\"Version\":\"10.0.0\",\"RollForward\":\"Minor\"}]"
+    }
+  },
+  "ExternalFiles": {
+    "sdk/code": "60ED820A65C2CC8B119EB64635FC75E4D534C7BB215B80FEB9060B88792FB75F"
+  }
+}

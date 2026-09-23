@@ -18,6 +18,11 @@ internal sealed class ProcessWorker(ProcessProfile profile, string version, Time
     internal override async Task StartAsync(CancellationToken token)
     {
         token.ThrowIfCancellationRequested();
+        if (profile.RuntimeValidation is { } validation)
+        {
+            await validation.ValidateAsync(token);
+        }
+
         CreateWorkspace();
         ProcessStartInfo info = CreateStartInfo();
         if (profile.UseUnixSocket)

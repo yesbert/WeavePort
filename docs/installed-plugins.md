@@ -16,18 +16,20 @@ Each release directory contains `installation.json` with case-sensitive fields:
 
 | Field | Meaning |
 |---|---|
-| `Schema` | Manifest format, currently 1 |
+| `Schema` | Manifest format: legacy 1 or portable 2 |
 | `Plugin`, `Version` | Expected plugin installation ID and exact artifact release |
 | `Contract` | Application contract identifier, independent of artifact release |
 | `EntryPoints` | Trusted aliases mapped to declared relative bundle files |
 | `Files` | Complete bundle file inventory with uppercase SHA-256 hashes, excluding the manifest itself |
-| `RuntimeFiles` | Verified subset of approved runtime aliases and file hashes; host supplies paths |
+| `RuntimeFiles` | Schema 1 only: approved runtime/external-code aliases and exact file hashes |
+| `Runtimes` | Schema 2 only: ecosystem, relative declaration source, extracted requirement and optional strict executable SHA-256 per entry alias |
+| `ExternalFiles` | Schema 2 only: additional approved external-code aliases and exact hashes |
 | `Launch` | Runtime alias, literal arguments, memory reservation, supported ownership and maximum degree; required by installed client binding |
 | `Compatibility` | Required exact host API/protocol/core packages and entry-specific SDK declarations; see [compatibility policy](package-compatibility.md) |
 
-An `InstallationIdentity` contains plugin, version, contract and SHA-256 of the exact manifest bytes. Even a manifest-only change invalidates an old pin. A directory may be relocated with unchanged content and approved equivalent runtime files; absolute paths are not the identity. Missing/extra bundle files, links, path traversal, duplicate JSON fields, unknown schema, mismatched contract/release and changed hashes are refused. The manifest is limited to 1 MiB, 4096 files and 32 entry points; traversal is bounded to 8192 directory entries.
+An `InstallationIdentity` contains plugin, version, contract and SHA-256 of the exact manifest bytes. Even a manifest-only change invalidates an old pin. A schema-1 directory may be relocated with unchanged content and approved equivalent runtime files. A schema-2 portable directory can retain its pin across supported hosts with compatible approved runtimes even when executable hashes differ. Absolute paths are not the identity. Missing/extra bundle files, links, path traversal, duplicate JSON fields, unknown schema, mismatched contract/release and changed hashes are refused. The manifest is limited to 1 MiB, 4096 files and 32 entry points; traversal is bounded to 8192 directory entries.
 
-The [offline sealing tool](../scripts/seal-installation.py) generates manifests after building. It removes generated Python bundle bytecode caches; Decision Room launches Python with `-B` so its release directory remains unchanged. Build scripts require Python 3.11+ for sealing. C#/Python SDK files included in the bundle are hashed; Decision Room also declares its external Python SDK source modules. Runtime executable hashes are recorded through host-supplied aliases.
+Version 0.7.0 adds a [public .NET sealing API](portable-installations.md), using the compatibility matrix embedded in Hosting. Hosts through 0.6.0 support schema 1; schema 2 requires the updated host. The [repository sealing driver](../scripts/seal-installation.sh) calls this API. The old Python script delegates to that driver and no longer owns manifest policy. Build cleanup belongs to the build caller, not the sealer. Runtime declaration files and consumer metadata are hashed like every other bundle file; explicitly external SDK files retain separate hashes.
 
 ## Stable deployment precondition
 
@@ -35,7 +37,7 @@ The manifest is trusted installation metadata. Someone able to replace both meta
 
 Files must remain unchanged from verification through execution and any automatic worker replacement. Hashing before a call does not prevent a time-of-check/time-of-use race. No read-only mount, kernel enforcement or code snapshot is introduced. OS/.NET shared framework/Python standard library and environment dependencies outside the declared file set remain deployment-owned and must also stay fixed. Runtime executable hashing does not attest their full dependency closure.
 
-Build/sealing are offline development actions and may replace release files. Activation of already-built installations is the supported live action. Do not rebuild, reseal or modify a release/runtime while a reference application is active. Changing shared libraries can invalidate earlier application state; retain the original build if that state must be recovered.
+Build/sealing are offline development actions and may replace release files. Activation of already-built installations is the supported live action. Do not rebuild, reseal or modify a release/runtime while a reference application is active. Portable requirements permit compatible runtime changes between deployments, not mutation during execution. Changing shared libraries can invalidate earlier application state; retain the original build if that state must be recovered.
 
 ## Reference application behavior
 

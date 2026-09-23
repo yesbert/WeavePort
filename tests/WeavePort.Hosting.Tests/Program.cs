@@ -23,6 +23,43 @@ if (args.Contains("--mcp-interop"))
     await McpChecks.InteropAsync(args[^2], args[^1]);
     return;
 }
+if (args.Contains("--probe-measure"))
+{
+    var measurements = new List<object>();
+    for (int i = 1; i < args.Length; i += 2)
+    {
+        var samples = new List<double>();
+        for (int sample = 0; sample < 25; sample++)
+        {
+            var watch = Stopwatch.StartNew();
+            await RuntimeProbe.RunAsync(args[i + 1], args[i], default);
+            if (sample >= 5) samples.Add(watch.Elapsed.TotalMilliseconds);
+        }
+        samples.Sort();
+        measurements.Add(new { ecosystem = args[i], count = samples.Count, medianMs = samples[samples.Count / 2], minMs = samples[0], maxMs = samples[^1] });
+    }
+    Console.WriteLine(JsonSerializer.Serialize(measurements));
+    return;
+}
+if (args.Contains("--framework-oracle"))
+{
+    using var cases = JsonDocument.Parse(File.ReadAllText(args[^1]));
+    foreach (var item in cases.RootElement.EnumerateArray())
+    {
+        string requirement = DotnetRequirements.Read(item.GetProperty("config").GetString()!);
+        bool actual = DotnetFrameworks.Matches(requirement, item.GetProperty("inventory").GetString()!);
+        if (actual != item.GetProperty("expected").GetBoolean()) throw new Exception("Framework oracle mismatch " + requirement);
+    }
+    Console.WriteLine($"PASS {cases.RootElement.GetArrayLength()} real dotnet framework resolution comparisons");
+    return;
+}
+if (args.Contains("--portable"))
+{
+    await PortableInstallationChecks.RunAsync();
+    return;
+}
+await ConsumerFindingChecks.RunAsync();
+await PortableInstallationChecks.RunAsync();
 Console.WriteLine($"PASS {await McpChecks.RunAsync()} MCP protocol, authority and lifecycle assertions");
 ManifestChecks.Run();
 await DisposalChecks.RunAsync();

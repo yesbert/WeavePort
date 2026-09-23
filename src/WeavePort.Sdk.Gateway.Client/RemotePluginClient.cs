@@ -1,3 +1,4 @@
+using WeavePort.Abstractions;
 using WeavePort.Internal;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
@@ -55,7 +56,10 @@ public sealed partial class RemotePluginClient : IBoundPluginClient
 
     /// <inheritdoc/>
     public Task<JsonElement> CallAsync(string operation, JsonElement input, CancellationToken cancellationToken = default) => ExchangeAsync(Request(operation, input), cancellationToken);
-    private async Task<JsonElement> ExchangeAsync(Request request, CancellationToken cancellationToken, bool cleanup = false)
+    /// <inheritdoc/>
+    public Task<PluginCallResult<JsonElement>> CallWithMetadataAsync(string operation, JsonElement input, CancellationToken cancellationToken = default) => ExchangeResultAsync(Request(operation, input), cancellationToken);
+    private async Task<JsonElement> ExchangeAsync(Request request, CancellationToken cancellationToken, bool cleanup = false) => (await ExchangeResultAsync(request, cancellationToken, cleanup)).Value;
+    private async Task<PluginCallResult<JsonElement>> ExchangeResultAsync(Request request, CancellationToken cancellationToken, bool cleanup = false)
     {
         using var stop = cleanup ? CancellationTokenSource.CreateLinkedTokenSource(cancellationToken) : CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, _sessions.Lifetime);
         stop.CancelAfter(cleanup ? _streamOptions.ExchangeTimeout : _callTimeout);
@@ -77,7 +81,12 @@ public sealed partial class RemotePluginClient : IBoundPluginClient
                 throw new PluginCallException("value-limit");
             }
 
-            return JsonElement.Parse(reply.Json.Span);
+            if (reply.HasElapsedMs && (!double.IsFinite(reply.ElapsedMs) || reply.ElapsedMs < 0))
+            {
+                throw new InvalidDataException("Invalid gateway elapsed timing.");
+            }
+
+            return new(JsonElement.Parse(reply.Json.Span), reply.HasElapsedMs ? reply.ElapsedMs : null);
         }
         catch (RpcException error)
         {
@@ -186,7 +195,10 @@ public sealed partial class RemotePluginClient : IBoundPluginClient
 
         if (reply.Error.Length > 0)
         {
-            throw new PluginCallException(reply.Error, reply.MayHaveExecuted);
+            throw new PluginCallException(reply.Error, reply.MayHaveExecuted)
+            {
+                VersionMismatch = reply.HasExpectedVersion && reply.HasAdvertisedVersion ? new PluginVersionMismatch(reply.ExpectedVersion, reply.AdvertisedVersion) : null
+            };
         }
     }
 
