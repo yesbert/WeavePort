@@ -1,0 +1,9 @@
+PASS real python CustomerBound: portable invocation, strict executable and incompatible version refusal
+PASS real python ApprovedSessions: portable invocation, strict executable and incompatible version refusal
+PASS real python Shared: portable invocation, strict executable and incompatible version refusal
+PASS real node CustomerBound: portable invocation, strict executable and incompatible version refusal
+PASS real node ApprovedSessions: portable invocation, strict executable and incompatible version refusal
+PASS real node Shared: portable invocation, strict executable and incompatible version refusal
+PASS CustomerBound: version change after resolution refused before initial and replacement execution
+PASS ApprovedSessions: version change after resolution refused before initial and replacement execution
+PASS Shared: version change after resolution refused before initial and replacement execution

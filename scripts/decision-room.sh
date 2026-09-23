@@ -19,6 +19,7 @@ if [[ "${1:-}" == "--build" ]]; then
     wp_release="$WP_DECISION_ROOT/releases/$wp_version"
     dotnet publish samples/DecisionRoom/Plugin -c Release --no-restore --self-contained false \
       -p:DefineConstants="DECISION_V$wp_version" -o "$wp_release" --nologo
+    cp samples/DecisionRoom/Python/pyproject.toml "$wp_release/pyproject.toml"
     cp samples/DecisionRoom/Python/plugin.py "$wp_release/plugin.py"
     wp_risk=1
     if [[ "$wp_version" == 2 ]]; then wp_risk=10; fi
@@ -33,7 +34,7 @@ if [[ "${1:-}" == "--build" ]]; then
   fi
   "$WP_DECISION_PYTHON" -m pip install --no-deps --force-reinstall "$WP_DECISION_ROOT"/wheel/weaveport_sdk-*.whl
   for wp_version in 1 2; do
-    python3 scripts/seal-installation.py "$WP_DECISION_ROOT" decision-room "$wp_version" decision-room/v1 DecisionRoom.Plugin.dll "$WP_DECISION_DOTNET" "$WP_DECISION_PYTHON"
+    ./scripts/seal-installation.sh "$WP_DECISION_ROOT" decision-room "$wp_version" decision-room/v1 DecisionRoom.Plugin.dll "$WP_DECISION_DOTNET" "$WP_DECISION_PYTHON"
   done
   if [[ ! -f "$WP_DECISION_ROOT/active-version.txt" ]]; then
     printf '1\n' > "$WP_DECISION_ROOT/active-version.txt"

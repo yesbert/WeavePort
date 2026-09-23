@@ -18,7 +18,7 @@ for name, version in expected.items():
     source = next(path for path in candidates if path.is_file())
     with zipfile.ZipFile(source) as archive:
         metadata = ET.fromstring(archive.read(next(n for n in archive.namelist() if n.endswith('.nuspec'))))
-        if metadata.find('.//{*}license').text != 'MIT':
+        if metadata.find('.//{*}license').text != ('BSD-2-Clause' if name == 'Tomlyn' else 'MIT'):
             raise ValueError("External package license differs from review")
     shutil.copyfile(source, root / 'artifacts/packages' / f'{name}.{version}.nupkg')
 print('Reviewed external package closure copied with original license metadata.')

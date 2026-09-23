@@ -216,6 +216,9 @@ type WeavePort.Hosting.InstalledPluginCatalog : System.Object [Public, Sealed]
   Constructor Void .ctor(System.String, System.Collections.Generic.IReadOnlyDictionary`2[System.String,System.String]) [Public] (releases, runtimeFiles)
   Method System.Collections.Generic.IReadOnlyList`1[WeavePort.Hosting.InstalledPlugin] List(System.String) [Public] (contract)
   Method System.String ReadSelection(System.String) [Public, Static] (path)
+  Method System.Threading.Tasks.Task ActivateAsync(System.String, System.String, System.String, System.String, System.Threading.CancellationToken) [Public] (selector, plugin, version, contract, cancellationToken=null)
+  Method System.Threading.Tasks.Task`1[System.Collections.Generic.IReadOnlyList`1[WeavePort.Hosting.InstalledPlugin]] ListAsync(System.String, System.Threading.CancellationToken) [Public] (contract, cancellationToken=null)
+  Method System.Threading.Tasks.Task`1[WeavePort.Hosting.InstalledPlugin] ResolveAsync(System.String, System.String, System.String, WeavePort.Hosting.InstallationIdentity, System.Threading.CancellationToken) [Public] (plugin, version, contract, pinned=null, cancellationToken=null)
   Method Void Activate(System.String, System.String, System.String, System.String) [Public] (selector, plugin, version, contract)
   Method WeavePort.Hosting.InstalledPlugin Resolve(System.String, System.String, System.String, WeavePort.Hosting.InstallationIdentity) [Public] (plugin, version, contract, pinned=null)
 type WeavePort.Hosting.McpMethods : System.Object [Public, Abstract, Sealed]
@@ -302,6 +305,8 @@ type WeavePort.Hosting.PluginHost : System.Object [Public, Sealed]
   Method WeavePort.Hosting.WorkerPoolSnapshot get_Snapshot() [Public] ()
   Property WeavePort.Hosting.SchedulingSnapshot Scheduling
   Property WeavePort.Hosting.WorkerPoolSnapshot Snapshot
+type WeavePort.Hosting.PluginInstallationSealer : System.Object [Public, Abstract, Sealed]
+  Method WeavePort.Hosting.InstallationIdentity Seal(WeavePort.Hosting.PluginSealOptions) [Public, Static] (options)
 type WeavePort.Hosting.PluginLaunchDeclaration : System.Object [Public, Sealed]
   implements System.IEquatable`1[WeavePort.Hosting.PluginLaunchDeclaration]
   Constructor Void .ctor() [Public] ()
@@ -327,6 +332,43 @@ type WeavePort.Hosting.PluginLaunchDeclaration : System.Object [Public, Sealed]
   Property System.String Runtime
   Property System.String[] Arguments
   Property WeavePort.Hosting.WorkerReusePolicy[] Ownership
+type WeavePort.Hosting.PluginSealOptions : System.Object [Public, Sealed]
+  implements System.IEquatable`1[WeavePort.Hosting.PluginSealOptions]
+  Constructor Void .ctor() [Public] ()
+  Method Boolean Equals(System.Object) [Public, Virtual] (obj)
+  Method Boolean Equals(WeavePort.Hosting.PluginSealOptions) [Public, Final, Virtual] (other)
+  Method Boolean op_Equality(WeavePort.Hosting.PluginSealOptions, WeavePort.Hosting.PluginSealOptions) [Public, Static] (left, right)
+  Method Boolean op_Inequality(WeavePort.Hosting.PluginSealOptions, WeavePort.Hosting.PluginSealOptions) [Public, Static] (left, right)
+  Method Int32 GetHashCode() [Public, Virtual] ()
+  Method System.Collections.Generic.IReadOnlyDictionary`2[System.String,System.String] get_EntryPoints() [Public] ()
+  Method System.Collections.Generic.IReadOnlyDictionary`2[System.String,System.String] get_ExternalFiles() [Public] ()
+  Method System.Collections.Generic.IReadOnlyDictionary`2[System.String,System.String] get_RuntimeSources() [Public] ()
+  Method System.Collections.Generic.IReadOnlyDictionary`2[System.String,System.String] get_StrictRuntimeFiles() [Public] ()
+  Method System.String ToString() [Public, Virtual] ()
+  Method System.String get_Contract() [Public] ()
+  Method System.String get_Plugin() [Public] ()
+  Method System.String get_ReleaseDirectory() [Public] ()
+  Method System.String get_Version() [Public] ()
+  Method Void set_Contract(System.String) [Public] (value)
+  Method Void set_EntryPoints(System.Collections.Generic.IReadOnlyDictionary`2[System.String,System.String]) [Public] (value)
+  Method Void set_ExternalFiles(System.Collections.Generic.IReadOnlyDictionary`2[System.String,System.String]) [Public] (value)
+  Method Void set_Launch(WeavePort.Hosting.PluginLaunchDeclaration) [Public] (value)
+  Method Void set_Plugin(System.String) [Public] (value)
+  Method Void set_ReleaseDirectory(System.String) [Public] (value)
+  Method Void set_RuntimeSources(System.Collections.Generic.IReadOnlyDictionary`2[System.String,System.String]) [Public] (value)
+  Method Void set_StrictRuntimeFiles(System.Collections.Generic.IReadOnlyDictionary`2[System.String,System.String]) [Public] (value)
+  Method Void set_Version(System.String) [Public] (value)
+  Method WeavePort.Hosting.PluginLaunchDeclaration get_Launch() [Public] ()
+  Method WeavePort.Hosting.PluginSealOptions <Clone>$() [Public] ()
+  Property System.Collections.Generic.IReadOnlyDictionary`2[System.String,System.String] EntryPoints
+  Property System.Collections.Generic.IReadOnlyDictionary`2[System.String,System.String] ExternalFiles
+  Property System.Collections.Generic.IReadOnlyDictionary`2[System.String,System.String] RuntimeSources
+  Property System.Collections.Generic.IReadOnlyDictionary`2[System.String,System.String] StrictRuntimeFiles
+  Property System.String Contract
+  Property System.String Plugin
+  Property System.String ReleaseDirectory
+  Property System.String Version
+  Property WeavePort.Hosting.PluginLaunchDeclaration Launch
 type WeavePort.Hosting.PluginWorkClass : System.Enum [Public, Sealed]
   implements System.IComparable
   implements System.IConvertible

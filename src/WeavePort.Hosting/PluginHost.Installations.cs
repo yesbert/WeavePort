@@ -60,6 +60,7 @@ public sealed partial class PluginHost
         ValidateDeadline(approval.StartupTimeout);
         return new ProcessProfile(installation.RuntimeFiles[launch.Runtime], [installation.EntryPoints[launch.Runtime], ..launch.Arguments], true, approval.WorkspaceRoot, launch.MemoryMiB, approval.InvocationTimeout)
         {
+            RuntimeValidation = installation.RuntimeValidation,
             ReusePolicy = approval.Ownership,
             WorkClass = approval.WorkClass,
             MaximumCallbacks = approval.MaximumCallbacks,

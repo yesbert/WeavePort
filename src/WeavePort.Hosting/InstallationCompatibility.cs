@@ -22,6 +22,20 @@ internal static class InstallationCompatibility
         }
     }
 
+    internal static CompatibilityDeclaration Create(IEnumerable<string> entries, PluginLaunchDeclaration launch)
+    {
+        int protocol = launch.Ownership.Contains(WorkerReusePolicy.Shared) ? 2 : 1;
+        var sdks = entries.ToDictionary(alias => alias, alias => Supported.AuthorSdks.TryGetValue(alias, out var sdk) ? sdk : throw new InvalidDataException("Unsupported author SDK alias."), StringComparer.Ordinal);
+        var result = Supported with
+        {
+            Protocol = protocol,
+            Protocols = null,
+            AuthorSdks = sdks
+        };
+        Validate(result, sdks.Keys);
+        return result;
+    }
+
     private static CompatibilityDeclaration Load()
     {
         using var stream = typeof(InstallationCompatibility).Assembly.GetManifestResourceStream("WeavePort.LocalCompatibility") ?? throw new InvalidOperationException("Missing packaged compatibility matrix.");

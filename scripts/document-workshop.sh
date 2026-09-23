@@ -16,7 +16,7 @@ if [[ "${1:-}" == "--build" ]]; then
     if [[ "$wp_project" == Worker ]]; then
       for wp_version in 1 2; do
         dotnet publish "samples/DocumentWorkshop/Worker" -c Release --no-restore --self-contained false -p:DefineConstants="RELEASE_V$wp_version" -o "$WP_DOCUMENT_ROOT/releases/$wp_version" --nologo
-        python3 scripts/seal-installation.py "$WP_DOCUMENT_ROOT" document-workshop "$wp_version" document-workshop/v1 DocumentWorkshop.Worker.dll "$WP_DOCUMENT_DOTNET"
+        ./scripts/seal-installation.sh "$WP_DOCUMENT_ROOT" document-workshop "$wp_version" document-workshop/v1 DocumentWorkshop.Worker.dll "$WP_DOCUMENT_DOTNET"
       done
     else
       dotnet publish "samples/DocumentWorkshop/Host" -c Release --no-restore --self-contained false -o "$WP_DOCUMENT_ROOT/host" --nologo

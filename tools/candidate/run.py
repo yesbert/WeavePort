@@ -76,6 +76,7 @@ def build_candidate(checkout, env, run, stage):
     package_set.write_text(json.dumps(packages, indent=2))
     env["WEAVEPORT_PACKAGE_SET"] = str(package_set)
     stage("sdk-build", ["./scripts/sdk-versions.sh", "--build-only"])
+    stage("portable-installations", ["./scripts/verify-portable.sh"])
     wheel = next((checkout / "artifacts/sdk-version-tests/wheel").glob("*.whl"))
     env["WEAVEPORT_PYTHON_WHEEL"] = str(wheel)
     for app in ["decision-room", "document-workshop", "appointment-desk"]:

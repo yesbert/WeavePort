@@ -11,6 +11,8 @@
     <ProjectReference Include="../WeavePort.Sdk.Client/WeavePort.Sdk.Client.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="../../docs/licenses/tomlyn-LICENSE.txt" Pack="true" PackagePath="licenses/" />
+    <None Include="../../docs/licenses/chasm-LICENSE.txt" Pack="true" PackagePath="licenses/" />
     <None Include="../../docs/package.md" Pack="true" PackagePath="PACKAGE.md" />
   </ItemGroup>
   <ItemGroup>
@@ -21,6 +23,8 @@
     <Compile Include="../Shared/SdkOperations.cs" Link="Internal/SdkOperations.cs" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Tomlyn" Version="0.19.0" />
+    <PackageReference Include="Chasm.SemanticVersioning" Version="2.8.2" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.12" />
   </ItemGroup>
 </Project>
