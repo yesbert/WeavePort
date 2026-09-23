@@ -13,4 +13,4 @@ Exact package migration remains deliberate: resealing changes the installation i
 
 ## Qualification and publication
 
-Final qualification and publication evidence will be added after successful execution. A source version bump alone does not establish publication. Historical portable-runtime evidence is retained [separately](../../verification/portable-runtime-20260923/summary.md).
+The initial frozen candidate at `f360bf8e0f73e7cbb691d1dc563cd93577e7dbe7` passed all 58 stages with 3,533 reported assertions and 414 frozen artifacts. Required PR CI passed on macOS, Linux and Windows. A follow-up audit corrects the initial SonarQube findings before publication; final exact-tag qualification and publication evidence will be added after successful execution. A source version bump alone does not establish publication. Historical portable-runtime evidence is retained [separately](../../verification/portable-runtime-20260923/summary.md).

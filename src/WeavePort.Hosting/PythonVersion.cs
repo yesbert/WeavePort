@@ -2,7 +2,7 @@ using System.Numerics;
 using System.Text.RegularExpressions;
 
 namespace WeavePort.Hosting;
-internal sealed partial record PythonVersion(BigInteger Epoch, BigInteger[] Release, int PreKind, BigInteger Pre, BigInteger? Post, BigInteger? Dev, string[] Local) : IComparable<PythonVersion>
+internal sealed partial record PythonVersion(BigInteger Epoch, BigInteger[] Release, int PreKind, BigInteger Pre, BigInteger? Post, BigInteger? Dev, string[] Local)
 {
     internal string Canonical => (Epoch == 0 ? "" : Epoch + "!") + string.Join('.', Release) + (PreKind < 3 ? new[]
     {
@@ -33,17 +33,14 @@ internal sealed partial record PythonVersion(BigInteger Epoch, BigInteger[] Rele
         string publicText = text.Split('+')[0];
         bool post = m.Groups["post"].Success || Regex.IsMatch(publicText, @"(?:post|rev|r)[-_.]?\s*$", RegexOptions.IgnoreCase, TimeSpan.FromSeconds(1));
         bool dev = publicText.Contains("dev", StringComparison.OrdinalIgnoreCase);
-        return new(Number(m, "epoch"), m.Groups["release"].Value.Split('.').Select(BigInteger.Parse).ToArray(), kind, Number(m, "pren"), post ? Number(m, "post") : null, dev ? Number(m, "dev") : null, m.Groups["local"].Success ? Regex.Split(m.Groups["local"].Value.ToLowerInvariant(), "[-_.]") : []);
+        return new(Number(m, "epoch"), m.Groups["release"].Value.Split('.').Select(BigInteger.Parse).ToArray(), kind, Number(m, "pren"), post ? Number(m, "post") : null, dev ? Number(m, "dev") : null, m.Groups["local"].Success ? m.Groups["local"].Value.ToLowerInvariant().Split(['-', '_', '.']) : []);
     }
 
     private static BigInteger Number(Match match, string group) => match.Groups[group].Value is { Length: > 0 } text ? BigInteger.Parse(text) : BigInteger.Zero;
-    public int CompareTo(PythonVersion? other)
-    {
-        if (other is null)
-        {
-            return 1;
-        }
+    private int Phase => PreKind == 3 && Post is null && Dev is not null ? -1 : PreKind;
 
+    internal int CompareTo(PythonVersion other)
+    {
         int result = Epoch.CompareTo(other.Epoch);
         if (result != 0)
         {
@@ -56,25 +53,36 @@ internal sealed partial record PythonVersion(BigInteger Epoch, BigInteger[] Rele
             return result;
         }
 
-        int phase = PreKind == 3 && Post is null && Dev is not null ? -1 : PreKind;
-        int otherPhase = other.PreKind == 3 && other.Post is null && other.Dev is not null ? -1 : other.PreKind;
-        result = phase.CompareTo(otherPhase);
-        if (result == 0)
+        result = Phase.CompareTo(other.Phase);
+        if (result != 0)
         {
-            result = Pre.CompareTo(other.Pre);
+            return result;
         }
 
-        if (result == 0)
+        result = Pre.CompareTo(other.Pre);
+        if (result != 0)
         {
-            result = Nullable.Compare(Post, other.Post);
+            return result;
         }
 
-        if (result == 0)
+        result = Nullable.Compare(Post, other.Post);
+        if (result != 0)
         {
-            result = Dev is null ? (other.Dev is null ? 0 : 1) : other.Dev is null ? -1 : Dev.Value.CompareTo(other.Dev.Value);
+            return result;
         }
 
+        result = CompareDevelopment(Dev, other.Dev);
         return result != 0 ? result : CompareLocal(other);
+    }
+
+    private static int CompareDevelopment(BigInteger? left, BigInteger? right)
+    {
+        if (left is null)
+        {
+            return right is null ? 0 : 1;
+        }
+
+        return right is null ? -1 : left.Value.CompareTo(right.Value);
     }
 
     internal int CompareRelease(PythonVersion other)
@@ -95,9 +103,7 @@ internal sealed partial record PythonVersion(BigInteger Epoch, BigInteger[] Rele
     {
         for (int i = 0; i < Math.Min(Local.Length, other.Local.Length); i++)
         {
-            bool leftNumber = BigInteger.TryParse(Local[i], out var left);
-            bool rightNumber = BigInteger.TryParse(other.Local[i], out var right);
-            int result = leftNumber && rightNumber ? left.CompareTo(right) : leftNumber != rightNumber ? leftNumber.CompareTo(rightNumber) : string.CompareOrdinal(Local[i], other.Local[i]);
+            int result = CompareLocalPart(Local[i], other.Local[i]);
             if (result != 0)
             {
                 return result;
@@ -105,5 +111,17 @@ internal sealed partial record PythonVersion(BigInteger Epoch, BigInteger[] Rele
         }
 
         return Local.Length.CompareTo(other.Local.Length);
+    }
+
+    private static int CompareLocalPart(string leftPart, string rightPart)
+    {
+        bool leftNumber = BigInteger.TryParse(leftPart, out var left);
+        bool rightNumber = BigInteger.TryParse(rightPart, out var right);
+        if (leftNumber && rightNumber)
+        {
+            return left.CompareTo(right);
+        }
+
+        return leftNumber != rightNumber ? leftNumber.CompareTo(rightNumber) : string.CompareOrdinal(leftPart, rightPart);
     }
 }

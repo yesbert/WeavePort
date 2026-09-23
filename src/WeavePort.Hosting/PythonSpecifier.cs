@@ -50,7 +50,7 @@ internal sealed record PythonSpecifier(string Operator, string Text, PythonVersi
         PythonSpecifier[] constraints = Parse(requirement);
         PythonVersion candidate = PythonVersion.Parse(observed);
         bool prereleases = constraints.Any(s => s.Operator is "==" or ">=" or "<=" or ">" or "<" or "~=" or "===" && s.EnablesPrereleases());
-        return (!candidate.IsPrerelease || prereleases) && constraints.All(s => s.Contains(candidate, observed));
+        return (!candidate.IsPrerelease || prereleases) && constraints.All(s => s.Contains(candidate));
     }
 
     private bool EnablesPrereleases()
@@ -70,7 +70,7 @@ internal sealed record PythonSpecifier(string Operator, string Text, PythonVersi
         }
     }
 
-    private bool Contains(PythonVersion candidate, string observed)
+    private bool Contains(PythonVersion candidate)
     {
         if (Operator == "===")
         {

@@ -110,6 +110,9 @@ internal static class PortableInstallationChecks
         }
         Script("printf 'v22.1.0\\n'");
         if (RuntimeProbe.Run(script, "node") != "v22.1.0" || await RuntimeProbe.RunAsync(script, "node", default) != "v22.1.0") throw new Exception("Probe result");
+        File.WriteAllText(Path.Combine(root, "cwd-marker"), "approved runtime directory");
+        Script("[ -f cwd-marker ] || exit 7; printf 'v22.1.0\\n'");
+        if (RuntimeProbe.Run(script, "node") != "v22.1.0" || await RuntimeProbe.RunAsync(script, "node", default) != "v22.1.0") throw new Exception("Probe did not use the approved executable directory");
         Script("exit 3");
         await RejectAsync(() => RuntimeProbe.RunAsync(script, "node", default));
         Script("/usr/bin/yes abcdefghijklmnopqrstuvwxyz");

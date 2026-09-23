@@ -58,7 +58,7 @@ internal static class RuntimeProbe
                 UseShellExecute = false,
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
-                WorkingDirectory = Path.GetTempPath(),
+                WorkingDirectory = Path.GetDirectoryName(executable)!,
                 CreateNoWindow = true
             };
             info.Environment.Clear();

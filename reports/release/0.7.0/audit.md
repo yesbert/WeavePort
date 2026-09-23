@@ -24,6 +24,10 @@ Reviewed 2026-09-23 against the portable-installation and consumer-findings chan
 - Reviewed cancellation, disposal, approved runtime selection, bounded probing, bundle inventory/pins, version parsing, cross-tenant metadata exposure and default logging. Default logs still omit exception messages, version strings, payloads and credentials.
 - Package versions, exact compatibility policy, examples, fixtures, generated retrieval documents and source lockfiles are updated together. Historical reports and archived changes retain their original identities.
 
+## Static analysis follow-up
+
+The first merged revision's SonarQube report found 14 maintainability issues and two unreviewed hotspots; its new-code coverage was 84.7% with zero duplication. Publication was withheld. The corrections split framework inventory/dependency processing, simplified Python comparison phases, removed unused work, cached serialization options, replaced regex splitting with character splitting, and moved probe working directories from the shared temporary root to the approved executable directory. Runtime configuration parse/I/O/timeout failures retain the alias and requirement in diagnostic discovery. No analysis rule or quality gate was suppressed or relaxed. Final analysis status is recorded after the corrected revision is analyzed.
+
 ## Verification and limits
 
 A NuGet vulnerability query for the Hosting and Gateway server dependency closures reported no known vulnerable packages on the configured sources on 2026-09-23. This is an advisory snapshot, not proof of absence of vulnerabilities.

@@ -15,3 +15,7 @@ SDK checked: 10.0.401, net10.0/C#14. Microsoft documentation confirms informatio
 
 ## Verification
 Focused startup, discovery, metadata concurrency and gateway regressions; complete packed candidate qualification; documentation/link/generated/API checks; audit and release artifact verification. Results will be recorded after execution.
+
+## Release audit corrections
+
+SonarQube on the first merged revision reported 14 maintainability issues and two hotspots, with 84.7% new-code coverage and no duplication. Simplify framework dependency expansion and Python version comparison without changing selection semantics; cache serializer options; remove unnecessary regex splitting and unused parameters. Runtime probes use the operator-approved executable directory, avoiding shared temporary-directory search context. Diagnostic parsing, timeout and framework I/O failures retain runtime context. The existing independent version fixtures and real framework oracle are rerun after these changes. No suppressions or weakened gates are accepted. Microsoft .NET documentation consulted: https://learn.microsoft.com/dotnet/api/system.text.regularexpressions.generatedregexattribute.-ctor?view=net-10.0 .
