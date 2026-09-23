@@ -14,7 +14,7 @@ Changing the default artifact version would break existing launch profiles. A cl
 SDK checked: 10.0.401, net10.0/C#14. Microsoft documentation confirms informational versions include Source Link commit metadata since .NET 8: https://learn.microsoft.com/dotnet/api/system.reflection.assemblyinformationalversionattribute?view=net-10.0 . Existing lifecycle, architecture and memory guidance apply unchanged.
 
 ## Verification
-Focused startup, discovery, metadata concurrency and gateway regressions; complete packed candidate qualification; documentation/link/generated/API checks; audit and release artifact verification. Results will be recorded after execution.
+Focused startup, discovery, metadata concurrency and gateway regressions; complete packed candidate qualification; documentation/link/generated/API checks; audit and release artifact verification. The final tagged revision passed 3,533 reported assertions across 58 stages with 414 frozen artifacts. Main CI, CodeQL and SonarQube passed; the latter reports zero open issues and unreviewed hotspots, 84.9% new-code coverage and zero duplication. All seven NuGet packages and all 16 original GitHub package/symbol/SDK downloads were verified after publication. The durable release record is reports/release/0.7.0/README.md.
 
 ## Release audit corrections
 
