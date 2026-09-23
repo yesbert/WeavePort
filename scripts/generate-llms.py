@@ -27,6 +27,7 @@ GUIDES = [
     ("docs/plugin-sdk.md", "Author SDKs", "C#, Python and TypeScript plugins"),
     ("docs/reusable-plugins.md", "Reusable plugins", "Operator approval, session cleanup and author best practices"),
     ("docs/embedded-coordinator.md", "Coordinator", "Embedding and shared worker ownership"),
+    ("docs/portable-installations.md", "Portable installations", "Ecosystem runtime requirements and the .NET sealing API"),
     ("docs/installed-plugins.md", "Installed plugins", "Artifact identity, pinning and activation"),
     ("docs/package-compatibility.md", "Compatibility", "Exact package and protocol combinations"),
     ("docs/worker-lifecycle.md", "Lifecycle", "Retention, cleanup and worker limits"),

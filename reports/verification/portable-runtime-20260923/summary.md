@@ -1,6 +1,6 @@
 # Portable runtime qualification
 
-Implementation verification in progress on 2026-09-23. Final committed-HEAD qualification is recorded below when complete; this report does not allocate or publish a package version.
+Implementation verification completed on 2026-09-23. This report does not allocate or publish a package version.
 
 - A packed .NET consumer sealed a managed-only bundle on macOS and invoked it on macOS and Ubuntu 24.04.4 in a runtime-only container with separate read-only host and plugin-root mounts. No resealing occurred. Manifest/pin digest was identical while muxer hashes differed.
 - Python and Node ran real SDK echo plugins through CustomerBound, ApprovedSessions and Shared installed bindings. Compatible runtime selection, optional strict hashes and incompatible-version refusal passed for each combination.
@@ -15,3 +15,7 @@ Scope is managed-only .NET portability on the tested macOS/Linux deployment and 
 Probe-only observations used five warmups and twenty retained samples per runtime on this macOS host: median .NET 11.84 ms, Python 17.78 ms and Node 24.92 ms. See [raw samples summary](probe-measurements.json). These include process creation and bounded output collection; they are not isolation or throughput guarantees. [Local](local.json) and [Linux](linux.json) records retain the same pin and differing runtime hashes; [language checks](languages.txt) retain all ownership outcomes.
 
 The local language checks used Python 3.14.7 and Node 24.18.0. The macOS and Linux .NET worker checks used the .NET 10 deployment selected by their approved muxers. Pure parser fixtures separately cover other version values; those are not execution qualifications.
+
+## Committed candidate result
+
+Commit `37a1912196880b4cd8e4c42f99f3e8729bd12eb6` passed all 58 qualification stages, 3530 recorded assertion executions and stability checks for 414 frozen files. See [candidate result](candidate-result.json). This includes project-reference and packed hosting/scheduling checks, portable installation consumers, reuse/shared/multilingual SDK scenarios, product examples, optional packages, recovery, package/API gates and negative package-tampering verification. The initial run exposed a stale MCP example dependency lockfile at the final source-topology gate; it was updated, and this complete rerun passed. Later closure changes only record evidence, update documentation and archive/synchronize specifications.

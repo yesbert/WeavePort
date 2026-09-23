@@ -1,0 +1,450 @@
+{
+  "sourceCommit": "37a1912196880b4cd8e4c42f99f3e8729bd12eb6",
+  "status": "passed",
+  "platform": "macOS-27.0-arm64-arm-64bit-Mach-O",
+  "architecture": "arm64",
+  "stages": [
+    {
+      "name": "checkout",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 0.288,
+      "assertions": 0
+    },
+    {
+      "name": "tool-dotnet",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 0.094,
+      "assertions": 0
+    },
+    {
+      "name": "tool-python",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 0.014,
+      "assertions": 0
+    },
+    {
+      "name": "tool-node",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 0.02,
+      "assertions": 0
+    },
+    {
+      "name": "tool-npm",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 0.077,
+      "assertions": 0
+    },
+    {
+      "name": "dotnet-runtimes",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 0.006,
+      "assertions": 0
+    },
+    {
+      "name": "hosting-regressions",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 16.57,
+      "assertions": 426
+    },
+    {
+      "name": "scheduling-regressions",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 11.632,
+      "assertions": 88
+    },
+    {
+      "name": "density-observer-controls",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 0.093,
+      "assertions": 0
+    },
+    {
+      "name": "gateway-regressions",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 6.424,
+      "assertions": 6
+    },
+    {
+      "name": "code-style",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 1.748,
+      "assertions": 0
+    },
+    {
+      "name": "documentation-regressions",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 0.097,
+      "assertions": 4
+    },
+    {
+      "name": "core-packages",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 7.206,
+      "assertions": 0
+    },
+    {
+      "name": "packed-hosting-regressions",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 13.859,
+      "assertions": 426
+    },
+    {
+      "name": "packed-scheduling-regressions",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 11.049,
+      "assertions": 88
+    },
+    {
+      "name": "mcp-fixture-install",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 1.368,
+      "assertions": 0
+    },
+    {
+      "name": "packed-mcp-interop",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 0.308,
+      "assertions": 0
+    },
+    {
+      "name": "mcp-example-restore",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 1.987,
+      "assertions": 0
+    },
+    {
+      "name": "packed-mcp-example",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 1.583,
+      "assertions": 0
+    },
+    {
+      "name": "sdk-build",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 8.285,
+      "assertions": 0
+    },
+    {
+      "name": "portable-installations",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 4.406,
+      "assertions": 0
+    },
+    {
+      "name": "decision-room-build",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 9.778,
+      "assertions": 0
+    },
+    {
+      "name": "document-workshop-build",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 7.454,
+      "assertions": 0
+    },
+    {
+      "name": "appointment-desk-build",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 7.329,
+      "assertions": 0
+    },
+    {
+      "name": "optional-build",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 10.475,
+      "assertions": 0
+    },
+    {
+      "name": "reuse-source-build",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 0.984,
+      "assertions": 0
+    },
+    {
+      "name": "reuse-packed-build",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 0.861,
+      "assertions": 0
+    },
+    {
+      "name": "reuse-example-build",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 0.829,
+      "assertions": 0
+    },
+    {
+      "name": "shared-source-build",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 1.05,
+      "assertions": 0
+    },
+    {
+      "name": "concurrent-sdk-source-build",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 1.641,
+      "assertions": 0
+    },
+    {
+      "name": "shared-packed-build",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 0.989,
+      "assertions": 0
+    },
+    {
+      "name": "concurrent-sdk-packed-build",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 0.988,
+      "assertions": 0
+    },
+    {
+      "name": "shared-sample-build",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 0.883,
+      "assertions": 0
+    },
+    {
+      "name": "shared-sample-seal",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 1.34,
+      "assertions": 0
+    },
+    {
+      "name": "sources-sample-build",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 0.9,
+      "assertions": 0
+    },
+    {
+      "name": "fixed-package-set",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 0.039,
+      "assertions": 0
+    },
+    {
+      "name": "source-reuse-regressions",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 13.614,
+      "assertions": 1036
+    },
+    {
+      "name": "packed-reuse-regressions",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 13.264,
+      "assertions": 1036
+    },
+    {
+      "name": "reuse-author-examples",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 0.204,
+      "assertions": 9
+    },
+    {
+      "name": "shared-source-regressions",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 9.459,
+      "assertions": 3
+    },
+    {
+      "name": "concurrent-sdk-source-wire",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 2.114,
+      "assertions": 0
+    },
+    {
+      "name": "concurrent-sdk-source-collection",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 9.859,
+      "assertions": 0
+    },
+    {
+      "name": "concurrent-sdk-source-streams",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 19.173,
+      "assertions": 1
+    },
+    {
+      "name": "shared-packed-regressions",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 8.426,
+      "assertions": 3
+    },
+    {
+      "name": "concurrent-sdk-packed-wire",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 2.158,
+      "assertions": 0
+    },
+    {
+      "name": "concurrent-sdk-packed-collection",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 9.993,
+      "assertions": 0
+    },
+    {
+      "name": "concurrent-sdk-packed-streams",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 19.143,
+      "assertions": 1
+    },
+    {
+      "name": "sources-sample-run",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 1.761,
+      "assertions": 0
+    },
+    {
+      "name": "shared-sample-run",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 0.314,
+      "assertions": 0
+    },
+    {
+      "name": "multilingual-concurrent-wire",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 10.222,
+      "assertions": 0
+    },
+    {
+      "name": "decision-room-verify",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 14.197,
+      "assertions": 33
+    },
+    {
+      "name": "document-workshop-verify",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 5.144,
+      "assertions": 43
+    },
+    {
+      "name": "appointment-desk-verify",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 4.177,
+      "assertions": 68
+    },
+    {
+      "name": "sdk-verify",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 2.034,
+      "assertions": 12
+    },
+    {
+      "name": "optional-verify",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 14.644,
+      "assertions": 155
+    },
+    {
+      "name": "recovery-verify",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 1.265,
+      "assertions": 12
+    },
+    {
+      "name": "compatibility-verify",
+      "exitCode": 0,
+      "expectedExitCode": 0,
+      "seconds": 9.652,
+      "assertions": 80
+    },
+    {
+      "name": "changed-package-refused",
+      "exitCode": 1,
+      "expectedExitCode": 1,
+      "seconds": 0.038,
+      "assertions": 0
+    }
+  ],
+  "dotnet": "10.0.401",
+  "python": "Python 3.14.7",
+  "node": "v24.18.0",
+  "npm": "11.16.0",
+  "sharedRuntimes": [
+    "Microsoft.AspNetCore.App 8.0.27",
+    "Microsoft.AspNetCore.App 10.0.12",
+    "Microsoft.NETCore.App 8.0.23",
+    "Microsoft.NETCore.App 8.0.24",
+    "Microsoft.NETCore.App 8.0.25",
+    "Microsoft.NETCore.App 8.0.26",
+    "Microsoft.NETCore.App 8.0.27",
+    "Microsoft.NETCore.App 10.0.12"
+  ],
+  "runtimeExecutables": {
+    "dotnet": "00c673767ee2538369f307d3c8a0ce06f16bc9e0ecf8ce767b64dd02b2230e98",
+    "python3": "87d4df53fd91304be5bac391fb204643c36b7df2023c04a0953bcbc7d4fdf634",
+    "node": "ee6fb0e015284d83a91e8ec5213f43a157f8a392b58555301682892ba928c04a"
+  },
+  "lockfileRefreshes": {
+    "examples/mcp/packages.lock.json": {
+      "before": "29ffff373d44401f12b68350af52647e5fc9ccbed157a821acc070ac0504a760",
+      "after": "327f94fd278a3dd9c6b4dc113ffc16caf819463d47db88524dea400cdc5aa776"
+    },
+    "samples/DecisionRoom/Host/packages.lock.json": {
+      "before": "d94368dbacd4c22afffba7b1cbe939cc56aef8689947536f42c6372c2b985d42",
+      "after": "0c0df63bc523c8d7cfc38e1b9851768f8af4796a6fa2cde89eb3f3a0e73297da"
+    },
+    "samples/DecisionRoom/Plugin/packages.lock.json": {
+      "before": "879e296092122ff2c3ac6fe0e8faa2194382129a7f928c2b616d70033754fcf0",
+      "after": "f271f84b18701e9f558cf703f1bad17808d8368281a76723665fd69046ad71cc"
+    }
+  },
+  "artifactFiles": 414,
+  "artifactManifestSha256": "f290836e5de13b3ed182c0cd62d861cd68e2a6c6bed0d3af886916053c224330",
+  "assertions": 3530
+}

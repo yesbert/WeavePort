@@ -43,3 +43,7 @@ Version 0.4.0 adds a memory-led fair scheduler and opt-in `WorkerReusePolicy.App
 ## Unified host and shared execution
 
 The current source exposes one `PluginHost` with queued or immediate admission, explicit reconstructible eviction, operation-wide stream/source residency, verified installation approvals and opt-in resident Shared execution. Shared invocation authority, cancellation retention and bounded recovery are separate from sequential `ApprovedSessions` cleanup. New functionality must be qualified against the candidate package family before release claims; historical reports above remain tied to their recorded versions and machines. See [shared execution](shared-execution.md) and [installed clients](installed-plugin-clients.md).
+
+## Portable installation source changes
+
+Current source adds schema-2 runtime requirements derived from .NET, Python and Node declarations, bounded runtime checks at resolution and worker startup, and a public .NET sealing API using embedded compatibility metadata. Legacy manifests retain strict runtime hashes. A managed-only bundle was sealed on macOS and invoked unchanged from an external plugin-root mount in a Linux container; this does not replace full Linux release qualification. See [portable installation guidance](portable-installations.md) and [verification evidence](../reports/verification/portable-runtime-20260923/summary.md). Package publication remains a separate release operation.

@@ -13,7 +13,7 @@ plugins/
       TextTools.dll
 ```
 
-`catalog.List("text-tools/v1")` returns each matching plugin's verified selected release. `Resolve(plugin, version, contract, savedIdentity)` restores an exact digest pin. The original single-plugin `releases/version` layout remains supported by `Resolve`. Changing `active.txt` affects new selections only. Every runtime alias declared by the manifest must exist in the operator's approved runtime map and pass its hash check; unused approved aliases do not invalidate a plugin.
+`catalog.List("text-tools/v1")` returns each matching plugin's verified selected release. `Resolve(plugin, version, contract, savedIdentity)` restores an exact digest pin. The original single-plugin `releases/version` layout remains supported by `Resolve`. Changing `active.txt` affects new selections only. Every runtime alias declared by the manifest must exist in the operator's approved runtime map. Schema 1 requires its exact executable hash; current source also supports [portable schema 2](portable-installations.md), which validates ecosystem requirements and any optional strict hash. Unused approved aliases do not invalidate a plugin.
 
 ```csharp
 var catalog = new InstalledPluginCatalog(pluginRoot,
