@@ -6,11 +6,26 @@
         "type": "Direct",
         "requested": "[0.6.0, )",
         "resolved": "0.6.0",
-        "contentHash": "VEiG+TtJR9OqNKiNY5qGwYhRAII4BGTK2x5dSQWnsIHFPocpBQlIJFXnpEett0bgNryB4cznZTJm/rrYLjjuWA==",
+        "contentHash": "7uztepB55CdHkSEezf2gLdBK88oZiKFPxrTAzWFr5FhMDZYPf4HIp0Glwek2sRzpzF8U/LHtKD/S4HlwtdgxvQ==",
         "dependencies": {
+          "Chasm.SemanticVersioning": "2.8.2",
           "Microsoft.Extensions.Logging.Abstractions": "10.0.12",
+          "Tomlyn": "0.19.0",
           "WeavePort.Abstractions": "0.6.0",
           "WeavePort.Sdk.Client": "0.6.0"
+        }
+      },
+      "Chasm.Formatting": {
+        "type": "Transitive",
+        "resolved": "2.4.0",
+        "contentHash": "boc3JDTJ/bum/LWlnjNqHZpb4bQqQTH3p8500xL/3VPAmQMvjcONx1SaMkGDg5fuwdXbk9OtyM0zVKYGnULY7A=="
+      },
+      "Chasm.SemanticVersioning": {
+        "type": "Transitive",
+        "resolved": "2.8.2",
+        "contentHash": "6GLb6fU3klW0j4p14mRwk+11cOGMs3Nq41qfpjXv6EpFpwc6/X2CY+/iDPuHPauxXAe+9V1/qC0XVZN0s7Gipw==",
+        "dependencies": {
+          "Chasm.Formatting": "2.4.0"
         }
       },
       "Microsoft.Extensions.DependencyInjection.Abstractions": {
@@ -26,15 +41,20 @@
           "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.12"
         }
       },
+      "Tomlyn": {
+        "type": "Transitive",
+        "resolved": "0.19.0",
+        "contentHash": "GlI2o8R8jbZIaE+YX6uA/VoAOH7zIxYeqxDm7jHW2hqUhuB+q19oKold35FkMuv8IZDoCqsTMolaBv2eBLBmrQ=="
+      },
       "WeavePort.Abstractions": {
         "type": "Transitive",
         "resolved": "0.6.0",
-        "contentHash": "sTdrV3kG8oZQ0yZpQEBxojIurH4Ii31cfMUOSxgua2nxKK1bzihhCFPPTLzG+h84FwkN73PXAtrq/OZp5f24Ng=="
+        "contentHash": "Qi25pLRPJAwF/fWi8dykNh2X9wd7C79DjCecvNo1U/ZtMFHEVTQ6iK6sAmsepRt55+O2iutv+wfB6+guZEv77w=="
       },
       "WeavePort.Sdk.Client": {
         "type": "Transitive",
         "resolved": "0.6.0",
-        "contentHash": "Z8y4vOcZvmFwX2DkyXjD/dWu89wu8GP0YEw3Y3F+UHFqFB5amO2UwTBFhNzDTUD1Htc08zMjMYBhNOrNwksuLA==",
+        "contentHash": "/5DerzYwUBt8XY9li3XXb26XZG4RauawTKJIKMrlavz0qV4MnI74ApK+iWgwt+Hchsc1VKHs9kk22AFwAGWDdg==",
         "dependencies": {
           "WeavePort.Abstractions": "0.6.0"
         }
