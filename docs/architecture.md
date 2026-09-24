@@ -31,7 +31,7 @@ Cancellation means that the caller stopped waiting, not that an external action 
 
 ## Deferred work
 
-The 0.7.0 package family includes the four core packages and independently selectable Composition and Gateway server/client packages. Windows qualification, stronger native containment, distributed scheduling, application signing/notarization and automatic updates/migrations remain separate work. Integrations with the owner's applications follow their own development schedule.
+The 0.8.0 package family includes the four core packages and independently selectable Composition and Gateway server/client packages. Windows qualification, stronger native containment, distributed scheduling, application signing/notarization and automatic updates/migrations remain separate work. Integrations with the owner's applications follow their own development schedule.
 
 The [historical evidence guide](history.md) explains where earlier design alternatives, measurements and rejected experiments are retained, including the limits of public access to pre-baseline history. This guide retains the decisions that still govern current code.
 

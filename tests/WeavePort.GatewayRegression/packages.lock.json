@@ -4,12 +4,12 @@
     "net10.0": {
       "WeavePort.Sdk.Gateway": {
         "type": "Direct",
-        "requested": "[0.7.0, )",
-        "resolved": "0.7.0",
+        "requested": "[0.8.0, )",
+        "resolved": "0.8.0",
         "contentHash": "o/WR08pUXVw5nm8EojW6+kPfG/hQa9XHSkGJlfbZUtC3n4EVED13yi5WbdkuvsnxwVykdfvmQwJbL5S8RvbFgQ==",
         "dependencies": {
           "Grpc.AspNetCore.Server": "2.83.0",
-          "WeavePort.Sdk.Gateway.Client": "0.7.0"
+          "WeavePort.Sdk.Gateway.Client": "0.8.0"
         }
       },
       "Grpc.Core.Api": {
@@ -27,12 +27,12 @@
       },
       "WeavePort.Sdk.Gateway.Client": {
         "type": "Transitive",
-        "resolved": "0.7.0",
+        "resolved": "0.8.0",
         "contentHash": "hSfPVsER9MtgU6lM/tzIkCY+9twaNVgAmEN1xdJ6mC242E9+0ijKgNCNLSikzOKul5CY/DYGh/3+/FXrFXE62g==",
         "dependencies": {
           "Google.Protobuf": "3.36.1",
           "Grpc.Net.Client": "2.83.0",
-          "WeavePort.Sdk.Client": "0.7.0"
+          "WeavePort.Sdk.Client": "0.8.0"
         }
       },
       "Google.Protobuf": {
@@ -61,17 +61,17 @@
       },
       "WeavePort.Abstractions": {
         "type": "CentralTransitive",
-        "requested": "[0.7.0, )",
-        "resolved": "0.7.0",
+        "requested": "[0.8.0, )",
+        "resolved": "0.8.0",
         "contentHash": "w/lf//hyqt3e7i1gPaeYbVrU3BcWcCBYd5yHhGZ4oHqeSvpfCgxH4bOLCzpiIhSdTazcjmoFyBbrt8pIO3vJhQ=="
       },
       "WeavePort.Sdk.Client": {
         "type": "CentralTransitive",
-        "requested": "[0.7.0, )",
-        "resolved": "0.7.0",
+        "requested": "[0.8.0, )",
+        "resolved": "0.8.0",
         "contentHash": "C4qg9gYEfcTQ/rAZll44RE+1NuZDXC8mAaKdngFHQCiIiM2w9pR2J6ptAZamhGjHbt3LjUb6w6gA6HQNUygFpA==",
         "dependencies": {
-          "WeavePort.Abstractions": "0.7.0"
+          "WeavePort.Abstractions": "0.8.0"
         }
       }
     }

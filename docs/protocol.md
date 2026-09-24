@@ -38,7 +38,7 @@ Successful `Value` is the operation-specific result. Failure results can contain
 
 ## Structured errors in current source
 
-**Availability:** These additions are qualified post-0.7.0 source changes, not a republishing of the original 0.7.0 packages. See [source status](status.md#qualified-source-after-070).
+**Availability:** These optional failure metadata fields are included in release 0.8.0; older peers may omit them. See [migration notes](releases.md#080-failure-contracts-and-code-quality).
 
 Known wire codes are normalized through the shared catalogue; unrecognized peer codes become `unknown-error`. A combined author-handler and registered-resource cleanup failure keeps the legacy `cleanup-error` frame while adding the primary category and cleanup flag:
 

@@ -1,6 +1,6 @@
 # Runtime diagnostics
 
-**Source availability:** This checkout includes qualified changes made after the published `v0.7.0` release. Package labels still read .NET `0.7.0` and Python/TypeScript `0.3.0`; those labels do not make locally rebuilt artifacts identical to the published downloads. Structured `PluginFailure` details, `DetailedFailureSink`, event 1008 and combined primary/cleanup error metadata describe current source, not the original published packages. Use the matching release tag for a published-package integration; see [current status](status.md).
+**Release availability:** Structured failure details, diagnostic delivery and combined execution/cleanup metadata are included in .NET 0.8.0 and author SDKs 0.4.0. See the [0.8.0 migration notes](releases.md#080-failure-contracts-and-code-quality) before upgrading from 0.7.0.
 
 Observe worker startup, invocation, callback and cleanup failures through your application’s existing logging. Diagnostic events expose lifecycle context while excluding plugin payloads and secrets.
 

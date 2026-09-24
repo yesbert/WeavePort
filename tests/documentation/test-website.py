@@ -149,7 +149,8 @@ class WebsiteTests(unittest.TestCase):
         full = llms.generate()["llms-full.txt"]
         for path, _ in llms.API_REFERENCES:
             self.assertIn((ROOT / path).read_text().rstrip(), full)
-        self.assertIn("post-release", full)
+        self.assertIn("Migration from 0.7.0", full)
+        self.assertIn("release-080", full)
 
     def test_every_wire_failure_category_has_a_documented_meaning(self):
         contract = json.loads((ROOT / "contracts/protocol.json").read_text())

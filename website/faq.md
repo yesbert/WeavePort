@@ -5,7 +5,7 @@ description: Decide whether WeavePort fits your .NET application, understand plu
 
 # Is WeavePort right for my product?
 
-Start here if you are deciding how to make your .NET backend extensible. These answers describe the current 0.7.0 release and link to the detailed contracts.
+Start here if you are deciding how to make your .NET backend extensible. These answers describe the current 0.8.0 release and link to the detailed contracts.
 
 ## What would I use it for?
 
@@ -45,7 +45,7 @@ The host observes worker failure and manages restart and cleanup under its lifec
 
 ## Is it free to use?
 
-The seven public NuGet packages are released under the [MIT license](../LICENSE). The current version is 0.7.0. Review [packages and compatibility](packages.md) before adopting or upgrading the evolving API.
+The seven public NuGet packages are released under the [MIT license](../LICENSE). This documentation targets 0.8.0; see [release status](../docs/status.md) for publication progress. Review [packages and compatibility](packages.md) before adopting or upgrading the evolving API.
 
 ## Where should I start?
 
@@ -53,7 +53,7 @@ The seven public NuGet packages are released under the [MIT license](../LICENSE)
 
 ## Can I reuse an existing MCP server?
 
-Yes, if it offers the supported local stdio tools subset. Hosting 0.7.0 can discover and call tools using MCP 2025-11-25 or 2026-07-28, with the same lifecycle and tenant budgets as native plugins. You deploy the trusted server and select the protocol explicitly. One server may offer several tools; no AI model is required. See [MCP tools](../docs/mcp-plugins.md).
+Yes, if it offers the supported local stdio tools subset. Hosting 0.8.0 can discover and call tools using MCP 2025-11-25 or 2026-07-28, with the same lifecycle and tenant budgets as native plugins. You deploy the trusted server and select the protocol explicitly. One server may offer several tools; no AI model is required. See [MCP tools](../docs/mcp-plugins.md).
 
 This does not turn every plugin into an MCP server. Native callbacks and streams remain native; remote HTTP, resources, prompts and interactive continuations are outside this release.
 

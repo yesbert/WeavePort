@@ -4,7 +4,7 @@
     <IsPackable>false</IsPackable>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="WeavePort.Hosting" Version="0.7.0" />
-    <PackageReference Include="WeavePort.Sdk.Gateway" Version="0.7.0" />
+    <PackageReference Include="WeavePort.Hosting" Version="0.8.0" />
+    <PackageReference Include="WeavePort.Sdk.Gateway" Version="0.8.0" />
   </ItemGroup>
 </Project>

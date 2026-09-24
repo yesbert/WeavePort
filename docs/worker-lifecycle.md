@@ -77,7 +77,7 @@ Use `ExecutionProtections` to combine required restrictions. `BindAsync` and `Pr
 
 ### Optional MCP workers
 
-The source MCP integration shares these local lifecycle policies, with explicit protocol selection and no additional SDK-owned process launcher. [MCP plugins](mcp-plugins.md) documents cancellation, result semantics and the tools-only boundary. Introduced in 0.3.0 and included in the current 0.7.0 package family.
+The source MCP integration shares these local lifecycle policies, with explicit protocol selection and no additional SDK-owned process launcher. [MCP plugins](mcp-plugins.md) documents cancellation, result semantics and the tools-only boundary. Introduced in 0.3.0 and included in the current 0.8.0 package family.
 
 ## Approved session reuse
 

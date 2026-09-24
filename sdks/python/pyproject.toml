@@ -3,7 +3,7 @@ requires = ["setuptools==84.0.0"]
 build-backend = "setuptools.build_meta"
 [project]
 name = "weaveport-sdk"
-version = "0.3.0"
+version = "0.4.0"
 description = "WeavePort author SDK with registered session cleanup"
 requires-python = ">=3.11"
 readme = "README.md"

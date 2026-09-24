@@ -130,8 +130,8 @@ def stage_references():
         (STAGE / f"docs/{name}.md").write_text(
             f"# Reviewed {title} public API\n\n"
             f"These are the exact current-checkout signatures from `compatibility/{baseline}.txt`. "
-            "They include qualified source additions after published v0.7.0; the unchanged development package labels do not establish published availability. "
-            "See [current status](status.md#qualified-source-after-070), [package compatibility](package-compatibility.md) "
+            "They document release 0.8.0, including structured failure diagnostics and its migration requirements. "
+            "See [current status](status.md#release-080), [package compatibility](package-compatibility.md) "
             "and [author SDKs](plugin-sdk.md) before choosing artifacts. This generated inventory is not an additional compatibility guarantee.\n\n```csharp\n"
             + (ROOT / f"compatibility/{baseline}.txt").read_text()
             + "\n```\n"
