@@ -4,9 +4,16 @@
     <Project Path="benchmarks/WeavePort.Density/WeavePort.Density.csproj" />
     <Project Path="benchmarks/WeavePort.Registry/WeavePort.Registry.csproj" />
     <Project Path="benchmarks/WeavePort.Shared/WeavePort.Shared.csproj" />
+    <Project Path="benchmarks/WeavePort.Streaming/WeavePort.Streaming.csproj" />
+    <Project Path="benchmarks/WeavePort.Streaming/Worker/Worker.csproj" />
   </Folder>
   <Folder Name="/examples/">
     <Project Path="examples/sdk/csharp/ExamplePlugin.csproj" />
+    <Project Path="examples/gateway/Client/Client.csproj" />
+    <Project Path="examples/gateway/Server/Server.csproj" />
+    <Project Path="examples/gateway/Worker/Worker.csproj" />
+    <Project Path="examples/mcp/McpExample.csproj" />
+    <Project Path="examples/shared/SharedExample.csproj" />
   </Folder>
   <Folder Name="/plugins/">
     <Project Path="plugins/csharp/WeavePort.SamplePlugin.csproj" />
@@ -30,6 +37,7 @@
     <Project Path="src/WeavePort.Sdk.Gateway/WeavePort.Sdk.Gateway.csproj" />
     <Project Path="src/WeavePort.Sdk/WeavePort.Sdk.csproj" />
     <Project Path="src/WeavePort.Testing/WeavePort.Testing.csproj" />
+    <Project Path="src/WeavePort.Sdk.Gateway.Client/WeavePort.Sdk.Gateway.Client.csproj" />
   </Folder>
   <Folder Name="/examples/reuse/">
     <Project Path="examples/reuse/csharp/ReusablePlugin.csproj" />
@@ -58,9 +66,12 @@
     <Project Path="tests/WeavePort.WorkerHost/WeavePort.WorkerHost.csproj" />
     <Project Path="tests/compatibility/Compatibility.csproj" />
     <Project Path="tests/installations/Installations.csproj" />
+    <Project Path="tests/WeavePort.Optional.Tests/WeavePort.Optional.Tests.csproj" />
+    <Project Path="tests/portable/Portable.csproj" />
   </Folder>
   <Folder Name="/tools/">
     <Project Path="tools/WeavePort.CodeStyle/WeavePort.CodeStyle.csproj" />
     <Project Path="tools/WeavePort.Runner/WeavePort.Runner.csproj" />
+    <Project Path="tools/WeavePort.Seal/WeavePort.Seal.csproj" />
   </Folder>
 </Solution>

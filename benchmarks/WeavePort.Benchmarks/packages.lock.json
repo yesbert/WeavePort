@@ -24,7 +24,7 @@
         "type": "Direct",
         "requested": "[0.7.0, )",
         "resolved": "0.7.0",
-        "contentHash": "RMxKjJKlJzPTAG9D4JGzC66wtrleLHwf40+R93cBgmfl3CoxaVIvAagTYX2yPeWN5MPzI8T3ctC7afLcB4RfIA==",
+        "contentHash": "+33AwBDHqq2d6tQi0ut9sMmcYj2ey3MRWPmjrtSPMHlN+mP9EMjLOUvAraz54rwOUWsWZjeiH2FieBp1yOX4VA==",
         "dependencies": {
           "Chasm.SemanticVersioning": "2.8.2",
           "Microsoft.Extensions.Logging.Abstractions": "10.0.12",
@@ -37,7 +37,7 @@
         "type": "Direct",
         "requested": "[0.7.0, )",
         "resolved": "0.7.0",
-        "contentHash": "E+2Vn0zfH9pix+k7on59B8dUgeEihpy46JiHS6uUegpRfXM1lQlxmLwIk7WfsqwdRma1YMUQeTiTSHsW+9pH+Q==",
+        "contentHash": "o/WR08pUXVw5nm8EojW6+kPfG/hQa9XHSkGJlfbZUtC3n4EVED13yi5WbdkuvsnxwVykdfvmQwJbL5S8RvbFgQ==",
         "dependencies": {
           "Grpc.AspNetCore.Server": "2.83.0",
           "WeavePort.Sdk.Gateway.Client": "0.7.0"
@@ -205,7 +205,7 @@
       "WeavePort.Sdk.Gateway.Client": {
         "type": "Transitive",
         "resolved": "0.7.0",
-        "contentHash": "REbzriuMgJdG3ghrk7UzpvyfW8ekJ3WvuOsm2+Vk+0hBYI/9oCIJP2RHOS0vJMoRtIK1mHrcsOJs/boYKfPLtQ==",
+        "contentHash": "hSfPVsER9MtgU6lM/tzIkCY+9twaNVgAmEN1xdJ6mC242E9+0ijKgNCNLSikzOKul5CY/DYGh/3+/FXrFXE62g==",
         "dependencies": {
           "Google.Protobuf": "3.36.1",
           "Grpc.Net.Client": "2.83.0",
@@ -265,13 +265,13 @@
         "type": "CentralTransitive",
         "requested": "[0.7.0, )",
         "resolved": "0.7.0",
-        "contentHash": "wDSw9tu91T6BzWS9oCUI1TL4FyVrZPoWtvNQ95LfRt19wIsMMWdGmNu0u+lj5BcGQ/9YECPngoj/rR13XuKCsg=="
+        "contentHash": "w/lf//hyqt3e7i1gPaeYbVrU3BcWcCBYd5yHhGZ4oHqeSvpfCgxH4bOLCzpiIhSdTazcjmoFyBbrt8pIO3vJhQ=="
       },
       "WeavePort.Sdk.Client": {
         "type": "CentralTransitive",
         "requested": "[0.7.0, )",
         "resolved": "0.7.0",
-        "contentHash": "anJvPtlPlMrAHmXJHJXhqxBsFyISZ5pH9DdaHru5/6HQ9OjvFnY6WQ5XtPIfN5ko3HyyHmLZPh613hFMbYUtUg==",
+        "contentHash": "C4qg9gYEfcTQ/rAZll44RE+1NuZDXC8mAaKdngFHQCiIiM2w9pR2J6ptAZamhGjHbt3LjUb6w6gA6HQNUygFpA==",
         "dependencies": {
           "WeavePort.Abstractions": "0.7.0"
         }

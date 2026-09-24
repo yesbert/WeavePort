@@ -1,5 +1,3 @@
-using WeavePort.Abstractions;
-using System.Runtime.CompilerServices;
 using System.Text.Json;
 
 namespace WeavePort.Sdk.Client;

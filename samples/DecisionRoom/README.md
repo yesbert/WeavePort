@@ -58,7 +58,7 @@ This deliberately exits nonzero: the strategy requests `knowledge.read` without 
 - `Plugin`: C# SDK functions for room initialization/reduction/snapshots and evaluation. Distinct room and strategy bindings launch separate workers from the same artifact.
 - `Python`: an equivalent strategy through the packaged Python SDK.
 - `Host`: configuration, scoped callback, worker binding, state validation, persistence and console walkthrough.
-- `Host/Verification.cs`: explicit `--verify` harness, including abrupt termination of an owned worker. Crash controls are absent from the plugin contract.
+- `Host/Verification/Verification.cs`: explicit `--verify` harness, including abrupt termination of an owned worker. Crash controls are absent from the plugin contract.
 
 Both host and C# plugin reference packed WeavePort artifacts. Their only project reference is the sample's own contract module. No HiveWeaver, NextPA, TreeWeaver, Stratara or LoomWeaver dependency is introduced. This is an integration template inspired by HiveWeaver's extension boundaries, not a HiveWeaver adapter or parity demonstration. Application data and rules remain outside WeavePort core.
 

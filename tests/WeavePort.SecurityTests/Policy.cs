@@ -5,19 +5,34 @@ internal static class Policy
 {
     internal static void Validate(JsonElement inspect)
     {
-        JsonElement c = inspect.GetProperty("HostConfig");
-        bool Has(string name, string value) => c.GetProperty(name).EnumerateArray().Any(x => x.GetString() == value);
-        if (inspect.GetProperty("Config").GetProperty("User").GetString() != "65532:65532" ||
-            c.GetProperty("Privileged").GetBoolean() || !c.GetProperty("ReadonlyRootfs").GetBoolean() ||
-            c.GetProperty("NetworkMode").GetString() != "none" || c.GetProperty("PidMode").GetString() == "host" ||
-            c.GetProperty("IpcMode").GetString() == "host" || !Has("CapDrop", "ALL") ||
-            !Has("SecurityOpt", "no-new-privileges") || Has("SecurityOpt", "seccomp=unconfined") ||
-            c.GetProperty("Memory").GetInt64() != 256L * 1024 * 1024 || c.GetProperty("MemorySwap").GetInt64() != 256L * 1024 * 1024 ||
-            c.GetProperty("NanoCpus").GetInt64() != 500000000 || c.GetProperty("PidsLimit").GetInt64() != 64 ||
-            c.GetProperty("LogConfig").GetProperty("Type").GetString() != "none" ||
-            !c.GetProperty("Tmpfs").GetProperty("/tmp").GetString()!.Contains("size=16m", StringComparison.Ordinal) ||
-            inspect.GetProperty("Mounts").GetArrayLength() != 0)
-            throw new InvalidDataException("Pressure-test policy gate rejected configuration.");
+        JsonElement host = inspect.GetProperty("HostConfig");
+        Require(inspect.GetProperty("Config").GetProperty("User").GetString() == "65532:65532", "non-root user");
+        Require(!host.GetProperty("Privileged").GetBoolean(), "unprivileged container");
+        Require(host.GetProperty("ReadonlyRootfs").GetBoolean(), "read-only root filesystem");
+        Require(host.GetProperty("NetworkMode").GetString() == "none", "network isolation");
+        Require(host.GetProperty("PidMode").GetString() != "host", "PID isolation");
+        Require(host.GetProperty("IpcMode").GetString() != "host", "IPC isolation");
+        Require(Has(host, "CapDrop", "ALL"), "dropped capabilities");
+        Require(Has(host, "SecurityOpt", "no-new-privileges"), "privilege escalation prevention");
+        Require(!Has(host, "SecurityOpt", "seccomp=unconfined"), "seccomp confinement");
+        Require(host.GetProperty("Memory").GetInt64() == 256L * 1024 * 1024, "memory limit");
+        Require(host.GetProperty("MemorySwap").GetInt64() == 256L * 1024 * 1024, "swap limit");
+        Require(host.GetProperty("NanoCpus").GetInt64() == 500000000, "CPU limit");
+        Require(host.GetProperty("PidsLimit").GetInt64() == 64, "PID limit");
+        Require(host.GetProperty("LogConfig").GetProperty("Type").GetString() == "none", "disabled daemon logs");
+        Require(host.GetProperty("Tmpfs").GetProperty("/tmp").GetString()!.Contains("size=16m", StringComparison.Ordinal), "tmpfs limit");
+        Require(inspect.GetProperty("Mounts").GetArrayLength() == 0, "no host mounts");
+    }
+
+    private static bool Has(JsonElement host, string name, string value) =>
+        host.GetProperty(name).EnumerateArray().Any(item => item.GetString() == value);
+
+    private static void Require(bool condition, string control)
+    {
+        if (!condition)
+        {
+            throw new InvalidDataException("Pressure-test policy gate rejected configuration: " + control);
+        }
     }
 
     internal static int NegativeControls(JsonElement original)
@@ -45,7 +60,10 @@ internal static class Policy
         {
             JsonNode n = JsonNode.Parse(original.GetRawText())!;
             mutate(n);
-            try { Validate(JsonSerializer.SerializeToElement(n)); }
+            try
+            {
+                Validate(JsonSerializer.SerializeToElement(n));
+            }
             catch (InvalidDataException) { continue; }
             throw new InvalidDataException("Policy negative control accepted.");
         }

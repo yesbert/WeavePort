@@ -1,12 +1,22 @@
 using System.Text.Json;
 
 namespace WeavePort.Hosting;
+
 internal static class InstallationCompatibility
 {
     private static readonly CompatibilityDeclaration Supported = Load();
     internal static void Validate(CompatibilityDeclaration? declaration, IEnumerable<string> entries)
     {
-        if (declaration is null || declaration.HostApi != Supported.HostApi || !(Supported.Protocols ?? [Supported.Protocol]).Contains(declaration.Protocol) || declaration.HostPackages is null || declaration.AuthorSdks is null || !declaration.HostPackages.OrderBy(p => p.Key, StringComparer.Ordinal).SequenceEqual(Supported.HostPackages.OrderBy(p => p.Key, StringComparer.Ordinal)) || !declaration.AuthorSdks.Keys.ToHashSet(StringComparer.Ordinal).SetEquals(entries))
+        if (declaration is null || declaration.HostApi != Supported.HostApi ||
+            !(Supported.Protocols ?? [Supported.Protocol]).Contains(declaration.Protocol))
+        {
+            throw new InvalidDataException("Unsupported installation host API, protocol or package declaration.");
+        }
+
+        if (declaration.HostPackages is null || declaration.AuthorSdks is null ||
+            !declaration.HostPackages.OrderBy(package => package.Key, StringComparer.Ordinal)
+                .SequenceEqual(Supported.HostPackages.OrderBy(package => package.Key, StringComparer.Ordinal)) ||
+            !declaration.AuthorSdks.Keys.ToHashSet(StringComparer.Ordinal).SetEquals(entries))
         {
             throw new InvalidDataException("Unsupported installation host API, protocol or package declaration.");
         }
@@ -23,7 +33,7 @@ internal static class InstallationCompatibility
     internal static CompatibilityDeclaration Create(IEnumerable<string> entries, PluginLaunchDeclaration launch)
     {
         int protocol = launch.Ownership.Contains(WorkerReusePolicy.Shared) ? 2 : 1;
-        var sdks = entries.ToDictionary(alias => alias, alias => Supported.AuthorSdks.TryGetValue(alias, out var sdk) ? sdk : throw new InvalidDataException("Unsupported author SDK alias."), StringComparer.Ordinal);
+        var sdks = entries.ToDictionary(alias => alias, SupportedAuthorSdk, StringComparer.Ordinal);
         var result = Supported with
         {
             Protocol = protocol,
@@ -32,6 +42,16 @@ internal static class InstallationCompatibility
         };
         Validate(result, sdks.Keys);
         return result;
+    }
+
+    private static AuthorSdk SupportedAuthorSdk(string alias)
+    {
+        if (!Supported.AuthorSdks.TryGetValue(alias, out AuthorSdk? sdk))
+        {
+            throw new InvalidDataException("Unsupported author SDK alias.");
+        }
+
+        return sdk;
     }
 
     private static CompatibilityDeclaration Load()

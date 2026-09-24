@@ -8,9 +8,10 @@ namespace WeavePort.Sdk.Gateway;
 // reader/writer pair exclusively; only an explicit terminal reply permits reuse.
 internal sealed class GatewaySessions : IDisposable
 {
+    private const int MaximumLeasedSessions = 8;
     private readonly object _gate = new();
     private readonly Stack<AsyncDuplexStreamingCall<Request, Reply>> _idle = new();
-    private readonly SemaphoreSlim _slots = new(8, 8);
+    private readonly SemaphoreSlim _slots = new(MaximumLeasedSessions, MaximumLeasedSessions);
     private readonly CancellationTokenSource _lifetime = new();
     private readonly GrpcChannel _channel;
     private readonly WorkerGateway.WorkerGatewayClient _client;

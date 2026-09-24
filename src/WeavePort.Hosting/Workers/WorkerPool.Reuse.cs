@@ -1,4 +1,5 @@
 namespace WeavePort.Hosting;
+
 internal sealed partial class WorkerPool
 {
     private long _reuseHits;

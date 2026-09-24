@@ -16,7 +16,7 @@ Open `http://127.0.0.1:8080`. The build recreates only its own ignored staging/o
 
 ## Content ownership
 
-Edit canonical guides in their original locations. `scripts/build-website.py` maps guides and adoption pages into `docs/` and sample readmes into `docs/examples/`. Repository-only links are rewritten to GitHub. The build never treats unfinished OpenSpec changes as implemented behavior. Additional top-level site pages belong in this directory; add navigation entries to `GROUPS` in the build script.
+Edit canonical guides in their original locations. `scripts/build-website.py` maps guides and adoption pages into `docs/` and sample readmes into `docs/examples/`. Repository-only links are rewritten to GitHub. The build never treats unfinished OpenSpec changes as implemented behavior. Additional top-level site pages belong in this directory; add navigation entries to `website/navigation.json`.
 
 The core and optional public API pages come from `compatibility/public-api.txt` and `compatibility/optional-api.txt`; both are current-checkout signature references, not newly generated contracts or claims about original published packages. Keep post-release source availability explicit. The same build exports both raw baselines for retrieval. Every build generates website AI retrieval files and Markdown pages from the same canonical sources. The website index links to same-release Markdown on weaveport.dev; repository copies retain GitHub URLs. HTML discovery links expose the Markdown counterpart and llms.txt. CI rejects stale repository copies, and the website checker validates retrieval targets. Deploy the complete artifact to keep human and AI documentation synchronized.
 

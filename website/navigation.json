@@ -1,0 +1,238 @@
+{
+  "Getting started": [
+    [
+      "website/introduction.md",
+      "Introduction"
+    ],
+    [
+      "website/getting-started.md",
+      "Quickstart"
+    ],
+    [
+      "website/concepts.md",
+      "Core concepts"
+    ],
+    [
+      "website/packages.md",
+      "Packages"
+    ],
+    [
+      "website/faq.md",
+      "FAQ"
+    ]
+  ],
+  "Build plugins": [
+    [
+      "docs/portable-installations.md",
+      "Portable sealing"
+    ],
+    [
+      "docs/reusable-plugins.md",
+      "Approved reuse"
+    ],
+    [
+      "docs/mcp-plugins.md",
+      "MCP tools"
+    ],
+    [
+      "docs/plugin-sdk.md",
+      "Language SDKs"
+    ],
+    [
+      "docs/gateway.md",
+      "HTTPS gateway"
+    ],
+    [
+      "docs/installed-plugins.md",
+      "Installed artifacts"
+    ],
+    [
+      "docs/package-compatibility.md",
+      "Compatibility"
+    ]
+  ],
+  "Integration": [
+    [
+      "docs/installed-plugin-clients.md",
+      "Installed clients"
+    ],
+    [
+      "docs/shared-execution.md",
+      "Concurrent plugins"
+    ],
+    [
+      "docs/embedded-coordinator.md",
+      "Shared coordinator"
+    ],
+    [
+      "docs/v1-integration-contract.md",
+      "Integration contract"
+    ],
+    [
+      "docs/local-execution.md",
+      "Local execution"
+    ],
+    [
+      "docs/bulk-composition.md",
+      "Bulk composition"
+    ]
+  ],
+  "Operate": [
+    [
+      "docs/fair-scheduling.md",
+      "Fair scheduling"
+    ],
+    [
+      "docs/failure-codes.md",
+      "Failure codes"
+    ],
+    [
+      "docs/continuous-integration.md",
+      "CI and deployment"
+    ],
+    [
+      "docs/native-operations.md",
+      "Recovery runbook"
+    ],
+    [
+      "docs/worker-lifecycle.md",
+      "Worker lifecycle"
+    ],
+    [
+      "docs/runtime-diagnostics.md",
+      "Diagnostics"
+    ],
+    [
+      "docs/internal-distribution.md",
+      "Offline distribution"
+    ]
+  ],
+  "Platform": [
+    [
+      "docs/density-testing.md",
+      "Customer density"
+    ],
+    [
+      "docs/architecture.md",
+      "Architecture"
+    ],
+    [
+      "docs/security-architecture.md",
+      "Security"
+    ],
+    [
+      "docs/protocol.md",
+      "Protocol"
+    ],
+    [
+      "docs/status.md",
+      "Current status"
+    ],
+    [
+      "docs/platform-qualification.md",
+      "Platform qualification"
+    ],
+    [
+      "docs/benchmarking.md",
+      "Benchmarks"
+    ],
+    [
+      "docs/soak-testing.md",
+      "Soak testing"
+    ]
+  ],
+  "Examples": [
+    [
+      "examples/mcp/README.md",
+      "MCP tools"
+    ],
+    [
+      "examples/reuse/README.md",
+      "Resource cleanup"
+    ],
+    [
+      "examples/gateway/README.md",
+      "HTTPS composition"
+    ],
+    [
+      "examples/shared/README.md",
+      "Shared worker"
+    ],
+    [
+      "examples/sources/README.md",
+      "Binary sources"
+    ],
+    [
+      "samples/DecisionRoom/README.md",
+      "Decision Room"
+    ],
+    [
+      "samples/DocumentWorkshop/README.md",
+      "Document Workshop"
+    ],
+    [
+      "samples/AppointmentDesk/README.md",
+      "Appointment Desk"
+    ]
+  ],
+  "Development": [
+    [
+      "CONTRIBUTING.md",
+      "Contributing"
+    ],
+    [
+      "docs/engineering.md",
+      "Engineering rules"
+    ],
+    [
+      "docs/source-organization.md",
+      "Source organization"
+    ],
+    [
+      "docs/dotnet-guidance.md",
+      ".NET guidance"
+    ],
+    [
+      "tests/README.md",
+      "Verification"
+    ],
+    [
+      "sdks/python/README.md",
+      "Python SDK"
+    ],
+    [
+      "sdks/typescript/README.md",
+      "TypeScript SDK"
+    ]
+  ],
+  "Reference": [
+    [
+      "docs/optional-api.md",
+      "Optional public API"
+    ],
+    [
+      "docs/optional-dependencies.md",
+      "Dependency notices"
+    ],
+    [
+      "docs/api.md",
+      "Public API"
+    ],
+    [
+      "docs/releases.md",
+      "Releases"
+    ],
+    [
+      "docs/ai-documentation.md",
+      "AI documentation"
+    ],
+    [
+      "docs/history.md",
+      "Historical evidence"
+    ],
+    [
+      "docs/specifications.md",
+      "Behavioral specifications"
+    ]
+  ]
+}

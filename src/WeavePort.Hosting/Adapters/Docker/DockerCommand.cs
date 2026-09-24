@@ -2,6 +2,7 @@ using System.Diagnostics;
 using System.Text;
 
 namespace WeavePort.Hosting;
+
 internal static class DockerCommand
 {
     internal static string ResolveExecutable(string? executable)

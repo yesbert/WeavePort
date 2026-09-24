@@ -34,9 +34,7 @@ public sealed record SharedWorkerOptions
             options.RestartWindow,
             options.CancellationGrace,
             options.SilenceTimeout
-        }
-
-        )
+        })
         {
             if (value <= TimeSpan.Zero || value.TotalMilliseconds > uint.MaxValue - 1)
             {

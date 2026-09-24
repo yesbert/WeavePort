@@ -2,7 +2,11 @@ using System.Text.Json;
 using WeavePort.Composition;
 using WeavePort.Sdk.Gateway;
 
-if (args.Length != 3) throw new ArgumentException("Usage: Client <https-endpoint> <private-credential-file> <private-result-root>");
+if (args.Length != 3)
+{
+    throw new ArgumentException("Usage: Client <https-endpoint> <private-credential-file> <private-result-root>");
+}
+
 using var bootstrap = JsonDocument.Parse(await File.ReadAllTextAsync(args[1]));
 await using var client = new RemotePluginClient(new Uri(args[0]), bootstrap.RootElement.GetProperty("credential").GetString()!);
 string tenant = await client.GetTenantAsync();

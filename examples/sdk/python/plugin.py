@@ -5,21 +5,26 @@ from weaveport_sdk import PluginApplication
 app = PluginApplication()
 closed = 0
 
+
 @app.function("echo")
 async def echo(value, context):
     return value
+
 
 @app.function("owner")
 async def owner(value, context):
     return await context.call_host(value["operation"], value["input"])
 
+
 @app.function("state")
 async def state(value, context):
     return dict(closed=closed)
 
+
 @app.function("crash")
 async def crash(value, context):
     os._exit(17)
+
 
 @app.stream("records")
 async def records(query, context):
@@ -32,13 +37,24 @@ async def records(query, context):
         for i in range(count):
             if i == query.get("failAt", -1):
                 raise ValueError("Fixture failure")
-            if delay:
-                await asyncio.sleep(delay / 1000)
-            owner = context.tenant
-            if query.get("callbacks", False) and i % 4 == 0:
-                owner = (await context.call_host("host.owner", dict(tenant="forged")))["owner"]
-            yield dict(id=i, text="x" * width, owner=owner)
+            yield await create_row(query, i, delay, context)
     finally:
         closed += 1
+
+
+async def create_row(query, index, delay_ms, context):
+    if delay_ms:
+        await asyncio.sleep(delay_ms / 1000)
+    owner = await resolve_owner(query, index, context)
+    return dict(id=index, text="x" * query["width"], owner=owner)
+
+
+async def resolve_owner(query, index, context):
+    callback_interval = 4
+    if not query.get("callbacks", False) or index % callback_interval != 0:
+        return context.tenant
+    reply = await context.call_host("host.owner", dict(tenant="forged"))
+    return reply["owner"]
+
 
 app.run()

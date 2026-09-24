@@ -1,5 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup><RestoreConfigFile>$(MSBuildThisFileDirectory)../adapter-nuget.config</RestoreConfigFile>
+  <PropertyGroup>
+    <RestoreConfigFile>$(MSBuildThisFileDirectory)../adapter-nuget.config</RestoreConfigFile>
     <OutputType>Exe</OutputType>
     <RestoreSources>$(MSBuildThisFileDirectory)../../artifacts/packages</RestoreSources>
     <RestorePackagesPath>$(MSBuildThisFileDirectory)../../artifacts/consumer-packages</RestorePackagesPath>

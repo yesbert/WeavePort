@@ -1,10 +1,10 @@
 """Invocation context and reverse-order resource cleanup."""
 
-from .protocol import FailureCodes
-
 import asyncio
 import inspect
 import threading
+
+from .protocol import FailureCodes
 
 
 class SessionCleanupError(RuntimeError):
@@ -21,12 +21,11 @@ class PluginContext:
     """Resources belong to one function call or complete result stream."""
 
     def __init__(self, tenant, configuration, runtime):
-        self._tenant, self._configuration, self._runtime = (
-            tenant,
-            configuration,
-            runtime,
-        )
-        self._active, self._cleanup = True, []
+        self._tenant = tenant
+        self._configuration = configuration
+        self._runtime = runtime
+        self._active = True
+        self._cleanup = []
         self._cancelled = threading.Event()
 
     def _check(self):

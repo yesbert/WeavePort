@@ -1,5 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup><OutputType>Exe</OutputType><IsPackable>false</IsPackable></PropertyGroup>
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
   <ItemGroup Condition="'$(UsePackedCore)' != 'true'">
     <ProjectReference Include="../../src/WeavePort.Hosting/WeavePort.Hosting.csproj" />
     <ProjectReference Include="../../src/WeavePort.Sdk.Client/WeavePort.Sdk.Client.csproj" />

@@ -23,8 +23,9 @@ export class SourceSession {
         signal: AbortSignal,
     ): Promise<unknown> {
         const source = await handler(value, context, signal);
-        if (typeof source?.read !== 'function' || typeof source?.close !== 'function')
+        if (typeof source?.read !== 'function' || typeof source?.close !== 'function') {
             throw new TypeError('Invalid binary source');
+        }
         this.source = context.own(source);
         this.identity = randomUUID();
         return { source: this.identity };
@@ -36,11 +37,13 @@ export class SourceSession {
             !Number.isInteger(size) ||
             size < ProtocolLimits.SourceChunkMinimumBytes ||
             size > ProtocolLimits.SourceChunkMaximumBytes
-        )
+        ) {
             throw new Error('Source chunk limit');
+        }
         const data = await this.source!.read(size);
-        if (!(data instanceof Uint8Array) || data.length > size)
+        if (!(data instanceof Uint8Array) || data.length > size) {
             throw new Error('Source must return bounded bytes');
+        }
         return {
             data: Buffer.from(data).toString('base64'),
             done: data.length === 0,

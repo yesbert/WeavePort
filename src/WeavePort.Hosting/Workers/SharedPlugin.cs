@@ -3,6 +3,7 @@ using WeavePort.Abstractions;
 using WeavePort.Sdk.Client;
 
 namespace WeavePort.Hosting;
+
 internal sealed class SharedPlugin(PluginHost host, SessionBinding binding, SharedWorkerOptions options, WorkerPool pool, TimeProvider clock) : ISharedPlugin
 {
     private readonly object _sync = new();

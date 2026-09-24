@@ -2,6 +2,7 @@
 """Reject nested business branches/loops while allowing early-exit loop guards."""
 
 import ast
+import subprocess
 from pathlib import Path
 
 CONTROLS = (ast.If, ast.For, ast.AsyncFor, ast.While)
@@ -23,32 +24,33 @@ def is_guard(node):
     )
 
 
+def is_forbidden_nesting(node, parent, alternative):
+    return (
+        isinstance(node, CONTROLS)
+        and parent is not None
+        and not alternative
+        and not (not isinstance(parent, ast.If) and is_guard(node))
+    )
+
+
 def violations(source):
     failures = []
 
     def visit(node, parent=None, alternative=False):
         if isinstance(node, SCOPES):
             parent = None
+        if is_forbidden_nesting(node, parent, alternative):
+            failures.append(node.lineno)
         if isinstance(node, CONTROLS):
-            if (
-                parent is not None
-                and not alternative
-                and not (not isinstance(parent, ast.If) and is_guard(node))
-            ):
-                failures.append(node.lineno)
             parent = node
-        for field, value in ast.iter_fields(node):
-            children = value if isinstance(value, list) else [value]
-            for child in children:
-                if not isinstance(child, ast.AST):
-                    continue
-                is_alternative = (
-                    isinstance(node, ast.If)
-                    and field == "orelse"
-                    and len(children) == 1
-                    and isinstance(child, ast.If)
-                )
-                visit(child, parent, is_alternative)
+        for child in ast.iter_child_nodes(node):
+            is_alternative = (
+                isinstance(node, ast.If)
+                and len(node.orelse) == 1
+                and node.orelse[0] is child
+                and isinstance(child, ast.If)
+            )
+            visit(child, parent, is_alternative)
 
     visit(ast.parse(source))
     return failures
@@ -72,12 +74,26 @@ def verify_fixtures():
         assert violations(source), source
 
 
+def maintained_python_files(root):
+    names = subprocess.check_output(
+        ["git", "ls-files", "--cached", "--others", "--exclude-standard", "--", "*.py"],
+        cwd=root,
+        text=True,
+    ).splitlines()
+    # Retained report scripts reproduce old checkouts; their bytes are evidence.
+    return [
+        root / name
+        for name in sorted(set(names))
+        if not name.startswith(("reports/", "openspec/")) and (root / name).is_file()
+    ]
+
+
 if __name__ == "__main__":
     verify_fixtures()
     root = Path(__file__).resolve().parents[1]
     failures = [
         f"{path.relative_to(root)}:{line}"
-        for path in sorted((root / "sdks/python/weaveport_sdk").rglob("*.py"))
+        for path in maintained_python_files(root)
         for line in violations(path.read_text())
     ]
     print("\n".join(failures) if failures else "Python control flow: passed")

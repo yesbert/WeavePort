@@ -1,43 +1,86 @@
 using System.Numerics;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace WeavePort.Hosting;
-internal sealed partial record PythonVersion(BigInteger Epoch, BigInteger[] Release, int PreKind, BigInteger Pre, BigInteger? Post, BigInteger? Dev, string[] Local)
+
+internal sealed partial record PythonVersion(BigInteger Epoch, BigInteger[] Release, PythonReleasePhase PrereleasePhase, BigInteger PrereleaseNumber, BigInteger? Post, BigInteger? Dev, string[] Local)
 {
-    internal string Canonical => (Epoch == 0 ? "" : Epoch + "!") + string.Join('.', Release) + (PreKind < 3 ? new[]
+    internal string Canonical => FormatCanonical();
+    internal bool IsPrerelease => PrereleasePhase < PythonReleasePhase.Final || Dev is not null;
+
+    private string FormatCanonical()
     {
-        "a",
-        "b",
-        "rc"
-    }[PreKind] + Pre : "") + (Post is { } post ? ".post" + post : "") + (Dev is { } dev ? ".dev" + dev : "") + (Local.Length == 0 ? "" : "+" + string.Join('.', Local.Select(part => BigInteger.TryParse(part, out var number) ? number.ToString() : part)));
-    internal bool IsPrerelease => PreKind < 3 || Dev is not null;
+        var version = new StringBuilder();
+        if (Epoch != 0)
+        {
+            version.Append(Epoch).Append('!');
+        }
+
+        version.Append(string.Join('.', Release));
+        string prerelease = PrereleasePhase switch
+        {
+            PythonReleasePhase.Alpha => "a",
+            PythonReleasePhase.Beta => "b",
+            PythonReleasePhase.ReleaseCandidate => "rc",
+            _ => ""
+        };
+        if (prerelease.Length > 0)
+        {
+            version.Append(prerelease).Append(PrereleaseNumber);
+        }
+
+        if (Post is { } post)
+        {
+            version.Append(".post").Append(post);
+        }
+
+        if (Dev is { } development)
+        {
+            version.Append(".dev").Append(development);
+        }
+
+        if (Local.Length > 0)
+        {
+            version.Append('+').Append(string.Join('.', Local.Select(CanonicalLocalPart)));
+        }
+
+        return version.ToString();
+    }
+
+    private static string CanonicalLocalPart(string part) =>
+        BigInteger.TryParse(part, out var number) ? number.ToString() : part;
 
     [GeneratedRegex(@"^\s*v?(?:(?<epoch>[0-9]+)!)?(?<release>[0-9]+(?:\.[0-9]+)*)(?:[-_.]?(?<pre>a|b|c|rc|alpha|beta|pre|preview)[-_.]?(?<pren>[0-9]+)?)?(?:(?:-(?<post>[0-9]+))|(?:[-_.]?(?:post|rev|r)[-_.]?(?<post>[0-9]+)?))?(?:[-_.]?dev[-_.]?(?<dev>[0-9]+)?)?(?:\+(?<local>[a-z0-9]+(?:[-_.][a-z0-9]+)*))?\s*$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant, 1000)]
     private static partial Regex Pattern();
     internal static PythonVersion Parse(string text)
     {
-        Match m = Pattern().Match(text);
-        if (!m.Success)
+        Match match = Pattern().Match(text);
+        if (!match.Success)
         {
             throw new FormatException("Invalid Python version.");
         }
 
-        string pre = m.Groups["pre"].Value.ToLowerInvariant();
-        int kind = pre switch
+        string pre = match.Groups["pre"].Value.ToLowerInvariant();
+        PythonReleasePhase phase = pre switch
         {
-            "a" or "alpha" => 0,
-            "b" or "beta" => 1,
-            "c" or "rc" or "pre" or "preview" => 2,
-            _ => 3
+            "a" or "alpha" => PythonReleasePhase.Alpha,
+            "b" or "beta" => PythonReleasePhase.Beta,
+            "c" or "rc" or "pre" or "preview" => PythonReleasePhase.ReleaseCandidate,
+            _ => PythonReleasePhase.Final
         };
         string publicText = text.Split('+')[0];
-        bool post = m.Groups["post"].Success || Regex.IsMatch(publicText, @"(?:post|rev|r)[-_.]?\s*$", RegexOptions.IgnoreCase, TimeSpan.FromSeconds(1));
+        bool post = match.Groups["post"].Success || Regex.IsMatch(publicText, @"(?:post|rev|r)[-_.]?\s*$", RegexOptions.IgnoreCase, TimeSpan.FromSeconds(1));
         bool dev = publicText.Contains("dev", StringComparison.OrdinalIgnoreCase);
-        return new(Number(m, "epoch"), m.Groups["release"].Value.Split('.').Select(BigInteger.Parse).ToArray(), kind, Number(m, "pren"), post ? Number(m, "post") : null, dev ? Number(m, "dev") : null, m.Groups["local"].Success ? m.Groups["local"].Value.ToLowerInvariant().Split('-', '_', '.') : []);
+        return new(Number(match, "epoch"), match.Groups["release"].Value.Split('.').Select(BigInteger.Parse).ToArray(), phase, Number(match, "pren"), post ? Number(match, "post") : null, dev ? Number(match, "dev") : null, match.Groups["local"].Success ? match.Groups["local"].Value.ToLowerInvariant().Split('-', '_', '.') : []);
     }
 
     private static BigInteger Number(Match match, string group) => match.Groups[group].Value is { Length: > 0 } text ? BigInteger.Parse(text) : BigInteger.Zero;
-    private int Phase => PreKind == 3 && Post is null && Dev is not null ? -1 : PreKind;
+    // A bare development release sorts before alpha; a development suffix on a
+    // prerelease keeps that prerelease phase and is compared later.
+    private PythonReleasePhase Phase => PrereleasePhase == PythonReleasePhase.Final && Post is null && Dev is not null
+        ? PythonReleasePhase.Development
+        : PrereleasePhase;
 
     internal int CompareTo(PythonVersion other)
     {
@@ -59,7 +102,7 @@ internal sealed partial record PythonVersion(BigInteger Epoch, BigInteger[] Rele
             return result;
         }
 
-        result = Pre.CompareTo(other.Pre);
+        result = PrereleaseNumber.CompareTo(other.PrereleaseNumber);
         if (result != 0)
         {
             return result;

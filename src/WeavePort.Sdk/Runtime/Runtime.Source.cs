@@ -3,6 +3,7 @@ using System.Text.Json;
 using WeavePort.Internal;
 
 namespace WeavePort.Sdk;
+
 internal sealed partial class Runtime
 {
     private Stream? _source;

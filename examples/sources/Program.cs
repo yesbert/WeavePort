@@ -19,7 +19,9 @@ string root = Path.Combine(Path.GetTempPath(), "weaveport-source-example-" + Gui
 try
 {
     await using var host = new PluginHost();
-    var context = new PluginContext("example-tenant", "source-example", "1", "trusted-native", JsonSerializer.SerializeToElement(new { }));
+    var context = new PluginContext("example-tenant", "source-example", "1", "trusted-native", JsonSerializer.SerializeToElement(new
+    {
+    }));
     string executable = Environment.GetEnvironmentVariable("DOTNET_HOST_PATH") ?? Environment.ProcessPath!;
     string[] arguments = Path.GetFileNameWithoutExtension(executable) == "dotnet" ? [typeof(Download).Assembly.Location, "--worker"] : ["--worker"];
     var profile = new ProcessProfile(executable, arguments, trustedCode: true, workspaceRoot: Path.Combine(root, "workers"));

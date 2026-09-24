@@ -6,7 +6,7 @@
 | --- | --- |
 | Documentation and AI retrieval | `python3 scripts/generate-llms.py --check`, `python3 tests/documentation/check-links.py`, `python3 tests/documentation/test-website.py`, then `python3 scripts/build-website.py` (after `dotnet tool restore`) |
 | Source architecture | `python3 scripts/check-architecture.py` and `python3 tests/documentation/test-architecture.py` |
-| SDK protocol and context | `npm run build --prefix sdks/typescript`, `node --test sdks/typescript/tests/session.mjs`, then `python3 -m unittest discover -s sdks/python/tests` |
+| SDK protocol and context | `npm run build --prefix sdks/typescript`, `npm test --prefix sdks/typescript`, then `python3 -m unittest discover -s sdks/python/tests` |
 | Host regressions | `dotnet run --project tests/WeavePort.Hosting.Tests -c Release` |
 | Fair scheduler public API | `dotnet run --project tests/WeavePort.Scheduling.Tests -c Release` (also checked as a packed consumer) |
 | Density observer controls | `python3 tools/performance/test_density.py` |
@@ -16,7 +16,7 @@
 | Composition fixtures | `./scripts/build-bulk.sh`, then `./scripts/bulk.sh verify artifacts/runs/composition` |
 | Multilingual SDK fixtures | `./scripts/build-sdk.sh`, then `./scripts/sdk.sh artifacts/runs/sdk verify` |
 | Supervised k6 soak | See [multi-hour operation and stop controls](../docs/soak-testing.md) |
-| Current performance baseline | See [benchmarking](../docs/benchmarking.md) |
+| Retained release performance baseline | See [benchmarking](../docs/benchmarking.md) |
 | Optional Docker fixtures | `./scripts/verify-docker.sh` (requires the Docker service and builds fixture images) |
 
 `WeavePort.Local.Tests`, `WeavePort.Docker.Tests`, `WeavePort.Composition.Tests` and `WeavePort.WorkerHost` were moved from the sample tree. Their existing project/assembly names are retained for adapter tooling compatibility. The actual integration templates are [DecisionRoom](../samples/DecisionRoom/README.md), [DocumentWorkshop](../samples/DocumentWorkshop/README.md) and [AppointmentDesk](../samples/AppointmentDesk/README.md).

@@ -7,7 +7,6 @@
     <Description>Author owner-controlled C# plugins for WeavePort.</Description>
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
   </PropertyGroup>
-  <ItemGroup />
   <ItemGroup>
     <None Include="../../docs/package.md" Pack="true" PackagePath="PACKAGE.md" />
   </ItemGroup>

@@ -1,4 +1,5 @@
 namespace WeavePort.Hosting;
+
 internal static class McpNames
 {
     internal const string JsonRpcVersion = "2.0";

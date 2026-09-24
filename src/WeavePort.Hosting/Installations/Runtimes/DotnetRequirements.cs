@@ -1,6 +1,7 @@
 using System.Text.Json;
 
 namespace WeavePort.Hosting;
+
 internal static class DotnetRequirements
 {
     private static readonly string[] Policies = ["Disable", "LatestPatch", "Minor", "LatestMinor", "Major", "LatestMajor"];
@@ -78,7 +79,8 @@ internal static class DotnetRequirements
         {
             "Disable" => candidates[0],
             "LatestPatch" or "LatestMinor" or "LatestMajor" => candidates[^1],
-            _ => candidates.Last(v => v.Major == candidates[0].Major && v.Minor == candidates[0].Minor)};
+            _ => candidates.Last(v => v.Major == candidates[0].Major && v.Minor == candidates[0].Minor)
+        };
     }
 
     internal static bool Allows(FrameworkRequirement requirement, Version candidate)

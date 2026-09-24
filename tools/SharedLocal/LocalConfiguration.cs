@@ -23,10 +23,15 @@ internal sealed record LocalConfiguration(string Dotnet, string Python, string N
         };
         return value with
         {
-            Dotnet = Resolve(value.Dotnet), Python = Resolve(value.Python), Node = Resolve(value.Node),
-            Csharp = Resolve(value.Csharp), PythonScript = Resolve(value.PythonScript),
-            TypeScriptScript = Resolve(value.TypeScriptScript), WorkspaceRoot = Resolve(value.WorkspaceRoot),
-            SocketBufferBytes = socketBufferBytes, UseUnixSocket = useSocket
+            Dotnet = Resolve(value.Dotnet),
+            Python = Resolve(value.Python),
+            Node = Resolve(value.Node),
+            Csharp = Resolve(value.Csharp),
+            PythonScript = Resolve(value.PythonScript),
+            TypeScriptScript = Resolve(value.TypeScriptScript),
+            WorkspaceRoot = Resolve(value.WorkspaceRoot),
+            SocketBufferBytes = socketBufferBytes,
+            UseUnixSocket = useSocket
         };
     }
 
@@ -36,14 +41,21 @@ internal sealed record LocalConfiguration(string Dotnet, string Python, string N
         "python" => new ProcessProfile(Python, ["-I", "-u", PythonScript], true, WorkspaceRoot, timeout: timeout, idleTimeout: idleTimeout),
         "typescript" => new ProcessProfile(Node, [TypeScriptScript], true, WorkspaceRoot, timeout: timeout, idleTimeout: idleTimeout),
         _ => throw new ArgumentException("Unknown local fixture language")
-    }) with { UseUnixSocket = UseUnixSocket, SocketBufferBytes = SocketBufferBytes };
+    }) with
+    {
+        UseUnixSocket = UseUnixSocket,
+        SocketBufferBytes = SocketBufferBytes
+    };
 
     internal static string Find(string executable)
     {
         foreach (string entry in (Environment.GetEnvironmentVariable("PATH") ?? "").Split(Path.PathSeparator))
         {
             string candidate = Path.Combine(entry, executable + (OperatingSystem.IsWindows() ? ".exe" : ""));
-            if (File.Exists(candidate)) return Path.GetFullPath(candidate);
+            if (File.Exists(candidate))
+            {
+                return Path.GetFullPath(candidate);
+            }
         }
         throw new FileNotFoundException("Required executable not found: " + executable);
     }
@@ -52,7 +64,11 @@ internal sealed record LocalConfiguration(string Dotnet, string Python, string N
     {
         using var deadline = new CancellationTokenSource(TimeSpan.FromSeconds(5));
         var info = new ProcessStartInfo(executable) { UseShellExecute = false, RedirectStandardOutput = true, RedirectStandardError = true };
-        foreach (string argument in arguments) info.ArgumentList.Add(argument);
+        foreach (string argument in arguments)
+        {
+            info.ArgumentList.Add(argument);
+        }
+
         using Process process = Process.Start(info) ?? throw new IOException("Prerequisite check did not start");
         Task<string> output = process.StandardOutput.ReadToEndAsync(deadline.Token);
         Task<string> error = process.StandardError.ReadToEndAsync(deadline.Token);
@@ -60,9 +76,19 @@ internal sealed record LocalConfiguration(string Dotnet, string Python, string N
         {
             await process.WaitForExitAsync(deadline.Token);
             string text = (await output + await error).Trim();
-            if (process.ExitCode != 0) throw new IOException("Prerequisite command failed");
+            if (process.ExitCode != 0)
+            {
+                throw new IOException("Prerequisite command failed");
+            }
+
             return text;
         }
-        finally { if (!process.HasExited) process.Kill(entireProcessTree: true); }
+        finally
+        {
+            if (!process.HasExited)
+            {
+                process.Kill(entireProcessTree: true);
+            }
+        }
     }
 }

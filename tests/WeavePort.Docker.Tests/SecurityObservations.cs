@@ -4,7 +4,7 @@ internal static class SecurityObservations
 {
     internal static async Task RunAsync(Evidence evidence, string language, string instance)
     {
-        await evidence.Check(language + ": effective sandbox identity and syscall filter", async () =>
+        await evidence.CheckAsync(language + ": effective sandbox identity and syscall filter", async () =>
         {
             JsonElement inspect = JsonElement.Parse(await ResourceChecks.DockerAsync(["inspect", instance]))[0];
             JsonElement config = inspect.GetProperty("HostConfig");
@@ -16,14 +16,22 @@ internal static class SecurityObservations
             string lsm = await ResourceChecks.DockerAsync(["exec", instance, "/bin/sh", "-c", "cat /proc/1/attr/current 2>/dev/null || printf unavailable"]);
             var observation = new
             {
-                language, image = inspect.GetProperty("Image").GetString(), fields, uidMap, lsm,
+                language,
+                image = inspect.GetProperty("Image").GetString(),
+                fields,
+                uidMap,
+                lsm,
                 configured = new
                 {
                     user = inspect.GetProperty("Config").GetProperty("User").GetString(),
-                    privileged = config.GetProperty("Privileged"), network = config.GetProperty("NetworkMode"),
-                    pidMode = config.GetProperty("PidMode"), ipcMode = config.GetProperty("IpcMode"),
-                    readOnlyRoot = config.GetProperty("ReadonlyRootfs"), capabilities = config.GetProperty("CapDrop"),
-                    securityOptions = config.GetProperty("SecurityOpt"), runtime = config.GetProperty("Runtime"),
+                    privileged = config.GetProperty("Privileged"),
+                    network = config.GetProperty("NetworkMode"),
+                    pidMode = config.GetProperty("PidMode"),
+                    ipcMode = config.GetProperty("IpcMode"),
+                    readOnlyRoot = config.GetProperty("ReadonlyRootfs"),
+                    capabilities = config.GetProperty("CapDrop"),
+                    securityOptions = config.GetProperty("SecurityOpt"),
+                    runtime = config.GetProperty("Runtime"),
                     mounts = inspect.GetProperty("Mounts").EnumerateArray().Select(m => new { destination = m.GetProperty("Destination"), writable = m.GetProperty("RW") }).ToArray()
                 },
                 scope = "Trusted Docker observation of controlled fixture PID 1; not remote attestation or kernel-exploit resistance."
@@ -36,11 +44,16 @@ internal static class SecurityObservations
                 config.GetProperty("Privileged").GetBoolean() || !config.GetProperty("ReadonlyRootfs").GetBoolean() ||
                 config.GetProperty("NetworkMode").GetString() != "none" || config.GetProperty("PidMode").GetString() == "host" ||
                 config.GetProperty("IpcMode").GetString() == "host")
+            {
                 throw new Exception("Effective sandbox baseline missing; see retained observation");
+            }
+
             JsonElement[] mounts = inspect.GetProperty("Mounts").EnumerateArray().ToArray();
             if (TestProfiles.SocketTransport is null ? mounts.Length != 0 :
                 mounts.Length != 1 || mounts[0].GetProperty("Destination").GetString() != "/run/weaveport" || mounts[0].GetProperty("RW").GetBoolean())
+            {
                 throw new Exception("Unexpected worker mount exposure");
+            }
         });
     }
 }

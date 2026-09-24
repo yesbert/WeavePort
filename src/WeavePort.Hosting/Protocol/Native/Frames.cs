@@ -7,10 +7,12 @@ using System.Text.Json;
 using System.Text.Json.Serialization.Metadata;
 
 namespace WeavePort.Hosting;
+
 internal sealed class Frames(Stream input) : IDisposable
 {
     private const int RetainedBufferBytes = 4096;
     private static readonly ActivitySource Diagnostics = new("WeavePort.Transport");
+    internal const int MaximumJsonDepth = 32;
     internal const int MaximumBytes = ProtocolLimits.FrameBytes;
     private byte[] _buffer = ArrayPool<byte>.Shared.Rent(RetainedBufferBytes);
     private static readonly UTF8Encoding StrictUtf8 = new(false, true);
@@ -45,7 +47,7 @@ internal sealed class Frames(Stream input) : IDisposable
                 delimiter += scanned;
                 ValidateEncoding(delimiter);
                 long parseStarted = activity is null ? 0 : Stopwatch.GetTimestamp();
-                JsonElement result = JsonElement.Parse(_buffer.AsSpan(_start, delimiter), new JsonDocumentOptions { MaxDepth = 32 });
+                JsonElement result = JsonElement.Parse(_buffer.AsSpan(_start, delimiter), new JsonDocumentOptions { MaxDepth = MaximumJsonDepth });
                 activity?.SetTag("parse.ms", Stopwatch.GetElapsedTime(parseStarted).TotalMilliseconds);
                 activity?.SetTag("bytes", delimiter + 1);
                 activity?.SetTag("reads", reads);

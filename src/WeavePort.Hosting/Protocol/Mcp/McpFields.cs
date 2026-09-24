@@ -1,4 +1,5 @@
 namespace WeavePort.Hosting;
+
 internal static class McpFields
 {
     internal const string JsonRpc = "jsonrpc";

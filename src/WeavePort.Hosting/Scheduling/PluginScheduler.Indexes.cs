@@ -1,4 +1,5 @@
 namespace WeavePort.Hosting;
+
 internal sealed partial class PluginScheduler
 {
     // Mutations share _sync with registration, dispatch, completion and cleanup.

@@ -11,20 +11,32 @@ internal sealed class Evidence(string directory)
     internal string DirectoryPath => directory;
     internal int Failures { get; private set; }
 
-    internal async Task Check(string name, Func<Task> action)
+    internal async Task CheckAsync(string name, Func<Task> action)
     {
         long start = Stopwatch.GetTimestamp();
         try
         {
             await action();
-            _checks.Add(new { name, passed = true, elapsedMs = Stopwatch.GetElapsedTime(start).TotalMilliseconds });
-            _lines.Add($"- PASS: {name}"); Console.WriteLine($"PASS {name}");
+            _checks.Add(new
+            {
+                name,
+                passed = true,
+                elapsedMs = Stopwatch.GetElapsedTime(start).TotalMilliseconds
+            });
+            _lines.Add($"- PASS: {name}");
+            Console.WriteLine($"PASS {name}");
         }
         catch (Exception error)
         {
             Failures++;
-            _checks.Add(new { name, passed = false, error = error.Message });
-            _lines.Add($"- FAIL: {name}: {error.Message}"); Console.WriteLine($"FAIL {name}: {error.Message}");
+            _checks.Add(new
+            {
+                name,
+                passed = false,
+                error = error.Message
+            });
+            _lines.Add($"- FAIL: {name}: {error.Message}");
+            Console.WriteLine($"FAIL {name}: {error.Message}");
         }
         await SaveAsync();
     }
@@ -34,7 +46,15 @@ internal sealed class Evidence(string directory)
         double p50 = ContractChecks.Percentile(values, 50);
         double p95 = ContractChecks.Percentile(values, 95);
         double p99 = ContractChecks.Percentile(values, 99);
-        _measurements.Add(new { name, samplesMs = values, p50, p95, p99, details });
+        _measurements.Add(new
+        {
+            name,
+            samplesMs = values,
+            p50,
+            p95,
+            p99,
+            details
+        });
         _lines.Add($"- {name}: n={values.Length}, p50={p50:F3} ms, p95={p95:F3} ms, p99={p99:F3} ms");
         Console.WriteLine($"MEASURE {name}: p99={p99:F3} ms");
     }
@@ -49,11 +69,27 @@ internal sealed class Evidence(string directory)
         await File.WriteAllTextAsync(Path.Combine(directory, "report.md"), report);
     }
 
-    private Task SaveAsync() => File.WriteAllTextAsync(Path.Combine(directory, "results.json"), JsonSerializer.Serialize(new
+    private Task SaveAsync()
     {
-        environment = new { os = RuntimeInformation.OSDescription, architecture = RuntimeInformation.ProcessArchitecture.ToString(), dotnet = Environment.Version.ToString(), processors = Environment.ProcessorCount,
-            serverGc = System.Runtime.GCSettings.IsServerGC, gcConfiguration = GC.GetConfigurationVariables(),
-            hostWorkingSetBytes = Process.GetCurrentProcess().WorkingSet64, hostCpuTimeMs = Process.GetCurrentProcess().TotalProcessorTime.TotalMilliseconds, topology = "single-machine-docker-desktop" },
-        failures = Failures, checks = _checks, measurements = _measurements
-    }, new JsonSerializerOptions { WriteIndented = true }));
+        using Process current = Process.GetCurrentProcess();
+        return File.WriteAllTextAsync(Path.Combine(directory, "results.json"), JsonSerializer.Serialize(new
+        {
+            environment = new
+            {
+                os = RuntimeInformation.OSDescription,
+                architecture = RuntimeInformation.ProcessArchitecture.ToString(),
+                dotnet = Environment.Version.ToString(),
+                processors = Environment.ProcessorCount,
+                serverGc = System.Runtime.GCSettings.IsServerGC,
+                gcConfiguration = GC.GetConfigurationVariables(),
+                hostWorkingSetBytes = current.WorkingSet64,
+                hostCpuTimeMs = current.TotalProcessorTime.TotalMilliseconds,
+                topology = "single-machine-docker-desktop"
+            },
+            failures = Failures,
+            checks = _checks,
+            measurements = _measurements
+        }, new JsonSerializerOptions { WriteIndented = true }));
+    }
+
 }

@@ -3,6 +3,7 @@ using WeavePort.Abstractions;
 using WeavePort.Sdk.Client;
 
 namespace WeavePort.Hosting;
+
 public sealed partial class PluginHost
 {
     /// <summary>Creates a ready-to-use client from a verified installation, one operator approval and a tenant binding.</summary>
@@ -48,7 +49,15 @@ public sealed partial class PluginHost
         ArgumentNullException.ThrowIfNull(installation);
         ArgumentNullException.ThrowIfNull(approval);
         PluginLaunchDeclaration launch = installation.Launch ?? throw new InvalidDataException("Installation has no launch declaration.");
-        if (!approval.TrustedCode || !launch.Ownership.Contains(approval.Ownership) || launch.MemoryMiB > approval.MaximumMemoryMiB || approval.Degree < 1 || approval.Degree > launch.MaximumDegree || approval.Workers < 1 || approval.MaximumCallbacks < 1 || approval.Ownership != WorkerReusePolicy.Shared && (approval.Degree != 1 || approval.Workers != 1))
+        if (!approval.TrustedCode || !launch.Ownership.Contains(approval.Ownership) ||
+            launch.MemoryMiB > approval.MaximumMemoryMiB ||
+            approval.Degree < 1 || approval.Degree > launch.MaximumDegree ||
+            approval.Workers < 1 || approval.MaximumCallbacks < 1)
+        {
+            throw new InvalidOperationException("Operator approval does not authorize this installation's launch requirements.");
+        }
+
+        if (approval.Ownership != WorkerReusePolicy.Shared && (approval.Degree != 1 || approval.Workers != 1))
         {
             throw new InvalidOperationException("Operator approval does not authorize this installation's launch requirements.");
         }
@@ -58,7 +67,7 @@ public sealed partial class PluginHost
         ValidateDeadline(approval.Streams.TotalTimeout);
         ValidateDeadline(approval.InvocationTimeout);
         ValidateDeadline(approval.StartupTimeout);
-        return new ProcessProfile(installation.RuntimeFiles[launch.Runtime], [installation.EntryPoints[launch.Runtime], ..launch.Arguments], true, approval.WorkspaceRoot, launch.MemoryMiB, approval.InvocationTimeout)
+        return new ProcessProfile(installation.RuntimeFiles[launch.Runtime], [installation.EntryPoints[launch.Runtime], .. launch.Arguments], true, approval.WorkspaceRoot, launch.MemoryMiB, approval.InvocationTimeout)
         {
             RuntimeValidation = installation.RuntimeValidation,
             ReusePolicy = approval.Ownership,

@@ -1,6 +1,7 @@
 using System.Net.Sockets;
 
 namespace WeavePort.Hosting;
+
 internal sealed class WorkerSocket : IDisposable
 {
     private readonly string _directory;

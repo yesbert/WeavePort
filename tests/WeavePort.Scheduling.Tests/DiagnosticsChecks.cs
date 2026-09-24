@@ -13,17 +13,30 @@ internal static class DiagnosticsChecks
             await using var host = new PluginHost(logger, options: new WorkerPoolOptions(MaximumPristineWorkers: 0));
             var profile = new ProcessProfile(Environment.ProcessPath!, [typeof(DiagnosticsChecks).Assembly.Location, "--worker", "--stderr-flood"],
                 true, workspace, reservedMemoryMiB: 64);
-            var context = new PluginContext("diagnostics", "fixture", "1", "test", JsonSerializer.SerializeToElement(new { }));
+            var context = new PluginContext("diagnostics", "fixture", "1", "test", JsonSerializer.SerializeToElement(new
+            {
+            }));
             await using (var quiet = await host.BindAsync(context, profile, new NoCallbacks(), []))
             {
                 if ((await quiet.InvokeAsync("echo", context.Configuration)).Status != "ok" || logger.Lines != 0)
+                {
                     throw new InvalidOperationException("stderr must remain silent by default.");
+                }
             }
-            await using var enabled = await host.BindAsync(context, profile with { ForwardStandardError = true }, new NoCallbacks(), []);
+            await using var enabled = await host.BindAsync(context, profile with
+            {
+                ForwardStandardError = true
+            }, new NoCallbacks(), []);
             if ((await enabled.InvokeAsync("echo", context.Configuration)).Status != "ok")
+            {
                 throw new InvalidOperationException("Blocked logger stalled worker stdout.");
+            }
+
             await logger.Entered.Task.WaitAsync(TimeSpan.FromSeconds(5));
-            if (logger.MaximumLength > 4096) throw new InvalidOperationException("stderr line exceeded bound.");
+            if (logger.MaximumLength > 4096)
+            {
+                throw new InvalidOperationException("stderr line exceeded bound.");
+            }
             // Host disposal must not wait for arbitrary synchronous user logger code.
             await host.DisposeAsync().AsTask().WaitAsync(TimeSpan.FromSeconds(5));
             Console.WriteLine("PASS bounded opt-in stderr, flood draining and nonblocking shutdown");
@@ -41,7 +54,11 @@ internal static class DiagnosticsChecks
         public IDisposable? BeginScope<TState>(TState state) where TState : notnull => null;
         public void Log<TState>(LogLevel level, EventId eventId, TState state, Exception? error, Func<TState, Exception?, string> formatter)
         {
-            if (eventId.Id != 1007) return;
+            if (eventId.Id != 1007)
+            {
+                return;
+            }
+
             Interlocked.Increment(ref Lines);
             if (state is IEnumerable<KeyValuePair<string, object?>> fields)
             {

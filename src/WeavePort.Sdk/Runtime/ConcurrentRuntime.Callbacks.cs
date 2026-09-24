@@ -2,6 +2,7 @@ using WeavePort.Internal;
 using System.Text.Json;
 
 namespace WeavePort.Sdk;
+
 internal sealed partial class ConcurrentRuntime
 {
     private const int MaximumRetiredCallbacks = 4096;
@@ -80,7 +81,14 @@ internal sealed partial class ConcurrentRuntime
             call.Callbacks.TryAdd(callbackId, reply);
         }
 
-        await _channel.WriteAsync(new { type = FrameKinds.Callback, id = call.Id, callbackId, operation, payload = input }, linked.Token);
+        await _channel.WriteAsync(new
+        {
+            type = FrameKinds.Callback,
+            id = call.Id,
+            callbackId,
+            operation,
+            payload = input
+        }, linked.Token);
         return await reply.Task.WaitAsync(linked.Token);
     }
 }

@@ -3,6 +3,7 @@ using System.Text.Json;
 using WeavePort.Abstractions;
 
 namespace WeavePort.Hosting;
+
 internal sealed partial class PluginScheduler
 {
     internal ProcessProfile PrepareSharedProfile(ProcessProfile profile)
@@ -40,7 +41,9 @@ internal sealed partial class PluginScheduler
                 throw new IOException("Stream admission: " + rejected);
             }
 
-            call = new ScheduledCall(plugin, "", JsonSerializer.SerializeToElement(new { }), _clock.GetTimestamp(), token)
+            call = new ScheduledCall(plugin, "", JsonSerializer.SerializeToElement(new
+            {
+            }), _clock.GetTimestamp(), token)
             {
                 IsLease = true
             };
@@ -69,7 +72,9 @@ internal sealed partial class PluginScheduler
 
     private static async Task<InvocationResult> RunLeaseAsync(ScheduledCall call, CancellationToken token)
     {
-        var result = new InvocationResult(FailureCodes.Ok, JsonSerializer.SerializeToElement(new { }), call.Plugin.Instance, 0);
+        var result = new InvocationResult(FailureCodes.Ok, JsonSerializer.SerializeToElement(new
+        {
+        }), call.Plugin.Instance, 0);
         var direct = await ((IPluginOperationSession)call.Plugin.Session).AcquireOperationAsync(token);
         call.Lease = new OperationSession(direct, call.Released, token);
         call.Completion.TrySetResult(new(result, 0, 0, false));

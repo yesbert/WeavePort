@@ -12,7 +12,10 @@ internal static class SizeBoundaryChecks
         {
             var input = JsonSerializer.SerializeToElement(new string('x', bytes - 2));
             var output = await client.CallAsync("echo", input);
-            if (output.GetString() != input.GetString()) throw new Exception("Boundary result changed.");
+            if (output.GetString() != input.GetString())
+            {
+                throw new Exception("Boundary result changed.");
+            }
         }
         foreach (string text in new[] { new string('x', (512 << 10) - 1), new string('<', 90000) })
         {
@@ -23,7 +26,10 @@ internal static class SizeBoundaryChecks
                 throw new Exception("Oversized input accepted.");
             }
             catch (PluginCallException error) when (error.Status == "input-limit" && !error.MayHaveExecuted) { }
-            if (session.Invocations != before) throw new Exception("Oversized input dispatched.");
+            if (session.Invocations != before)
+            {
+                throw new Exception("Oversized input dispatched.");
+            }
         }
         session.LargeReply = true;
         try

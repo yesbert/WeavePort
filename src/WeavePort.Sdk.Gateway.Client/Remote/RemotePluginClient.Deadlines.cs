@@ -3,25 +3,19 @@ using WeavePort.Sdk.Client;
 using WeavePort.Sdk.Gateway.Protocol;
 
 namespace WeavePort.Sdk.Gateway;
+
 public sealed partial class RemotePluginClient
 {
+    private const double MaximumTimeoutMilliseconds = uint.MaxValue - 1;
     private static void ValidateStreamOptions(PluginStreamOptions options)
     {
-        foreach (TimeSpan timeout in new[]
+        if (!IsSupportedTimeout(options.ExchangeTimeout) || !IsSupportedTimeout(options.TotalTimeout))
         {
-            options.ExchangeTimeout,
-            options.TotalTimeout
-        }
-
-        )
-        {
-            if (timeout <= TimeSpan.Zero || timeout.TotalMilliseconds > uint.MaxValue - 1)
-            {
-                throw new ArgumentOutOfRangeException(nameof(options));
-            }
+            throw new ArgumentOutOfRangeException(nameof(options));
         }
     }
 
+    private static bool IsSupportedTimeout(TimeSpan timeout) => timeout > TimeSpan.Zero && timeout.TotalMilliseconds <= MaximumTimeoutMilliseconds;
     private async Task<Reply> ReadStreamReplyAsync(AsyncDuplexStreamingCall<Request, Reply> session, CancellationToken token)
     {
         using var exchange = CancellationTokenSource.CreateLinkedTokenSource(token);

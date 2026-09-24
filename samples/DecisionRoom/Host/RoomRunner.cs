@@ -5,6 +5,7 @@ using WeavePort.Hosting;
 using WeavePort.Sdk.Client;
 
 namespace DecisionRoom.Host;
+
 internal sealed record RunOptions(string Journal, bool Resume = false, bool RestartAfterFirst = false, bool DenyKnowledge = false, bool PauseAfterFirst = false);
 internal sealed class RoomRunner(RuntimePaths runtime, TextWriter output)
 {
@@ -16,7 +17,9 @@ internal sealed class RoomRunner(RuntimePaths runtime, TextWriter output)
         callbacks ??= new KnowledgeCallbacks(config);
         await using var host = new PluginHost(options: new WorkerPoolOptions(MaximumPristineWorkers: 0));
         string workspace = Path.Combine(runtime.Root, "workers", Guid.NewGuid().ToString("N"));
-        var room = await BindAsync(host, new PluginContext(config.Tenant, "decision-room", config.PluginVersion!, "room", JsonSerializer.SerializeToElement(new { })), "csharp", workspace, callbacks, []);
+        var room = await BindAsync(host, new PluginContext(config.Tenant, "decision-room", config.PluginVersion!, "room", JsonSerializer.SerializeToElement(new
+        {
+        })), "csharp", workspace, callbacks, []);
         await using var roomClient = new LocalPluginClient(room);
         await VerifyReleaseAsync(roomClient, config.PluginVersion!, token);
         var definition = new RoomDefinition(config.Proposals, config.Participants.Select(p => p.Id).ToArray());
@@ -37,7 +40,10 @@ internal sealed class RoomRunner(RuntimePaths runtime, TextWriter output)
         foreach (var participant in config.Participants.Skip(state.Evaluations.Length))
         {
             journal.VerifyArtifacts(runtime);
-            var strategy = await BindAsync(host, new PluginContext(config.Tenant, "decision-room", config.PluginVersion!, participant.Profile, JsonSerializer.SerializeToElement(new { priorities = participant.Priorities }, Wire.Json)), participant.Language, workspace, callbacks, options.DenyKnowledge ? [] : ["knowledge.read"]);
+            var strategy = await BindAsync(host, new PluginContext(config.Tenant, "decision-room", config.PluginVersion!, participant.Profile, JsonSerializer.SerializeToElement(new
+            {
+                priorities = participant.Priorities
+            }, Wire.Json)), participant.Language, workspace, callbacks, options.DenyKnowledge ? [] : ["knowledge.read"]);
             await using var client = new LocalPluginClient(strategy);
             await VerifyReleaseAsync(client, config.PluginVersion!, token);
             Evaluation evaluation = await client.CallAsync<DecisionRequest, Evaluation>("strategy.evaluate", new DecisionRequest(participant.Id, state), token);
@@ -95,13 +101,17 @@ internal sealed class RoomRunner(RuntimePaths runtime, TextWriter output)
     private async Task<IPluginSession> BindAsync(PluginHost host, PluginContext context, string language, string workspace, IHostCallbacks callbacks, string[] grants)
     {
         var installed = runtime.Catalog().Resolve("decision-room", context.Version, "decision-room/v1");
-        var process = language == "python" ? new ProcessProfile(runtime.Python, ["-B", installed.EntryPoints["python"]], true, workspace, timeout: TimeSpan.FromSeconds(10)) : new ProcessProfile(runtime.Dotnet, [installed.EntryPoints["dotnet"]], true, workspace, timeout: TimeSpan.FromSeconds(10));
+        var process = language == "python"
+            ? new ProcessProfile(runtime.Python, ["-B", installed.EntryPoints["python"]], true, workspace, timeout: TimeSpan.FromSeconds(10))
+            : new ProcessProfile(runtime.Dotnet, [installed.EntryPoints["dotnet"]], true, workspace, timeout: TimeSpan.FromSeconds(10));
         return await host.BindAsync(context, process, callbacks, grants);
     }
 
     private static async Task VerifyReleaseAsync(IPluginClient client, string version, CancellationToken token)
     {
-        var identity = await client.CallAsync<object, PluginIdentity>("artifact.identity", new { }, token);
+        var identity = await client.CallAsync<object, PluginIdentity>("artifact.identity", new
+        {
+        }, token);
         if (identity.Version != version)
         {
             throw new InvalidDataException("Plugin artifact reports a different release.");
@@ -111,7 +121,7 @@ internal sealed class RoomRunner(RuntimePaths runtime, TextWriter output)
     private static async Task<RoomState> ReduceAsync(IPluginClient room, RoomState state, Evaluation evaluation, CancellationToken token)
     {
         RoomState next = await room.CallAsync<Reduction, RoomState>("room.reduce", new Reduction(state, evaluation), token);
-        EnsureState(next, state.Definition, [..state.Evaluations, evaluation]);
+        EnsureState(next, state.Definition, [.. state.Evaluations, evaluation]);
         return next;
     }
 
@@ -126,7 +136,12 @@ internal sealed class RoomRunner(RuntimePaths runtime, TextWriter output)
     private static void ValidateEvaluation(Evaluation evaluation, Participant participant, RunConfiguration config)
     {
         var ids = config.Proposals.Select(p => p.Id).ToHashSet();
-        if (evaluation.PluginVersion != config.PluginVersion || evaluation.Participant != participant.Id || evaluation.Source != config.Tenant + "/" + participant.Profile || !ids.SetEquals(evaluation.Scores.Keys) || !ids.SetEquals(evaluation.Risks.Keys) || evaluation.Scores.Values.Any(v => v is < -12000 or > 12000) || ids.Any(id => evaluation.Risks[id] != config.Knowledge[participant.Profile][id]))
+        if (evaluation.PluginVersion != config.PluginVersion ||
+            evaluation.Participant != participant.Id ||
+            evaluation.Source != config.Tenant + "/" + participant.Profile ||
+            !ids.SetEquals(evaluation.Scores.Keys) || !ids.SetEquals(evaluation.Risks.Keys) ||
+            evaluation.Scores.Values.Any(score => score is < -12000 or > 12000) ||
+            ids.Any(id => evaluation.Risks[id] != config.Knowledge[participant.Profile][id]))
         {
             throw new InvalidDataException("Invalid strategy evaluation or knowledge scope.");
         }

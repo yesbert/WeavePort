@@ -2,8 +2,13 @@ using System.Security.Cryptography;
 using System.Text.Json;
 
 namespace WeavePort.Hosting;
+
 internal static class InstallationFiles
 {
+    internal const string ManifestFileName = "installation.json";
+    internal const string SelectorFileName = "active.txt";
+    internal const string ReleasesDirectoryName = "releases";
+
     internal static void RejectLink(string path)
     {
         if ((File.GetAttributes(path) & FileAttributes.ReparsePoint) != 0)
@@ -14,7 +19,9 @@ internal static class InstallationFiles
 
     internal static void ValidateSegment(string value)
     {
-        if (string.IsNullOrWhiteSpace(value) || value.Length > 64 || value is "." or ".." || value.Any(c => !char.IsAsciiLetterOrDigit(c) && c is not '.' and not '-' and not '_'))
+        if (string.IsNullOrWhiteSpace(value) || value.Length > InstallationLimits.ReleaseIdentifierCharacters ||
+            value is "." or ".." ||
+            value.Any(character => !char.IsAsciiLetterOrDigit(character) && character is not '.' and not '-' and not '_'))
         {
             throw new InvalidDataException("Invalid installation release identifier.");
         }
@@ -63,7 +70,7 @@ internal static class InstallationFiles
     {
         foreach (string path in Directory.EnumerateFileSystemEntries(directory))
         {
-            if (++entries > 8192)
+            if (++entries > InstallationLimits.InventoryEntries)
             {
                 throw new InvalidDataException("Installation inventory exceeds limit.");
             }
@@ -80,7 +87,7 @@ internal static class InstallationFiles
                 continue;
             }
 
-            if (path == Path.Combine(root, "installation.json"))
+            if (path == Path.Combine(root, ManifestFileName))
             {
                 continue;
             }
@@ -91,7 +98,7 @@ internal static class InstallationFiles
 
     internal static void VerifyFile(string path, string digest)
     {
-        if (!File.Exists(path) || digest is null || digest.Length != 64)
+        if (!File.Exists(path) || digest is null || digest.Length != SHA256.HashSizeInBytes * 2)
         {
             throw new InvalidDataException("Missing installation file or digest.");
         }
@@ -105,15 +112,15 @@ internal static class InstallationFiles
 
     internal static void RejectDuplicateFields(byte[] bytes)
     {
-        using var document = JsonDocument.Parse(bytes, new JsonDocumentOptions { MaxDepth = 8 });
-        Check(document.RootElement);
+        using var document = JsonDocument.Parse(bytes, new JsonDocumentOptions { MaxDepth = InstallationLimits.JsonDepth });
+        ValidateUniqueFieldNames(document.RootElement);
     }
 
-    private static void Check(JsonElement element)
+    private static void ValidateUniqueFieldNames(JsonElement element)
     {
         if (element.ValueKind == JsonValueKind.Array)
         {
-            CheckArray(element);
+            ValidateArrayFieldNames(element);
             return;
         }
 
@@ -130,15 +137,15 @@ internal static class InstallationFiles
                 throw new InvalidDataException("Duplicate installation field.");
             }
 
-            Check(property.Value);
+            ValidateUniqueFieldNames(property.Value);
         }
     }
 
-    private static void CheckArray(JsonElement element)
+    private static void ValidateArrayFieldNames(JsonElement element)
     {
         foreach (var item in element.EnumerateArray())
         {
-            Check(item);
+            ValidateUniqueFieldNames(item);
         }
     }
 }

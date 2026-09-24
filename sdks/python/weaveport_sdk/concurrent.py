@@ -1,14 +1,15 @@
 """Protocol 2 demultiplexing. Only the reader owns inbound channel access."""
 
-MAXIMUM_RETIRED_IDENTITIES = 4096
-
-from .protocol import FailureCodes, FrameKinds, ProtocolLimits, SdkOperations
-
 import asyncio
 import contextvars
 import inspect
 from concurrent.futures import ThreadPoolExecutor
 from collections import deque
+
+from .concurrent_call import ConcurrentCall
+from .protocol import FailureCodes, FrameKinds, ProtocolLimits, SdkOperations
+
+MAXIMUM_RETIRED_IDENTITIES = 4096
 
 
 async def run_concurrent(runtime, context_type, scope_variable):
@@ -16,7 +17,7 @@ async def run_concurrent(runtime, context_type, scope_variable):
     degree = config.get("degree") if isinstance(config, dict) else None
     if (
         config is None
-        or config.get("type") != "configure"
+        or config.get("type") != FrameKinds.Configure
         or type(degree) is not int
         or not 1 <= degree <= ProtocolLimits.MaximumConcurrentCalls
     ):
@@ -47,13 +48,13 @@ class ConcurrentRuntime:
 
     async def callback(self, operation, value):
         scope = self.scope_variable.get()
-        if not scope or not scope["active"] or scope["cancelled"]:
+        if not scope or not scope.active or scope.cancelled:
             raise RuntimeError("Expired invocation")
         self.runtime.callback_id += 1
-        callback_id, request_id = str(self.runtime.callback_id), scope["request"]["id"]
+        callback_id, request_id = str(self.runtime.callback_id), scope.request["id"]
         future = self.loop.create_future()
         self.callbacks[(request_id, callback_id)] = future
-        scope["callbacks"].append(future)
+        scope.callbacks.append(future)
         await self.runtime.send(
             dict(
                 type=FrameKinds.Callback,
@@ -72,9 +73,9 @@ class ConcurrentRuntime:
             request["context"]["configuration"],
             self.runtime,
         )
-        if scope["cancelled"]:
+        if scope.cancelled:
             context._cancelled.set()
-        scope["context"] = context
+        scope.context = context
         response = None
         try:
             if request.get("operation") != SdkOperations.Call:
@@ -86,67 +87,69 @@ class ConcurrentRuntime:
                 type=FrameKinds.Result, id=request["id"], value=value, reusable=True
             )
         except asyncio.CancelledError:
-            scope["cancelled"] = True
+            scope.cancelled = True
         except Exception:
             response = dict(
                 type=FrameKinds.Error, id=request["id"], code=FailureCodes.SdkError
             )
         finally:
-            scope["active"] = False
-            try:
-                await context._close()
-            except BaseException:
-                response = dict(
+            await self.complete_invocation(request, scope, context, response)
+            self.scope_variable.reset(token)
+
+    async def complete_invocation(self, request, scope, context, response):
+        scope.active = False
+        try:
+            await context._close()
+        except BaseException:
+            response = dict(
+                type=FrameKinds.Error,
+                id=request["id"],
+                code=FailureCodes.CleanupError,
+                primaryCode=(response or {}).get("code", FailureCodes.CleanupError),
+                cleanupFailed=True,
+            )
+        if scope.cancelled and (
+            response is None or response.get("code") != FailureCodes.CleanupError
+        ):
+            response = dict(type=FrameKinds.Cancelled, id=request["id"])
+        callback_results = await asyncio.gather(
+            *scope.callbacks, return_exceptions=True
+        )
+        if (
+            not scope.cancelled
+            and any(isinstance(result, BaseException) for result in callback_results)
+            and response.get("code") != FailureCodes.CleanupError
+        ):
+            response = dict(
+                type=FrameKinds.Error, id=request["id"], code=FailureCodes.SdkError
+            )
+        self.retire_callback_routes(request["id"])
+        try:
+            await self.runtime.send(response)
+        except (ValueError, TypeError, OverflowError):
+            await self.runtime.send(
+                dict(
                     type=FrameKinds.Error,
                     id=request["id"],
-                    code=FailureCodes.CleanupError,
-                    primaryCode=(response or {}).get("code", FailureCodes.CleanupError),
-                    cleanupFailed=True,
+                    code=FailureCodes.SdkError,
                 )
-            if scope["cancelled"] and (
-                response is None or response.get("code") != FailureCodes.CleanupError
-            ):
-                response = dict(type=FailureCodes.Cancelled, id=request["id"])
-            callback_results = await asyncio.gather(
-                *scope["callbacks"], return_exceptions=True
             )
-            if (
-                not scope["cancelled"]
-                and any(
-                    isinstance(result, BaseException) for result in callback_results
-                )
-                and response.get("code") != FailureCodes.CleanupError
-            ):
-                response = dict(
-                    type=FrameKinds.Error, id=request["id"], code=FailureCodes.SdkError
-                )
-            # Host callbacks may outlive cancellation and may never reply. Release their
-            # futures at terminal completion; retain only bounded identities for late replies.
-            for key in [key for key in self.callbacks if key[0] == request["id"]]:
-                self.callbacks.pop(key)
-                self.cancelled_callbacks.add(key)
-                self.cancelled_callback_order.append(key)
-                if len(self.cancelled_callback_order) <= MAXIMUM_RETIRED_IDENTITIES:
-                    continue
-                self.cancelled_callbacks.discard(
-                    self.cancelled_callback_order.popleft()
-                )
-            try:
-                await self.runtime.send(response)
-            except (ValueError, TypeError, OverflowError):
-                await self.runtime.send(
-                    dict(
-                        type=FrameKinds.Error,
-                        id=request["id"],
-                        code=FailureCodes.SdkError,
-                    )
-                )
-            self.calls.pop(request["id"], None)
-            self.completed.add(request["id"])
-            self.completed_order.append(request["id"])
-            if len(self.completed_order) > MAXIMUM_RETIRED_IDENTITIES:
-                self.completed.remove(self.completed_order.popleft())
-            self.scope_variable.reset(token)
+        self.calls.pop(request["id"], None)
+        self.completed.add(request["id"])
+        self.completed_order.append(request["id"])
+        if len(self.completed_order) > MAXIMUM_RETIRED_IDENTITIES:
+            self.completed.remove(self.completed_order.popleft())
+
+    def retire_callback_routes(self, request_id):
+        # Host callbacks may outlive cancellation and may never reply. Release their
+        # futures at terminal completion; retain only bounded identities for late replies.
+        for key in [key for key in self.callbacks if key[0] == request_id]:
+            self.callbacks.pop(key)
+            self.cancelled_callbacks.add(key)
+            self.cancelled_callback_order.append(key)
+            if len(self.cancelled_callback_order) <= MAXIMUM_RETIRED_IDENTITIES:
+                continue
+            self.cancelled_callbacks.discard(self.cancelled_callback_order.popleft())
 
     async def run(self):
         try:
@@ -154,8 +157,8 @@ class ConcurrentRuntime:
                 self.route(frame)
         finally:
             for scope in self.calls.values():
-                scope["cancelled"] = True
-                if not (context := scope.get("context")):
+                scope.cancelled = True
+                if not (context := scope.context):
                     continue
                 context._cancelled.set()
             for future in self.callbacks.values():
@@ -163,7 +166,7 @@ class ConcurrentRuntime:
                     continue
                 future.set_exception(RuntimeError("Channel closed"))
             await asyncio.gather(
-                *(scope["task"] for scope in list(self.calls.values())),
+                *(scope.task for scope in list(self.calls.values())),
                 return_exceptions=True,
             )
             self.executor.shutdown(wait=True)
@@ -187,9 +190,9 @@ class ConcurrentRuntime:
             or "configuration" not in context
         ):
             raise ValueError("Malformed context")
-        scope = dict(request=frame, active=True, cancelled=False, callbacks=[])
+        scope = ConcurrentCall(frame)
         self.calls[request_id] = scope
-        scope["task"] = asyncio.create_task(self.execute(frame, scope))
+        scope.task = asyncio.create_task(self.execute(frame, scope))
 
     def complete_callback(self, frame, request_id):
         key = (request_id, frame.get("callbackId"))
@@ -212,8 +215,8 @@ class ConcurrentRuntime:
             return
         if scope is None:
             raise ValueError("Unknown cancellation identity")
-        scope["cancelled"] = True
-        if context := scope.get("context"):
+        scope.cancelled = True
+        if context := scope.context:
             context._cancelled.set()
         for (owner, _), future in self.callbacks.items():
             if owner != request_id or future.done():
@@ -222,11 +225,11 @@ class ConcurrentRuntime:
 
     def route(self, frame):
         kind, request_id = frame.get("type"), frame.get("id")
-        if kind == "invoke":
+        if kind == FrameKinds.Invoke:
             self.admit(frame, request_id)
-        elif kind == "callback-result":
+        elif kind == FrameKinds.CallbackResult:
             self.complete_callback(frame, request_id)
-        elif kind == "cancel":
+        elif kind == FrameKinds.Cancel:
             self.cancel(frame, request_id)
         else:
             raise ValueError("Unknown protocol frame")

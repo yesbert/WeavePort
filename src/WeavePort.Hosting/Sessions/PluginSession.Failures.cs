@@ -4,6 +4,7 @@ using WeavePort.Abstractions;
 using WeavePort.Internal;
 
 namespace WeavePort.Hosting;
+
 internal sealed partial class PluginSession
 {
     private string ClassifyFailure(Exception error, CancellationToken caller, CancellationToken deadline)
@@ -70,7 +71,7 @@ internal sealed partial class PluginSession
 
         activity?.SetTag("weaveport.correlation_id", id);
         string status = primary is WorkerExecutionException ? FailureCodes.Failed : code;
-        return Result(status, started)with
+        return Result(status, started) with
         {
             Failure = failure,
             VersionMismatch = (primary as PluginVersionMismatchException)?.Mismatch

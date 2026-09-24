@@ -17,50 +17,43 @@ public sealed partial class GatewayService(GatewayRegistry registry) : WorkerGat
             Reply terminal;
             try
             {
-                Request request = requestStream.Current;
-                // Re-authorize every exchange, including on sessions opened before revocation.
-                _ = Authorize(context);
-                switch (request.Mode)
-                {
-                    case Mode.Describe:
-                        terminal = Encode(new { tenant = registry.GetTenant(context.RequestHeaders.GetValue(GatewayMetadata.BindingCredential)), protocol = 1 });
-                        break;
-                    case Mode.Call:
-                        terminal = await CallAsync(request, context);
-                        break;
-                    case Mode.Stream:
-                        await StreamAsync(request, responseStream, context);
-                        terminal = new Reply();
-                        break;
-                    case Mode.Source:
-                        await SourceAsync(request, responseStream, context);
-                        terminal = new Reply();
-                        break;
-                    case Mode.Cancel:
-                        terminal = await CancelAsync(request, context);
-                        break;
-                    default:
-                        throw new PluginCallException(FailureCodes.InvalidMode, false);
-                }
+                terminal = await DispatchAsync(requestStream.Current, responseStream, context);
             }
             catch (Exception error) when (!context.CancellationToken.IsCancellationRequested)
             {
-                RpcException mapped = error as RpcException ?? Map(error);
-                terminal = new Reply
-                {
-                    Error = error is PluginCallException legacy ? FailureCode.Normalize(legacy.Status) : FailureCode.Normalize(mapped.Trailers.GetValue(GatewayMetadata.FailureCode)),
-                    FailureCode = FailureCode.Normalize(mapped.Trailers.GetValue(GatewayMetadata.FailureCode)),
-                    FailurePhase = mapped.Trailers.GetValue(GatewayMetadata.FailurePhase) ?? FailurePhases.Transport,
-                    CorrelationId = mapped.Trailers.GetValue(GatewayMetadata.CorrelationId) ?? "",
-                    CleanupFailed = mapped.Trailers.GetValue(GatewayMetadata.CleanupFailed) == "true",
-                    MayHaveExecuted = mapped.StatusCode != StatusCode.Unauthenticated && mapped.Trailers.GetValue(GatewayMetadata.MayHaveExecuted) != "false",
-                    Cancelled = mapped.StatusCode == StatusCode.Cancelled
-                };
-                IncludeVersionMismatch(terminal, error);
+                terminal = EncodeFailure(error);
             }
 
             terminal.Complete = true;
             await responseStream.WriteAsync(terminal, context.CancellationToken);
+        }
+    }
+
+    private async Task<Reply> DispatchAsync(
+        Request request, IServerStreamWriter<Reply> output, ServerCallContext context)
+    {
+        // Re-authorize every exchange, including on sessions opened before revocation.
+        _ = Authorize(context);
+        switch (request.Mode)
+        {
+            case Mode.Describe:
+                return Encode(new
+                {
+                    tenant = registry.GetTenant(context.RequestHeaders.GetValue(GatewayMetadata.BindingCredential)),
+                    protocol = 1
+                });
+            case Mode.Call:
+                return await CallAsync(request, context);
+            case Mode.Stream:
+                await StreamAsync(request, output, context);
+                return new Reply();
+            case Mode.Source:
+                await SourceAsync(request, output, context);
+                return new Reply();
+            case Mode.Cancel:
+                return await CancelAsync(request, context);
+            default:
+                throw new PluginCallException(FailureCodes.InvalidMode, false);
         }
     }
 
@@ -107,7 +100,9 @@ public sealed partial class GatewayService(GatewayRegistry registry) : WorkerGat
         {
             _ = Authorize(context);
             await registry.CancelAsync(context.RequestHeaders.GetValue(GatewayMetadata.BindingCredential)!, request.StreamId, context.CancellationToken);
-            return Encode(JsonSerializer.SerializeToElement(new { }));
+            return Encode(JsonSerializer.SerializeToElement(new
+            {
+            }));
         }
         catch (Exception error)
         {
@@ -131,62 +126,4 @@ public sealed partial class GatewayService(GatewayRegistry registry) : WorkerGat
         // Fresh exclusive array; never pooled, exposed for mutation or reused.
         Json = UnsafeByteOperations.UnsafeWrap(JsonSerializer.SerializeToUtf8Bytes(value))
     };
-    private static RpcException Map(Exception error)
-    {
-        if (error is RpcException rpc)
-        {
-            return rpc;
-        }
-
-        var call = error as PluginCallException;
-        string code = error switch
-        {
-            UnauthorizedAccessException => FailureCodes.BindingDenied,
-            OperationCanceledException => FailureCodes.Cancelled,
-            PluginCallException => FailureCode.Normalize(call!.Failure?.Code ?? call.Status),
-            _ => FailureCodes.GatewayFailed
-        };
-        StatusCode status = error switch
-        {
-            UnauthorizedAccessException => StatusCode.Unauthenticated,
-            OperationCanceledException => StatusCode.Cancelled,
-            PluginCallException => StatusCode.FailedPrecondition,
-            _ => StatusCode.Internal
-        };
-        var trailers = new Metadata
-        {
-            {
-                GatewayMetadata.FailureCode,
-                code
-            },
-            {
-                GatewayMetadata.FailurePhase,
-                call?.Failure?.Phase ?? FailurePhases.Transport
-            },
-            {
-                GatewayMetadata.CorrelationId,
-                call?.Failure?.CorrelationId ?? ""
-            },
-            {
-                GatewayMetadata.CleanupFailed,
-                call?.Failure?.CleanupFailed == true ? "true" : "false"
-            },
-            {
-                GatewayMetadata.MayHaveExecuted,
-                call?.MayHaveExecuted == false || error is UnauthorizedAccessException ? "false" : "true"
-            }
-        };
-        return new RpcException(new Status(status, code), trailers);
-    }
-
-    private static void IncludeVersionMismatch(Reply terminal, Exception error)
-    {
-        if (error is not PluginCallException { VersionMismatch: { } mismatch })
-        {
-            return;
-        }
-
-        terminal.ExpectedVersion = mismatch.Expected;
-        terminal.AdvertisedVersion = mismatch.Advertised;
-    }
 }

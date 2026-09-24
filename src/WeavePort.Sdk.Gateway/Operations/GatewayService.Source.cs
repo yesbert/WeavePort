@@ -5,6 +5,7 @@ using WeavePort.Sdk.Client;
 using WeavePort.Sdk.Gateway.Protocol;
 
 namespace WeavePort.Sdk.Gateway;
+
 public sealed partial class GatewayService
 {
     private async Task SourceAsync(Request request, IServerStreamWriter<Reply> output, ServerCallContext context)
@@ -15,7 +16,7 @@ public sealed partial class GatewayService
         }
 
         string credential = context.RequestHeaders.GetValue(GatewayMetadata.BindingCredential) ?? "";
-        if (Authorize(context)is not IBoundPluginClient client)
+        if (Authorize(context) is not IBoundPluginClient client)
         {
             throw new PluginCallException(FailureCodes.SourceUnsupported, false);
         }

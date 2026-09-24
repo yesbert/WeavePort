@@ -2,8 +2,10 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 
 namespace WeavePort.Hosting;
+
 internal static class DotnetFrameworks
 {
+    private const int MaximumDependencyExpansionRounds = 128;
     private const int MaximumRuntimeConfigBytes = 65536;
     private sealed record Installed(string Name, Version Version, string Directory);
     internal static bool Matches(string requirement, string output)
@@ -11,7 +13,7 @@ internal static class DotnetFrameworks
         List<Installed> available = ReadInventory(output);
         var constraints = JsonSerializer.Deserialize<FrameworkRequirement[]>(requirement)!.ToList();
         var expanded = new HashSet<(string, Version)>();
-        for (int iteration = 0; iteration < 128; iteration++)
+        for (int iteration = 0; iteration < MaximumDependencyExpansionRounds; iteration++)
         {
             var expansion = ExpandConstraints(available, constraints, expanded);
             if (!expansion.Compatible)
@@ -32,11 +34,12 @@ internal static class DotnetFrameworks
     {
         bool added = false;
         // GroupBy buffers this iteration's constraints before the first group is yielded.
-        foreach (var group in constraints.GroupBy(f => f.Name, StringComparer.Ordinal))
+        foreach (var group in constraints.GroupBy(requirement => requirement.Name, StringComparer.Ordinal))
         {
-            Installed[] installed = available.Where(f => f.Name == group.Key).ToArray();
-            var versions = installed.Select(f => f.Version).Where(v => group.All(r => DotnetRequirements.Allows(r, v))).ToArray();
-            Version? selected = group.Select(r => DotnetRequirements.Select(r, versions)).Max();
+            Installed[] installed = available.Where(framework => framework.Name == group.Key).ToArray();
+            var versions = installed.Select(framework => framework.Version)
+                .Where(version => group.All(requirement => DotnetRequirements.Allows(requirement, version))).ToArray();
+            Version? selected = group.Select(requirement => DotnetRequirements.Select(requirement, versions)).Max();
             if (selected is null)
             {
                 return (false, added);
@@ -47,7 +50,7 @@ internal static class DotnetFrameworks
                 continue;
             }
 
-            FrameworkRequirement[] dependencies = ReadDependencies(installed.First(f => f.Version == selected));
+            FrameworkRequirement[] dependencies = ReadDependencies(installed.First(framework => framework.Version == selected));
             constraints.AddRange(dependencies);
             added |= dependencies.Length > 0;
         }
@@ -82,7 +85,7 @@ internal static class DotnetFrameworks
         string path = Path.Combine(framework.Directory, framework.Version.ToString(), framework.Name + ".runtimeconfig.json");
         if (!File.Exists(path))
         {
-            return[];
+            return [];
         }
 
         if (new FileInfo(path).Length > MaximumRuntimeConfigBytes)

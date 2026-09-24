@@ -16,23 +16,33 @@ internal static class WorkerFixture
         app.Function<JsonElement, object>("stash", (input, context, token) =>
         {
             _hidden = context.Tenant;
-            return ValueTask.FromResult<object>(new { stored = true });
+            return ValueTask.FromResult<object>(new
+            {
+                stored = true
+            });
         });
         app.Function<JsonElement, object>("probe", (input, context, token) => ValueTask.FromResult<object>(new { hidden = _hidden }));
         app.Function<JsonElement, object>("cleanup-fail", (input, context, token) =>
         {
             context.OnClose(() => throw new IOException("Deliberate cleanup failure"));
-            return ValueTask.FromResult<object>(new { });
+            return ValueTask.FromResult<object>(new
+            {
+            });
         });
         app.Function<JsonElement, object>("cleanup-hang", (input, context, token) =>
         {
             context.OnClose(async () => await Task.Delay(30000));
-            return ValueTask.FromResult<object>(new { });
+            return ValueTask.FromResult<object>(new
+            {
+            });
         });
         app.Function<JsonElement, object>("delay", async (input, context, token) =>
         {
             await Task.Delay(input.GetProperty("ms").GetInt32(), token);
-            return new { tenant = context.Tenant };
+            return new
+            {
+                tenant = context.Tenant
+            };
         });
         app.Stream<JsonElement, object>("rows", Rows);
         return app.RunAsync();
@@ -43,10 +53,19 @@ internal static class WorkerFixture
         bool expired = _previous is null;
         if (_previous is not null)
         {
-            try { await _previous.CallHostAsync("who", JsonSerializer.SerializeToElement(new { }), token); }
+            try
+            {
+                await _previous.CallHostAsync("who", JsonSerializer.SerializeToElement(new
+                {
+                }), token);
+            }
             catch (InvalidOperationException) { expired = true; }
         }
-        if (Cache.Count != 0 || _file is not null && File.Exists(_file)) throw new InvalidDataException("Registered residue");
+        if (Cache.Count != 0 || _file is not null && File.Exists(_file))
+        {
+            throw new InvalidDataException("Registered residue");
+        }
+
         string tenant = context.Tenant;
         string secret = context.Configuration.GetProperty("secret").GetString()!;
         Cache["secret"] = secret;
@@ -57,8 +76,17 @@ internal static class WorkerFixture
         var file = context.Own(File.Open(path, FileMode.CreateNew));
         file.Write(System.Text.Encoding.UTF8.GetBytes(secret));
         _previous = context;
-        JsonElement callback = await context.CallHostAsync("who", JsonSerializer.SerializeToElement(new { tenant = "forged" }), token);
-        return new { tenant, secret, expired, callback = callback.GetString() };
+        JsonElement callback = await context.CallHostAsync("who", JsonSerializer.SerializeToElement(new
+        {
+            tenant = "forged"
+        }), token);
+        return new
+        {
+            tenant,
+            secret,
+            expired,
+            callback = callback.GetString()
+        };
     }
 
     private static async IAsyncEnumerable<object> Rows(JsonElement input, PluginCallContext context, [EnumeratorCancellation] CancellationToken token)
@@ -68,7 +96,11 @@ internal static class WorkerFixture
         {
             await Task.Yield();
             token.ThrowIfCancellationRequested();
-            yield return new { tenant = context.Tenant, i };
+            yield return new
+            {
+                tenant = context.Tenant,
+                i
+            };
         }
     }
 }

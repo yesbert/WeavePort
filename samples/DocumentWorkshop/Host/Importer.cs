@@ -7,6 +7,7 @@ using WeavePort.Hosting;
 using WeavePort.Sdk.Client;
 
 namespace DocumentWorkshop.Host;
+
 internal sealed class Importer(RuntimePaths runtime, Catalog catalog, TextWriter output)
 {
     internal async Task<ImportResult> ImportAsync(ImportOptions options, CancellationToken token, TestHooks? hooks = null)
@@ -30,7 +31,7 @@ internal sealed class Importer(RuntimePaths runtime, Catalog catalog, TextWriter
         try
         {
             string sourcePath = Path.Combine(staging, "source.bin");
-            var(length, digest) = await CaptureAsync(options.File, sourcePath, token);
+            var (length, digest) = await CaptureAsync(options.File, sourcePath, token);
             var declined = new List<string>();
             foreach (var reader in candidates)
             {
@@ -60,14 +61,18 @@ internal sealed class Importer(RuntimePaths runtime, Catalog catalog, TextWriter
     private sealed record Attempt(ReaderInfo Reader, ImportOptions Options, DocumentSource Source, string SourcePath, string Digest, string Staging, InstallationIdentity Installation);
     private async Task<ImportResult?> ExtractAsync(Attempt attempt, CancellationToken token, TestHooks? hooks)
     {
-        var(reader, options, source, sourcePath, digest, staging, pin) = attempt;
+        var (reader, options, source, sourcePath, _, staging, pin) = attempt;
         var installation = runtime.Resolve(pin);
         await using var lease = new SourceLease(sourcePath, options.Tenant, options.Profile, source);
         await using var host = new PluginHost(options: new WorkerPoolOptions(MaximumPristineWorkers: 0));
         var process = new ProcessProfile(runtime.Dotnet, [installation.EntryPoints["dotnet"], reader.Id], trustedCode: true, workspaceRoot: Path.Combine(runtime.Root, "workers"), timeout: TimeSpan.FromSeconds(10));
-        var session = await host.BindAsync(new PluginContext(options.Tenant, reader.Id, reader.Version, options.Profile, JsonSerializer.SerializeToElement(new { })), process, lease, hooks?.DenyRead == true ? [] : ["document.read"]);
+        var session = await host.BindAsync(new PluginContext(options.Tenant, reader.Id, reader.Version, options.Profile, JsonSerializer.SerializeToElement(new
+        {
+        })), process, lease, hooks?.DenyRead == true ? [] : ["document.read"]);
         await using var client = new LocalPluginClient(session);
-        ReaderInfo actual = await client.CallAsync<object, ReaderInfo>("reader.describe", new { }, token);
+        ReaderInfo actual = await client.CallAsync<object, ReaderInfo>("reader.describe", new
+        {
+        }, token);
         if (Json.Serialize(actual) != Json.Serialize(reader))
         {
             throw new InvalidDataException("Reader metadata does not match installation.");
@@ -83,7 +88,7 @@ internal sealed class Importer(RuntimePaths runtime, Catalog catalog, TextWriter
         var validator = new PageValidator(source.Length);
         await using (var destination = new FileStream(pending, FileMode.Create, FileAccess.Write, FileShare.None))
         {
-            await WriteAsync(destination, new { kind = "document", source.FileName, source.MediaType, source.Length, sha256 = digest, reader = reader.Id, version = reader.Version, installation = pin, tenant = options.Tenant, profile = options.Profile }, token);
+            await WriteDocumentHeaderAsync(destination, attempt, token);
             if (!await ReadPagesAsync(client, session, destination, validator, hooks, token))
             {
                 return null;
@@ -94,7 +99,12 @@ internal sealed class Importer(RuntimePaths runtime, Catalog catalog, TextWriter
                 throw new InvalidDataException("Reader returned an empty document.");
             }
 
-            await WriteAsync(destination, new { kind = "complete", sections = validator.Sections, fragments = validator.Fragments }, token);
+            await WriteAsync(destination, new
+            {
+                kind = "complete",
+                sections = validator.Sections,
+                fragments = validator.Fragments
+            }, token);
         }
 
         token.ThrowIfCancellationRequested();
@@ -102,6 +112,24 @@ internal sealed class Importer(RuntimePaths runtime, Catalog catalog, TextWriter
         _ = runtime.Resolve(pin);
         File.Move(pending, committed);
         return new ImportResult(committed, reader.Id, validator.Sections, validator.Fragments, source.Length, lease.Calls, lease.MaximumRead, []);
+    }
+
+    private static Task WriteDocumentHeaderAsync(FileStream destination, Attempt attempt, CancellationToken token)
+    {
+        var (reader, options, source, _, digest, _, pin) = attempt;
+        return WriteAsync(destination, new
+        {
+            kind = "document",
+            source.FileName,
+            source.MediaType,
+            source.Length,
+            sha256 = digest,
+            reader = reader.Id,
+            version = reader.Version,
+            installation = pin,
+            tenant = options.Tenant,
+            profile = options.Profile
+        }, token);
     }
 
     private static async Task<bool> ReadPagesAsync(IPluginClient client, IPluginSession session, FileStream destination, PageValidator validator, TestHooks? hooks, CancellationToken token)
@@ -171,7 +199,11 @@ internal sealed class Importer(RuntimePaths runtime, Catalog catalog, TextWriter
     {
         foreach (var fragment in fragments)
         {
-            await WriteAsync(destination, new { kind = "fragment", fragment }, token);
+            await WriteAsync(destination, new
+            {
+                kind = "fragment",
+                fragment
+            }, token);
         }
     }
 

@@ -685,9 +685,13 @@ InvocationResult result = await session.InvokeAsync(
     }));
 
 if (result.Status != "ok")
+{
     throw new InvalidOperationException($"Host exchange failed: {result.Status}");
+}
 if (result.Value.TryGetProperty("isError", out var error) && error.GetBoolean())
+{
     throw new InvalidOperationException("The tool reported an application error.");
+}
 Console.WriteLine(result.Value.GetProperty("structuredContent"));
 
 sealed class NoCallbacks : IHostCallbacks
@@ -1082,7 +1086,9 @@ const plugin = new PluginApplication();
 plugin.function<SearchRequest, SearchResult>('search', async (request, context, signal) =>
     searchBackend(request, signal));
 plugin.stream('results', async function* (request: SearchRequest, context, signal) {
-    for await (const item of searchPages(request, signal)) yield item;
+    for await (const item of searchPages(request, signal)) {
+        yield item;
+    }
 });
 await plugin.run();
 ```
@@ -1130,7 +1136,9 @@ Use `WeavePort.Sdk.Client` over an already authorized `IPluginSession`:
 IPluginClient plugin = new LocalPluginClient(session);
 SearchResult result = await plugin.CallAsync<SearchRequest, SearchResult>("search", request, token);
 await foreach (SearchHit hit in plugin.StreamAsync<SearchRequest, SearchHit>("results", request, token))
+{
     await DisplayAsync(hit, token);
+}
 ```
 
 For a worker host, the trusted application registers that same local client in `GatewayRegistry`, adds gRPC services and maps `GatewayService`. Registration returns a random credential that authorizes only that preconfigured binding. The caller constructs `RemotePluginClient(endpoint, credential)` and uses the same IPluginClient methods. The binding client owns a reusable channel and up to eight binding-scoped duplex sessions to avoid a demonstrated Kestrel stream-reuse defect without per-call TCP churn; see [the cause and compatibility correction (historical) — pre-public record](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/history.md). No provider edit or gRPC import is necessary. RPC requests cannot register executable paths, select tenant identity or assign grants.
@@ -1153,7 +1161,7 @@ The [compatibility policy](https://raw.githubusercontent.com/yesbert/WeavePort/m
 
 Use matching gateway package versions. The gateway wire protocol uses duplex exchanges. Session lease waits count against the operation timeout. An incomplete exchange is discarded, not returned to the session pool; every exchange rechecks the binding credential. Idle transport sessions remain until client disposal.
 
-See [current performance evidence](https://raw.githubusercontent.com/yesbert/WeavePort/main/reports/benchmarks/current/README.md) for the current delivered core and optional loopback Gateway measurements.
+See [retained performance evidence](https://raw.githubusercontent.com/yesbert/WeavePort/main/reports/benchmarks/current/README.md) for measurements of the frozen 0.1.0-internal.2 core and optional loopback Gateway. Those results do not measure the current checkout or published 0.7.0.
 
 ## Per-call timing
 
@@ -2314,9 +2322,21 @@ The author SDK keeps registration at its root, session resource ownership in `Se
 
 `index.ts` and `weaveport_sdk/__init__.py` only expose the public API. Registration lives in `application`; the runtime owns transport and dispatch. Session/context modules own callback access and reverse-order cleanup. Source and stream modules own bounded output. Internal modules import each other directly, never through the public facade.
 
-TypeScript's `runtime/stream-buffer.ts` retains a pending iterator advancement across bounded batches. Runtime code owns its cancellation and cleanup. Python's `stream.py` owns its retained producer. Do not move these lifetimes into registration or recreate invocation context storage per exchange.
+TypeScript's `runtime/stream-buffer.ts` retains a pending iterator advancement across bounded batches. Runtime code owns its cancellation and cleanup. Python's `stream.py` owns its retained producer. TypeScript's `runtime/channel.ts` owns the line transport; Python's `concurrent_call.py` gives each concurrent invocation explicit state. Do not move these lifetimes into registration or recreate invocation context storage per exchange.
 
 Opaque application payloads retain the SDK's generic handler boundary. Changes to wire validation, concurrency, cancellation or buffer ownership require behavioral tests, even when made during a readability refactor.
+
+## Examples and verification scenarios
+
+The three application samples keep executable verification scenarios under `Host/Verification/`, separate from application orchestration and persistence. Start at `Host/Program.cs`, follow the named workflow (`RoomRunner`, `Importer`, or `Desk`), then inspect its owned journal, source lease, or calendar store. Sample worker registration should reveal the operations immediately; Decision Room keeps state reduction in `RoomOperations` and scoring in `Strategy`.
+
+SDK wire tests use real programs in `sdks/python/tests/fixtures/`, launched by `worker_harness.py`. The scenarios compare independent literal protocol expectations against both author SDKs. Fixture failures and deliberate protocol violations are test inputs, not patterns for production code.
+
+Hosting verification is grouped by boundary under `tests/WeavePort.Hosting.Tests/`: `Protocol`, `Installations`, `Lifecycle`, `Transports` and `Mcp`. Its [local guide](https://raw.githubusercontent.com/yesbert/WeavePort/main/tests/WeavePort.Hosting.Tests/README.md) maps these groups to their entry points. SDK consumer checks separate complete calls, streams and cross-tenant isolation; `Program.cs` only selects the suite.
+
+Benchmark orchestration keeps registration, warmup, measurement and reporting visible. `benchmarks/WeavePort.Density/DensityRun.*.cs` groups those phases around one owned experiment; `tools/performance/density_stage.py` owns process supervision and asynchronous memory observation. Historical `reports/` data preserves its original source identity and is never reformatted as current evidence.
+
+The website navigation catalogue lives in `website/navigation.json`; `scripts/build-website.py` stages canonical pages, generates references and exports AI retrieval files. Website source documents remain the authoritative prose; generated site output stays under `artifacts/`.
 
 ## Checks and formatting
 
@@ -2327,6 +2347,16 @@ Format TypeScript with `npx --yes prettier@3.6.2 --write 'sdks/typescript/src/**
 Central NuGet versions live in the root `Directory.Packages.props`. Preserve `PrivateAssets` and conditional references in each project. Copyable `samples/` and `examples/` explicitly opt out and retain complete consumer versions. Their props files document this boundary. Check lockfile resolved versions after changes; Central Package Management can change lockfile metadata without changing versions. Transitive pinning is disabled.
 
 See [runtime diagnostics](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/runtime-diagnostics.md) for IDs, error codes and recovery limits; [verification entry points](https://raw.githubusercontent.com/yesbert/WeavePort/main/tests/README.md) for behavioral checks.
+
+### Verification and measurement harnesses
+
+Large test executables keep `Program.cs` as the command entry point. In the local consumer, `Verification/` owns prerequisite and behavior checks, while `Capacity/` owns bounded configuration, worker growth, request stages and resource observation. The Docker capacity harness separates `Execution/`, `Measurement/`, `Resources/` and `Reporting/`; reports consume retained observations rather than performing new measurements. Optional-package checks live under `Composition/`, `Gateway/` and `Verification/`. Shared execution keeps `Scenarios/` separate from its host-side `HostFixtures/` and language worker scripts in `fixtures/`.
+
+These directories identify responsibilities, not separate production packages. Scenario files keep setup, assertions and cleanup together where they explain one behavior. Fault injection, foreign-tenant attempts, malformed frames and uncooperative cleanup in test providers are intentional negative controls and must remain distinguishable from production examples.
+
+Installation and portable checks keep launcher fixtures as ordinary source files under `tests/installations/fixtures/`; scenario classes describe discovery, policy, sealing and runtime selection. Package/API checks are separate from runtime scenarios so a metadata mismatch can be investigated without following a worker lifecycle.
+
+Python measurement entry points (`reuse.py`, `reuse_matrix.py`, `density.py`, `tools/soak/run.py`) select an experiment and delegate its lifetime. `MatrixMeasurement` owns one stage, with `matrix_workloads`, `matrix_execution`, `matrix_observation` and `matrix_lifecycle` separating requests, arrivals, reporting and cleanup. `SoakRun` owns the supervised native process group; `configuration.py` validates its limits and `support.py` supplies bounded process and evidence operations. The k6 workload separates transport (`session.js`), protocol encoding (`protocol.js`) and checked operations (`operations.js`). New helpers belong to the recorded source-hash set as well as the import graph.
 
 ---
 
@@ -2374,7 +2404,7 @@ Keep rationale, alternatives, evidence and consequences in change design notes. 
 
 ## Automated readability gate
 
-Run `dotnet run --project tools/WeavePort.CodeStyle -c Release -- "$PWD"` to verify maintained core C#, the three product examples and shared templates. Add `--write` to apply the SDK Roslyn formatter and required braces. The gate rejects drift, methods over 60 code lines and files over 350 lines. `.editorconfig` mirrors the editor conventions. This covers methods and constructors; primary record constructors with many fields are reviewed as meaningful configuration or result objects, not arbitrarily wrapped. Scenario suites outside this scope keep their explicit test setup and assertions together.
+Run `dotnet run --project tools/WeavePort.CodeStyle -c Release -- "$PWD"` to verify maintained C# in `src`, `samples`, `examples`, `plugins`, `tests`, `benchmarks` and `tools`. Add `--write` to apply the SDK Roslyn formatter and required braces. For a focused review, pass one or more `--area=relative-directory` arguments; they replace the default area list and report the same checks. The gate rejects drift, methods over 60 code lines and files over 350 lines. It uses the formatting workspace shipped with the pinned SDK and preserves intentional line wrapping; syntax-tree normalization is not a source formatter. Generated `.g.cs` files are verified through their generators instead. Keep simple auto-properties compact while using braces for control-flow bodies. `.editorconfig` mirrors the editor conventions. This covers methods and constructors; primary record constructors with many fields are reviewed as meaningful configuration or result objects, not arbitrarily wrapped. Scenario methods keep setup and assertions together within those bounds.
 
 ## Source ownership and diagnostic vocabulary
 
@@ -2388,9 +2418,9 @@ Use early returns for preconditions, unsupported cases and completed paths. Do n
 
 Extract named operations with a single responsibility when a loop body requires its own decisions or iteration. Do not hide nesting in trivial lambdas, local functions, ternaries, boolean expressions or switch/match blocks solely to satisfy a metric. Keep mutation and evaluation order visible, choose domain-specific names, avoid unrelated helper collections, and keep each statement focused on one action. Prefer a cohesive class when several operations share owned state; facade modules export the supported surface rather than hosting runtime classes.
 
-The C# readability gate now also rejects forbidden control flow. Run `python3 scripts/check-python-control-flow.py` for the Python SDK and `npm run check:control-flow --prefix sdks/typescript` after `npm ci --prefix sdks/typescript` for the TypeScript SDK. All three checks execute positive and negative syntax fixtures before scanning maintained sources. The isolated candidate workflow runs them in CI. TypeScript uses the AST API of the existing pinned compiler as development tooling; its unstable API must be rechecked deliberately when upgrading TypeScript. No parser is shipped with the SDK.
+The C# readability gate now also rejects forbidden control flow. Run `python3 scripts/check-python-control-flow.py` for maintained Python sources and `npm run check:control-flow --prefix sdks/typescript` after `npm ci --prefix sdks/typescript` for maintained TypeScript and JavaScript sources. All three checks execute positive and negative syntax fixtures before scanning maintained sources. The isolated candidate workflow runs them in CI. TypeScript uses the AST API of the existing pinned compiler as development tooling; its unstable API must be rechecked deliberately when upgrading TypeScript. No parser is shipped with the SDK.
 
-The C# gate covers `src` and the three maintained application examples plus shared templates; the Python and TypeScript gates cover their author SDK implementation directories. Test scenarios and unrelated tooling are not implicitly claimed to be checked by these gates. Review still owns naming, cohesion, duplication, dependency direction and meaningful method boundaries; a passing syntax metric is not proof of every clean-code property.
+The Python and TypeScript/JavaScript gates inspect versioned and non-ignored new source files, including test scenarios and tooling. Historical `reports/` source snapshots and archived OpenSpec artifacts are excluded: their original bytes are evidence. Dependency caches and generated build output are ignored; C# generated contracts retain their generator check. Review still owns naming, cohesion, duplication, dependency direction and meaningful method boundaries; a passing syntax metric is not proof of every clean-code property.
 
 Exception messages explain failures to humans. Use existing standard exceptions for invalid arguments, invalid state, cancellation and transport failures. Use the documented stable code/metadata for platform outcomes, never message parsing. Do not replace useful diagnostics with numeric-only messages or introduce a custom exception per throw site. Log at the boundary that owns recovery or propagation, not in every helper; see [logging ownership](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/runtime-diagnostics.md#logging-ownership-and-exception-messages).
 
@@ -2858,7 +2888,7 @@ Source: https://raw.githubusercontent.com/yesbert/WeavePort/main/tests/README.md
 | --- | --- |
 | Documentation and AI retrieval | `python3 scripts/generate-llms.py --check`, `python3 tests/documentation/check-links.py`, `python3 tests/documentation/test-website.py`, then `python3 scripts/build-website.py` (after `dotnet tool restore`) |
 | Source architecture | `python3 scripts/check-architecture.py` and `python3 tests/documentation/test-architecture.py` |
-| SDK protocol and context | `npm run build --prefix sdks/typescript`, `node --test sdks/typescript/tests/session.mjs`, then `python3 -m unittest discover -s sdks/python/tests` |
+| SDK protocol and context | `npm run build --prefix sdks/typescript`, `npm test --prefix sdks/typescript`, then `python3 -m unittest discover -s sdks/python/tests` |
 | Host regressions | `dotnet run --project tests/WeavePort.Hosting.Tests -c Release` |
 | Fair scheduler public API | `dotnet run --project tests/WeavePort.Scheduling.Tests -c Release` (also checked as a packed consumer) |
 | Density observer controls | `python3 tools/performance/test_density.py` |
@@ -2868,7 +2898,7 @@ Source: https://raw.githubusercontent.com/yesbert/WeavePort/main/tests/README.md
 | Composition fixtures | `./scripts/build-bulk.sh`, then `./scripts/bulk.sh verify artifacts/runs/composition` |
 | Multilingual SDK fixtures | `./scripts/build-sdk.sh`, then `./scripts/sdk.sh artifacts/runs/sdk verify` |
 | Supervised k6 soak | See [multi-hour operation and stop controls](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/soak-testing.md) |
-| Current performance baseline | See [benchmarking](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/benchmarking.md) |
+| Retained release performance baseline | See [benchmarking](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/benchmarking.md) |
 | Optional Docker fixtures | `./scripts/verify-docker.sh` (requires the Docker service and builds fixture images) |
 
 `WeavePort.Local.Tests`, `WeavePort.Docker.Tests`, `WeavePort.Composition.Tests` and `WeavePort.WorkerHost` were moved from the sample tree. Their existing project/assembly names are retained for adapter tooling compatibility. The actual integration templates are [DecisionRoom](https://raw.githubusercontent.com/yesbert/WeavePort/main/samples/DecisionRoom/README.md), [DocumentWorkshop](https://raw.githubusercontent.com/yesbert/WeavePort/main/samples/DocumentWorkshop/README.md) and [AppointmentDesk](https://raw.githubusercontent.com/yesbert/WeavePort/main/samples/AppointmentDesk/README.md).
@@ -3326,7 +3356,7 @@ This deliberately exits nonzero: the strategy requests `knowledge.read` without 
 - `Plugin`: C# SDK functions for room initialization/reduction/snapshots and evaluation. Distinct room and strategy bindings launch separate workers from the same artifact.
 - `Python`: an equivalent strategy through the packaged Python SDK.
 - `Host`: configuration, scoped callback, worker binding, state validation, persistence and console walkthrough.
-- `Host/Verification.cs`: explicit `--verify` harness, including abrupt termination of an owned worker. Crash controls are absent from the plugin contract.
+- `Host/Verification/Verification.cs`: explicit `--verify` harness, including abrupt termination of an owned worker. Crash controls are absent from the plugin contract.
 
 Both host and C# plugin reference packed WeavePort artifacts. Their only project reference is the sample's own contract module. No HiveWeaver, NextPA, TreeWeaver, Stratara or LoomWeaver dependency is introduced. This is an integration template inspired by HiveWeaver's extension boundaries, not a HiveWeaver adapter or parity demonstration. Application data and rules remain outside WeavePort core.
 

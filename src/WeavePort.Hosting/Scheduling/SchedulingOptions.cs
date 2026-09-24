@@ -41,7 +41,21 @@ public sealed record SchedulingOptions
 
     internal static void Validate(SchedulingOptions options)
     {
-        if (options.MaximumCallsPerTenant < 1 || options.MaximumWorkers < 1 || options.MemoryBudgetMiB < 64 || options.MaximumConcurrentStarts < 1 || options.MaximumHeavyCalls < 0 || options.MaximumHeavyCalls >= options.MaximumWorkers || options.MaximumHeavyCallsPerTenant < 1 || options.MaximumHeavyPluginsPerTenant < 1 || options.MaximumQueuedCalls < 1 || options.MaximumQueuedCallsPerTenant < 1 || options.MaximumRegistrations < 1 || options.MaximumPayloadBytes < 1 || options.MaximumPristineWorkers < 0 || options.MaximumPristineWorkers > options.MaximumWorkers)
+        if (options.MaximumCallsPerTenant < 1 || options.MaximumWorkers < 1 ||
+            options.MemoryBudgetMiB < ExecutionProfile.MinimumMemoryMiB || options.MaximumConcurrentStarts < 1 ||
+            options.MaximumPristineWorkers < 0 || options.MaximumPristineWorkers > options.MaximumWorkers)
+        {
+            throw new ArgumentOutOfRangeException(nameof(options), "Scheduling limits must fit the configured budgets.");
+        }
+
+        if (options.MaximumHeavyCalls < 0 || options.MaximumHeavyCalls >= options.MaximumWorkers ||
+            options.MaximumHeavyCallsPerTenant < 1 || options.MaximumHeavyPluginsPerTenant < 1)
+        {
+            throw new ArgumentOutOfRangeException(nameof(options), "Scheduling limits must fit the configured budgets.");
+        }
+
+        if (options.MaximumQueuedCalls < 1 || options.MaximumQueuedCallsPerTenant < 1 ||
+            options.MaximumRegistrations < 1 || options.MaximumPayloadBytes < 1)
         {
             throw new ArgumentOutOfRangeException(nameof(options), "Scheduling limits must fit the configured budgets.");
         }
@@ -58,9 +72,7 @@ public sealed record SchedulingOptions
             options.IdleTimeout,
             options.ReusableIdleTimeout,
             options.DemandWindow
-        }
-
-        )
+        })
         {
             if (duration <= TimeSpan.Zero || duration.TotalMilliseconds > uint.MaxValue - 1)
             {

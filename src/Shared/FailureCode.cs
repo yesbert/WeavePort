@@ -1,13 +1,24 @@
 namespace WeavePort.Internal;
+
 internal static class FailureCode
 {
+    private const int MaximumCorrelationIdLength = 64;
     internal static string Phase(string? phase) => phase switch
     {
         FailurePhases.Prepare => FailurePhases.Prepare,
         FailurePhases.Exchange => FailurePhases.Exchange,
         _ => FailurePhases.Transport
     };
-    internal static string Correlation(string? id) => id is { Length: > 0 and <= 64 } && id.All(c => char.IsAsciiLetterOrDigit(c) || c == '-') ? id : "";
+    internal static string Correlation(string? id)
+    {
+        if (string.IsNullOrEmpty(id) || id.Length > MaximumCorrelationIdLength)
+        {
+            return "";
+        }
+
+        return id.All(character => char.IsAsciiLetterOrDigit(character) || character == '-') ? id : "";
+    }
+
     internal static string Normalize(string? code) => code switch
     {
         FailureCodes.Failed => FailureCodes.Failed,

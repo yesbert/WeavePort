@@ -3,6 +3,7 @@ using System.Text.Json;
 using WeavePort.Abstractions;
 
 namespace WeavePort.Hosting;
+
 internal sealed partial class SharedWorker
 {
     private async Task ReadLoopAsync()
@@ -77,7 +78,7 @@ internal sealed partial class SharedWorker
             return;
         }
 
-        if (type is not ("result" or "error" or FailureCodes.Cancelled))
+        if (type is not (FrameKinds.Result or FrameKinds.Error or FrameKinds.Cancelled))
         {
             throw new InvalidDataException("Unsupported shared frame.");
         }
@@ -85,7 +86,7 @@ internal sealed partial class SharedWorker
         bool cleanupFailed = type == FrameKinds.Error && frame.TryGetProperty(WireFields.Code, out var code) && code.GetString() == FailureCodes.CleanupError;
         if (type == FrameKinds.Error)
         {
-            string reported = frame.TryGetProperty(WireFields.PrimaryCode, out var primary) ? primary.GetString()! : frame.TryGetProperty(WireFields.Code, out var reportedCode) ? reportedCode.GetString()! : FailureCodes.Failed;
+            string reported = ReadReportedFailureCode(frame);
             call.Failure = new PluginFailure(FailureCode.Normalize(reported), FailurePhases.Exchange, call.Id, cleanupFailed);
             pool.ReportFailure(Instance, call.Failure, new WorkerExecutionException(reported, cleanupFailed));
         }
@@ -99,8 +100,8 @@ internal sealed partial class SharedWorker
 
         string status = type switch
         {
-            "result" => FailureCodes.Ok,
-            FailureCodes.Cancelled => FailureCodes.Cancelled,
+            FrameKinds.Result => FailureCodes.Ok,
+            FrameKinds.Cancelled => FailureCodes.Cancelled,
             _ => FailureCodes.Failed
         };
         call.Finish(status, Instance, value);
@@ -108,6 +109,21 @@ internal sealed partial class SharedWorker
         {
             throw new InvalidDataException("Shared invocation cleanup failed.");
         }
+    }
+
+    private static string ReadReportedFailureCode(JsonElement frame)
+    {
+        if (frame.TryGetProperty(WireFields.PrimaryCode, out JsonElement primary))
+        {
+            return primary.GetString()!;
+        }
+
+        if (frame.TryGetProperty(WireFields.Code, out JsonElement code))
+        {
+            return code.GetString()!;
+        }
+
+        return FailureCodes.Failed;
     }
 
     private void FailPending(Exception error, bool cleanupFailed)
@@ -139,7 +155,11 @@ internal sealed partial class SharedWorker
             {
                 replacement = await pool.StartSharedAsync(plugin.Profile, plugin.Context.Version, _lifetime.Token);
                 _worker = replacement;
-                await SendAsync(new { type = FrameKinds.Configure, degree = plugin.Options.Degree }, _lifetime.Token, replacement);
+                await SendAsync(new
+                {
+                    type = FrameKinds.Configure,
+                    degree = plugin.Options.Degree
+                }, _lifetime.Token, replacement);
                 lock (_sync)
                 {
                     _channelStop?.Dispose();
@@ -162,121 +182,6 @@ internal sealed partial class SharedWorker
         }
 
         return false;
-    }
-
-    private void QueueCallback(SharedCall call, JsonElement frame)
-    {
-        string callbackId = frame.GetProperty(WireFields.CallbackId).GetString() ?? "";
-        string operation = frame.GetProperty(WireFields.Operation).GetString() ?? "";
-        if (callbackId.Length == 0 || operation.Length == 0)
-        {
-            throw new InvalidDataException("Missing callback identity or operation.");
-        }
-
-        bool allowed;
-        lock (_sync)
-        {
-            if (call.CallbackRejected)
-            {
-                return;
-            }
-
-            allowed = call.Scope.TakeCallback() && call.Scope.Allows(operation);
-            if (!allowed)
-            {
-                call.CallbackRejected = true;
-            }
-            else if (!call.CallbackIds.Add(callbackId))
-            {
-                throw new InvalidDataException("Repeated callback identity.");
-            }
-        }
-
-        _ = RespondAsync(call, frame, _worker!, allowed);
-    }
-
-    private async Task RespondAsync(SharedCall call, JsonElement frame, Worker worker, bool allowed)
-    {
-        try
-        {
-            string callbackId = frame.GetProperty(WireFields.CallbackId).GetString() ?? "";
-            string operation = frame.GetProperty(WireFields.Operation).GetString() ?? "";
-            if (callbackId.Length == 0 || operation.Length == 0)
-            {
-                throw new InvalidDataException("Missing callback identity or operation.");
-            }
-
-            CancellationToken channelToken = _channelStop!.Token;
-            var(value, error) = await GetCallbackResultAsync(call, operation, frame, allowed, channelToken);
-            if (call.Finished || !ReferenceEquals(worker, _worker))
-            {
-                return;
-            }
-
-            await SendAsync(new { type = FrameKinds.CallbackResult, id = call.Id, callbackId, value, error }, channelToken, worker);
-        }
-        catch (OperationCanceledException)
-        {
-        // Invocation/channel cancellation revokes the reply. A detached callback
-        // still retains its own admission until its actual completion.
-        }
-        catch (Exception failure) when (failure is IOException or InvalidDataException or InvalidOperationException or ObjectDisposedException or KeyNotFoundException or JsonException)
-        {
-            Retire(worker);
-        }
-    }
-
-    private async Task<(JsonElement Value, string? Error)> GetCallbackResultAsync(SharedCall call, string operation, JsonElement frame, bool allowed, CancellationToken channelToken)
-    {
-        if (!allowed)
-        {
-            return (Empty, FailureCodes.Denied);
-        }
-
-        try
-        {
-            JsonElement value = await InvokeCallbackAsync(call, operation, frame.GetProperty(WireFields.Payload), channelToken);
-            return (value, null);
-        }
-        catch (Exception error) when (error is not OperationCanceledException || !(call.Token.IsCancellationRequested || channelToken.IsCancellationRequested))
-        {
-            return (Empty, FailureCodes.CallbackFailed);
-        }
-    }
-
-    private async Task<JsonElement> InvokeCallbackAsync(SharedCall call, string operation, JsonElement payload, CancellationToken channelToken)
-    {
-        if (!await call.Admission.Callbacks.WaitAsync(0, call.Token))
-        {
-            throw new IOException("Callback capacity exhausted.");
-        }
-
-        var stop = CancellationTokenSource.CreateLinkedTokenSource(call.Token, channelToken);
-        CancellationToken callbackToken = stop.Token;
-        call.Admission.RetainCallback();
-        Task<JsonElement> callback = Task.Run(async () =>
-        {
-            InvocationScope.Current.Value = call.Scope;
-            try
-            {
-                return await plugin.Callbacks.InvokeAsync(new HostCall(call.Context, call.Id, operation, payload, call.Id), callbackToken);
-            }
-            finally
-            {
-                InvocationScope.Current.Value = null;
-                call.Admission.ReleaseCallback();
-                stop.Dispose();
-            }
-        }, CancellationToken.None);
-        try
-        {
-            return await callback.WaitAsync(callbackToken);
-        }
-        catch
-        {
-            _ = callback.ContinueWith(t => _ = t.Exception, TaskContinuationOptions.OnlyOnFaulted);
-            throw;
-        }
     }
 
     private async Task DestroyReplacementAsync(Worker? replacement)

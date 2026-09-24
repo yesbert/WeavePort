@@ -16,7 +16,11 @@ internal sealed class ResourceSampler : IAsyncDisposable
     internal ResourceSampler(string instance, TimeProvider clock)
     {
         var info = new ProcessStartInfo("docker") { RedirectStandardOutput = true, RedirectStandardError = true, UseShellExecute = false };
-        foreach (string argument in new[] { "stats", "--no-trunc", "--format", "{{json .}}", instance }) info.ArgumentList.Add(argument);
+        foreach (string argument in new[] { "stats", "--no-trunc", "--format", "{{json .}}", instance })
+        {
+            info.ArgumentList.Add(argument);
+        }
+
         _process = Process.Start(info) ?? throw new IOException("Could not launch resource sampler.");
         _errors = _process.StandardError.ReadToEndAsync();
         _reader = ReadAsync(clock);
@@ -31,12 +35,23 @@ internal sealed class ResourceSampler : IAsyncDisposable
             while (await _process.StandardOutput.ReadLineAsync() is { } line)
             {
                 string json = Regex.Replace(line, @"\x1B\[[0-?]*[ -/]*[@-~]", string.Empty);
-                if (string.IsNullOrWhiteSpace(json)) continue;
+                if (string.IsNullOrWhiteSpace(json))
+                {
+                    continue;
+                }
+
                 using JsonDocument sample = JsonDocument.Parse(json);
-                Samples.Add(new { observedUtc = clock.GetUtcNow(), statistics = sample.RootElement.Clone() });
+                Samples.Add(new
+                {
+                    observedUtc = clock.GetUtcNow(),
+                    statistics = sample.RootElement.Clone()
+                });
                 _first.TrySetResult();
             }
-            if (Samples.Count == 0) _first.TrySetException(new IOException("Docker emitted no resource samples: " + await _errors));
+            if (Samples.Count == 0)
+            {
+                _first.TrySetException(new IOException("Docker emitted no resource samples: " + await _errors));
+            }
         }
         catch (Exception error)
         {
@@ -47,9 +62,17 @@ internal sealed class ResourceSampler : IAsyncDisposable
 
     internal async Task StopAsync()
     {
-        if (_stopped) return;
+        if (_stopped)
+        {
+            return;
+        }
+
         _stopped = true;
-        if (!_process.HasExited) _process.Kill(true);
+        if (!_process.HasExited)
+        {
+            _process.Kill(true);
+        }
+
         await _process.WaitForExitAsync();
         await _reader;
         await _errors;

@@ -1,6 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup><OutputType>Exe</OutputType><IsPackable>false</IsPackable><UsePackedCore Condition="'$(UsePackedCore)' == ''">true</UsePackedCore></PropertyGroup>
-  <ItemGroup Condition="'$(UsePackedCore)' == 'true'"><PackageReference Include="WeavePort.Sdk" Version="0.7.0" /></ItemGroup>
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <IsPackable>false</IsPackable>
+    <UsePackedCore Condition="'$(UsePackedCore)' == ''">true</UsePackedCore>
+  </PropertyGroup>
+  <ItemGroup Condition="'$(UsePackedCore)' == 'true'">
+    <PackageReference Include="WeavePort.Sdk" Version="0.7.0" />
+  </ItemGroup>
   <ItemGroup Condition="'$(UsePackedCore)' != 'true'">
     <ProjectReference Include="../../../src/WeavePort.Sdk/WeavePort.Sdk.csproj" />
   </ItemGroup>

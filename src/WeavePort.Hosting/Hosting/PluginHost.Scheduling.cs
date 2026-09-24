@@ -2,6 +2,7 @@ using WeavePort.Abstractions;
 using Microsoft.Extensions.Logging;
 
 namespace WeavePort.Hosting;
+
 public sealed partial class PluginHost
 {
     private readonly PluginScheduler? _scheduler;
@@ -23,7 +24,7 @@ public sealed partial class PluginHost
     private static WorkerPoolOptions PoolOptions(SchedulingOptions options)
     {
         SchedulingOptions.Validate(options);
-        int workers = options.MaximumWorkers ?? (int)Math.Min(int.MaxValue, options.MemoryBudgetMiB / 64);
+        int workers = options.MaximumWorkers ?? (int)Math.Min(int.MaxValue, options.MemoryBudgetMiB / ExecutionProfile.MinimumMemoryMiB);
         return new WorkerPoolOptions(workers, options.MemoryBudgetMiB, Math.Min(workers, options.MaximumPristineWorkers), options.MaximumConcurrentStarts, MaximumWorkersPerTenant: workers, MemoryBudgetPerTenantMiB: options.MemoryBudgetMiB)
         {
             WaitForStartCapacity = true,

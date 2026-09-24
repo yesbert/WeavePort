@@ -1,6 +1,7 @@
 using WeavePort.Hosting;
 
 namespace DecisionRoom.Host;
+
 internal sealed record RuntimePaths(string Root, string Dotnet, string Python, string? Selector = null, string? ReleaseDirectory = null)
 {
     internal string SelectorPath => Selector ?? Path.Combine(Root, "active-version.txt");

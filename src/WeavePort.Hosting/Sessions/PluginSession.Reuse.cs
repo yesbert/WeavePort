@@ -2,6 +2,7 @@ using WeavePort.Internal;
 using System.Text.Json;
 
 namespace WeavePort.Hosting;
+
 internal sealed partial class PluginSession
 {
     private bool _clean;

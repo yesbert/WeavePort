@@ -1,4 +1,5 @@
 namespace DecisionRoom.Contracts;
+
 public sealed record Proposal(string Id, string Title, int Cost, int Benefit);
 public sealed record Priorities(int Benefit, int Cost, int Risk);
 public sealed record Participant(string Id, string Language, string Profile, Priorities Priorities);

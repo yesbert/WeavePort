@@ -2,6 +2,7 @@ using WeavePort.Internal;
 using System.Text.Json;
 
 namespace WeavePort.Sdk;
+
 internal sealed partial class Runtime
 {
     private static async Task DisposeEnumeratorAsync(IAsyncEnumerator<JsonElement> enumerator)
@@ -45,6 +46,53 @@ internal sealed partial class Runtime
             cleanupFailed = true;
         }
 
-        await _channel.WriteAsync(new { type = FrameKinds.Error, id = request.GetProperty(WireFields.Id).GetString(), code = cleanupFailed ? FailureCodes.CleanupError : FailureCodes.SdkError, primaryCode = error is SessionCleanupException { HasExecutionFailure: false } ? FailureCodes.CleanupError : FailureCodes.SdkError, cleanupFailed }, token);
+        await _channel.WriteAsync(new
+        {
+            type = FrameKinds.Error,
+            id = request.GetProperty(WireFields.Id).GetString(),
+            code = cleanupFailed ? FailureCodes.CleanupError : FailureCodes.SdkError,
+            primaryCode = error is SessionCleanupException { HasExecutionFailure: false } ? FailureCodes.CleanupError : FailureCodes.SdkError,
+            cleanupFailed
+        }, token);
+    }
+
+    private async Task CloseAsync()
+    {
+        var enumerator = _enumerator;
+        _enumerator = null;
+        _streamId = null;
+        _pending = null;
+        var cancellation = _streamCancellation;
+        try
+        {
+            await SessionCleanup.RunAsync(() => cancellation?.CancelAsync() ?? Task.CompletedTask, () => enumerator is null ? Task.CompletedTask : CompleteEnumeratorAsync(enumerator), CloseSourceAsync, CompleteContextAsync);
+        }
+        finally
+        {
+            cancellation?.Dispose();
+            _streamCancellation = null;
+        }
+    }
+
+    private async Task CompleteEnumeratorAsync(IAsyncEnumerator<JsonElement> enumerator)
+    {
+        await SessionCleanup.RunAsync(CompleteAdvancementAsync, () => DisposeEnumeratorAsync(enumerator));
+    }
+
+    private async Task CompleteAdvancementAsync()
+    {
+        Task<bool>? advancement = _advancement;
+        _advancement = null;
+        try
+        {
+            if (advancement is not null)
+            {
+                await advancement;
+            }
+        }
+        catch (OperationCanceledException) when (_streamCancellation?.IsCancellationRequested == true)
+        {
+            // The owned stream token confirms cancellation of this advancement.
+        }
     }
 }

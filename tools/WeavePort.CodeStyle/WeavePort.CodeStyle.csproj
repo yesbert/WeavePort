@@ -2,13 +2,36 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <IsPackable>false</IsPackable>
+    <!-- Reuse the formatter shipped with the pinned SDK; nothing is shipped to consumers. -->
+    <RoslynToolPath>$(MSBuildSDKsPath)/../DotnetTools/dotnet-format</RoslynToolPath>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CodeAnalysis">
-      <HintPath>$(MSBuildSDKsPath)/../Roslyn/bincore/Microsoft.CodeAnalysis.dll</HintPath>
+      <HintPath>$(RoslynToolPath)/Microsoft.CodeAnalysis.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CodeAnalysis.CSharp">
-      <HintPath>$(MSBuildSDKsPath)/../Roslyn/bincore/Microsoft.CodeAnalysis.CSharp.dll</HintPath>
+      <HintPath>$(RoslynToolPath)/Microsoft.CodeAnalysis.CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CodeAnalysis.Workspaces">
+      <HintPath>$(RoslynToolPath)/Microsoft.CodeAnalysis.Workspaces.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CodeAnalysis.CSharp.Workspaces">
+      <HintPath>$(RoslynToolPath)/Microsoft.CodeAnalysis.CSharp.Workspaces.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Composition.AttributedModel">
+      <HintPath>$(RoslynToolPath)/System.Composition.AttributedModel.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Composition.Runtime">
+      <HintPath>$(RoslynToolPath)/System.Composition.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Composition.Hosting">
+      <HintPath>$(RoslynToolPath)/System.Composition.Hosting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Composition.TypedParts">
+      <HintPath>$(RoslynToolPath)/System.Composition.TypedParts.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Composition.Convention">
+      <HintPath>$(RoslynToolPath)/System.Composition.Convention.dll</HintPath>
     </Reference>
   </ItemGroup>
 </Project>

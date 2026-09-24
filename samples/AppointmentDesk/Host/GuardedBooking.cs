@@ -3,6 +3,7 @@ using AppointmentDesk.Contracts;
 using WeavePort.Samples;
 
 namespace AppointmentDesk.Host;
+
 internal static class GuardedBooking
 {
     internal static async Task<Outcome> RunAsync(RuntimePaths runtime, string storePath, Request request, CancellationToken token, bool loseResponse, string? holdAfterBooking)
@@ -24,7 +25,11 @@ internal static class GuardedBooking
                     {
                         using (var marker = new FileStream(holdAfterBooking, FileMode.CreateNew, FileAccess.Write, FileShare.Read))
                         {
-                            JsonSerializer.Serialize(marker, new { session.Instance, guard.Generation });
+                            JsonSerializer.Serialize(marker, new
+                            {
+                                session.Instance,
+                                guard.Generation
+                            });
                             marker.Flush(flushToDisk: true);
                         }
 

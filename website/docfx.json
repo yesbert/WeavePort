@@ -1,20 +1,47 @@
 {
   "$schema": "https://raw.githubusercontent.com/dotnet/docfx/main/schemas/docfx.schema.json",
   "build": {
-    "content": [{"files": ["**/*.md", "**/toc.yml"], "exclude": ["templates/**"]}],
-    "resource": [{"files": ["assets/**", "robots.txt", "llms.txt", "llms-full.txt"]}],
+    "content": [
+      {
+        "files": [
+          "**/*.md",
+          "**/toc.yml"
+        ],
+        "exclude": [
+          "templates/**"
+        ]
+      }
+    ],
+    "resource": [
+      {
+        "files": [
+          "assets/**",
+          "robots.txt",
+          "llms.txt",
+          "llms-full.txt"
+        ]
+      }
+    ],
     "globalMetadata": {
       "_lang": "en",
       "_appName": "WeavePort",
-      "_appTitle": "WeavePort · Backend plugins for .NET",
+      "_appTitle": "WeavePort \u00b7 Backend plugins for .NET",
       "_appLogoPath": "assets/logo.png",
       "_appFaviconPath": "assets/logo.png",
       "_appBaseUrl": "https://weaveport.dev",
       "_enableSearch": true,
       "_disableContribution": true,
-      "_appFooter": "<div class=\"wp-footer\"><span>WeavePort · MIT-licensed backend plugins for .NET</span><nav aria-label=\"Footer\"><a href=\"https://github.com/yesbert/WeavePort\">Source</a><a href=\"https://github.com/yesbert/WeavePort/blob/main/LICENSE\">MIT license</a><a href=\"/docs/ai-documentation.html\">Use with AI</a><a href=\"/llms.txt\">llms.txt</a><a href=\"/imprint.html\">Imprint</a><a href=\"/privacy.html\">Privacy</a></nav></div>"
+      "_appFooter": "<div class=\"wp-footer\"><span>WeavePort \u00b7 MIT-licensed backend plugins for .NET</span><nav aria-label=\"Footer\"><a href=\"https://github.com/yesbert/WeavePort\">Source</a><a href=\"https://github.com/yesbert/WeavePort/blob/main/LICENSE\">MIT license</a><a href=\"/docs/ai-documentation.html\">Use with AI</a><a href=\"/llms.txt\">llms.txt</a><a href=\"/imprint.html\">Imprint</a><a href=\"/privacy.html\">Privacy</a></nav></div>"
     },
-    "template": ["default", "modern", "templates/weaveport"],
-    "sitemap": {"baseUrl": "https://weaveport.dev", "changefreq": "weekly", "priority": 0.5}
+    "template": [
+      "default",
+      "modern",
+      "templates/weaveport"
+    ],
+    "sitemap": {
+      "baseUrl": "https://weaveport.dev",
+      "changefreq": "weekly",
+      "priority": 0.5
+    }
   }
 }

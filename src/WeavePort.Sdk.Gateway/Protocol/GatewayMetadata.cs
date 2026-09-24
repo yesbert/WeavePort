@@ -1,4 +1,5 @@
 namespace WeavePort.Sdk.Gateway;
+
 internal static class GatewayMetadata
 {
     internal const string FailureCode = "weaveport-error-code";

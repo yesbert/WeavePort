@@ -7,11 +7,19 @@ internal sealed partial class DensityResources
     private static async Task<string[]> ReadDockerInstancesAsync(IEnumerable<int> ownedPids)
     {
         var info = new ProcessStartInfo("/bin/ps") { RedirectStandardOutput = true, RedirectStandardError = true };
-        foreach (string arg in new[] { "-ww", "-p", string.Join(',', ownedPids), "-o", "command=" }) info.ArgumentList.Add(arg);
+        foreach (string arg in new[] { "-ww", "-p", string.Join(',', ownedPids), "-o", "command=" })
+        {
+            info.ArgumentList.Add(arg);
+        }
+
         using var ps = Process.Start(info)!;
         string commands = await ps.StandardOutput.ReadToEndAsync();
         await ps.WaitForExitAsync();
-        if (ps.ExitCode != 0) throw new IOException("Owned Docker process observer failed");
+        if (ps.ExitCode != 0)
+        {
+            throw new IOException("Owned Docker process observer failed");
+        }
+
         return ExtractDockerInstances(commands);
     }
 

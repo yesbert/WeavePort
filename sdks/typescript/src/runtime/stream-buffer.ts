@@ -1,5 +1,8 @@
 import { ProtocolLimits } from '../protocol.js';
 const BATCH_WAIT_MILLISECONDS = 25;
+// Reserve brackets and a conservative comma per accepted item.
+const ARRAY_BRACKET_BYTES = 2;
+const ITEM_SEPARATOR_BYTES = 1;
 /** Bounded batch state; only one iterator advancement may remain in flight. */
 export class StreamBuffer {
     private pending?: unknown;
@@ -14,28 +17,34 @@ export class StreamBuffer {
         onItem: () => void,
     ): Promise<{ items: unknown[]; done: boolean }> {
         const items: unknown[] = [];
-        let batchBytes = 2;
+        let batchBytes = ARRAY_BRACKET_BYTES;
         let done = false;
         while (items.length < ProtocolLimits.StreamBatchItems) {
             const next =
                 this.takePending() ??
                 (await this.next(iterator, items.length ? 0 : BATCH_WAIT_MILLISECONDS));
-            if (next === undefined) break;
+            if (next === undefined) {
+                break;
+            }
             if (next.done) {
                 done = true;
                 break;
             }
             const item = next.value;
             const size = Buffer.byteLength(this.encode(item));
-            if (size > ProtocolLimits.StreamItemBytes) throw new Error('Item limit');
-            if (batchBytes + size + 1 > ProtocolLimits.StreamBatchBytes) {
+            if (size > ProtocolLimits.StreamItemBytes) {
+                throw new Error('Item limit');
+            }
+            if (batchBytes + size + ITEM_SEPARATOR_BYTES > ProtocolLimits.StreamBatchBytes) {
                 this.pending = item;
                 this.hasPending = true;
                 break;
             }
-            batchBytes += size + 1;
+            batchBytes += size + ITEM_SEPARATOR_BYTES;
             this.bytes += size;
-            if (this.bytes > ProtocolLimits.StreamTotalBytes) throw new Error('Stream limit');
+            if (this.bytes > ProtocolLimits.StreamTotalBytes) {
+                throw new Error('Stream limit');
+            }
             items.push(item);
             onItem();
         }
@@ -43,7 +52,9 @@ export class StreamBuffer {
     }
 
     private takePending(): IteratorResult<unknown> | undefined {
-        if (!this.hasPending) return undefined;
+        if (!this.hasPending) {
+            return undefined;
+        }
         const value = this.pending;
         this.pending = undefined;
         this.hasPending = false;
@@ -63,7 +74,9 @@ export class StreamBuffer {
             }),
         ]);
         clearTimeout(timer);
-        if (next !== undefined) this.advance = undefined;
+        if (next !== undefined) {
+            this.advance = undefined;
+        }
         return next;
     }
 

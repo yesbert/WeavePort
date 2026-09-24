@@ -1,5 +1,4 @@
 using System.Text.Json;
-using WeavePort.Sdk.Client;
 
 namespace WeavePort.Hosting;
 /// <summary>Authenticated tenant identity and configuration supplied by the application.</summary>

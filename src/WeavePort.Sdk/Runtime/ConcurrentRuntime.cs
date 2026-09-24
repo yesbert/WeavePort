@@ -3,6 +3,7 @@ using System.Text.Json;
 using WeavePort.Internal;
 
 namespace WeavePort.Sdk;
+
 internal sealed partial class ConcurrentRuntime(PluginApplication application)
 {
     private const int MaximumCompletedIdentities = 4096;
@@ -52,16 +53,23 @@ internal sealed partial class ConcurrentRuntime(PluginApplication application)
         using var lifetime = CancellationTokenSource.CreateLinkedTokenSource(token);
         _channel = channel;
         _lifetime = lifetime;
-        await channel.WriteAsync(new { type = FrameKinds.Ready, protocol = ProtocolVersions.Concurrent, concurrentCalls = ProtocolVersions.ConcurrentCalls, sessionCleanup = ProtocolVersions.SessionCleanup, pluginVersion = application.PluginVersion }, token);
+        await channel.WriteAsync(new
+        {
+            type = FrameKinds.Ready,
+            protocol = ProtocolVersions.Concurrent,
+            concurrentCalls = ProtocolVersions.ConcurrentCalls,
+            sessionCleanup = ProtocolVersions.SessionCleanup,
+            pluginVersion = application.PluginVersion
+        }, token);
         JsonElement configure = await channel.ReadAsync(token) ?? throw new EndOfStreamException();
-        if (configure.GetProperty(WireFields.Type).GetString() != "configure" || !configure.GetProperty(WireFields.Degree).TryGetInt32(out _degree) || _degree is < 1 or > ProtocolLimits.MaximumConcurrentCalls)
+        if (configure.GetProperty(WireFields.Type).GetString() != FrameKinds.Configure || !configure.GetProperty(WireFields.Degree).TryGetInt32(out _degree) || _degree is < 1 or > ProtocolLimits.MaximumConcurrentCalls)
         {
             throw new InvalidDataException("Invalid concurrency configuration.");
         }
 
         try
         {
-            while (await channel.ReadAsync(lifetime.Token)is { } frame)
+            while (await channel.ReadAsync(lifetime.Token) is { } frame)
             {
                 Route(frame);
             }
@@ -197,7 +205,7 @@ internal sealed partial class ConcurrentRuntime(PluginApplication application)
                 id = call.Id,
                 code = errorCode,
                 primaryCode = call.ExecutionFailed ? FailureCodes.SdkError : errorCode,
-                cleanupFailed = errorCode == FailureCodes.CleanupError
+                cleanupFailed = true
             };
         }
 
@@ -253,6 +261,5 @@ internal sealed partial class ConcurrentRuntime(PluginApplication application)
         call.Completion = Task.Run(() => ExecuteAsync(call, frame));
         _running[id] = call.Completion;
         _ = call.Completion.ContinueWith(completedTask => _running.TryRemove(id, out _), CancellationToken.None, TaskContinuationOptions.ExecuteSynchronously, TaskScheduler.Default);
-        return;
     }
 }

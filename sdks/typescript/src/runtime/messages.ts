@@ -35,44 +35,56 @@ export type Terminal = {
     cleanupFailed?: boolean;
 };
 
-function object(value: unknown): Record<string, unknown> {
-    if (value === null || typeof value !== 'object' || Array.isArray(value))
+function requireObject(value: unknown): Record<string, unknown> {
+    if (value === null || typeof value !== 'object' || Array.isArray(value)) {
         throw new TypeError('Expected protocol object');
+    }
     return value as Record<string, unknown>;
 }
-function text(value: unknown): string {
-    if (typeof value !== 'string') throw new TypeError('Expected protocol string');
+function requireString(value: unknown): string {
+    if (typeof value !== 'string') {
+        throw new TypeError('Expected protocol string');
+    }
     return value;
 }
-function invocation(frame: Record<string, unknown>): Invocation {
-    const payload = object(frame.payload);
-    const context = object(frame.context);
-    if (!('configuration' in context)) throw new TypeError('Missing configuration');
-    if (payload.operation !== undefined) text(payload.operation);
-    if (payload.stream !== undefined) text(payload.stream);
-    if (payload.source !== undefined) text(payload.source);
-    if (payload.chunkBytes !== undefined && typeof payload.chunkBytes !== 'number')
+function decodeInvocation(frame: Record<string, unknown>): Invocation {
+    const payload = requireObject(frame.payload);
+    const context = requireObject(frame.context);
+    if (!('configuration' in context)) {
+        throw new TypeError('Missing configuration');
+    }
+    if (payload.operation !== undefined) {
+        requireString(payload.operation);
+    }
+    if (payload.stream !== undefined) {
+        requireString(payload.stream);
+    }
+    if (payload.source !== undefined) {
+        requireString(payload.source);
+    }
+    if (payload.chunkBytes !== undefined && typeof payload.chunkBytes !== 'number') {
         throw new TypeError('Invalid source chunk size');
+    }
     return {
         type: FrameKinds.Invoke,
-        id: text(frame.id),
-        operation: text(frame.operation),
+        id: requireString(frame.id),
+        operation: requireString(frame.operation),
         payload: payload as SdkPayload,
-        context: { tenant: text(context.tenant), configuration: context.configuration },
+        context: { tenant: requireString(context.tenant), configuration: context.configuration },
     };
 }
 export function decodeFrame(value: unknown): InboundFrame {
-    const frame = object(value);
+    const frame = requireObject(value);
     switch (frame.type) {
         case FrameKinds.Invoke:
-            return invocation(frame);
+            return decodeInvocation(frame);
         case FrameKinds.Cancel:
-            return { type: FrameKinds.Cancel, id: text(frame.id) };
+            return { type: FrameKinds.Cancel, id: requireString(frame.id) };
         case FrameKinds.CallbackResult:
             return {
                 type: FrameKinds.CallbackResult,
-                id: text(frame.id),
-                callbackId: text(frame.callbackId),
+                id: requireString(frame.id),
+                callbackId: requireString(frame.callbackId),
                 value: frame.value,
                 error: frame.error,
                 success: frame.success === false ? false : undefined,
@@ -83,10 +95,19 @@ export function decodeFrame(value: unknown): InboundFrame {
                 !Number.isInteger(frame.degree) ||
                 frame.degree < 1 ||
                 frame.degree > ProtocolLimits.MaximumConcurrentCalls
-            )
+            ) {
                 throw new TypeError('Invalid concurrency degree');
+            }
             return { type: FrameKinds.Configure, degree: frame.degree };
         default:
             throw new TypeError('Unknown protocol frame');
     }
+}
+
+export function encodeJson(value: unknown): string {
+    const text = JSON.stringify(value);
+    if (text === undefined) {
+        throw new TypeError('Result is not JSON');
+    }
+    return text;
 }

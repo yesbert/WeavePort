@@ -7,29 +7,65 @@ internal static class ClientDisposalChecks
 {
     internal static async Task RunAsync()
     {
-        foreach (bool fail in new[] { false, true })
-        {
-            var session = new Session(fail);
-            var client = new LocalPluginClient(session);
-            var source = (CancellationTokenSource)typeof(LocalPluginClient).GetField("_lifetime", BindingFlags.NonPublic | BindingFlags.Instance)!.GetValue(client)!;
-            await using var iterator = client.StreamAsync("items", JsonSerializer.SerializeToElement(1)).GetAsyncEnumerator();
-            if (!await iterator.MoveNextAsync()) throw new Exception("Missing first item");
-            for (int i = 0; i < 2; i++)
-            {
-                try { await client.DisposeAsync().AsTask().WaitAsync(TimeSpan.FromSeconds(3)); if (fail) throw new Exception("Missing failure"); }
-                catch (AggregateException) when (fail) { }
-            }
-            if (session.Disposals != 1) throw new Exception("Duplicate binding cleanup");
-            try { _ = source.Token; throw new Exception("client source not disposed"); }
-            catch (ObjectDisposedException) { }
-            int calls = session.Invocations;
-            try { await iterator.MoveNextAsync(); throw new Exception("Late stream must cancel"); }
-            catch (OperationCanceledException) { }
-            if (session.Invocations != calls) throw new Exception("Late stream dispatched after disposal");
-        }
+        await PausedStreamAsync(fail: false);
+        await PausedStreamAsync(fail: true);
         await ActiveCallAsync();
         Console.WriteLine("PASS client disposal, active calls, paused streams and cleanup failure");
     }
+    private static async Task PausedStreamAsync(bool fail)
+    {
+        var session = new Session(fail);
+        var client = new LocalPluginClient(session);
+        var source = (CancellationTokenSource)typeof(LocalPluginClient).GetField("_lifetime", BindingFlags.NonPublic | BindingFlags.Instance)!.GetValue(client)!;
+        await using var iterator = client.StreamAsync("items", JsonSerializer.SerializeToElement(1)).GetAsyncEnumerator();
+        if (!await iterator.MoveNextAsync())
+        {
+            throw new Exception("Missing first item");
+        }
+
+        await AssertDisposalAsync(client, fail);
+        await AssertDisposalAsync(client, fail);
+        if (session.Disposals != 1)
+        {
+            throw new Exception("Duplicate binding cleanup");
+        }
+
+        try
+        {
+            _ = source.Token;
+            throw new Exception("client source not disposed");
+        }
+        catch (ObjectDisposedException) { }
+        int calls = session.Invocations;
+        try
+        {
+            await iterator.MoveNextAsync();
+            throw new Exception("Late stream must cancel");
+        }
+        catch (OperationCanceledException) { }
+        if (session.Invocations != calls)
+        {
+            throw new Exception("Late stream dispatched after disposal");
+        }
+    }
+
+    private static async Task AssertDisposalAsync(LocalPluginClient client, bool expectFailure)
+    {
+        try
+        {
+            await client.DisposeAsync().AsTask().WaitAsync(TimeSpan.FromSeconds(3));
+        }
+        catch (AggregateException) when (expectFailure)
+        {
+            return;
+        }
+
+        if (expectFailure)
+        {
+            throw new Exception("Missing failure");
+        }
+    }
+
     private static async Task ActiveCallAsync()
     {
         var session = new WaitingSession();
@@ -37,11 +73,22 @@ internal static class ClientDisposalChecks
         Task<JsonElement> call = client.CallAsync("wait", JsonSerializer.SerializeToElement(1));
         await session.Entered.Task.WaitAsync(TimeSpan.FromSeconds(3));
         await client.DisposeAsync();
-        try { await call; throw new Exception("Active call was not cancelled"); }
+        try
+        {
+            await call;
+            throw new Exception("Active call was not cancelled");
+        }
         catch (OperationCanceledException) { }
-        try { await client.CallAsync("late", JsonSerializer.SerializeToElement(1)); throw new Exception("Late call admitted"); }
+        try
+        {
+            await client.CallAsync("late", JsonSerializer.SerializeToElement(1));
+            throw new Exception("Late call admitted");
+        }
         catch (ObjectDisposedException) { }
-        if (session.Invocations != 1) throw new Exception("Late call dispatched");
+        if (session.Invocations != 1)
+        {
+            throw new Exception("Late call dispatched");
+        }
     }
     private sealed class WaitingSession : IPluginSession
     {
@@ -68,7 +115,14 @@ internal static class ClientDisposalChecks
         public Task<InvocationResult> InvokeAsync(string operation, JsonElement payload, CancellationToken cancellationToken = default)
         {
             Invocations++;
-            object value = operation == "$sdk.start" ? new { stream = "s" } : new { items = new[] { 1 }, done = false };
+            object value = operation == "$sdk.start" ? new
+            {
+                stream = "s"
+            } : new
+            {
+                items = new[] { 1 },
+                done = false
+            };
             return Task.FromResult(new InvocationResult("ok", JsonSerializer.SerializeToElement(value), Instance, 0));
         }
         public Task RestartAsync(CancellationToken cancellationToken = default) => Task.CompletedTask;

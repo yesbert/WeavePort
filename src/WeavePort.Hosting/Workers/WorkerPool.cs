@@ -3,6 +3,7 @@ using WeavePort.Internal;
 using System.Text.Json;
 
 namespace WeavePort.Hosting;
+
 internal sealed partial class WorkerPool(WorkerPoolOptions options, TimeProvider clock, ILogger logger) : IAsyncDisposable
 {
     private readonly object _sync = new();
@@ -36,48 +37,6 @@ internal sealed partial class WorkerPool(WorkerPoolOptions options, TimeProvider
         }
     }
 
-    internal async Task PrewarmAsync(ExecutionProfile profile, string version, int count, CancellationToken token)
-    {
-        ArgumentOutOfRangeException.ThrowIfNegative(count);
-        var key = (Normalize(profile), version);
-        int previous;
-        lock (_sync)
-        {
-            ObjectDisposedException.ThrowIf(_disposed, this);
-            if (count > options.MaximumPristineWorkers - _targets.Where(p => p.Key != key).Sum(p => p.Value))
-            {
-                throw new ArgumentOutOfRangeException(nameof(count), "Warm targets exceed the shared reserve ceiling.");
-            }
-
-            previous = _targets.GetValueOrDefault(key);
-            if (count == 0)
-            {
-                _targets.Remove(key);
-            }
-            else
-            {
-                _targets[key] = count;
-            }
-        }
-
-        try
-        {
-            await MaintainAsync(token);
-        }
-        catch
-        {
-            lock (_sync)
-            {
-                if (_targets.GetValueOrDefault(key) == count)
-                {
-                    RestoreWarmTarget(key, previous);
-                }
-            }
-
-            throw;
-        }
-    }
-
     internal async Task<JsonElement> DestroyAsync(Worker worker)
     {
         lock (_sync)
@@ -108,62 +67,6 @@ internal sealed partial class WorkerPool(WorkerPoolOptions options, TimeProvider
         }
 
         return termination;
-    }
-
-    internal async Task MaintainAsync(CancellationToken token)
-    {
-        await _sweep.WaitAsync(token);
-        try
-        {
-            Worker[] expired;
-            KeyValuePair<(ExecutionProfile Profile, string Version), int>[] targets;
-            lock (_sync)
-            {
-                if (_disposed)
-                {
-                    return;
-                }
-
-                var retained = new Dictionary<(ExecutionProfile, string), int>();
-                expired = _workers.Where(w => w.Quarantined || (w.Pristine && ShouldRemove(w)) || (w.Reusable && (!w.Running || clock.GetElapsedTime(w.ReadyAt) >= options.ReusableIdleTimeout))).ToArray();
-                bool ShouldRemove(Worker worker)
-                {
-                    var key = (worker.Profile, worker.Version);
-                    retained.TryGetValue(key, out int count);
-                    retained[key] = count + 1;
-                    return Expired(worker) || !worker.Running || count >= _targets.GetValueOrDefault(key);
-                }
-
-                foreach (Worker worker in expired)
-                {
-                    worker.Pristine = false;
-                    worker.Reusable = false;
-                    worker.QuarantinedAt ??= clock.GetTimestamp();
-                }
-
-                targets = _targets.ToArray();
-            }
-
-            foreach (Worker worker in expired)
-            {
-                await DestroyAsync(worker);
-            }
-
-            foreach (var target in targets)
-            {
-                int needed;
-                lock (_sync)
-                {
-                    needed = target.Value - _workers.Count(w => w.Pristine && Matches(w, target.Key.Profile, target.Key.Version));
-                }
-
-                await ReplenishAsync(target.Key.Profile, target.Key.Version, needed, token);
-            }
-        }
-        finally
-        {
-            _sweep.Release();
-        }
     }
 
     private void CheckTenantBudget(string tenant, int memoryMiB)
@@ -248,31 +151,5 @@ internal sealed partial class WorkerPool(WorkerPoolOptions options, TimeProvider
         }
     }
 
-    private void RestoreWarmTarget((ExecutionProfile Profile, string Version) key, int previous)
-    {
-        if (previous == 0)
-        {
-            _targets.Remove(key);
-        }
-        else
-        {
-            _targets[key] = previous;
-        }
-    }
 
-    private async Task ReplenishAsync(ExecutionProfile profile, string version, int needed, CancellationToken token)
-    {
-        for (int i = 0; i < needed; i++)
-        {
-            token.ThrowIfCancellationRequested();
-            try
-            {
-                await StartAsync(profile, version, true, token);
-            }
-            catch (WorkerCapacityException)
-            {
-                break;
-            }
-        }
-    }
 }

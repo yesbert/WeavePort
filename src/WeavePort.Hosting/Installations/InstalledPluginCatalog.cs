@@ -1,5 +1,4 @@
 using static WeavePort.Hosting.InstallationFiles;
-using System.Collections.ObjectModel;
 using System.Security.Cryptography;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -28,7 +27,7 @@ public sealed partial class InstalledPluginCatalog(string releases, IReadOnlyDic
     {
         ValidateSegment(plugin);
         ValidateSegment(version);
-        string nested = Path.Combine(releases, plugin, "releases");
+        string nested = Path.Combine(releases, plugin, ReleasesDirectoryName);
         if (Directory.Exists(nested))
         {
             RejectLink(Path.Combine(releases, plugin));
@@ -36,10 +35,18 @@ public sealed partial class InstalledPluginCatalog(string releases, IReadOnlyDic
         }
 
         string root = Path.GetFullPath(Path.Combine(Directory.Exists(nested) ? nested : releases, version));
-        string path = Path.Combine(root, "installation.json");
+        string path = Path.Combine(root, ManifestFileName);
         (Manifest manifest, byte[] bytes) = ReadManifest(root, path);
         var identity = new InstallationIdentity(plugin, version, contract, Convert.ToHexString(SHA256.HashData(bytes)));
-        if (manifest.Schema is not (1 or 2) || manifest.Plugin != plugin || manifest.Version != version || manifest.Contract != contract || (pinned is not null && identity != pinned) || manifest.Files is null || manifest.EntryPoints is null || manifest.Files.Count is < 1 or > InstallationLimits.Files || manifest.EntryPoints.Count is < 1 or > InstallationLimits.EntryPoints)
+        if (manifest.Schema is not (1 or 2) || manifest.Plugin != plugin || manifest.Version != version ||
+            manifest.Contract != contract || (pinned is not null && identity != pinned))
+        {
+            throw new InvalidDataException("Installation identity, schema, contract or runtime selection mismatch.");
+        }
+
+        if (manifest.Files is null || manifest.EntryPoints is null ||
+            manifest.Files.Count is < 1 or > InstallationLimits.Files ||
+            manifest.EntryPoints.Count is < 1 or > InstallationLimits.EntryPoints)
         {
             throw new InvalidDataException("Installation identity, schema, contract or runtime selection mismatch.");
         }
@@ -103,7 +110,7 @@ public sealed partial class InstalledPluginCatalog(string releases, IReadOnlyDic
                 throw new InvalidDataException("Linked plugin roots are unsupported.");
             }
 
-            string selector = Path.Combine(directory, "active.txt");
+            string selector = Path.Combine(directory, SelectorFileName);
             if (!File.Exists(selector))
             {
                 continue;
@@ -111,8 +118,8 @@ public sealed partial class InstalledPluginCatalog(string releases, IReadOnlyDic
 
             string plugin = Path.GetFileName(directory);
             string version = ReadSelection(selector);
-            string root = Path.Combine(directory, "releases", version);
-            (Manifest manifest, _) = ReadManifest(root, Path.Combine(root, "installation.json"));
+            string root = Path.Combine(directory, ReleasesDirectoryName, version);
+            (Manifest manifest, _) = ReadManifest(root, Path.Combine(root, ManifestFileName));
             if (manifest.Contract != contract)
             {
                 continue;
@@ -154,7 +161,7 @@ public sealed partial class InstalledPluginCatalog(string releases, IReadOnlyDic
     /// <summary>Reads a trusted default selector. This is only for new logical operations.</summary>
     public static string ReadSelection(string path)
     {
-        if (!File.Exists(path) || new FileInfo(path).Length > 128)
+        if (!File.Exists(path) || new FileInfo(path).Length > InstallationLimits.SelectorBytes)
         {
             throw new InvalidDataException("Invalid installation selector.");
         }

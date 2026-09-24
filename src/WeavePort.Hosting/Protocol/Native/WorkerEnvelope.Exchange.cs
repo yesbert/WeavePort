@@ -2,6 +2,7 @@ using System.Text.Json;
 using WeavePort.Internal;
 
 namespace WeavePort.Hosting;
+
 internal static partial class WorkerEnvelope
 {
     internal static void ValidateExchange(JsonElement frame)

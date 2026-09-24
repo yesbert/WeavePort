@@ -1,6 +1,7 @@
 using System.Text.RegularExpressions;
 
 namespace WeavePort.Hosting;
+
 internal sealed record PythonSpecifier(string Operator, string Text, PythonVersion? Version, bool Prefix)
 {
     private const int MaximumRequirementCharacters = 4096;
@@ -29,29 +30,31 @@ internal sealed record PythonSpecifier(string Operator, string Text, PythonVersi
             throw new FormatException("Invalid Python version specifier.");
         }
 
-        string op = match.Groups[1].Value;
+        string comparisonOperator = match.Groups[1].Value;
         string value = match.Groups[2].Value;
-        if (op == "===")
+        if (comparisonOperator == "===")
         {
-            return new(op, value, null, false);
+            return new(comparisonOperator, value, null, false);
         }
 
         bool prefix = value.EndsWith(".*", StringComparison.Ordinal);
         PythonVersion version = PythonVersion.Parse(prefix ? value[..^2] : value);
-        if (prefix && (op is not ("==" or "!=") || version.IsPrerelease || version.Post is not null || version.Local.Length != 0) || op == "~=" && version.Release.Length < 2 || op is not ("==" or "!=") && version.Local.Length != 0)
+        if (prefix && (comparisonOperator is not ("==" or "!=") || version.IsPrerelease || version.Post is not null || version.Local.Length != 0) || comparisonOperator == "~=" && version.Release.Length < 2 || comparisonOperator is not ("==" or "!=") && version.Local.Length != 0)
         {
             throw new FormatException("Invalid Python specifier operator/version combination.");
         }
 
-        return new(op, value, version, prefix);
+        return new(comparisonOperator, value, version, prefix);
     }
 
     internal static bool Matches(string requirement, string observed)
     {
         PythonSpecifier[] constraints = Parse(requirement);
         PythonVersion candidate = PythonVersion.Parse(observed);
-        bool prereleases = constraints.Any(s => s.Operator is "==" or ">=" or "<=" or ">" or "<" or "~=" or "===" && s.EnablesPrereleases());
-        return (!candidate.IsPrerelease || prereleases) && constraints.All(s => s.Contains(candidate));
+        bool prereleases = constraints.Any(specifier =>
+            specifier.Operator is "==" or ">=" or "<=" or ">" or "<" or "~=" or "===" &&
+            specifier.EnablesPrereleases());
+        return (!candidate.IsPrerelease || prereleases) && constraints.All(specifier => specifier.Contains(candidate));
     }
 
     private bool EnablesPrereleases()

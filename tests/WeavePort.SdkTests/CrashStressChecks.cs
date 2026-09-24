@@ -16,17 +16,8 @@ internal static class CrashStressChecks
             {
                 try
                 {
-                    var echo = await client.CallAsync("echo", JsonSerializer.SerializeToElement(new { sentinel = 42 }));
-                    if (echo.GetProperty("sentinel").GetInt32() != 42) throw new Exception("Replacement echo mismatch");
-                    try
-                    {
-                        await client.CallAsync("crash", JsonSerializer.SerializeToElement(new { }));
-                        failures.Enqueue(new Exception("Crash unexpectedly succeeded"));
-                    }
-                    catch (PluginCallException error) when (error.Status == "failed")
-                    {
-                        Interlocked.Increment(ref completed);
-                    }
+                    await VerifyCrashAsync(client);
+                    Interlocked.Increment(ref completed);
                 }
                 catch (Exception error)
                 {
@@ -42,4 +33,28 @@ internal static class CrashStressChecks
         }
         Console.WriteLine($"PASS {completed} repeated crash/replacement assertions across three Python tenants");
     }
+    private static async Task VerifyCrashAsync(IPluginClient client)
+    {
+        var echo = await client.CallAsync("echo", JsonSerializer.SerializeToElement(new
+        {
+            sentinel = 42
+        }));
+        if (echo.GetProperty("sentinel").GetInt32() != 42)
+        {
+            throw new Exception("Replacement echo mismatch");
+        }
+
+        try
+        {
+            await client.CallAsync("crash", JsonSerializer.SerializeToElement(new
+            {
+            }));
+            throw new Exception("Crash unexpectedly succeeded");
+        }
+        catch (PluginCallException error) when (error.Status == "failed")
+        {
+            // Expected failure confirms this replacement cycle.
+        }
+    }
+
 }

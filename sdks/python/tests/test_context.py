@@ -1,4 +1,5 @@
 """Public context diagnostics and callback loop ownership."""
+
 import asyncio
 import sys
 import unittest
@@ -38,7 +39,9 @@ class ContextTests(unittest.IsolatedAsyncioTestCase):
         context = PluginContext("tenant", {}, runtime)
         with self.assertRaisesRegex(RuntimeError, "Use await call_host"):
             context.call_host_sync("echo", 1)
-        self.assertEqual(await asyncio.to_thread(context.call_host_sync, "echo", 2), ("echo", 2))
+        self.assertEqual(
+            await asyncio.to_thread(context.call_host_sync, "echo", 2), ("echo", 2)
+        )
 
 
 if __name__ == "__main__":

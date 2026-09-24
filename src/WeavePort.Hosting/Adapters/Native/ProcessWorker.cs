@@ -2,8 +2,13 @@ using System.Diagnostics;
 using System.Text.Json;
 
 namespace WeavePort.Hosting;
+
 internal sealed class ProcessWorker(ProcessProfile profile, string version, TimeProvider clock) : Worker(profile, version)
 {
+    private const UnixFileMode NonOwnerPermissions = UnixFileMode.GroupRead | UnixFileMode.GroupWrite |
+        UnixFileMode.GroupExecute | UnixFileMode.OtherRead | UnixFileMode.OtherWrite | UnixFileMode.OtherExecute;
+    private static readonly TimeSpan CleanupTimeout = TimeSpan.FromSeconds(5);
+    private static readonly TimeSpan McpShutdownGrace = TimeSpan.FromMilliseconds(100);
     private readonly SemaphoreSlim _cleanup = new(1);
     private Process? _process;
     private Task? _drain;
@@ -73,7 +78,7 @@ internal sealed class ProcessWorker(ProcessProfile profile, string version, Time
             Directory.CreateDirectory(profile.WorkspaceRoot, UnixFileMode.UserRead | UnixFileMode.UserWrite | UnixFileMode.UserExecute);
         }
 
-        if (!OperatingSystem.IsWindows() && (File.GetUnixFileMode(profile.WorkspaceRoot) & (UnixFileMode)63) != 0)
+        if (!OperatingSystem.IsWindows() && (File.GetUnixFileMode(profile.WorkspaceRoot) & NonOwnerPermissions) != 0)
         {
             throw new IOException("Local workspace parent must be private.");
         }
@@ -132,11 +137,13 @@ internal sealed class ProcessWorker(ProcessProfile profile, string version, Time
         {
             if (_removed)
             {
-                return JsonSerializer.SerializeToElement(new { });
+                return JsonSerializer.SerializeToElement(new
+                {
+                });
             }
 
             int? exitCode = null;
-            using var deadline = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+            using var deadline = new CancellationTokenSource(CleanupTimeout);
             if (_process is not null)
             {
                 exitCode = await StopProcessAsync(deadline.Token);
@@ -152,7 +159,12 @@ internal sealed class ProcessWorker(ProcessProfile profile, string version, Time
             _process?.Dispose();
             _process = null;
             _removed = true;
-            return JsonSerializer.SerializeToElement(new { exitCode, runningAtTermination = false, cleanupScope = "root-exited-best-effort-process-tree" });
+            return JsonSerializer.SerializeToElement(new
+            {
+                exitCode,
+                runningAtTermination = false,
+                cleanupScope = "root-exited-best-effort-process-tree"
+            });
         }
         finally
         {
@@ -162,7 +174,7 @@ internal sealed class ProcessWorker(ProcessProfile profile, string version, Time
 
     private async Task CloseMcpInputAsync()
     {
-        using var grace = new CancellationTokenSource(TimeSpan.FromMilliseconds(100));
+        using var grace = new CancellationTokenSource(McpShutdownGrace);
         try
         {
             _process!.StandardInput.Close();
@@ -170,7 +182,7 @@ internal sealed class ProcessWorker(ProcessProfile profile, string version, Time
         }
         catch (Exception error) when (error is IOException or OperationCanceledException)
         {
-        // The existing forced termination path follows when graceful shutdown cannot finish.
+            // The existing forced termination path follows when graceful shutdown cannot finish.
         }
     }
 

@@ -4,6 +4,7 @@ using DocumentWorkshop.Contracts;
 using WeavePort.Sdk;
 
 namespace DocumentWorkshop.Worker;
+
 internal sealed class Extraction(DocumentSource source, string kind)
 {
     private readonly Decoder _decoder = new UTF8Encoding(false, true).GetDecoder();

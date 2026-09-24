@@ -1,13 +1,5 @@
 """Exclusive protocol runtime; one invocation scope owns callback authority."""
 
-from .protocol import (
-    ProtocolVersions,
-    FailureCodes,
-    FrameKinds,
-    ProtocolLimits,
-    SdkOperations,
-)
-
 import asyncio
 import contextvars
 import json
@@ -15,6 +7,14 @@ import os
 import socket
 import sys
 import uuid
+
+from .protocol import (
+    ProtocolVersions,
+    FailureCodes,
+    FrameKinds,
+    ProtocolLimits,
+    SdkOperations,
+)
 
 from .cleanup import cleanup_all, execute_with_cleanup
 from .context import PluginContext, SessionCleanupError
@@ -57,11 +57,11 @@ class Runtime:
 
     async def read(self):
         line = await asyncio.to_thread(
-            self.reader.readline, (ProtocolLimits.FrameBytes) + 2
+            self.reader.readline, ProtocolLimits.FrameBytes + 2
         )
         if not line:
             return None
-        if len(line) > (ProtocolLimits.FrameBytes) + 1 or not line.endswith(b"\n"):
+        if len(line) > ProtocolLimits.FrameBytes + 1 or not line.endswith(b"\n"):
             raise ValueError("Frame limit")
         return json.loads(line)
 
@@ -94,7 +94,7 @@ class Runtime:
             reply = await self.read()
             if (
                 reply is None
-                or reply.get("type") != "callback-result"
+                or reply.get("type") != FrameKinds.CallbackResult
                 or reply.get("id") != request_id
                 or reply.get("callbackId") != callback_id
             ):

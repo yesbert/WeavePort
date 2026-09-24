@@ -1,4 +1,5 @@
 """Read-only, bounded Docker Engine one-shot memory sampling over a local Unix socket."""
+
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import http.client
 import json
@@ -8,16 +9,24 @@ import subprocess
 import time
 
 
+def context_endpoint():
+    command = ["docker", "context", "inspect"]
+    if os.environ.get("DOCKER_CONTEXT"):
+        command.append(os.environ["DOCKER_CONTEXT"])
+    return json.loads(subprocess.check_output(command, text=True, timeout=10))[0][
+        "Endpoints"
+    ]["docker"]["Host"]
+
+
 class Engine:
     def __init__(self):
         endpoint = os.environ.get("DOCKER_HOST")
         if not endpoint or os.environ.get("DOCKER_CONTEXT"):
-            command = ["docker", "context", "inspect"]
-            if os.environ.get("DOCKER_CONTEXT"):
-                command.append(os.environ["DOCKER_CONTEXT"])
-            endpoint = json.loads(subprocess.check_output(command, text=True, timeout=10))[0]["Endpoints"]["docker"]["Host"]
+            endpoint = context_endpoint()
         if not endpoint.startswith("unix://"):
-            raise ValueError("Density memory observer requires a local Docker Unix socket")
+            raise ValueError(
+                "Density memory observer requires a local Docker Unix socket"
+            )
         self.path = endpoint[7:]
 
     def get(self, path):
@@ -39,23 +48,44 @@ class Engine:
 
 
 def memory_row(engine, container):
-    data = engine.get("/containers/" + container["Id"] + "/stats?stream=false&one-shot=true")
+    data = engine.get(
+        "/containers/" + container["Id"] + "/stats?stream=false&one-shot=true"
+    )
     memory = (data or {}).get("memory_stats", {})
     if "usage" not in memory:
-        state = engine.get("/containers/" + container["Id"] + "/json")
-        if state and state.get("State", {}).get("Running"):
-            raise ValueError("Live container has unavailable memory")
-        return {"id": container["Id"], "names": container["Names"], "exitedDuringSample": True}
+        return unavailable_memory(engine, container)
     usage = memory["usage"]
     stats = memory.get("stats", {})
     cache = stats.get("total_inactive_file", stats.get("inactive_file", 0))
-    if not isinstance(usage, int) or usage < 0 or not isinstance(cache, int) or cache < 0:
+    if (
+        not isinstance(usage, int)
+        or usage < 0
+        or not isinstance(cache, int)
+        or cache < 0
+    ):
         raise ValueError("Invalid Docker memory accounting")
     # Match Docker CLI cache subtraction while retaining the raw cgroup accounting separately.
     working = usage - cache if cache < usage else usage
-    return {"id": container["Id"], "names": container["Names"], "read": data.get("read"),
-            "usageBytes": usage, "workingSetBytes": working, "limitBytes": memory.get("limit"),
-            "cpuTotalNs": data.get("cpu_stats", {}).get("cpu_usage", {}).get("total_usage")}
+    return {
+        "id": container["Id"],
+        "names": container["Names"],
+        "read": data.get("read"),
+        "usageBytes": usage,
+        "workingSetBytes": working,
+        "limitBytes": memory.get("limit"),
+        "cpuTotalNs": data.get("cpu_stats", {}).get("cpu_usage", {}).get("total_usage"),
+    }
+
+
+def unavailable_memory(engine, container):
+    state = engine.get("/containers/" + container["Id"] + "/json")
+    if state and state.get("State", {}).get("Running"):
+        raise ValueError("Live container has unavailable memory")
+    return {
+        "id": container["Id"],
+        "names": container["Names"],
+        "exitedDuringSample": True,
+    }
 
 
 def snapshot(engine, known):
@@ -71,13 +101,20 @@ def snapshot(engine, known):
             rows.append(future.result())
     finally:
         pool.shutdown(wait=True, cancel_futures=True)
-    owned = [row for row in rows if any(name.lstrip("/") in known for name in row["names"])]
+    owned = [
+        row for row in rows if any(name.lstrip("/") in known for name in row["names"])
+    ]
     valid = [row for row in rows if "usageBytes" in row]
     owned_valid = [row for row in owned if "usageBytes" in row]
     scale = 1048576
-    return {"at": time.time(), "durationSeconds": time.monotonic() - start, "rows": rows,
-            "owned": owned, "ownedMiB": sum(r["workingSetBytes"] for r in owned_valid) / scale,
-            "ownedRawMiB": sum(r["usageBytes"] for r in owned_valid) / scale,
-            "allContainersMiB": sum(r["workingSetBytes"] for r in valid) / scale,
-            "allContainersRawMiB": sum(r["usageBytes"] for r in valid) / scale,
-            "unavailableAfterExit": sum("exitedDuringSample" in row for row in owned)}
+    return {
+        "at": time.time(),
+        "durationSeconds": time.monotonic() - start,
+        "rows": rows,
+        "owned": owned,
+        "ownedMiB": sum(r["workingSetBytes"] for r in owned_valid) / scale,
+        "ownedRawMiB": sum(r["usageBytes"] for r in owned_valid) / scale,
+        "allContainersMiB": sum(r["workingSetBytes"] for r in valid) / scale,
+        "allContainersRawMiB": sum(r["usageBytes"] for r in valid) / scale,
+        "unavailableAfterExit": sum("exitedDuringSample" in row for row in owned),
+    }

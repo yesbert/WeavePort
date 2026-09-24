@@ -20,15 +20,28 @@ if (args.Length == 3 && args[0] == "configure")
     Console.WriteLine("Local fixture configuration written.");
     return;
 }
-if (args.Length < 2) throw new ArgumentException("Use doctor|verify|capacity CONFIG [OUTPUT] or configure ROOT CONFIG");
+if (args.Length < 2)
+{
+    throw new ArgumentException("Use doctor|verify|capacity CONFIG [OUTPUT] or configure ROOT CONFIG");
+}
+
 string output = Path.GetFullPath(args.Length > 2 ? args[2] : "local-evidence");
 Directory.CreateDirectory(output);
 LocalConfiguration config = LocalConfiguration.Load(args[1]);
 switch (args[0])
 {
-    case "doctor": Environment.ExitCode = await LocalVerification.DoctorAsync(config, output); break;
-    case "verify": Environment.ExitCode = await LocalVerification.RunAsync(config, output); break;
-    case "compare-linux": Environment.ExitCode = await LinuxComparison.RunAsync(config, output); break;
-    case "capacity": Environment.ExitCode = await LocalCapacity.RunAsync(config, output); break;
-    default: throw new ArgumentException("Unknown local command");
+    case "doctor":
+        Environment.ExitCode = await LocalVerification.DoctorAsync(config, output);
+        break;
+    case "verify":
+        Environment.ExitCode = await LocalVerification.RunAsync(config, output);
+        break;
+    case "compare-linux":
+        Environment.ExitCode = await LinuxComparison.RunAsync(config, output);
+        break;
+    case "capacity":
+        Environment.ExitCode = await LocalCapacity.RunAsync(config, output);
+        break;
+    default:
+        throw new ArgumentException("Unknown local command");
 }

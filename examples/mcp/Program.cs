@@ -15,9 +15,13 @@ foreach (ProcessProtocol protocol in new[] { ProcessProtocol.Mcp20251125, Proces
         Protocol = protocol
     };
     var context = new PluginContext("department-a", "document-tools", "1", "local-mcp",
-        JsonSerializer.SerializeToElement(new { }));
+        JsonSerializer.SerializeToElement(new
+        {
+        }));
     await using var session = await host.BindAsync(context, profile, new NoCallbacks(), []);
-    InvocationResult list = await session.InvokeAsync(McpMethods.ListTools, JsonSerializer.SerializeToElement(new { }));
+    InvocationResult list = await session.InvokeAsync(McpMethods.ListTools, JsonSerializer.SerializeToElement(new
+    {
+    }));
     EnsureSuccess(list);
     if (!list.Value.GetProperty("tools").EnumerateArray().Any(tool => tool.GetProperty("name").GetString() == "normalize"))
     {
@@ -27,7 +31,10 @@ foreach (ProcessProtocol protocol in new[] { ProcessProtocol.Mcp20251125, Proces
     InvocationResult result = await session.InvokeAsync(McpMethods.CallTool, JsonSerializer.SerializeToElement(new
     {
         name = "normalize",
-        arguments = new { text = " hello   world " }
+        arguments = new
+        {
+            text = " hello   world "
+        }
     }));
     EnsureSuccess(result);
     string? text = result.Value.GetProperty("structuredContent").GetProperty("text").GetString();

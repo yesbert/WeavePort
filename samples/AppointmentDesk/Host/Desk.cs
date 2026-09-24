@@ -6,23 +6,6 @@ using WeavePort.Sdk.Client;
 using WeavePort.Samples;
 
 namespace AppointmentDesk.Host;
-internal sealed record RuntimePaths(string Root, string Dotnet, string? SelectedVersion = null, string? Selector = null, string? WorkerRoot = null)
-{
-    internal string SelectorPath => Selector ?? Path.Combine(Root, "active-version.txt");
-    internal InstalledPluginCatalog Catalog => new(Path.Combine(Root, "releases"), new Dictionary<string, string> { ["dotnet"] = Dotnet });
-
-    internal InstalledPlugin Resolve(InstallationIdentity? pin = null)
-    {
-        if (pin is not null && SelectedVersion is not null && SelectedVersion != pin.Version)
-        {
-            throw new InvalidDataException("Explicit release conflicts with retained installation.");
-        }
-
-        return Catalog.Resolve("appointment-desk", pin?.Version ?? SelectedVersion ?? InstalledPluginCatalog.ReadSelection(SelectorPath), "appointment-desk/v1", pin);
-    }
-
-    internal void Activate(string version) => Catalog.Activate(SelectorPath, "appointment-desk", version, "appointment-desk/v1");
-}
 
 internal sealed record Hooks(Func<IPluginSession, BookingCallbacks, Task>? Bound = null, Func<Task>? Prepared = null, bool DenyBook = false);
 internal sealed class Desk(RuntimePaths runtime, CalendarStore store, EmbeddedCoordinator coordinator)
@@ -34,7 +17,9 @@ internal sealed class Desk(RuntimePaths runtime, CalendarStore store, EmbeddedCo
         var installed = runtime.Resolve(entry?.Installation);
         var callbacks = new BookingCallbacks(store, request, installed.Identity.Version);
         var process = new ProcessProfile(runtime.Dotnet, [installed.EntryPoints["dotnet"], request.Strategy], trustedCode: true, workspaceRoot: runtime.WorkerRoot ?? Path.Combine(runtime.Root, "workers"), timeout: TimeSpan.FromSeconds(10));
-        var session = await host.BindAsync(new PluginContext(request.Scope.Tenant, request.Strategy, installed.Identity.Version, request.Scope.Profile, JsonSerializer.SerializeToElement(new { })), process, callbacks, hooks?.DenyBook == true ? ["calendar.available"] : ["calendar.available", "calendar.book"], cancellationToken: token);
+        var session = await host.BindAsync(new PluginContext(request.Scope.Tenant, request.Strategy, installed.Identity.Version, request.Scope.Profile, JsonSerializer.SerializeToElement(new
+        {
+        })), process, callbacks, hooks?.DenyBook == true ? ["calendar.available"] : ["calendar.available", "calendar.book"], cancellationToken: token);
         await using var client = new LocalPluginClient(session);
         if (hooks?.Bound is not null)
         {

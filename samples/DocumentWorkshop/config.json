@@ -1,1 +1,6 @@
-{"installedReaders":["markdown","plain"]}
+{
+  "installedReaders": [
+    "markdown",
+    "plain"
+  ]
+}

@@ -6,7 +6,7 @@
         "type": "Direct",
         "requested": "[0.7.0, )",
         "resolved": "0.7.0",
-        "contentHash": "RMxKjJKlJzPTAG9D4JGzC66wtrleLHwf40+R93cBgmfl3CoxaVIvAagTYX2yPeWN5MPzI8T3ctC7afLcB4RfIA==",
+        "contentHash": "07nmtLRQkX4E3zqNIu/JI4SM9r6dQkfL6Aejcc4ICeUGA5+eTB5fkihYsG+i9PfEektDdPL7EM9xQU+/y74UgA==",
         "dependencies": {
           "Chasm.SemanticVersioning": "2.8.2",
           "Microsoft.Extensions.Logging.Abstractions": "10.0.12",
@@ -19,7 +19,7 @@
         "type": "Direct",
         "requested": "[0.7.0, )",
         "resolved": "0.7.0",
-        "contentHash": "anJvPtlPlMrAHmXJHJXhqxBsFyISZ5pH9DdaHru5/6HQ9OjvFnY6WQ5XtPIfN5ko3HyyHmLZPh613hFMbYUtUg==",
+        "contentHash": "5RSUdhl4Oerxkyv3/+hyZpJJPqW6fM9vYJRSciSnCIe1B/5mb8lhv7LpusAql+PHYKee3ehIWUqtbUYrDOWVgA==",
         "dependencies": {
           "WeavePort.Abstractions": "0.7.0"
         }
@@ -58,7 +58,7 @@
       "WeavePort.Abstractions": {
         "type": "Transitive",
         "resolved": "0.7.0",
-        "contentHash": "wDSw9tu91T6BzWS9oCUI1TL4FyVrZPoWtvNQ95LfRt19wIsMMWdGmNu0u+lj5BcGQ/9YECPngoj/rR13XuKCsg=="
+        "contentHash": "7l8oZHrkfwbQxmge3sWYTvMT1viRHrHjGLEn7OIoEZQYyABDMdE1jvRZyHVoS0zsfyvxg0+aWC91HqLZNtA0aw=="
       },
       "decisionroom.contracts": {
         "type": "Project"

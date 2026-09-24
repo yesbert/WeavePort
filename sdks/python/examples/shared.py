@@ -1,9 +1,11 @@
 """Shared native worker: one model, bounded concurrent invocations."""
+
 import time
 from weaveport_sdk import PluginApplication
 
 app = PluginApplication("1", concurrent_calls=True)
 # Initialize a trusted, thread-safe model once here.
+
 
 @app.function("score")
 def score(value, context):
@@ -13,8 +15,10 @@ def score(value, context):
         return None
     return {"tenant": context.tenant, "score": value["number"] * 2}
 
+
 @app.function("callback")
 def callback(value, context):
     return context.call_host_sync("echo", value)
+
 
 app.run()

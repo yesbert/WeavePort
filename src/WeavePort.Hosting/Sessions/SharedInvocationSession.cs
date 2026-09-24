@@ -4,6 +4,7 @@ using System.Text.Json;
 using WeavePort.Abstractions;
 
 namespace WeavePort.Hosting;
+
 internal sealed class SharedInvocationSession(SharedPlugin plugin, string tenant) : IPluginSession
 {
     private SharedWorker? _worker;
@@ -22,7 +23,9 @@ internal sealed class SharedInvocationSession(SharedPlugin plugin, string tenant
     public async Task<InvocationResult> InvokeAsync(string operation, JsonElement payload, CancellationToken cancellationToken = default)
     {
         long started = Stopwatch.GetTimestamp();
-        var empty = JsonSerializer.SerializeToElement(new { });
+        var empty = JsonSerializer.SerializeToElement(new
+        {
+        });
         if (plugin.Snapshot.Disabled)
         {
             return new(FailureCodes.Disabled, empty, "", 0);

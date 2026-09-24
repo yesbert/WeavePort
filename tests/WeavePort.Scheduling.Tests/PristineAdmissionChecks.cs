@@ -23,8 +23,13 @@ internal static class PristineAdmissionChecks
             trustedCode: true, workspaceRoot: root, reservedMemoryMiB: 64);
         await using var host = new PluginHost(1, new WorkerPoolOptions(MaximumWorkers: 1, MemoryBudgetMiB: 64,
             MaximumPristineWorkers: 1, MaximumConcurrentStarts: 2, MaximumWorkersPerTenant: 1, MemoryBudgetPerTenantMiB: 64,
-            MaintenanceInterval: TimeSpan.FromMilliseconds(25)) { WaitForStartCapacity = wait });
-        JsonElement empty = JsonSerializer.SerializeToElement(new { });
+            MaintenanceInterval: TimeSpan.FromMilliseconds(25))
+        {
+            WaitForStartCapacity = wait
+        });
+        JsonElement empty = JsonSerializer.SerializeToElement(new
+        {
+        });
         var session = await host.BindAsync(new("reserve-customer", "plugin", "1", "test", empty), callProfile, new NoCallbacks(), []);
         Task warming = host.PrewarmAsync(warmProfile, "1", 1);
         Task<InvocationResult>? call = null;
@@ -32,25 +37,15 @@ internal static class PristineAdmissionChecks
         try
         {
             using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(5));
-            while (!File.Exists(gate + ".entered")) await Task.Delay(10, timeout.Token);
+            while (!File.Exists(gate + ".entered"))
+            {
+                await Task.Delay(10, timeout.Token);
+            }
+
             string warmPid = await File.ReadAllTextAsync(gate + ".entered");
             check(host.Snapshot.Starting == 1, "controlled pristine startup owns the only reservation");
             call = session.InvokeAsync("echo", empty, cancellation.Token);
-            if (cancel)
-            {
-                cancellation.Cancel();
-                check((await call.WaitAsync(TimeSpan.FromSeconds(2))).Status == "cancelled", "waiting for pristine capacity respects caller cancellation");
-                check(host.Snapshot.Starting == 1, "caller cancellation does not destroy an unassigned shared startup");
-            }
-            else if (wait)
-            {
-                await Task.Delay(75);
-                check(!call.IsCompleted, "foreground waits for a starting pristine worker instead of returning busy");
-            }
-            else
-            {
-                check((await call.WaitAsync(TimeSpan.FromSeconds(2))).Status == "busy", "default direct-host capacity admission remains fail-fast");
-            }
+            await CheckPendingAdmissionAsync(call, host, cancellation, check, wait, cancel);
             await File.WriteAllTextAsync(gate, "release");
             await warming.WaitAsync(TimeSpan.FromSeconds(5));
             InvocationResult result = wait && !cancel ? await call : await session.InvokeAsync("echo", empty);
@@ -65,13 +60,36 @@ internal static class PristineAdmissionChecks
         {
             await File.WriteAllTextAsync(gate, "release");
             await warming.WaitAsync(TimeSpan.FromSeconds(5));
-            if (call is not null) await call.WaitAsync(TimeSpan.FromSeconds(5));
+            if (call is not null)
+            {
+                await call.WaitAsync(TimeSpan.FromSeconds(5));
+            }
+
             await host.DisposeAsync();
             File.Delete(gate);
             File.Delete(gate + ".entered");
             File.Delete(gate + ".pending");
         }
         check(host.Snapshot is { Workers: 0, Bindings: 0, Tenants: 0 }, "pristine admission control cleans all owned resources");
+    }
+
+    private static async Task CheckPendingAdmissionAsync(Task<InvocationResult> call, PluginHost host,
+        CancellationTokenSource cancellation, Action<bool, string> check, bool wait, bool cancel)
+    {
+        if (cancel)
+        {
+            cancellation.Cancel();
+            check((await call.WaitAsync(TimeSpan.FromSeconds(2))).Status == "cancelled", "waiting for pristine capacity respects caller cancellation");
+            check(host.Snapshot.Starting == 1, "caller cancellation does not destroy an unassigned shared startup");
+            return;
+        }
+        if (wait)
+        {
+            await Task.Delay(75);
+            check(!call.IsCompleted, "foreground waits for a starting pristine worker instead of returning busy");
+            return;
+        }
+        check((await call.WaitAsync(TimeSpan.FromSeconds(2))).Status == "busy", "default direct-host capacity admission remains fail-fast");
     }
 
     private static async Task IndependentStartupAsync(string root, Action<bool, string> check)
@@ -82,8 +100,13 @@ internal static class PristineAdmissionChecks
             [typeof(PristineAdmissionChecks).Assembly.Location, "--worker", "--ready-gate", gate],
             trustedCode: true, workspaceRoot: root, reservedMemoryMiB: 64);
         await using var host = new PluginHost(2, new WorkerPoolOptions(MaximumWorkers: 2, MemoryBudgetMiB: 128,
-            MaximumPristineWorkers: 1, MaximumConcurrentStarts: 3) { WaitForStartCapacity = true });
-        JsonElement empty = JsonSerializer.SerializeToElement(new { });
+            MaximumPristineWorkers: 1, MaximumConcurrentStarts: 3)
+        {
+            WaitForStartCapacity = true
+        });
+        JsonElement empty = JsonSerializer.SerializeToElement(new
+        {
+        });
         var a = await host.BindAsync(new("a", "plugin", "1", "test", empty), ProfileFor(otherGate), new NoCallbacks(), []);
         var b = await host.BindAsync(new("b", "plugin", "1", "test", empty), ProfileFor(warmGate), new NoCallbacks(), []);
         Task warming = host.PrewarmAsync(ProfileFor(warmGate), "1", 1);
@@ -91,9 +114,17 @@ internal static class PristineAdmissionChecks
         using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(5));
         try
         {
-            while (!File.Exists(warmGate + ".entered")) await Task.Delay(10, timeout.Token);
+            while (!File.Exists(warmGate + ".entered"))
+            {
+                await Task.Delay(10, timeout.Token);
+            }
+
             first = a.InvokeAsync("echo", empty);
-            while (!File.Exists(otherGate + ".entered")) await Task.Delay(10, timeout.Token);
+            while (!File.Exists(otherGate + ".entered"))
+            {
+                await Task.Delay(10, timeout.Token);
+            }
+
             second = b.InvokeAsync("echo", empty);
             await File.WriteAllTextAsync(warmGate, "release");
             var completed = await second.WaitAsync(TimeSpan.FromSeconds(1));
@@ -107,11 +138,29 @@ internal static class PristineAdmissionChecks
             await File.WriteAllTextAsync(warmGate, "release");
             await File.WriteAllTextAsync(otherGate, "release");
             await warming.WaitAsync(TimeSpan.FromSeconds(5));
-            if (first is not null) await first.WaitAsync(TimeSpan.FromSeconds(5));
-            if (second is not null) await second.WaitAsync(TimeSpan.FromSeconds(5));
+            if (first is not null)
+            {
+                await first.WaitAsync(TimeSpan.FromSeconds(5));
+            }
+
+            if (second is not null)
+            {
+                await second.WaitAsync(TimeSpan.FromSeconds(5));
+            }
+
             await host.DisposeAsync();
             foreach (string gate in new[] { warmGate, otherGate })
-                foreach (string suffix in new[] { "", ".entered", ".pending" }) File.Delete(gate + suffix);
+            {
+                DeleteGate(gate);
+            }
+        }
+    }
+
+    private static void DeleteGate(string gate)
+    {
+        foreach (string suffix in new[] { "", ".entered", ".pending" })
+        {
+            File.Delete(gate + suffix);
         }
     }
 
