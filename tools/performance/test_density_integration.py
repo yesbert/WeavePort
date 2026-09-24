@@ -14,6 +14,13 @@ HARNESS = (
 
 
 class HarnessControls(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        if not HARNESS.is_file():
+            raise RuntimeError(
+                "Build benchmarks/WeavePort.Density in Release before running native controls"
+            )
+
     def run_case(self, **overrides):
         with tempfile.TemporaryDirectory(prefix="wp-density-control-") as directory:
             root = Path(directory)
@@ -38,7 +45,9 @@ class HarnessControls(unittest.TestCase):
                 text=True,
                 timeout=30,
             )
-            result = json.loads((root / "result.json").read_text())
+            result_path = root / "result.json"
+            self.assertTrue(result_path.is_file(), process.stdout + process.stderr)
+            result = json.loads(result_path.read_text())
             self.assertNotEqual(process.returncode, 0)
             self.assertFalse(result["passed"])
             self.assertEqual(result["cleanup"]["Workers"], 0)

@@ -1,6 +1,5 @@
 """Trusted fixture helpers. Never preload customer plugin code in the fork server."""
 
-import json
 import os
 from pathlib import Path
 import shutil

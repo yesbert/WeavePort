@@ -10,7 +10,7 @@ import time
 
 import docker_memory
 from density_stage import run_stage
-from density_support import ROOT, command, mib, pressure, refresh_known, write_json
+from density_support import ROOT, command, pressure, write_json
 
 
 def identities(output):

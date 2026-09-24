@@ -3,7 +3,6 @@ import os
 from pathlib import Path
 import signal
 import sys
-import time
 
 if not Path("/.dockerenv").exists() or Path(__file__).resolve() != Path(
     "/fixture/matrix_runtime.py"

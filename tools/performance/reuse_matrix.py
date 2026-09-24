@@ -6,18 +6,12 @@ import hashlib
 import json
 import os
 from pathlib import Path
-import random
-import time
 import docker_memory
 from density import identities, pressure
 from matrix_lane import MatrixLane
 from matrix_measurement import MatrixMeasurement
 from matrix_engine import EngineLane
-from matrix_metrics import Histogram
-from matrix_queue import SerialReadyQueue, grouped_capacity
-from matrix_resources import ResourceTotals
-from matrix_policy import PolicyPool
-from reuse_support import command, correct, request, write
+from reuse_support import command, write
 
 ROOT = Path(__file__).resolve().parents[2]
 

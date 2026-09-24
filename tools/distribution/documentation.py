@@ -1,7 +1,7 @@
 """Prepare offline consumer guidance and reject unresolved artifact-relative links."""
 
 import os
-from pathlib import Path, PurePosixPath
+from pathlib import Path
 import posixpath
 import re
 import subprocess

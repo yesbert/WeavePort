@@ -421,7 +421,7 @@
     "category": "implementation",
     "status": "reviewed",
     "assessment": "Read independent adversarial fixture and launcher. Named operation handlers and guards expose intent; deliberate hangs, state retention, exhaustion and malformed frames remain negative controls. Raw C#/Python/TypeScript cooperative transcripts verified; Docker-only cases inspected/compiled, not executed.",
-    "reviewed_sha256": "115cc780295e56c6ac7288e890ac38405fc8d1ac775b3d86b58bcb23542d3b3e"
+    "reviewed_sha256": "d29321f9e3a663766f52a4a9457205e66b4a7fa10c15b8f74b103c6b73bf705d"
   },
   {
     "path": "benchmarks/WeavePort.Reuse/fixture/plugin_a.py",
@@ -445,7 +445,7 @@
     "category": "implementation",
     "status": "reviewed",
     "assessment": "Read independent adversarial fixture and launcher. Named operation handlers and guards expose intent; deliberate hangs, state retention, exhaustion and malformed frames remain negative controls. Raw C#/Python/TypeScript cooperative transcripts verified; Docker-only cases inspected/compiled, not executed.",
-    "reviewed_sha256": "86464befb2c0a977fd8db6ada902a2fc6314de2e27118e41aef546b2a2f07a78"
+    "reviewed_sha256": "9053395804168291519a9b2691452197d4e4b9aca76a5e2b83c11a285fc7c365"
   },
   {
     "path": "benchmarks/WeavePort.Reuse/fixture/runtime_helpers.py",
@@ -453,7 +453,7 @@
     "category": "implementation",
     "status": "reviewed",
     "assessment": "Read independent adversarial fixture and launcher. Named operation handlers and guards expose intent; deliberate hangs, state retention, exhaustion and malformed frames remain negative controls. Raw C#/Python/TypeScript cooperative transcripts verified; Docker-only cases inspected/compiled, not executed.",
-    "reviewed_sha256": "146443f1e4e41e5ec531a4ef266e2a9f93aae5f5c6451285348c40ca4583cfd4"
+    "reviewed_sha256": "a839c2a7485c269342a48d9f9ea576cc20a7cdf54caadbb7dd5640033a73c002"
   },
   {
     "path": "benchmarks/WeavePort.Reuse/fixture/scope.py",
@@ -2525,7 +2525,7 @@
     "category": "audit record",
     "status": "reviewed",
     "assessment": "Reviewed audit scope, decisions, completed tasks and per-file evidence bookkeeping. Qualification task remains open until the frozen candidate passes.",
-    "reviewed_sha256": "bfe85f552a34dae33dc3e204a61a3c5ff8111892d1ad6b387855a1190ab966ea"
+    "reviewed_sha256": "749f366da4e15b68035559b8a9bcc8fd1dbd636e67b1294fea646081ce7cee78"
   },
   {
     "path": "openspec/changes/audit-file-readability/files.json",
@@ -13608,7 +13608,7 @@
     "category": "implementation",
     "status": "reviewed",
     "assessment": "Read every shared execution scenario and language fixture. Split invocation/lifecycle/failure scenarios and callback fixtures; extract language SDK copying from manifest sealing and flatten adversarial callback dispatch. Full native suite passes including mixed catalog, duplicate identity, callback flood and 512-tenant churn.",
-    "reviewed_sha256": "5ac3179b49874deeb753364324e9479cca68b47ead9bdaeef0f1e9bc0e463903"
+    "reviewed_sha256": "6647fad92516d86e01e41851b56a175ac7e1ccb8f73724ef684c1c878e5c6dd4"
   },
   {
     "path": "tests/WeavePort.WorkerHost/FixtureLogger.cs",
@@ -13736,7 +13736,7 @@
     "category": "implementation",
     "status": "reviewed",
     "assessment": "Read deterministic generator and canonical inputs; checked generated drift and retained independent literal protocol assertions.",
-    "reviewed_sha256": "990820843508ade412445b711fb5088eb20a23bd25494c7ca160fd79ad9496e0"
+    "reviewed_sha256": "7eb7cf3cd63e9649c5b67cb41f3ce11968784866df18fcd23fb2e8fc54a0cca5"
   },
   {
     "path": "tests/documentation/test-public-tree.py",
@@ -14112,7 +14112,7 @@
     "category": "implementation",
     "status": "reviewed",
     "assessment": "Read qualification orchestration, immutable artifact inventory, source lockfile validation and stage evidence recording. Split stage recorder and artifact inventory into named modules; retained source/packed run order and exact package checks. Final frozen qualification will verify execution.",
-    "reviewed_sha256": "e9c202f50490c53d7fad6a64f31e5da406a9910f3b0bf5312fc05c8673f098ac"
+    "reviewed_sha256": "2a7e24fdf1cb5e47eed836ac02c9d716b7fab7618b0e74579b033f06f34afd18"
   },
   {
     "path": "tools/candidate/shared.py",
@@ -14136,7 +14136,7 @@
     "category": "implementation",
     "status": "reviewed",
     "assessment": "Read retrieval generation and offline documentation dependency traversal. Extracted closure state and link resolution, regenerated retrieval output and passed maintained/packaged link checks.",
-    "reviewed_sha256": "0c3d66a89502070dfd3aee4992eddbbfe7706f3adde47575955b9a8b7410cad7"
+    "reviewed_sha256": "0006e339bf87bbd3ee212eafe0cbeffe99d52ce1c5b85949a14bec2baa83c900"
   },
   {
     "path": "tools/distribution/package.py",
@@ -14176,7 +14176,7 @@
     "category": "implementation",
     "status": "reviewed",
     "assessment": "Read complete performance and experimental reuse tooling. Separate bounded lane ownership, workload scheduling, observations and evidence rendering; preserve fixed historical distribution pins explicitly. 47 local unit/integration controls passed. Captured 230 security invocations replay identically; historical performance rendering is byte-identical. No Docker experiment executed.",
-    "reviewed_sha256": "b90eafa720409aac2806da5886bc1e489e45c1a3c6e8c0910a036c64be655fde"
+    "reviewed_sha256": "aa3839c7531f7c202f1f4365dae7cd263ae159d550ad1ad0ef75f61aae8107a2"
   },
   {
     "path": "tools/performance/density_stage.py",
@@ -14296,7 +14296,7 @@
     "category": "implementation",
     "status": "reviewed",
     "assessment": "Read complete performance and experimental reuse tooling. Separate bounded lane ownership, workload scheduling, observations and evidence rendering; preserve fixed historical distribution pins explicitly. 47 local unit/integration controls passed. Captured 230 security invocations replay identically; historical performance rendering is byte-identical. No Docker experiment executed.",
-    "reviewed_sha256": "84a50ecb5a7c96ba06835d1da9717b2798c6da0e4d94c09b4c1c9edb1f37cb9d"
+    "reviewed_sha256": "705860f7809a85ff8b3e2b59cd60daad3476d3651f976b90391f91d8121280a6"
   },
   {
     "path": "tools/performance/matrix_queue.py",
@@ -14360,7 +14360,7 @@
     "category": "implementation",
     "status": "reviewed",
     "assessment": "Read complete performance and experimental reuse tooling. Separate bounded lane ownership, workload scheduling, observations and evidence rendering; preserve fixed historical distribution pins explicitly. 47 local unit/integration controls passed. Captured 230 security invocations replay identically; historical performance rendering is byte-identical. No Docker experiment executed.",
-    "reviewed_sha256": "f7c11692d10803d083b8c9e9b1d52590ab0b6b387e95f0591e7b5bb455670338"
+    "reviewed_sha256": "0b1ae5adecbacdc35e7264d898ef61f6fab8805f18068960cbfdfbbd955551ea"
   },
   {
     "path": "tools/performance/reuse_measurement.py",
@@ -14400,7 +14400,7 @@
     "category": "implementation",
     "status": "reviewed",
     "assessment": "Read complete performance and experimental reuse tooling. Separate bounded lane ownership, workload scheduling, observations and evidence rendering; preserve fixed historical distribution pins explicitly. 47 local unit/integration controls passed. Captured 230 security invocations replay identically; historical performance rendering is byte-identical. No Docker experiment executed.",
-    "reviewed_sha256": "55afc871ec1213c6f2cc7a5bfd2f0f22f9a4da892c2ca33248292e7e81c00f43"
+    "reviewed_sha256": "b3cccbb636cf6e695cd674ec6124d7927c09262cc5a4bc2596e121bc97765fe0"
   },
   {
     "path": "tools/performance/test_density_integration.py",
@@ -14408,7 +14408,7 @@
     "category": "implementation",
     "status": "reviewed",
     "assessment": "Read complete performance and experimental reuse tooling. Separate bounded lane ownership, workload scheduling, observations and evidence rendering; preserve fixed historical distribution pins explicitly. 47 local unit/integration controls passed. Captured 230 security invocations replay identically; historical performance rendering is byte-identical. No Docker experiment executed.",
-    "reviewed_sha256": "093515451eef67b25672e671423df6a07a440ec84911a30cddde8034376a0784"
+    "reviewed_sha256": "8263c28b368d795ccf9e8a19e62f6eceb1da8258f43bedb9a9a9abf603c26cc2"
   },
   {
     "path": "tools/performance/test_density_stage.py",
@@ -14448,7 +14448,7 @@
     "category": "implementation",
     "status": "reviewed",
     "assessment": "Read complete performance and experimental reuse tooling. Separate bounded lane ownership, workload scheduling, observations and evidence rendering; preserve fixed historical distribution pins explicitly. 47 local unit/integration controls passed. Captured 230 security invocations replay identically; historical performance rendering is byte-identical. No Docker experiment executed.",
-    "reviewed_sha256": "fc02825b50a99eb75f461b7c5fefcc9463b4b5f4140f1bd85cfe47c1c8d8d9c1"
+    "reviewed_sha256": "d3c4bf8ebae567bf19b235a0aa7f6f58afda8ed2e35336348c47ccb6231b614b"
   },
   {
     "path": "tools/performance/test_matrix_metrics.py",

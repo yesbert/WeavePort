@@ -1,7 +1,6 @@
 """Docker checks of the two agreed reuse policies, including accepted residue risk."""
 
 import asyncio
-import json
 import os
 from pathlib import Path
 import sys

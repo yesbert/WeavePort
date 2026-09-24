@@ -3,7 +3,6 @@ import hashlib
 import os
 from pathlib import Path
 import sys
-import time
 
 sdk_path = (
     sys.argv[sys.argv.index("--sdk-path") + 1]

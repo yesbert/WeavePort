@@ -1,6 +1,5 @@
 """Independent literal expectations prevent accidental protocol changes."""
 
-import importlib.util
 import json
 import subprocess
 from pathlib import Path

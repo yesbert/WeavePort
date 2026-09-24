@@ -6,6 +6,7 @@ import tempfile
 import unittest
 from unittest.mock import patch
 import density
+from density_support import mib, refresh_known
 import docker_memory
 
 
@@ -19,11 +20,11 @@ class FakeEngine:
 
 class DensityControls(unittest.TestCase):
     def test_memory_units(self):
-        self.assertEqual(density.mib("1GiB"), 1024)
-        self.assertEqual(density.mib("0B"), 0)
-        self.assertEqual(density.mib("1024KiB"), 1)
+        self.assertEqual(mib("1GiB"), 1024)
+        self.assertEqual(mib("0B"), 0)
+        self.assertEqual(mib("1024KiB"), 1)
         with self.assertRaises(ValueError):
-            density.mib("--")
+            mib("--")
 
     def test_missing_live_memory_fails(self):
         engine = FakeEngine(
@@ -101,10 +102,10 @@ class DensityControls(unittest.TestCase):
             first = json.dumps({"instances": ["one"]}) + "\n"
             resource.write_text(first + '{"instances":')
             known = set()
-            position = density.refresh_known(folder, known, 0)
+            position = refresh_known(folder, known, 0)
             self.assertEqual(known, {"one"})
             resource.write_text(first + json.dumps({"instances": ["two"]}) + "\n")
-            density.refresh_known(folder, known, position)
+            refresh_known(folder, known, position)
             self.assertEqual(known, {"one", "two"})
 
     def test_engine_timeout_is_not_zero_memory(self):

@@ -270,6 +270,10 @@ def main():
             "protocol-fixtures",
             ["python3", "tests/documentation/test-protocol-contract.py"],
         )
+        stage(
+            "density-harness-build",
+            ["dotnet", "build", "benchmarks/WeavePort.Density", "-c", "Release"],
+        )
         for name, directory, pattern in (
             ("performance-tool-controls", "tools/performance", "test_*.py"),
             ("soak-tool-controls", "tests/soak", "test_*.py"),
