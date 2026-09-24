@@ -124,7 +124,7 @@ The [compatibility policy](package-compatibility.md) defines the exact core pack
 
 Use matching gateway package versions. The gateway wire protocol uses duplex exchanges. Session lease waits count against the operation timeout. An incomplete exchange is discarded, not returned to the session pool; every exchange rechecks the binding credential. Idle transport sessions remain until client disposal.
 
-See [retained performance evidence](../reports/benchmarks/current/README.md) for measurements of the frozen 0.1.0-internal.2 core and optional loopback Gateway. Those results do not measure the current checkout or published 0.7.0.
+See [retained performance evidence](../reports/benchmarks/current/README.md) for measurements of the frozen 0.1.0-internal.2 core and optional loopback Gateway. Those results do not measure the current checkout or published 0.8.0.
 
 ## Per-call timing
 

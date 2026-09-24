@@ -45,7 +45,7 @@ The host observes worker failure and manages restart and cleanup under its lifec
 
 ## Is it free to use?
 
-The seven public NuGet packages are released under the [MIT license](../LICENSE). This documentation targets 0.8.0; see [release status](../docs/status.md) for publication progress. Review [packages and compatibility](packages.md) before adopting or upgrading the evolving API.
+The seven public NuGet packages are released under the [MIT license](../LICENSE). The current published version is 0.8.0; see [release status](../docs/status.md) for qualification evidence. Review [packages and compatibility](packages.md) before adopting or upgrading the evolving API.
 
 ## Where should I start?
 

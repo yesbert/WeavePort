@@ -343,7 +343,7 @@ The host observes worker failure and manages restart and cleanup under its lifec
 
 ## Is it free to use?
 
-The seven public NuGet packages are released under the [MIT license](https://raw.githubusercontent.com/yesbert/WeavePort/main/LICENSE). This documentation targets 0.8.0; see [release status](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/status.md) for publication progress. Review [packages and compatibility](https://raw.githubusercontent.com/yesbert/WeavePort/main/website/packages.md) before adopting or upgrading the evolving API.
+The seven public NuGet packages are released under the [MIT license](https://raw.githubusercontent.com/yesbert/WeavePort/main/LICENSE). The current published version is 0.8.0; see [release status](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/status.md) for qualification evidence. Review [packages and compatibility](https://raw.githubusercontent.com/yesbert/WeavePort/main/website/packages.md) before adopting or upgrading the evolving API.
 
 ## Where should I start?
 
@@ -501,7 +501,7 @@ Current measurement methodology and results are in [benchmarking](https://raw.gi
 
 Release 0.8.0 includes structured failure details, explicit cancellation attribution, primary execution/cleanup cause preservation, safe diagnostic delivery, generated shared protocol definitions and the complete readability audit. Python/TypeScript author SDKs are 0.4.0. See [migration notes](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/releases.md#080-failure-contracts-and-code-quality), [failure codes](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/failure-codes.md), [runtime diagnostics](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/runtime-diagnostics.md) and [source organization](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/source-organization.md).
 
-Publication is being prepared. The [0.8.0 release record](https://raw.githubusercontent.com/yesbert/WeavePort/main/reports/release/0.8.0/README.md) tracks exact-version qualification and public download verification; until publication completes, 0.7.0 remains the latest public delivery. Current API baselines and examples describe 0.8.0. Historical reports retain their original versions and qualification limits.
+Release 0.8.0 is published. The [release record](https://raw.githubusercontent.com/yesbert/WeavePort/main/reports/release/0.8.0/README.md) retains exact-tag qualification (3,599 reported assertions, 73 stages, 442 frozen artifacts), successful publication and verified downloads for all seven NuGet packages and 16 package/symbol/SDK assets. Current API baselines and examples describe 0.8.0. Historical reports retain their original versions and qualification limits.
 
 ## Runtime optimization and soak verification
 
@@ -1159,7 +1159,7 @@ The [compatibility policy](https://raw.githubusercontent.com/yesbert/WeavePort/m
 
 Use matching gateway package versions. The gateway wire protocol uses duplex exchanges. Session lease waits count against the operation timeout. An incomplete exchange is discarded, not returned to the session pool; every exchange rechecks the binding credential. Idle transport sessions remain until client disposal.
 
-See [retained performance evidence](https://raw.githubusercontent.com/yesbert/WeavePort/main/reports/benchmarks/current/README.md) for measurements of the frozen 0.1.0-internal.2 core and optional loopback Gateway. Those results do not measure the current checkout or published 0.7.0.
+See [retained performance evidence](https://raw.githubusercontent.com/yesbert/WeavePort/main/reports/benchmarks/current/README.md) for measurements of the frozen 0.1.0-internal.2 core and optional loopback Gateway. Those results do not measure the current checkout or published 0.8.0.
 
 ## Per-call timing
 
@@ -3111,7 +3111,7 @@ The release allowlist in `build/release-packages.json` contains the four core pa
 
 The release version is `0.8.0`, licensed under [MIT](https://raw.githubusercontent.com/yesbert/WeavePort/main/LICENSE). All seven .NET packages and the exact compatibility matrix use 0.8.0; host API is 2, exclusive native protocol is 1 and concurrent native protocol is 2. Python/TypeScript SDK versions are 0.4.0; the qualified wheel and tarball accompany the GitHub release without claiming PyPI/npm registry publication. Historical internal distribution and measurement evidence retain their original identities. Public releases require complete clean candidate qualification and publication verification; see [current release status](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/status.md#release-080). A tag override cannot substitute for updating compatibility inputs.
 
-The previous [0.7.0 release report](https://raw.githubusercontent.com/yesbert/WeavePort/main/reports/release/0.7.0/README.md) records exact-tag qualification, the completed audit and verified public downloads. The [0.5.0 release report](https://raw.githubusercontent.com/yesbert/WeavePort/main/reports/release/0.5.0/README.md) records all seven public packages, tag qualification and download verification. The [0.4.0 release report](https://raw.githubusercontent.com/yesbert/WeavePort/main/reports/release/0.4.0/README.md) retains the exact qualification, artifact hashes and publication verification.
+The current [0.8.0 release report](https://raw.githubusercontent.com/yesbert/WeavePort/main/reports/release/0.8.0/README.md) records exact-tag qualification, the prepublication cancellation correction and verified public downloads. The previous [0.7.0 release report](https://raw.githubusercontent.com/yesbert/WeavePort/main/reports/release/0.7.0/README.md) records exact-tag qualification, the completed audit and verified public downloads. The [0.5.0 release report](https://raw.githubusercontent.com/yesbert/WeavePort/main/reports/release/0.5.0/README.md) records all seven public packages, tag qualification and download verification. The [0.4.0 release report](https://raw.githubusercontent.com/yesbert/WeavePort/main/reports/release/0.4.0/README.md) retains the exact qualification, artifact hashes and publication verification.
 
 ## Trusted Publishing setup
 

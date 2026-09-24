@@ -1,0 +1,39 @@
+{
+  "component": {
+    "key": "weaveport",
+    "name": "WeavePort",
+    "qualifier": "TRK",
+    "measures": [
+      {
+        "metric": "coverage",
+        "value": "83.4",
+        "bestValue": false
+      },
+      {
+        "metric": "duplicated_lines_density",
+        "value": "0.0",
+        "bestValue": true
+      },
+      {
+        "metric": "new_coverage",
+        "period": {
+          "index": 1,
+          "value": "84.5",
+          "bestValue": false
+        }
+      },
+      {
+        "metric": "ncloc",
+        "value": "9685"
+      },
+      {
+        "metric": "new_duplicated_lines_density",
+        "period": {
+          "index": 1,
+          "value": "0.0",
+          "bestValue": true
+        }
+      }
+    ]
+  }
+}
