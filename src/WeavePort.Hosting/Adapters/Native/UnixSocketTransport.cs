@@ -14,7 +14,7 @@ public sealed record UnixSocketTransport(string LocalDirectory, string DockerDir
 
         ValidatePath(LocalDirectory);
         ValidatePath(DockerDirectory);
-        if (System.Text.Encoding.UTF8.GetByteCount(Path.Combine(LocalDirectory, "weaveport-" + new string ('0', 32), "p.sock")) > 100)
+        if (System.Text.Encoding.UTF8.GetByteCount(Path.Combine(LocalDirectory, "weaveport-" + new string('0', 32), "p.sock")) > 100)
         {
             throw new ArgumentException("Coordinator socket directory is too long for a Unix endpoint.");
         }

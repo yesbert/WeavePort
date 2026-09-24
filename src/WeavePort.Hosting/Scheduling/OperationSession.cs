@@ -2,6 +2,7 @@ using System.Text.Json;
 using WeavePort.Abstractions;
 
 namespace WeavePort.Hosting;
+
 internal sealed class OperationSession(IPluginSession session, TaskCompletionSource released, CancellationToken token) : IPluginSession
 {
     private readonly SemaphoreSlim _gate = new(1);

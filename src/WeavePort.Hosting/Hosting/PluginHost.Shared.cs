@@ -2,6 +2,7 @@ using System.Text.Json;
 using WeavePort.Abstractions;
 
 namespace WeavePort.Hosting;
+
 public sealed partial class PluginHost
 {
     private readonly HashSet<SharedPlugin> _shared = [];
@@ -18,7 +19,11 @@ public sealed partial class PluginHost
 
         var resolved = (ProcessProfile)await ResolveAsync(profile, ExecutionProtections.None, cancellationToken);
         resolved = _scheduler?.PrepareSharedProfile(resolved) ?? resolved;
-        var binding = new SessionBinding(context with { Tenant = "", Configuration = context.Configuration.Clone() }, resolved, callbacks, grants.ToHashSet(StringComparer.Ordinal));
+        var binding = new SessionBinding(context with
+        {
+            Tenant = "",
+            Configuration = context.Configuration.Clone()
+        }, resolved, callbacks, grants.ToHashSet(StringComparer.Ordinal));
         var plugin = new SharedPlugin(this, binding, options, _pool, _clock);
         lock (_sync)
         {

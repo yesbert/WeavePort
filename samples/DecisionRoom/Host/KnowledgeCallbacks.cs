@@ -3,6 +3,7 @@ using DecisionRoom.Contracts;
 using WeavePort.Abstractions;
 
 namespace DecisionRoom.Host;
+
 internal sealed class KnowledgeCallbacks(RunConfiguration config) : IHostCallbacks
 {
     internal int Calls { get; private set; }

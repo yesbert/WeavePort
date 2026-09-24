@@ -2,11 +2,12 @@ using Chasm.SemanticVersioning;
 using Chasm.SemanticVersioning.Ranges;
 
 namespace WeavePort.Hosting;
+
 internal sealed class RuntimeValidation(string root, IReadOnlyDictionary<string, RuntimeDeclaration> requirements, IReadOnlyDictionary<string, string> executables, IReadOnlyDictionary<string, string> files)
 {
     internal void Validate()
     {
-        foreach (var(alias, requirement)in requirements)
+        foreach (var (alias, requirement) in requirements)
         {
             ValidateHash(alias, requirement);
             string observed = Observe(alias, requirement);
@@ -16,7 +17,7 @@ internal sealed class RuntimeValidation(string root, IReadOnlyDictionary<string,
 
     internal async Task ValidateAsync(CancellationToken token)
     {
-        foreach (var(alias, requirement)in requirements)
+        foreach (var (alias, requirement) in requirements)
         {
             token.ThrowIfCancellationRequested();
             ValidateHash(alias, requirement);

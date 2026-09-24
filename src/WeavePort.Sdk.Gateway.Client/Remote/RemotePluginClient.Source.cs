@@ -5,6 +5,7 @@ using Grpc.Core;
 using WeavePort.Sdk.Gateway.Protocol;
 
 namespace WeavePort.Sdk.Gateway;
+
 public sealed partial class RemotePluginClient
 {
     /// <inheritdoc/>

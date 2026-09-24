@@ -1,4 +1,5 @@
 namespace WeavePort.Hosting;
+
 internal sealed class InvocationScope(string tenant, string traceId, HashSet<string> grants, CancellationToken cancellation, int maximumCallbacks = 8)
 {
     internal static readonly AsyncLocal<InvocationScope?> Current = new();

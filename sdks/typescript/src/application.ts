@@ -10,8 +10,9 @@ export class PluginApplication {
         private readonly pluginVersion: string = '1',
         private readonly options: { concurrentCalls?: boolean } = {},
     ) {
-        if (typeof pluginVersion !== 'string' || !pluginVersion.trim())
+        if (typeof pluginVersion !== 'string' || !pluginVersion.trim()) {
             throw new Error('Invalid plugin version');
+        }
     }
     private functions = new Map<string, Handler>();
     private streams = new Map<string, Generator>();
@@ -51,8 +52,9 @@ export class PluginApplication {
             this.functions.has(name) ||
             this.streams.has(name) ||
             this.sources.has(name)
-        )
+        ) {
             throw new Error('Invalid or duplicate operation');
+        }
     }
     async run(): Promise<void> {
         await new Runtime(

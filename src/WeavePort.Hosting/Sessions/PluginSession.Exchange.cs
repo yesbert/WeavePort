@@ -4,6 +4,7 @@ using System.Text.Json;
 using WeavePort.Abstractions;
 
 namespace WeavePort.Hosting;
+
 internal sealed partial class PluginSession
 {
     private async Task<JsonElement> ExchangeAsync(string id, string trace, CancellationToken token)
@@ -55,7 +56,7 @@ internal sealed partial class PluginSession
 
         var call = new HostCall(binding.Context, id, operation, frame.GetProperty(WireFields.Payload), trace);
         JsonElement value = await InvokeCallbackAsync(call, token);
-        await Frames.WriteAsync(_worker!.Input, new CallbackResultFrame("callback-result", id, callbackId, value), WireJson.Default.CallbackResultFrame, token);
+        await Frames.WriteAsync(_worker!.Input, new CallbackResultFrame(FrameKinds.CallbackResult, id, callbackId, value), WireJson.Default.CallbackResultFrame, token);
     }
 
     private async Task<JsonElement> InvokeCallbackAsync(HostCall call, CancellationToken token)

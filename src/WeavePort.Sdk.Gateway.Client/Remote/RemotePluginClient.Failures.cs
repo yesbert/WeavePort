@@ -4,6 +4,7 @@ using WeavePort.Internal;
 using WeavePort.Sdk.Client;
 
 namespace WeavePort.Sdk.Gateway;
+
 public sealed partial class RemotePluginClient
 {
     private static Exception Translate(RpcException error, CancellationToken token)

@@ -3,8 +3,13 @@ from matrix_resources import ResourceTotals
 
 
 def sample(working, raw, host=30, helper=0, live=True):
-    return dict(owned=[{'usageBytes': raw * 1048576}] if live else [], ownedMiB=working,
-                ownedRawMiB=raw, hostRssMiB=host, helpersRssMiB=helper)
+    return dict(
+        owned=[{"usageBytes": raw * 1048576}] if live else [],
+        ownedMiB=working,
+        ownedRawMiB=raw,
+        hostRssMiB=host,
+        helpersRssMiB=helper,
+    )
 
 
 class ResourceControls(unittest.TestCase):
@@ -12,8 +17,16 @@ class ResourceControls(unittest.TestCase):
         totals = ResourceTotals()
         totals.add(sample(100, 120, host=80, helper=50))
         totals.add(sample(30, 40))
-        self.assertEqual((2, 100, 120, 80, 50), (totals.live_samples, totals.working_peak,
-                         totals.raw_peak, totals.host_peak, totals.helpers_peak))
+        self.assertEqual(
+            (2, 100, 120, 80, 50),
+            (
+                totals.live_samples,
+                totals.working_peak,
+                totals.raw_peak,
+                totals.host_peak,
+                totals.helpers_peak,
+            ),
+        )
 
     def test_missing_live_memory_is_unavailable_not_zero(self):
         totals = ResourceTotals()
@@ -28,8 +41,13 @@ class ResourceControls(unittest.TestCase):
         for _ in range(1000):
             totals.add(sample(10, 12))
         self.assertEqual(1000, totals.live_samples)
-        self.assertTrue(all(value is None or isinstance(value, (int, float)) for value in vars(totals).values()))
+        self.assertTrue(
+            all(
+                value is None or isinstance(value, (int, float))
+                for value in vars(totals).values()
+            )
+        )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

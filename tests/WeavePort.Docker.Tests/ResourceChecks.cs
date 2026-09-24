@@ -14,7 +14,7 @@ internal static class ResourceChecks
             await File.WriteAllTextAsync(Path.Combine(evidence.DirectoryPath, language + "-idle-stats.json"), statistics);
             string inspect = await DockerAsync(["inspect", "--format", "{{json .HostConfig}}", session.Instance]);
             await File.WriteAllTextAsync(Path.Combine(evidence.DirectoryPath, language + "-limits.json"), inspect);
-            await evidence.Check(language + ": enforced container resource profile", () =>
+            await evidence.CheckAsync(language + ": enforced container resource profile", () =>
             {
                 using JsonDocument limits = JsonDocument.Parse(inspect);
                 JsonElement value = limits.RootElement;
@@ -27,25 +27,41 @@ internal static class ResourceChecks
                     !value.GetProperty("Tmpfs").GetProperty("/tmp").GetString()!.Contains("size=16m", StringComparison.Ordinal) ||
                     !value.GetProperty("CapDrop").EnumerateArray().Any(v => v.GetString() == "ALL") ||
                     !value.GetProperty("SecurityOpt").EnumerateArray().Any(v => v.GetString() == "no-new-privileges"))
+                {
                     throw new InvalidOperationException("Runtime resource profile differs from experiment design");
+                }
+
                 return Task.CompletedTask;
             });
         }
-        await evidence.Check("installed bindings are lazy", async () =>
+        await evidence.CheckAsync("installed bindings are lazy", async () =>
         {
-            await using IPluginSession installed = await host.BindAsync(new PluginContext("lazy", "demo", "1", "default", JsonSerializer.SerializeToElement(new { })),
+            await using IPluginSession installed = await host.BindAsync(new PluginContext("lazy", "demo", "1", "default", JsonSerializer.SerializeToElement(new
+            {
+            })),
                 TestProfiles.Create("weaveport-poc-python:1"), callbacks, DemoCallbacks.Grants);
-            if (installed.Instance != "") throw new InvalidOperationException("Idle binding launched a worker");
+            if (installed.Instance != "")
+            {
+                throw new InvalidOperationException("Idle binding launched a worker");
+            }
         });
     }
     internal static async Task<string> DockerAsync(string[] args)
     {
         var info = new ProcessStartInfo("docker") { RedirectStandardOutput = true, UseShellExecute = false };
-        foreach (string argument in args) info.ArgumentList.Add(argument);
+        foreach (string argument in args)
+        {
+            info.ArgumentList.Add(argument);
+        }
+
         using Process process = Process.Start(info)!;
         string output = await process.StandardOutput.ReadToEndAsync();
         await process.WaitForExitAsync();
-        if (process.ExitCode != 0) throw new IOException("Docker measurement failed.");
+        if (process.ExitCode != 0)
+        {
+            throw new IOException("Docker measurement failed.");
+        }
+
         return output;
     }
 }

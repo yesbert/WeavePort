@@ -1,4 +1,5 @@
 """Reject tracked local context and private documentation references."""
+
 from pathlib import Path
 import re
 import subprocess
@@ -11,17 +12,33 @@ def validate(names, root=ROOT):
     failures = []
     for name in names:
         path = Path(name)
-        if PRIVATE_PARTS.intersection(path.parts):
-            failures.append(name + ": local context must not be tracked")
-        if path.suffix.lower() in {".md", ".txt", ".yaml", ".yml"} and (root / path).is_file():
-            content = (root / path).read_text()
-            if re.search(r"https?://dev\.azure\.com/|/(?:Users|Volumes)/", content):
-                failures.append(name + ": private repository or machine-local reference")
+        failures.extend(
+            [name + ": local context must not be tracked"]
+            if PRIVATE_PARTS.intersection(path.parts)
+            else []
+        )
+        failures.extend(document_failures(name, root))
     if failures:
         raise ValueError("\n".join(failures))
 
 
+def document_failures(name, root):
+    path = root / name
+    if (
+        path.suffix.lower() not in {".md", ".txt", ".yaml", ".yml"}
+        or not path.is_file()
+    ):
+        return []
+    if re.search(r"https?://dev\.azure\.com/|/(?:Users|Volumes)/", path.read_text()):
+        return [name + ": private repository or machine-local reference"]
+    return []
+
+
 if __name__ == "__main__":
-    names = subprocess.check_output(["git", "ls-files"], cwd=ROOT, text=True).splitlines()
+    names = subprocess.check_output(
+        ["git", "ls-files"], cwd=ROOT, text=True
+    ).splitlines()
     validate(names)
-    print("PASS: tracked public tree excludes local context and private documentation references")
+    print(
+        "PASS: tracked public tree excludes local context and private documentation references"
+    )

@@ -12,7 +12,8 @@ public sealed class ResultScope : IAsyncDisposable
     private readonly Dictionary<string, ResultHandle> _results = [];
     private readonly CancellationTokenSource _lifetime = new();
     private readonly TaskCompletionSource _idle = new(TaskCreationOptions.RunContinuationsAsynchronously);
-    private int _active, _objects;
+    private int _active;
+    private int _objects;
     private long _bytes;
     private bool _closed;
     private Task? _disposal;
@@ -74,7 +75,21 @@ public sealed class ResultScope : IAsyncDisposable
         }
     }
 
-    private FileStream Open(string id, bool write) => new(Path.Combine(_directory, id), new FileStreamOptions { Mode = write ? FileMode.CreateNew : FileMode.Open, Access = write ? FileAccess.Write : FileAccess.Read, Share = FileShare.Read, Options = FileOptions.Asynchronous | FileOptions.SequentialScan, BufferSize = CopyBufferBytes });
+    private FileStream CreateResultFile(string id) => OpenResultFile(id, FileMode.CreateNew, FileAccess.Write);
+    private FileStream ReadResultFile(string id) => OpenResultFile(id, FileMode.Open, FileAccess.Read);
+    private FileStream OpenResultFile(string id, FileMode mode, FileAccess access)
+    {
+        var options = new FileStreamOptions
+        {
+            Mode = mode,
+            Access = access,
+            Share = FileShare.Read,
+            Options = FileOptions.Asynchronous | FileOptions.SequentialScan,
+            BufferSize = CopyBufferBytes
+        };
+        return new FileStream(Path.Combine(_directory, id), options);
+    }
+
     private string Resolve(ResultHandle handle)
     {
         lock (_sync)
@@ -107,7 +122,7 @@ public sealed class ResultScope : IAsyncDisposable
         long reserved = 0;
         try
         {
-            await using (FileStream file = Open(id, true))
+            await using (FileStream file = CreateResultFile(id))
             {
                 using var limited = new BoundedOutput(file, count =>
                 {
@@ -169,7 +184,7 @@ public sealed class ResultScope : IAsyncDisposable
     {
         using var active = Enter();
         using var linked = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, _lifetime.Token);
-        await using FileStream source = Open(Resolve(handle), false);
+        await using FileStream source = ReadResultFile(Resolve(handle));
         await source.CopyToAsync(destination, CopyBufferBytes, linked.Token);
     }
 
@@ -185,7 +200,7 @@ public sealed class ResultScope : IAsyncDisposable
         string id = Resolve(input);
         return await CreateAsync(async (output, token) =>
         {
-            await using FileStream source = Open(id, false);
+            await using FileStream source = ReadResultFile(id);
             byte[] buffer = new byte[chunkBytes];
             try
             {

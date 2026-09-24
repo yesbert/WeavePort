@@ -1,12 +1,23 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup><OutputType>Exe</OutputType><IsPackable>false</IsPackable></PropertyGroup>
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
   <!-- Lifecycle fixtures relaunch via Environment.ProcessPath in a cleared worker environment.
        Use the selected dotnet host so non-global SDK installations need no inherited DOTNET_ROOT. -->
-  <PropertyGroup><UseAppHost>false</UseAppHost></PropertyGroup>
-  <ItemGroup><ProjectReference Condition="'$(UsePackedCore)' != 'true'" Include="../../src/WeavePort.Hosting/WeavePort.Hosting.csproj" /></ItemGroup>
+  <PropertyGroup>
+    <UseAppHost>false</UseAppHost>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Condition="'$(UsePackedCore)' != 'true'" Include="../../src/WeavePort.Hosting/WeavePort.Hosting.csproj" />
+  </ItemGroup>
   <ItemGroup Condition="'$(UsePackedCore)' == 'true'">
     <PackageReference Include="WeavePort.Hosting" />
   </ItemGroup>
-  <ItemGroup><Compile Include="../../src/Shared/JsonSize.cs" Link="Internal/JsonSize.cs" /></ItemGroup>
-<ItemGroup><None Include="fixtures/*" CopyToOutputDirectory="PreserveNewest" /></ItemGroup>
+  <ItemGroup>
+    <Compile Include="../../src/Shared/JsonSize.cs" Link="Internal/JsonSize.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="fixtures/*" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>

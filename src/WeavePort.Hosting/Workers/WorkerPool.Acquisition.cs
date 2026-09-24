@@ -1,4 +1,5 @@
 namespace WeavePort.Hosting;
+
 internal sealed partial class WorkerPool
 {
     internal async Task<Worker> AcquireAsync(ExecutionProfile profile, string version, string tenant, CancellationToken token, bool freshOnly = false)
@@ -14,7 +15,7 @@ internal sealed partial class WorkerPool
             while (true)
             {
                 token.ThrowIfCancellationRequested();
-                var(ready, pending, reclaim) = PrepareAcquisition(profile, version, tenant, freshOnly);
+                var (ready, pending, reclaim) = PrepareAcquisition(profile, version, tenant, freshOnly);
                 if (ready is not null)
                 {
                     return ready;
@@ -33,7 +34,7 @@ internal sealed partial class WorkerPool
                 }
                 catch (WorkerCapacityException) when (options.WaitForStartCapacity && CanRetryAcquisition(profile))
                 {
-                // A startup already in flight can change capacity before reservation. Recheck under the lock.
+                    // A startup already in flight can change capacity before reservation. Recheck under the lock.
                 }
             }
         }
@@ -70,15 +71,20 @@ internal sealed partial class WorkerPool
 
     private Worker? TakeReady(ExecutionProfile profile, string version, string tenant, bool freshOnly = false)
     {
-        Worker? ready = _workers.FirstOrDefault(w => (w.Pristine && !Expired(w) || !freshOnly && w.Reusable && clock.GetElapsedTime(w.ReadyAt) < options.ReusableIdleTimeout) && Matches(w, profile, version) && w.Running);
-        if (ready is not null)
+        Worker? ready = _workers.FirstOrDefault(candidate =>
+            (candidate.Pristine && !Expired(candidate) ||
+             !freshOnly && candidate.Reusable && clock.GetElapsedTime(candidate.ReadyAt) < options.ReusableIdleTimeout) &&
+            Matches(candidate, profile, version) && candidate.Running);
+        if (ready is null)
         {
-            ready.AcquiredFromReuse = ready.Reusable;
-            _reuseHits += ready.Reusable ? 1 : 0;
-            ready.Reusable = false;
-            ready.Pristine = false;
-            ready.Tenant = tenant;
+            return null;
         }
+
+        ready.AcquiredFromReuse = ready.Reusable;
+        _reuseHits += ready.Reusable ? 1 : 0;
+        ready.Reusable = false;
+        ready.Pristine = false;
+        ready.Tenant = tenant;
 
         return ready;
     }

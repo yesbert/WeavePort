@@ -4,6 +4,7 @@ using WeavePort.Abstractions;
 using WeavePort.Sdk.Client;
 
 namespace WeavePort.Hosting;
+
 internal sealed class SharedView(SharedPlugin plugin, string tenant) : IPluginOperationSession
 {
     private bool _disposed;
@@ -21,7 +22,9 @@ internal sealed class SharedView(SharedPlugin plugin, string tenant) : IPluginOp
 
         if (InvocationScope.Current.Value is not null)
         {
-            return Task.FromResult(new InvocationResult(FailureCodes.Denied, JsonSerializer.SerializeToElement(new { }), "", 0));
+            return Task.FromResult(new InvocationResult(FailureCodes.Denied, JsonSerializer.SerializeToElement(new
+            {
+            }), "", 0));
         }
 
         return plugin.Host.InvokeSharedAsync(new SharedInvocationSession(plugin, tenant), operation, payload, cancellationToken);

@@ -1,9 +1,41 @@
 syntax = "proto3";
+
 option csharp_namespace = "WeavePort.Sdk.Gateway.Protocol";
 package weaveport.sdk;
+
+// Each binding authorizes sequential exchanges on a persistent HTTP/2 stream.
 service WorkerGateway {
- rpc Session (stream Request) returns (stream Reply);
+  rpc Session (stream Request) returns (stream Reply);
 }
-message Request { string operation = 1; bytes input = 2; string stream_id = 3; Mode mode = 4; int32 chunk_bytes = 5; }
-enum Mode { CALL = 0; STREAM = 1; CANCEL = 2; DESCRIBE = 3; SOURCE = 4; }
-message Reply { bytes json = 1; bool complete = 2; string error = 3; bool may_have_executed = 4; bool cancelled = 5; bytes data = 6; optional double elapsed_ms = 7; optional string expected_version = 8; optional string advertised_version = 9; string failure_code = 10; string failure_phase = 11; string correlation_id = 12; bool cleanup_failed = 13; }
+
+message Request {
+  string operation = 1;
+  bytes input = 2;
+  string stream_id = 3;
+  Mode mode = 4;
+  int32 chunk_bytes = 5;
+}
+
+enum Mode {
+  CALL = 0;
+  STREAM = 1;
+  CANCEL = 2;
+  DESCRIBE = 3;
+  SOURCE = 4;
+}
+
+message Reply {
+  bytes json = 1;
+  bool complete = 2;
+  string error = 3;
+  bool may_have_executed = 4;
+  bool cancelled = 5;
+  bytes data = 6;
+  optional double elapsed_ms = 7;
+  optional string expected_version = 8;
+  optional string advertised_version = 9;
+  string failure_code = 10;
+  string failure_phase = 11;
+  string correlation_id = 12;
+  bool cleanup_failed = 13;
+}

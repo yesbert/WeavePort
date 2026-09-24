@@ -1,6 +1,7 @@
 using System.Text.Json;
 
 namespace WeavePort.Hosting;
+
 internal abstract class Worker(ExecutionProfile profile, string version)
 {
     internal ExecutionProfile Profile { get; } = profile;

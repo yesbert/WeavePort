@@ -2,6 +2,7 @@ using System.Text.Json;
 using WeavePort.Internal;
 
 namespace WeavePort.Sdk;
+
 internal sealed partial class Runtime
 {
     private static readonly TimeSpan BatchFlushInterval = TimeSpan.FromMilliseconds(100);
@@ -113,5 +114,23 @@ internal sealed partial class Runtime
         }
 
         return (_enumerator!.Current, false);
+    }
+
+    private async Task<object> DispatchStreamAsync(string operation, JsonElement payload)
+    {
+        if (_streamId is null || payload.GetProperty(WireFields.Stream).GetString() != _streamId)
+        {
+            throw new InvalidDataException("Stream ownership.");
+        }
+
+        if (operation == SdkOperations.Close)
+        {
+            await CloseAsync();
+            return new
+            {
+            };
+        }
+
+        return await NextAsync();
     }
 }

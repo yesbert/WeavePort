@@ -24,7 +24,9 @@ export class SessionContext implements PluginContext {
         private callback: (<T>(operation: string, input: unknown) => Promise<T>) | undefined,
     ) {}
     private check(): void {
-        if (!this.active) throw new Error('Session completed');
+        if (!this.active) {
+            throw new Error('Session completed');
+        }
     }
     get tenant(): string {
         this.check();
@@ -36,7 +38,9 @@ export class SessionContext implements PluginContext {
     }
     onClose(action: () => void | Promise<void>): void {
         this.check();
-        if (typeof action !== 'function') throw new TypeError('Cleanup must be callable');
+        if (typeof action !== 'function') {
+            throw new TypeError('Cleanup must be callable');
+        }
         this.cleanup.push(action);
     }
     own<T extends { close(): void | Promise<void> }>(resource: T): T {
@@ -62,6 +66,8 @@ export class SessionContext implements PluginContext {
                 errors.push(error);
             }
         }
-        if (errors.length) throw new SessionCleanupError(errors, 'Session cleanup failed');
+        if (errors.length) {
+            throw new SessionCleanupError(errors, 'Session cleanup failed');
+        }
     }
 }

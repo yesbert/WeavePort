@@ -11,7 +11,16 @@ internal sealed class ExternalActionService : IAsyncDisposable
     private readonly string _path;
     private readonly Task _loop;
     internal Uri Address { get; }
-    internal int Count { get { lock (_ledger) return _ledger.Count; } }
+    internal int Count
+    {
+        get
+        {
+            lock (_ledger)
+            {
+                return _ledger.Count;
+            }
+        }
+    }
 
     internal ExternalActionService(string path)
     {
@@ -49,20 +58,17 @@ internal sealed class ExternalActionService : IAsyncDisposable
             JsonElement args = p.GetProperty("args");
             bool compensate = request.Request.Url!.AbsolutePath == "/compensate";
             bool failure = args.TryGetProperty("fail", out JsonElement fail) && fail.GetBoolean();
-            string status;
-            lock (_ledger)
-            {
-                if (compensate)
-                {
-                    if (!failure) _ledger.Remove(key);
-                    status = failure ? "compensation-failed" : "compensated";
-                }
-                else { _ledger.TryAdd(key, 1); status = "committed"; }
-                File.WriteAllText(_path, JsonSerializer.Serialize(_ledger));
-            }
+            string status = RecordAction(key, compensate, failure);
             if (args.TryGetProperty("loseResponse", out JsonElement lose) && lose.GetBoolean())
+            {
                 await Task.Delay(TimeSpan.FromSeconds(10), _stop.Token);
-            byte[] bytes = JsonSerializer.SerializeToUtf8Bytes(new { status, count = 1 });
+            }
+
+            byte[] bytes = JsonSerializer.SerializeToUtf8Bytes(new
+            {
+                status,
+                count = 1
+            });
             request.Response.ContentType = "application/json";
             request.Response.ContentLength64 = bytes.Length;
             await request.Response.OutputStream.WriteAsync(bytes, _stop.Token);
@@ -70,6 +76,32 @@ internal sealed class ExternalActionService : IAsyncDisposable
         catch (OperationCanceledException) when (_stop.IsCancellationRequested) { return; }
         catch (HttpListenerException) { return; }
         finally { request.Response.Close(); }
+    }
+
+    private string RecordAction(string key, bool compensate, bool failure)
+    {
+        lock (_ledger)
+        {
+            string status = ApplyAction(key, compensate, failure);
+            File.WriteAllText(_path, JsonSerializer.Serialize(_ledger));
+            return status;
+        }
+    }
+
+    // Caller holds the ledger lock through mutation and persistence.
+    private string ApplyAction(string key, bool compensate, bool failure)
+    {
+        if (!compensate)
+        {
+            _ledger.TryAdd(key, 1);
+            return "committed";
+        }
+        if (failure)
+        {
+            return "compensation-failed";
+        }
+        _ledger.Remove(key);
+        return "compensated";
     }
 
     public async ValueTask DisposeAsync()

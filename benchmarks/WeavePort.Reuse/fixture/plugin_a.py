@@ -1,4 +1,5 @@
 """Example: customer data belongs to the invocation, not a module-global cache."""
+
 # Deliberately unsafe cache used ONLY by the negative isolation control.
 _hidden = None
 

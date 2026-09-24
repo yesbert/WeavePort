@@ -5,8 +5,11 @@ import { PluginApplication } from '../dist/index.js';
 
 test('public registration remains available through the package entry point', () => {
     const app = new PluginApplication('1');
-    assert.equal(app.function('echo', async value => value), app);
-    assert.throws(() => app.function('echo', async value => value));
+    assert.equal(
+        app.function('echo', async (value) => value),
+        app,
+    );
+    assert.throws(() => app.function('echo', async (value) => value));
 });
 
 test('cleanup preserves causes, reverse ordering and context expiry', async () => {
@@ -14,9 +17,12 @@ test('cleanup preserves causes, reverse ordering and context expiry', async () =
     const actions = [];
     const failure = new Error('private cleanup detail');
     context.onClose(() => actions.push('first'));
-    context.onClose(() => { actions.push('failure'); throw failure; });
+    context.onClose(() => {
+        actions.push('failure');
+        throw failure;
+    });
     context.onClose(() => actions.push('last'));
-    await assert.rejects(context.complete(), error => {
+    await assert.rejects(context.complete(), (error) => {
         assert.ok(error instanceof SessionCleanupError);
         assert.ok(error instanceof AggregateError);
         assert.equal(error.code, 'cleanup-error');

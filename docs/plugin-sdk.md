@@ -49,7 +49,9 @@ const plugin = new PluginApplication();
 plugin.function<SearchRequest, SearchResult>('search', async (request, context, signal) =>
     searchBackend(request, signal));
 plugin.stream('results', async function* (request: SearchRequest, context, signal) {
-    for await (const item of searchPages(request, signal)) yield item;
+    for await (const item of searchPages(request, signal)) {
+        yield item;
+    }
 });
 await plugin.run();
 ```
@@ -97,7 +99,9 @@ Use `WeavePort.Sdk.Client` over an already authorized `IPluginSession`:
 IPluginClient plugin = new LocalPluginClient(session);
 SearchResult result = await plugin.CallAsync<SearchRequest, SearchResult>("search", request, token);
 await foreach (SearchHit hit in plugin.StreamAsync<SearchRequest, SearchHit>("results", request, token))
+{
     await DisplayAsync(hit, token);
+}
 ```
 
 For a worker host, the trusted application registers that same local client in `GatewayRegistry`, adds gRPC services and maps `GatewayService`. Registration returns a random credential that authorizes only that preconfigured binding. The caller constructs `RemotePluginClient(endpoint, credential)` and uses the same IPluginClient methods. The binding client owns a reusable channel and up to eight binding-scoped duplex sessions to avoid a demonstrated Kestrel stream-reuse defect without per-call TCP churn; see [the cause and compatibility correction (historical) — pre-public record](history.md). No provider edit or gRPC import is necessary. RPC requests cannot register executable paths, select tenant identity or assign grants.
@@ -120,7 +124,7 @@ The [compatibility policy](package-compatibility.md) defines the exact core pack
 
 Use matching gateway package versions. The gateway wire protocol uses duplex exchanges. Session lease waits count against the operation timeout. An incomplete exchange is discarded, not returned to the session pool; every exchange rechecks the binding credential. Idle transport sessions remain until client disposal.
 
-See [current performance evidence](../reports/benchmarks/current/README.md) for the current delivered core and optional loopback Gateway measurements.
+See [retained performance evidence](../reports/benchmarks/current/README.md) for measurements of the frozen 0.1.0-internal.2 core and optional loopback Gateway. Those results do not measure the current checkout or published 0.7.0.
 
 ## Per-call timing
 

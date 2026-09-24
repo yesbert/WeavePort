@@ -24,7 +24,11 @@ internal sealed class NativeRunGuard : IDisposable
 
         try
         {
-            JsonSerializer.Serialize(_marker, new { Schema = 1, Generation });
+            JsonSerializer.Serialize(_marker, new
+            {
+                Schema = 1,
+                Generation
+            });
             _marker.Flush(flushToDisk: true);
         }
         catch
@@ -65,6 +69,6 @@ internal sealed class NativeRunGuard : IDisposable
 
         _marker.Dispose();
         _closed = true;
-    // Releasing the handle must never acknowledge cleanup after an exception or crash.
+        // Releasing the handle must never acknowledge cleanup after an exception or crash.
     }
 }

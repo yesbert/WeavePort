@@ -4,6 +4,7 @@ using Tomlyn;
 using Tomlyn.Model;
 
 namespace WeavePort.Hosting;
+
 internal static class RuntimeRequirements
 {
     private const int MaximumRequirementsBytes = 65536;
@@ -23,7 +24,8 @@ internal static class RuntimeRequirements
                 "dotnet" => DotnetRequirements.Read(content),
                 "python" => PythonRequirement(content),
                 "node" => NodeRequirement(content),
-                _ => throw new InvalidDataException($"Unsupported runtime ecosystem '{alias}'.")};
+                _ => throw new InvalidDataException($"Unsupported runtime ecosystem '{alias}'.")
+            };
             if (alias == "dotnet" && source != Path.ChangeExtension(entry, ".runtimeconfig.json"))
             {
                 throw new InvalidDataException("The .NET runtime declaration must be adjacent to its entry assembly.");
@@ -40,7 +42,14 @@ internal static class RuntimeRequirements
     private static string PythonRequirement(string content)
     {
         TomlTable table = Toml.ToModel(content);
-        if (!table.TryGetValue("project", out var project) || project is not TomlTable metadata || !metadata.TryGetValue("requires-python", out var value) || value is not string requirement || metadata.TryGetValue("dynamic", out var dynamic) && dynamic is TomlArray array && array.Contains("requires-python"))
+        if (!table.TryGetValue("project", out var project) || project is not TomlTable metadata ||
+            !metadata.TryGetValue("requires-python", out var value) || value is not string requirement)
+        {
+            throw new InvalidDataException("pyproject.toml requires a static project.requires-python declaration.");
+        }
+
+        if (metadata.TryGetValue("dynamic", out var dynamicFields) &&
+            dynamicFields is TomlArray fields && fields.Contains("requires-python"))
         {
             throw new InvalidDataException("pyproject.toml requires a static project.requires-python declaration.");
         }

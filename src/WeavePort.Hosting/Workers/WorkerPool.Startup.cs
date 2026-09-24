@@ -1,4 +1,5 @@
 namespace WeavePort.Hosting;
+
 internal sealed partial class WorkerPool
 {
     internal Task<Worker> StartSharedAsync(ExecutionProfile profile, string version, CancellationToken token) => StartAsync(profile, version, false, token);

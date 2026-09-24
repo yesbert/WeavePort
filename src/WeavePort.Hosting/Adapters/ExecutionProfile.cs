@@ -5,6 +5,8 @@ namespace WeavePort.Hosting;
 /// <param name = "IdleTimeout">Optional idle release policy.</param>
 public abstract record ExecutionProfile(int MemoryMiB, TimeSpan? Timeout, TimeSpan? IdleTimeout)
 {
+    internal const int MinimumMemoryMiB = 64;
+
     /// <summary>Operator-approved reuse policy. Defaults to customer-bound execution; approval covers all code in the compatible deployment.</summary>
     public WorkerReusePolicy ReusePolicy { get; init; }
     /// <summary>Host-authorized normal or heavy scheduling class.</summary>

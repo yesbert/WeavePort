@@ -15,14 +15,20 @@ internal static class OperationLeaseChecks
 
     private static PluginHost Host(bool failFast) => new(new SchedulingOptions
     {
-        MaximumWorkers = 1, MemoryBudgetMiB = 64, MaximumPristineWorkers = 0,
-        MaximumHeavyCalls = 0, QueueTimeout = failFast ? TimeSpan.Zero : TimeSpan.FromSeconds(5),
+        MaximumWorkers = 1,
+        MemoryBudgetMiB = 64,
+        MaximumPristineWorkers = 0,
+        MaximumHeavyCalls = 0,
+        QueueTimeout = failFast ? TimeSpan.Zero : TimeSpan.FromSeconds(5),
         IdleTimeout = TimeSpan.FromMilliseconds(50)
     });
     private static Task<IPluginSession> BindAsync(PluginHost host, string tenant, string workspace) => host.BindAsync(
         new PluginContext(tenant, "lease", "1", "test", Empty),
         new ProcessProfile(Environment.ProcessPath!, [typeof(OperationLeaseChecks).Assembly.Location, "--worker"],
-            true, workspace, reservedMemoryMiB: 64) { Reconstructible = true }, new NoCallbacks(), []);
+            true, workspace, reservedMemoryMiB: 64)
+        {
+            Reconstructible = true
+        }, new NoCallbacks(), []);
 
     private static async Task ResidencyAsync(string workspace, bool failFast)
     {
@@ -31,20 +37,42 @@ internal static class OperationLeaseChecks
         await using var second = await BindAsync(host, "lease-b", workspace);
         await using var lease = await ((IPluginOperationSession)first).AcquireOperationAsync();
         InvocationResult started = await lease.InvokeAsync("echo", Empty);
-        if (started.Status != "ok") throw new InvalidOperationException("Lease failed initial exchange.");
+        if (started.Status != "ok")
+        {
+            throw new InvalidOperationException("Lease failed initial exchange.");
+        }
+
         Task<InvocationResult> pressure = second.InvokeAsync("echo", Empty);
         await Task.Delay(150);
-        if (failFast)
-        {
-            if (!pressure.IsCompleted || (await pressure).Status != "busy") throw new InvalidOperationException("Zero wait queued instead of refusing.");
-        }
-        else if (pressure.IsCompleted) throw new InvalidOperationException("Pressure evicted an operation lease during consumer pause.");
+        await CheckPressureAsync(pressure, failFast);
+
         InvocationResult resumed = await lease.InvokeAsync("echo", Empty);
         if (resumed.Instance != started.Instance || resumed.Value.GetProperty("counter").GetInt32() != 2)
+        {
             throw new InvalidOperationException("Operation lost resident state between exchanges.");
+        }
+
         await lease.DisposeAsync();
         if (!failFast && (await pressure.WaitAsync(TimeSpan.FromSeconds(5))).Status != "ok")
+        {
             throw new InvalidOperationException("Releasing residency did not admit waiting tenant.");
+        }
+    }
+
+    private static async Task CheckPressureAsync(Task<InvocationResult> pressure, bool failFast)
+    {
+        if (!failFast && pressure.IsCompleted)
+        {
+            throw new InvalidOperationException("Pressure evicted an operation lease during consumer pause.");
+        }
+        if (!failFast)
+        {
+            return;
+        }
+        if (!pressure.IsCompleted || (await pressure).Status != "busy")
+        {
+            throw new InvalidOperationException("Zero wait queued instead of refusing.");
+        }
     }
 
     private static async Task CancelledAdmissionAsync(string workspace)
@@ -56,12 +84,22 @@ internal static class OperationLeaseChecks
             using var stop = new CancellationTokenSource();
             ValueTask<IPluginSession> acquisition = ((IPluginOperationSession)binding).AcquireOperationAsync(stop.Token);
             stop.Cancel();
-            try { await using var lease = await acquisition; }
+            try
+            {
+                await using var lease = await acquisition;
+            }
             catch (Exception error) when (error is OperationCanceledException or IOException) { }
-            if (host.Scheduling!.Failure is not null) throw new InvalidOperationException("Lease cancellation poisoned scheduler: " + host.Scheduling.Failure);
+            if (host.Scheduling!.Failure is not null)
+            {
+                throw new InvalidOperationException("Lease cancellation poisoned scheduler: " + host.Scheduling.Failure);
+            }
+
             await Task.Delay(5);
         }
-        if ((await binding.InvokeAsync("echo", Empty)).Status != "ok") throw new InvalidOperationException("Host unusable after cancelled lease admission.");
+        if ((await binding.InvokeAsync("echo", Empty)).Status != "ok")
+        {
+            throw new InvalidOperationException("Host unusable after cancelled lease admission.");
+        }
     }
     private sealed class NoCallbacks : IHostCallbacks
     {

@@ -1,4 +1,5 @@
 """Experimental cooperative SDK scope. This is not a sandbox or a published SDK API."""
+
 import os
 import shutil
 import signal
@@ -28,21 +29,30 @@ class Scope:
         stop = threading.Event()
         thread = threading.Thread(target=action, args=(stop,), daemon=True)
         thread.start()
+
         def close():
             stop.set()
-            thread.join(.2)
+            thread.join(0.2)
             if thread.is_alive():
                 raise RuntimeError("Background task did not stop")
+
         self.on_close(close)
 
     def child(self, arguments):
-        child = subprocess.Popen(arguments, start_new_session=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        child = subprocess.Popen(
+            arguments,
+            start_new_session=True,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+        )
+
         def close():
             try:
                 os.killpg(child.pid, signal.SIGKILL)
             except ProcessLookupError:
                 pass
-            child.wait(timeout=.5)
+            child.wait(timeout=0.5)
+
         self.on_close(close)
         return child.pid
 

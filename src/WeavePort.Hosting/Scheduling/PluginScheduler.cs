@@ -35,7 +35,7 @@ internal sealed partial class PluginScheduler : IAsyncDisposable
         SchedulingOptions.Validate(_options);
         _clock = timeProvider;
         // Every supported profile reserves at least 64 MiB. This derived ceiling cannot bind before memory does.
-        _workerLimit = _options.MaximumWorkers ?? (int)Math.Min(int.MaxValue, _options.MemoryBudgetMiB / 64);
+        _workerLimit = _options.MaximumWorkers ?? (int)Math.Min(int.MaxValue, _options.MemoryBudgetMiB / ExecutionProfile.MinimumMemoryMiB);
         _host = host;
         _pump = Task.Run(PumpAsync);
     }

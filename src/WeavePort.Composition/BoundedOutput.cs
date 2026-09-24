@@ -1,4 +1,5 @@
 namespace WeavePort.Composition;
+
 internal sealed class BoundedOutput(Stream target, Action<int> reserve, CancellationToken lifetime) : Stream
 {
     private bool _disposed;
@@ -13,7 +14,10 @@ internal sealed class BoundedOutput(Stream target, Action<int> reserve, Cancella
     public override bool CanSeek => false;
     public override bool CanWrite => !_disposed;
     public override long Length => throw new NotSupportedException();
-    public override long Position { get => throw new NotSupportedException(); set => throw new NotSupportedException(); }
+    public override long Position
+    {
+        get => throw new NotSupportedException(); set => throw new NotSupportedException();
+    }
 
     public override void Flush()
     {

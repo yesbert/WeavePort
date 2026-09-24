@@ -1,6 +1,7 @@
 using System.Text;
 
 namespace WeavePort.Hosting;
+
 internal static class ProcessDiagnostics
 {
     private const int ReadBufferCharacters = 4096;

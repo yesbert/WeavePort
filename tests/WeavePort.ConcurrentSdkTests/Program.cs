@@ -33,7 +33,11 @@ app.Function<JsonElement, object>("identity", async (input, context, token) =>
     context.OnClose(async () => await Task.Delay(input.TryGetProperty("cleanupDelay", out var delay) ? delay.GetInt32() : 0, CancellationToken.None));
     // Cancellation must not acknowledge completion before this deliberately uncooperative work.
     await Task.Delay(input.GetProperty("delay").GetInt32(), CancellationToken.None);
-    return new { tenant, current = context.Tenant };
+    return new
+    {
+        tenant,
+        current = context.Tenant
+    };
 });
 app.Function<JsonElement, JsonElement>("callback", async (input, context, token) => await context.CallHostAsync("echo", input, token));
 app.Function<JsonElement, JsonElement>("failure", (_, _, _) => throw new InvalidOperationException("Author failure"));

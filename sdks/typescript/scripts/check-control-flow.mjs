@@ -2,8 +2,9 @@ import { API } from 'typescript/unstable/sync';
 import { SyntaxKind as K } from 'typescript/unstable/ast';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { mkdtempSync, writeFileSync, rmSync } from 'node:fs';
+import { mkdtempSync, writeFileSync, rmSync, existsSync } from 'node:fs';
 import { tmpdir } from 'node:os';
+import { execFileSync } from 'node:child_process';
 import assert from 'node:assert/strict';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -26,13 +27,17 @@ const scopes = new Set([
 ]);
 const exits = new Set([K.ReturnStatement, K.ThrowStatement, K.BreakStatement, K.ContinueStatement]);
 
-function guard(node) {
-    if (node.kind !== K.IfStatement || node.elseStatement) return false;
+function isLoopGuard(node) {
+    if (node.kind !== K.IfStatement || node.elseStatement) {
+        return false;
+    }
     const body = node.thenStatement;
     const last = body.kind === K.Block ? body.statements.at(-1) : body;
     let nested = false;
     const visit = (child) => {
-        if (controls.has(child.kind)) nested = true;
+        if (controls.has(child.kind)) {
+            nested = true;
+        }
         child.forEachChild(visit);
     };
     body.forEachChild(visit);
@@ -42,11 +47,19 @@ function guard(node) {
 export function violations(source) {
     const failures = [];
     const visit = (node, parent, alternative = false) => {
-        if (scopes.has(node.kind)) parent = undefined;
-        if (controls.has(node.kind)) {
-            if (parent && !alternative && !(parent.kind !== K.IfStatement && guard(node))) {
-                failures.push(source.getLineAndCharacterOfPosition(node.getStart(source)).line + 1);
-            }
+        if (scopes.has(node.kind)) {
+            parent = undefined;
+        }
+        const isControl = controls.has(node.kind);
+        if (
+            isControl &&
+            parent &&
+            !alternative &&
+            !(parent.kind !== K.IfStatement && isLoopGuard(node))
+        ) {
+            failures.push(source.getLineAndCharacterOfPosition(node.getStart(source)).line + 1);
+        }
+        if (isControl) {
             parent = node;
         }
         node.forEachChild((child) => {
@@ -100,14 +113,38 @@ function verifyFixtures() {
 
 verifyFixtures();
 
-const api = new API({ cwd: root });
+const repository = resolve(root, '../..');
+const files = execFileSync(
+    'git',
+    ['ls-files', '--cached', '--others', '--exclude-standard', '--', '*.ts', '*.js', '*.mjs'],
+    { cwd: repository, encoding: 'utf8' },
+)
+    .trim()
+    .split('\n')
+    .filter((path) => path && !path.startsWith('reports/') && !path.startsWith('openspec/'))
+    .map((path) => resolve(repository, path))
+    .filter(existsSync);
+const directory = mkdtempSync(resolve(tmpdir(), 'weaveport-source-audit-'));
+const configuration = resolve(directory, 'tsconfig.json');
+writeFileSync(
+    configuration,
+    JSON.stringify({
+        compilerOptions: { allowJs: true, noEmit: true, noResolve: true, target: 'ESNext' },
+        files: [...new Set(files)],
+    }),
+);
+const api = new API({ cwd: repository });
 try {
-    const snapshot = api.updateSnapshot({ openProjects: [resolve(root, 'tsconfig.json')] });
-    const project = snapshot.getProject(resolve(root, 'tsconfig.json'));
-    if (!project) throw new Error('TypeScript project missing');
+    const snapshot = api.updateSnapshot({ openProjects: [configuration] });
+    const project = snapshot.getProject(configuration);
+    if (!project) {
+        throw new Error('TypeScript project missing');
+    }
     const failures = project.rootFiles.flatMap((path) => {
         const source = project.program.getSourceFile(path);
-        if (!source) throw new Error(`Source missing: ${path}`);
+        if (!source) {
+            throw new Error(`Source missing: ${path}`);
+        }
         return violations(source).map((line) => `${path}:${line}`);
     });
     snapshot.dispose();
@@ -115,4 +152,5 @@ try {
     process.exitCode = failures.length ? 1 : 0;
 } finally {
     api.close();
+    rmSync(directory, { recursive: true, force: true });
 }

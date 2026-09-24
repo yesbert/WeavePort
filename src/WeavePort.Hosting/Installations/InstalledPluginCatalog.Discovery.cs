@@ -1,6 +1,7 @@
 using static WeavePort.Hosting.InstallationFiles;
 
 namespace WeavePort.Hosting;
+
 public sealed partial class InstalledPluginCatalog
 {
     /// <summary>Reports every immediate plugin directory, including unselected or refused installations. Root enumeration errors propagate. An optional contract restricts usable results without hiding mismatches.</summary>
@@ -62,17 +63,17 @@ public sealed partial class InstalledPluginCatalog
     private InstalledPlugin DiscoverContent(string directory, string? contract)
     {
         RejectLink(directory);
-        string selector = Path.Combine(directory, "active.txt");
+        string selector = Path.Combine(directory, SelectorFileName);
         if (!File.Exists(selector))
         {
             throw new FileNotFoundException("Plugin directory has no readable active.txt selector.", selector);
         }
 
         string version = ReadSelection(selector);
-        string nested = Path.Combine(directory, "releases");
+        string nested = Path.Combine(directory, ReleasesDirectoryName);
         RejectLink(nested);
         string root = Path.Combine(nested, version);
-        (Manifest manifest, _) = ReadManifest(root, Path.Combine(root, "installation.json"));
+        (Manifest manifest, _) = ReadManifest(root, Path.Combine(root, ManifestFileName));
         if (string.IsNullOrWhiteSpace(manifest.Contract) || (contract is not null && manifest.Contract != contract))
         {
             throw new InvalidDataException("Selected installation does not declare the expected contract.");

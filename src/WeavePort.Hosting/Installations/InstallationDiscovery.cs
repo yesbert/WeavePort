@@ -1,5 +1,3 @@
-using static WeavePort.Hosting.InstallationFiles;
-
 namespace WeavePort.Hosting;
 /// <summary>Diagnostic result for one immediate plugin directory. Exactly one of Installation and Refusal is populated.</summary>
 /// <param name = "Directory">Absolute plugin directory inspected.</param>

@@ -3,6 +3,7 @@ using AppointmentDesk.Contracts;
 using WeavePort.Abstractions;
 
 namespace AppointmentDesk.Host;
+
 internal sealed class BookingCallbacks(CalendarStore store, Request request, string version = "1") : IHostCallbacks
 {
     internal Command? Approved { get; set; }

@@ -1,5 +1,3 @@
-using System.Security.Cryptography;
-
 namespace WeavePort.Composition;
 /// <summary>An immutable result belonging exclusively to its creating request scope. Contains no filesystem path.</summary>
 public sealed class ResultHandle

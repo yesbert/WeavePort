@@ -1,4 +1,5 @@
 namespace WeavePort.Hosting;
+
 internal sealed class TenantAdmission(string tenant, int maximum, Action<TenantAdmission> retain, Action<TenantAdmission> release)
 {
     internal string Tenant { get; } = tenant;

@@ -8,21 +8,37 @@ internal static class ClientOperationChecks
     {
         var session = new OperationSession();
         await using var client = new LocalPluginClient(session);
-        await using (var iterator = client.StreamAsync("rows", JsonSerializer.SerializeToElement(new { })).GetAsyncEnumerator())
+        await using (var iterator = client.StreamAsync("rows", JsonSerializer.SerializeToElement(new
+        {
+        })).GetAsyncEnumerator())
         {
             if (!await iterator.MoveNextAsync() || !session.Held || iterator.Current.GetInt32() != 42)
+            {
                 throw new InvalidOperationException("Stream heartbeat/residency contract failed.");
+            }
         }
-        if (session.Held || !session.Closed) throw new InvalidOperationException("Early disposal did not close before releasing residency.");
+        if (session.Held || !session.Closed)
+        {
+            throw new InvalidOperationException("Early disposal did not close before releasing residency.");
+        }
+
         session.SupportsStreaming = false;
         int before = session.Calls;
         try
         {
-            await foreach (var row in client.StreamAsync("rows", JsonSerializer.SerializeToElement(new { }))) { }
+            await foreach (var row in client.StreamAsync("rows", JsonSerializer.SerializeToElement(new
+            {
+            })))
+            {
+            }
             throw new InvalidOperationException("Shared stream should be refused.");
         }
         catch (NotSupportedException) { }
-        if (session.Calls != before) throw new InvalidOperationException("Shared stream was dispatched before refusal.");
+        if (session.Calls != before)
+        {
+            throw new InvalidOperationException("Shared stream was dispatched before refusal.");
+        }
+
         Console.WriteLine("PASS: client operation lease, heartbeat and shared refusal");
     }
 
@@ -43,7 +59,11 @@ internal static class ClientOperationChecks
         public Task<InvocationResult> InvokeAsync(string operation, JsonElement payload, CancellationToken cancellationToken = default)
         {
             Calls++;
-            if (!Held) throw new InvalidOperationException("Missing operation residency.");
+            if (!Held)
+            {
+                throw new InvalidOperationException("Missing operation residency.");
+            }
+
             object result = operation switch
             {
                 "$sdk.start" => new { stream = "1" },
@@ -54,8 +74,18 @@ internal static class ClientOperationChecks
             };
             return Task.FromResult(new InvocationResult("ok", JsonSerializer.SerializeToElement(result), Instance, 0));
         }
-        private object Close() { Closed = true; return new { }; }
+        private object Close()
+        {
+            Closed = true;
+            return new
+            {
+            };
+        }
         public Task RestartAsync(CancellationToken cancellationToken = default) => Task.CompletedTask;
-        public ValueTask DisposeAsync() { Held = false; return ValueTask.CompletedTask; }
+        public ValueTask DisposeAsync()
+        {
+            Held = false;
+            return ValueTask.CompletedTask;
+        }
     }
 }

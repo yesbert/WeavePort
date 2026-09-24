@@ -17,13 +17,23 @@ var registry = app.Services.GetRequiredService<GatewayRegistry>();
 string credential = registry.Register(client);
 // Bootstrap goes only to an explicitly selected private file, never to logs or HTTP.
 var options = new FileStreamOptions { Mode = FileMode.CreateNew, Access = FileAccess.Write };
-if (!OperatingSystem.IsWindows()) options.UnixCreateMode = UnixFileMode.UserRead | UnixFileMode.UserWrite;
+if (!OperatingSystem.IsWindows())
+{
+    options.UnixCreateMode = UnixFileMode.UserRead | UnixFileMode.UserWrite;
+}
+
 await using (var file = new FileStream(Required("Gateway:CredentialFile"), options))
 {
-    await JsonSerializer.SerializeAsync(file, new { credential });
+    await JsonSerializer.SerializeAsync(file, new
+    {
+        credential
+    });
 }
 app.MapWeavePortGateway();
-try { await app.RunAsync(); }
+try
+{
+    await app.RunAsync();
+}
 finally { await registry.DisposeAsync(); }
 
 internal sealed class Callbacks : IHostCallbacks

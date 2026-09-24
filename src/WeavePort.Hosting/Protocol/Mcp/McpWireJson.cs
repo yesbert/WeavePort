@@ -2,7 +2,8 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace WeavePort.Hosting;
-[JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase, MaxDepth = 32)]
+
+[JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase, MaxDepth = Frames.MaximumJsonDepth)]
 [JsonSerializable(typeof(McpRequest))]
 [JsonSerializable(typeof(McpResponse))]
 internal partial class McpWireJson : JsonSerializerContext;

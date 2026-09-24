@@ -1,4 +1,5 @@
 """Bounded ready queue: same customer/plugin jobs never occupy two worker lanes."""
+
 import asyncio
 from collections import deque
 
@@ -11,7 +12,7 @@ def grouped_capacity(workers, calls_per_customer):
 class SerialReadyQueue:
     def __init__(self, maxsize, key_for):
         if maxsize < 1:
-            raise ValueError('Queue capacity must be positive')
+            raise ValueError("Queue capacity must be positive")
         self.maximum, self.key_for = maxsize, key_for
         self.ready, self.pending = asyncio.Queue(), {}
         self.waiting = self.unfinished = 0

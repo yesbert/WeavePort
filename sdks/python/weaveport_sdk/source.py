@@ -1,10 +1,10 @@
 """Exclusive, bounded binary source ownership."""
 
-from .protocol import ProtocolLimits
-
 import base64
 import inspect
 import uuid
+
+from .protocol import ProtocolLimits
 
 
 class SourceSession:

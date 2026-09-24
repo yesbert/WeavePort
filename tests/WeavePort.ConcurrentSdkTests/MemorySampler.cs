@@ -38,9 +38,15 @@ internal sealed class MemorySampler : IAsyncDisposable
     public async ValueTask DisposeAsync()
     {
         _stop.Cancel();
-        await _sampling;
-        _stop.Dispose();
-        _host.Dispose();
-        _worker.Dispose();
+        try
+        {
+            await _sampling;
+        }
+        finally
+        {
+            _stop.Dispose();
+            _host.Dispose();
+            _worker.Dispose();
+        }
     }
 }

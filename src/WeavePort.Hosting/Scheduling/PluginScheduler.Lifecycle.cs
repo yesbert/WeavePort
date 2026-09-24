@@ -1,8 +1,10 @@
 using WeavePort.Internal;
 
 namespace WeavePort.Hosting;
+
 internal sealed partial class PluginScheduler
 {
+    private static readonly TimeSpan ReserveRefreshInterval = TimeSpan.FromSeconds(1);
     private readonly Dictionary<(ExecutionProfile Profile, string Version), int> _reserve = [];
     private long? _lastReserve;
     private async Task MaintainReserveAsync()
@@ -10,7 +12,7 @@ internal sealed partial class PluginScheduler
         Dictionary<(ExecutionProfile Profile, string Version), int> desired;
         lock (_sync)
         {
-            if (_closed || _failure is not null || _queue.Count != 0 || _active.Count != 0 || _lastReserve is { } last && _clock.GetElapsedTime(last) < TimeSpan.FromSeconds(1))
+            if (_closed || _failure is not null || _queue.Count != 0 || _active.Count != 0 || _lastReserve is { } last && _clock.GetElapsedTime(last) < ReserveRefreshInterval)
             {
                 return;
             }

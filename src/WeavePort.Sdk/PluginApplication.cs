@@ -51,7 +51,12 @@ public sealed class PluginApplication
     public PluginApplication Function<TInput, TOutput>(string name, Func<TInput, PluginCallContext, CancellationToken, ValueTask<TOutput>> handler)
     {
         Validate(name);
-        Functions.Add(name, async (input, context, token) => JsonSerializer.SerializeToElement(await handler(input.Deserialize<TInput>(_json)!, context, token), _json));
+        Functions.Add(name, async (input, context, token) =>
+        {
+            TInput arguments = input.Deserialize<TInput>(_json)!;
+            TOutput result = await handler(arguments, context, token);
+            return JsonSerializer.SerializeToElement(result, _json);
+        });
         return this;
     }
 

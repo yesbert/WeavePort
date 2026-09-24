@@ -2,9 +2,11 @@ using System.Text.Json;
 using DecisionRoom.Contracts;
 
 namespace DecisionRoom.Host;
+
 internal sealed record JournalData(int Schema, string Configuration, Dictionary<string, string> Artifacts, Evaluation[] Events);
 internal sealed class Journal : IDisposable
 {
+    private const int SchemaVersion = 2;
     private readonly string _path;
     private readonly FileStream _lock;
     internal JournalData Data { get; private set; }
@@ -18,7 +20,7 @@ internal sealed class Journal : IDisposable
         try
         {
             JournalData? saved = resume ? JsonSerializer.Deserialize<JournalData>(File.ReadAllText(_path), Wire.Json) ?? throw new InvalidDataException("Empty journal.") : null;
-            if (resume && saved!.Schema != 2)
+            if (resume && saved!.Schema != SchemaVersion)
             {
                 throw new InvalidDataException("Journal schema is incompatible; use the original build or a new journal.");
             }
@@ -33,7 +35,7 @@ internal sealed class Journal : IDisposable
             {
                 PluginVersion = config.PluginVersion ?? pinned ?? runtime.CurrentVersion()
             };
-            var expected = new JournalData(2, Wire.Serialize(Configuration), runtime.Identity(Configuration.PluginVersion!), []);
+            var expected = new JournalData(SchemaVersion, Wire.Serialize(Configuration), runtime.Identity(Configuration.PluginVersion!), []);
             Data = SelectData(saved, expected);
         }
         catch

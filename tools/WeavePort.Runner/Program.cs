@@ -3,7 +3,10 @@ using System.Text.Json;
 using WeavePort.Runner;
 
 if (args.Length < 2 || args[0] is not ("verify" or "load"))
+{
     throw new ArgumentException("Expected verify|load followed by repository root.");
+}
+
 TimeProvider clock = TimeProvider.System;
 string root = Path.GetFullPath(args[1]);
 string mode = args[0];

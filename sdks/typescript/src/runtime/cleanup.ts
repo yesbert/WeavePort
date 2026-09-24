@@ -9,7 +9,9 @@ export async function cleanupAll(...actions: (() => Promise<unknown>)[]): Promis
             errors.push(error);
         }
     }
-    if (errors.length) throw new SessionCleanupError(errors, 'Owned resource cleanup failed');
+    if (errors.length) {
+        throw new SessionCleanupError(errors, 'Owned resource cleanup failed');
+    }
 }
 
 export async function executeWithCleanup<T>(
@@ -26,7 +28,9 @@ export async function executeWithCleanup<T>(
         try {
             await cleanup();
         } catch (error) {
-            if (!failures.length) throw error;
+            if (!failures.length) {
+                throw error;
+            }
             const combined = new SessionCleanupError(
                 [...failures, error],
                 'Execution and cleanup failed',

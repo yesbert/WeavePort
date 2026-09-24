@@ -1,4 +1,5 @@
 namespace WeavePort.Sdk;
+
 internal static class SessionCleanup
 {
     internal static async Task RunAsync(params Func<Task>[] actions)

@@ -19,20 +19,50 @@ internal sealed class Example
     internal int Closed { get; private set; }
     internal async IAsyncEnumerable<Row> RecordsAsync(Query query, PluginCallContext context, [EnumeratorCancellation] CancellationToken cancellationToken)
     {
-        if (query.Count is < 0 or > 1_000_000 || query.Width is < 0 or > 200_000 || query.DelayMs is < 0 or > 1000) throw new ArgumentException("Invalid query.");
+        if (query.Count is < 0 or > 1_000_000 || query.Width is < 0 or > 200_000 || query.DelayMs is < 0 or > 1000)
+        {
+            throw new ArgumentException("Invalid query.");
+        }
+
         try
         {
             for (int i = 0; i < query.Count; i++)
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                if (i == query.FailAt) throw new InvalidOperationException("Fixture failure.");
-                if (query.DelayMs > 0) await Task.Delay(query.DelayMs, cancellationToken);
-                string owner = context.Tenant;
-                if (query.Callbacks && i % 4 == 0)
-                    owner = (await context.CallHostAsync("host.owner", JsonSerializer.SerializeToElement(new { tenant = "forged" }), cancellationToken)).GetProperty("owner").GetString()!;
-                yield return new Row(i, new string('x', query.Width), owner);
+                if (i == query.FailAt)
+                {
+                    throw new InvalidOperationException("Fixture failure.");
+                }
+
+                yield return await CreateRowAsync(query, i, context, cancellationToken);
             }
         }
         finally { Closed++; }
+    }
+
+    private static async Task<Row> CreateRowAsync(Query query, int index, PluginCallContext context, CancellationToken token)
+    {
+        if (query.DelayMs > 0)
+        {
+            await Task.Delay(query.DelayMs, token);
+        }
+
+        string owner = await ResolveOwnerAsync(query, index, context, token);
+        return new Row(index, new string('x', query.Width), owner);
+    }
+
+    private static async Task<string> ResolveOwnerAsync(Query query, int index, PluginCallContext context, CancellationToken token)
+    {
+        const int CallbackInterval = 4;
+        if (!query.Callbacks || index % CallbackInterval != 0)
+        {
+            return context.Tenant;
+        }
+
+        var reply = await context.CallHostAsync("host.owner", JsonSerializer.SerializeToElement(new
+        {
+            tenant = "forged"
+        }), token);
+        return reply.GetProperty("owner").GetString()!;
     }
 }

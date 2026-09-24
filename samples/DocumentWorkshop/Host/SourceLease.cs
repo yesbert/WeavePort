@@ -3,8 +3,10 @@ using DocumentWorkshop.Contracts;
 using WeavePort.Abstractions;
 
 namespace DocumentWorkshop.Host;
+
 internal sealed class SourceLease(string path, string tenant, string profile, DocumentSource source) : IHostCallbacks, IAsyncDisposable
 {
+    private const int MaximumReadCalls = 1024;
     private readonly FileStream _file = new(path, FileMode.Open, FileAccess.Read, FileShare.Read);
     private readonly SemaphoreSlim _gate = new(1);
     private bool _disposed;
@@ -24,7 +26,7 @@ internal sealed class SourceLease(string path, string tenant, string profile, Do
             }
 
             var request = call.Payload.Deserialize<ReadRequest>(JsonSerializerOptions.Web) ?? throw new InvalidDataException("Missing read request.");
-            if (request.DocumentId != source.Id || request.Offset < 0 || request.Offset > source.Length || request.Count is <= 0 or > Limits.ReadBytes || Calls >= 1024)
+            if (request.DocumentId != source.Id || request.Offset < 0 || request.Offset > source.Length || request.Count is <= 0 or > Limits.ReadBytes || Calls >= MaximumReadCalls)
             {
                 throw new UnauthorizedAccessException("Invalid document read.");
             }
@@ -54,11 +56,13 @@ internal sealed class SourceLease(string path, string tenant, string profile, Do
         await _gate.WaitAsync();
         try
         {
-            if (!_disposed)
+            if (_disposed)
             {
-                _disposed = true;
-                await _file.DisposeAsync();
+                return;
             }
+
+            _disposed = true;
+            await _file.DisposeAsync();
         }
         finally
         {

@@ -17,7 +17,11 @@ if (args.Contains("--worker"))
     return;
 }
 
-if (args.Length != 2) throw new ArgumentException("Usage: SharedExample <catalog-root> <absolute-dotnet-path>");
+if (args.Length != 2)
+{
+    throw new ArgumentException("Usage: SharedExample <catalog-root> <absolute-dotnet-path>");
+}
+
 var catalog = new InstalledPluginCatalog(args[0], new Dictionary<string, string> { ["dotnet"] = args[1] });
 InstalledPlugin installation = catalog.List("shared-example/v1").Single();
 await using var host = new PluginHost(new SchedulingOptions
@@ -40,10 +44,18 @@ await using var bob = plugin.For("bob");
 PluginCallResult<Response>[] results = await Task.WhenAll(
     alice.CallWithMetadataAsync<Request, Response>("describe", new("hello")),
     bob.CallWithMetadataAsync<Request, Response>("describe", new("world")));
-if (results[0].Value.Tenant != "alice" || results[1].Value.Tenant != "bob") throw new InvalidOperationException("Tenant identity mismatch.");
+if (results[0].Value.Tenant != "alice" || results[1].Value.Tenant != "bob")
+{
+    throw new InvalidOperationException("Tenant identity mismatch.");
+}
+
 foreach (var result in results)
 {
-    if (result.ElapsedMs is not >= 0) throw new InvalidOperationException("Host timing unavailable.");
+    if (result.ElapsedMs is not >= 0)
+    {
+        throw new InvalidOperationException("Host timing unavailable.");
+    }
+
     Console.WriteLine($"{result.Value.Tenant}: {result.Value.Text} ({result.ElapsedMs:F2} ms at host)");
 }
 Console.WriteLine($"Ready shared workers: {plugin.Snapshot.ReadyWorkers}");

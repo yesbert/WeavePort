@@ -1,8 +1,11 @@
 namespace DocumentWorkshop.Contracts;
+
 public static class Limits
 {
     public const int SourceBytes = 8 * 1024 * 1024;
     public const int ReadBytes = 32 * 1024;
+    public const int HeadingCharacters = 256;
+    public const int AnchorCharacters = 128;
     public const int TextCharacters = 4096;
     public const int PageFragments = 32;
     public const int TotalFragments = 8192;

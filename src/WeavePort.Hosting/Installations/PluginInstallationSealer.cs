@@ -63,7 +63,7 @@ public static class PluginInstallationSealer
         }
 
         var runtimes = new Dictionary<string, RuntimeDeclaration>(StringComparer.Ordinal);
-        foreach (var(alias, entry)in entries)
+        foreach (var (alias, entry) in entries)
         {
             if (!files.ContainsKey(entry))
             {
@@ -75,7 +75,8 @@ public static class PluginInstallationSealer
                 "dotnet" => Path.ChangeExtension(entry, ".runtimeconfig.json"),
                 "python" => "pyproject.toml",
                 "node" => "package.json",
-                _ => throw new InvalidDataException($"Unsupported runtime alias '{alias}'.")};
+                _ => throw new InvalidDataException($"Unsupported runtime alias '{alias}'.")
+            };
             if (!files.ContainsKey(source))
             {
                 throw new InvalidDataException($"Missing runtime declaration '{source}'.");
@@ -96,7 +97,7 @@ public static class PluginInstallationSealer
 
     private static void Write(string root, byte[] bytes)
     {
-        string path = Path.Combine(root, "installation.json");
+        string path = Path.Combine(root, ManifestFileName);
         if (File.Exists(path))
         {
             RejectLink(path);

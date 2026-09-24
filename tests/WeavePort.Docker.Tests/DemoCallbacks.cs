@@ -20,35 +20,69 @@ internal sealed class DemoCallbacks(ExternalActionService external) : IHostCallb
         {
             case "documents.read":
                 if (call.Payload.TryGetProperty("tenant", out JsonElement tenant) && tenant.GetString() != call.Context.Tenant)
-                    throw new UnauthorizedAccessException("Foreign tenant request.");
-                return JsonSerializer.SerializeToElement(new[] { new { id = call.Context.Tenant + "-1", text = "WeavePort document" } });
-            case "throw": throw new InvalidOperationException("Deliberate host callback failure");
-            case "resource.use":
-                await _resource.WaitAsync(cancellationToken);
-                try
                 {
-                    _resourceUsers++;
-                    MaximumResourceUsers = Math.Max(MaximumResourceUsers, _resourceUsers);
-                    await Task.Delay(150, cancellationToken);
-                    return JsonSerializer.SerializeToElement(new { status = "completed", resource = "demo-radio" });
+                    throw new UnauthorizedAccessException("Foreign tenant request.");
                 }
-                finally { _resourceUsers--; _resource.Release(); }
-            case "stubborn": await Task.Delay(6000); return JsonSerializer.SerializeToElement(new { done = true });
-            case "slow": await Task.Delay(Timeout.Infinite, cancellationToken); return default;
+
+                return JsonSerializer.SerializeToElement(new[] { new { id = call.Context.Tenant + "-1", text = "WeavePort document" } });
+            case "throw":
+                throw new InvalidOperationException("Deliberate host callback failure");
+            case "resource.use":
+                return await UseResourceAsync(cancellationToken);
+            case "stubborn":
+                await Task.Delay(6000);
+                return JsonSerializer.SerializeToElement(new
+                {
+                    done = true
+                });
+            case "slow":
+                await Task.Delay(Timeout.Infinite, cancellationToken);
+                return default;
             case "external.perform":
             case "external.compensate":
                 string path = call.Operation == "external.perform" ? "perform" : "compensate";
                 using (HttpResponseMessage response = await Client.PostAsJsonAsync(new Uri(external.Address, path),
-                    new { tenant = call.Context.Tenant, args = call.Payload }, cancellationToken))
+                    new
+                    {
+                        tenant = call.Context.Tenant,
+                        args = call.Payload
+                    }, cancellationToken))
                 {
                     response.EnsureSuccessStatusCode();
                     return await response.Content.ReadFromJsonAsync<JsonElement>(cancellationToken);
                 }
             case "nested":
-                if (Nested is null) throw new InvalidOperationException("No nested binding.");
+                if (Nested is null)
+                {
+                    throw new InvalidOperationException("No nested binding.");
+                }
+
                 InvocationResult result = await Nested.InvokeAsync(NestedOperation, call.Payload, cancellationToken);
-                return JsonSerializer.SerializeToElement(new { result.Status, result.Value, call.TraceId });
-            default: throw new UnauthorizedAccessException();
+                return JsonSerializer.SerializeToElement(new
+                {
+                    result.Status,
+                    result.Value,
+                    call.TraceId
+                });
+            default:
+                throw new UnauthorizedAccessException();
         }
     }
+    private async Task<JsonElement> UseResourceAsync(CancellationToken cancellationToken)
+    {
+        await _resource.WaitAsync(cancellationToken);
+        try
+        {
+            _resourceUsers++;
+            MaximumResourceUsers = Math.Max(MaximumResourceUsers, _resourceUsers);
+            await Task.Delay(150, cancellationToken);
+            return JsonSerializer.SerializeToElement(new
+            {
+                status = "completed",
+                resource = "demo-radio"
+            });
+        }
+        finally { _resourceUsers--; _resource.Release(); }
+    }
+
 }

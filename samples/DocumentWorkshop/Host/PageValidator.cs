@@ -1,6 +1,7 @@
 using DocumentWorkshop.Contracts;
 
 namespace DocumentWorkshop.Host;
+
 internal sealed class PageValidator(long length)
 {
     private int _cursor;
@@ -13,9 +14,26 @@ internal sealed class PageValidator(long length)
 
     internal void Accept(ExtractionPage page)
     {
-        if (page is null || _finished || page.NextCursor != _cursor + 1 || page.BytesRead < _bytes || page.BytesRead > length || page.Fragments is null || page.Fragments.Length > Limits.PageFragments || (page.Declined && (!page.Complete || Fragments > 0 || page.Fragments.Length > 0)) || (page.Complete && !page.Declined && page.BytesRead != length) || (!page.Complete && page.BytesRead == _bytes && page.Fragments.Length == 0))
+        if (page is null || _finished || page.NextCursor != _cursor + 1 ||
+            page.BytesRead < _bytes || page.BytesRead > length ||
+            page.Fragments is null || page.Fragments.Length > Limits.PageFragments)
         {
             throw new InvalidDataException("Invalid extraction page or progress.");
+        }
+
+        if (page.Declined && (!page.Complete || Fragments > 0 || page.Fragments.Length > 0))
+        {
+            throw new InvalidDataException("A declined extraction must complete without fragments.");
+        }
+
+        if (page.Complete && !page.Declined && page.BytesRead != length)
+        {
+            throw new InvalidDataException("A completed extraction must consume the whole document.");
+        }
+
+        if (!page.Complete && page.BytesRead == _bytes && page.Fragments.Length == 0)
+        {
+            throw new InvalidDataException("An unfinished extraction must make progress.");
         }
 
         foreach (var fragment in page.Fragments)
@@ -30,7 +48,11 @@ internal sealed class PageValidator(long length)
 
     private void AcceptFragment(Fragment f)
     {
-        if (f is null || f.Sequence != Fragments || f.Text is null || f.Text.Length > Limits.TextCharacters || f.Heading is null || f.Heading.Length > 256 || string.IsNullOrEmpty(f.Anchor) || f.Anchor.Length > 128 || f.Level is < 0 or > 6 || Fragments >= Limits.TotalFragments)
+        if (f is null || f.Sequence != Fragments ||
+            f.Text is null || f.Text.Length > Limits.TextCharacters ||
+            f.Heading is null || f.Heading.Length > Limits.HeadingCharacters ||
+            string.IsNullOrEmpty(f.Anchor) || f.Anchor.Length > Limits.AnchorCharacters ||
+            f.Level is < 0 or > 6 || Fragments >= Limits.TotalFragments)
         {
             throw new InvalidDataException("Malformed fragment.");
         }

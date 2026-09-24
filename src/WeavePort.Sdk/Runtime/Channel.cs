@@ -4,6 +4,7 @@ using System.Text;
 using System.Text.Json;
 
 namespace WeavePort.Sdk;
+
 internal sealed class Channel : IAsyncDisposable
 {
     private const int ReaderBufferBytes = 65536;
@@ -13,7 +14,7 @@ internal sealed class Channel : IAsyncDisposable
     private readonly StreamReader _reader;
     internal Channel()
     {
-        if (Environment.GetEnvironmentVariable("WEAVEPORT_SOCKET")is { } endpoint)
+        if (Environment.GetEnvironmentVariable("WEAVEPORT_SOCKET") is { } endpoint)
         {
             var socket = new Socket(AddressFamily.Unix, SocketType.Stream, ProtocolType.Unspecified);
             try

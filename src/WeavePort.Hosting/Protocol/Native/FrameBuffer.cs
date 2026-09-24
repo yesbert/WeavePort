@@ -13,7 +13,10 @@ internal sealed class FrameBuffer : Stream
     public override bool CanSeek => false;
     public override bool CanWrite => true;
     public override long Length => _length;
-    public override long Position { get => _length; set => throw new NotSupportedException(); }
+    public override long Position
+    {
+        get => _length; set => throw new NotSupportedException();
+    }
 
     public override void Write(byte[] buffer, int offset, int count) => Write(buffer.AsSpan(offset, count));
     public override void Write(ReadOnlySpan<byte> buffer)

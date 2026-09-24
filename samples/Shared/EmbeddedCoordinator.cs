@@ -1,6 +1,7 @@
 using WeavePort.Hosting;
 
 namespace WeavePort.Samples;
+
 internal sealed class CoordinatorRejectedException(string status) : InvalidOperationException("Coordinator refused operation: " + status)
 {
     internal string Status { get; } = status;

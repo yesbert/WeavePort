@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <OutputType>Exe</OutputType><IsPackable>false</IsPackable>
+    <OutputType>Exe</OutputType>
+    <IsPackable>false</IsPackable>
     <RestorePackagesPath>../../artifacts/sdk-version-tests/packages</RestorePackagesPath>
   </PropertyGroup>
   <ItemGroup>

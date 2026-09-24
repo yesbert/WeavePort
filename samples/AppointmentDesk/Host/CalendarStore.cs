@@ -3,8 +3,12 @@ using System.Text.Json;
 using AppointmentDesk.Contracts;
 
 namespace AppointmentDesk.Host;
+
 internal sealed class CalendarStore : IAsyncDisposable
 {
+    private const int SnapshotSchema = 2;
+    private const int MaximumIntents = 1000;
+    private const int MaximumSnapshotBytes = 2 * 1024 * 1024;
     private readonly string _path;
     private readonly FileStream _owner;
     private readonly SemaphoreSlim _gate = new(1);
@@ -16,12 +20,12 @@ internal sealed class CalendarStore : IAsyncDisposable
         _owner = new FileStream(Path.Combine(directory, "owner.lock"), FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
         try
         {
-            if (File.Exists(_path) && new FileInfo(_path).Length > 2 * 1024 * 1024)
+            if (File.Exists(_path) && new FileInfo(_path).Length > MaximumSnapshotBytes)
             {
                 throw new InvalidDataException("Store exceeds 2 MiB.");
             }
 
-            _state = File.Exists(_path) ? JsonSerializer.Deserialize<Snapshot>(File.ReadAllText(_path), Model.Json) ?? throw new InvalidDataException("Missing snapshot.") : new Snapshot(2, []);
+            _state = File.Exists(_path) ? JsonSerializer.Deserialize<Snapshot>(File.ReadAllText(_path), Model.Json) ?? throw new InvalidDataException("Missing snapshot.") : new Snapshot(SnapshotSchema, []);
             ValidateSnapshot(_state);
         }
         catch
@@ -62,7 +66,11 @@ internal sealed class CalendarStore : IAsyncDisposable
         await _gate.WaitAsync(token);
         try
         {
-            return Model.Slots.Where(s => Model.Fits(request.Wish, s) && !_state.Entries.Any(e => e.Request.Scope == request.Scope && e.Outcome?.Status == "booked" && e.Command.Slot == s)).ToArray();
+            return Model.Slots
+                .Where(slot => Model.Fits(request.Wish, slot))
+                .Where(slot => !_state.Entries.Any(entry => entry.Request.Scope == request.Scope &&
+                    entry.Outcome?.Status == "booked" && entry.Command.Slot == slot))
+                .ToArray();
         }
         finally
         {
@@ -87,13 +95,13 @@ internal sealed class CalendarStore : IAsyncDisposable
                 return existing;
             }
 
-            if (_state.Entries.Length >= 1000)
+            if (_state.Entries.Length >= MaximumIntents)
             {
                 throw new InvalidDataException("Store capacity reached (1000 intents).");
             }
 
             var entry = new Entry(request, new Command(request.Id, slot, request.Wish.Subject), null, installation);
-            await SaveAsync(new Snapshot(2, [.._state.Entries, entry]), token);
+            await SaveAsync(new Snapshot(SnapshotSchema, [.. _state.Entries, entry]), token);
             return entry;
         }
         finally
@@ -121,7 +129,7 @@ internal sealed class CalendarStore : IAsyncDisposable
             bool conflict = _state.Entries.Any(e => e.Request.Scope == request.Scope && e.Outcome?.Status == "booked" && e.Command.Slot == command.Slot);
             var outcome = new Outcome(conflict ? "conflict" : "booked", conflict ? null : Guid.NewGuid().ToString("N"), command.Slot);
             var updated = _state.Entries.Select(e => e == entry ? e with { Outcome = outcome } : e).ToArray();
-            await SaveAsync(new Snapshot(2, updated), token);
+            await SaveAsync(new Snapshot(SnapshotSchema, updated), token);
             return outcome;
         }
         finally
@@ -133,7 +141,7 @@ internal sealed class CalendarStore : IAsyncDisposable
     private async Task SaveAsync(Snapshot state, CancellationToken token)
     {
         byte[] bytes = JsonSerializer.SerializeToUtf8Bytes(state, Model.Json);
-        if (bytes.Length > 2 * 1024 * 1024)
+        if (bytes.Length > MaximumSnapshotBytes)
         {
             throw new InvalidDataException("Store exceeds 2 MiB.");
         }
@@ -157,7 +165,7 @@ internal sealed class CalendarStore : IAsyncDisposable
 
     private static void ValidateSnapshot(Snapshot state)
     {
-        if (state.Schema != 2 || state.Entries is null || state.Entries.Length > 1000)
+        if (state.Schema != SnapshotSchema || state.Entries is null || state.Entries.Length > MaximumIntents)
         {
             throw new InvalidDataException("Invalid snapshot.");
         }
@@ -167,7 +175,7 @@ internal sealed class CalendarStore : IAsyncDisposable
         var ids = new HashSet<string>();
         foreach (var entry in state.Entries)
         {
-            if (entry?.Request is null || entry.Command is null || entry.Installation is null || entry.Installation.Plugin != "appointment-desk" || entry.Installation.Contract != "appointment-desk/v1" || !Model.Text(entry.Installation.Version) || entry.Installation.Digest?.Length != 64)
+            if (entry?.Request is null || entry.Command is null || entry.Installation is null || entry.Installation.Plugin != "appointment-desk" || entry.Installation.Contract != "appointment-desk/v1" || !Model.IsValidText(entry.Installation.Version) || entry.Installation.Digest?.Length != 64)
             {
                 throw new InvalidDataException("Invalid intent.");
             }
@@ -183,10 +191,26 @@ internal sealed class CalendarStore : IAsyncDisposable
                 continue;
             }
 
-            if (outcome.Slot != entry.Command.Slot || outcome.Status is not ("booked" or "conflict") || (outcome.Status == "conflict" && outcome.BookingId is not null) || (outcome.Status == "booked" && (!Model.Text(outcome.BookingId) || !ids.Add(outcome.BookingId!) || !booked.Add((entry.Request.Scope, entry.Command.Slot)))))
-            {
-                throw new InvalidDataException("Invalid booking outcome.");
-            }
+            ValidateOutcome(entry, outcome, booked, ids);
+        }
+    }
+
+    private static void ValidateOutcome(Entry entry, Outcome outcome, HashSet<(Scope, Slot)> booked, HashSet<string> ids)
+    {
+        if (outcome.Slot != entry.Command.Slot || outcome.Status is not ("booked" or "conflict") ||
+            (outcome.Status == "conflict" && outcome.BookingId is not null))
+        {
+            throw new InvalidDataException("Invalid booking outcome.");
+        }
+        if (outcome.Status == "conflict")
+        {
+            return;
+        }
+
+        if (!Model.IsValidText(outcome.BookingId) || !ids.Add(outcome.BookingId!) ||
+            !booked.Add((entry.Request.Scope, entry.Command.Slot)))
+        {
+            throw new InvalidDataException("Invalid or duplicate booking identity.");
         }
     }
 

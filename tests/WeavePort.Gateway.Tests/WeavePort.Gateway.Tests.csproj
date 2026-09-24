@@ -1,4 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup><OutputType>Exe</OutputType><IsPackable>false</IsPackable></PropertyGroup>
-  <ItemGroup><ProjectReference Include="../../src/WeavePort.Sdk.Gateway/WeavePort.Sdk.Gateway.csproj" /></ItemGroup>
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../src/WeavePort.Sdk.Gateway/WeavePort.Sdk.Gateway.csproj" />
+  </ItemGroup>
 </Project>

@@ -1,5 +1,3 @@
-using System.Text.Json;
-
 namespace WeavePort.Abstractions;
 /// <summary>Artifact identity disagreement observed before plugin dispatch.</summary>
 /// <param name = "Expected">The host binding's required artifact version.</param>

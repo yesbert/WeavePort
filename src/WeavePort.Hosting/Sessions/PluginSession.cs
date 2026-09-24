@@ -5,9 +5,9 @@ using System.Text.Json;
 using WeavePort.Abstractions;
 
 namespace WeavePort.Hosting;
+
 internal sealed partial class PluginSession(SessionBinding binding, TenantAdmission admission, WorkerPool pool, TimeProvider clock, Action<PluginSession, TenantAdmission> removed, ILogger logger) : IPluginOperationSession
 {
-    private const string Disabled = FailureCodes.Disabled;
     private static readonly ActivitySource Traces = new("WeavePort.Hosting");
     private readonly SemaphoreSlim _gate = new(1);
     private Worker? _worker;
@@ -27,13 +27,14 @@ internal sealed partial class PluginSession(SessionBinding binding, TenantAdmiss
         long started = Stopwatch.GetTimestamp();
         if (_disposed)
         {
-            return Result(Disabled, started, false);
+            return Result(FailureCodes.Disabled, started, false);
         }
 
-        InvocationScope? parent = InvocationScope.Current.Value;
-        if (parent is not null)
+        if (InvocationScope.Current.Value is not null)
         {
-            return new InvocationResult(FailureCodes.Denied, JsonSerializer.SerializeToElement(new { }), "", Stopwatch.GetElapsedTime(started).TotalMilliseconds);
+            return new InvocationResult(FailureCodes.Denied, JsonSerializer.SerializeToElement(new
+            {
+            }), "", Stopwatch.GetElapsedTime(started).TotalMilliseconds);
         }
 
         if (!await _gate.WaitAsync(0, CancellationToken.None))
@@ -44,7 +45,7 @@ internal sealed partial class PluginSession(SessionBinding binding, TenantAdmiss
 
         try
         {
-            return await InvokeAdmittedAsync(operation, payload, parent, started, streamExchange, cancellationToken);
+            return await InvokeAdmittedAsync(operation, payload, started, streamExchange, cancellationToken);
         }
         finally
         {
@@ -59,7 +60,7 @@ internal sealed partial class PluginSession(SessionBinding binding, TenantAdmiss
         }
     }
 
-    private async Task<InvocationResult> InvokeAdmittedAsync(string operation, JsonElement payload, InvocationScope? parent, long started, bool streamExchange, CancellationToken cancellationToken)
+    private async Task<InvocationResult> InvokeAdmittedAsync(string operation, JsonElement payload, long started, bool streamExchange, CancellationToken cancellationToken)
     {
         _dispatched = false;
         _clean = false;
@@ -72,7 +73,7 @@ internal sealed partial class PluginSession(SessionBinding binding, TenantAdmiss
         {
             if (_disposed)
             {
-                return Result(Disabled, started, false);
+                return Result(FailureCodes.Disabled, started, false);
             }
 
             if (!streamExchange)
@@ -89,8 +90,8 @@ internal sealed partial class PluginSession(SessionBinding binding, TenantAdmiss
 
             deadline.Token.ThrowIfCancellationRequested();
             await EnsureStartedAsync(deadline.Token);
-            string trace = parent?.TraceId ?? activity?.TraceId.ToString() ?? id;
-            JsonElement value = await DispatchAsync(new InvokeFrame("invoke", id, operation, payload, binding.Context, trace), parent, deadline.Token);
+            string trace = activity?.TraceId.ToString() ?? id;
+            JsonElement value = await DispatchAsync(new InvokeFrame(FrameKinds.Invoke, id, operation, payload, binding.Context, trace), deadline.Token);
             deadline.Token.ThrowIfCancellationRequested();
             await ReturnCleanWorkerAsync();
             return new InvocationResult(FailureCodes.Ok, value, Instance, Stopwatch.GetElapsedTime(started).TotalMilliseconds, true);
@@ -113,18 +114,16 @@ internal sealed partial class PluginSession(SessionBinding binding, TenantAdmiss
         }
     }
 
-    private async Task<JsonElement> DispatchAsync(InvokeFrame frame, InvocationScope? parent, CancellationToken token)
+    private async Task<JsonElement> DispatchAsync(InvokeFrame frame, CancellationToken token)
     {
         InvocationScope? ownedScope = null;
         try
         {
-            _termination = JsonSerializer.SerializeToElement(new { });
-            if (parent is null)
+            _termination = JsonSerializer.SerializeToElement(new
             {
-                ownedScope = new InvocationScope(binding.Context.Tenant, frame.TraceId, binding.Grants, token, binding.Profile.MaximumCallbacks);
-            }
-
-            InvocationScope.Current.Value = parent ?? ownedScope;
+            });
+            ownedScope = new InvocationScope(binding.Context.Tenant, frame.TraceId, binding.Grants, token, binding.Profile.MaximumCallbacks);
+            InvocationScope.Current.Value = ownedScope;
             _dispatched = true;
             if (_worker!.Mcp is { } mcp)
             {
@@ -137,7 +136,7 @@ internal sealed partial class PluginSession(SessionBinding binding, TenantAdmiss
         finally
         {
             ownedScope?.Complete();
-            InvocationScope.Current.Value = parent;
+            InvocationScope.Current.Value = null;
         }
     }
 

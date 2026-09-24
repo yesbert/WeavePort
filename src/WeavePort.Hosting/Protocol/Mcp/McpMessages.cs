@@ -1,6 +1,7 @@
 using System.Text.Json;
 
 namespace WeavePort.Hosting;
+
 internal static class McpMessages
 {
     private static readonly JsonElement ModernMetadata = JsonSerializer.SerializeToElement(new Dictionary<string, object> { [McpNames.ProtocolVersionMetadata] = McpNames.Revision20260728, [McpNames.ClientCapabilitiesMetadata] = new { } });
@@ -20,7 +21,7 @@ internal static class McpMessages
         return Frames.WriteAsync(stream, new McpRequest(McpNames.JsonRpcVersion, id, method, fields), McpWireJson.Default.McpRequest, token);
     }
 
-    internal static void Object(JsonElement value)
+    internal static void RequireObject(JsonElement value)
     {
         if (value.ValueKind != JsonValueKind.Object)
         {
@@ -42,7 +43,7 @@ internal static class McpMessages
         }
     }
 
-    internal static string String(JsonElement value, string name)
+    internal static string ReadString(JsonElement value, string name)
     {
         if (!value.TryGetProperty(name, out JsonElement field) || field.ValueKind != JsonValueKind.String)
         {
@@ -52,9 +53,9 @@ internal static class McpMessages
         return field.GetString()!;
     }
 
-    internal static void Parameters(string method, JsonElement parameters)
+    internal static void ValidateParameters(string method, JsonElement parameters)
     {
-        Object(parameters);
+        RequireObject(parameters);
         foreach (JsonProperty property in parameters.EnumerateObject())
         {
             bool valid = method switch
@@ -69,7 +70,7 @@ internal static class McpMessages
             }
         }
 
-        if (method is not (McpMethods.ListTools or McpMethods.CallTool) || method == McpMethods.CallTool && string.IsNullOrWhiteSpace(String(parameters, McpFields.Name)))
+        if (method is not (McpMethods.ListTools or McpMethods.CallTool) || method == McpMethods.CallTool && string.IsNullOrWhiteSpace(ReadString(parameters, McpFields.Name)))
         {
             throw new InvalidDataException("Unsupported MCP method or tool name.");
         }

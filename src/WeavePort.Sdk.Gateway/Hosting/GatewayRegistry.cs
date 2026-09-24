@@ -20,7 +20,7 @@ public sealed class GatewayRegistry : IAsyncDisposable
             }
             catch (ObjectDisposedException) when (Done.Task.IsCompleted)
             {
-            // The request completed between lookup and cancellation.
+                // The request completed between lookup and cancellation.
             }
         }
 
@@ -31,6 +31,7 @@ public sealed class GatewayRegistry : IAsyncDisposable
         }
     }
 
+    private const int CredentialEntropyBytes = 32;
     private readonly object _sync = new();
     private sealed record Binding(IPluginClient Client, string Tenant);
     private readonly Dictionary<string, Binding> _bindings = new(StringComparer.Ordinal);
@@ -104,7 +105,7 @@ public sealed class GatewayRegistry : IAsyncDisposable
             throw new UnauthorizedAccessException("Registration identity differs from the local binding.");
         }
 
-        string token = Convert.ToHexString(RandomNumberGenerator.GetBytes(32));
+        string token = Convert.ToHexString(RandomNumberGenerator.GetBytes(CredentialEntropyBytes));
         lock (_sync)
         {
             ObjectDisposedException.ThrowIf(_disposed, this);
@@ -114,20 +115,20 @@ public sealed class GatewayRegistry : IAsyncDisposable
         return token;
     }
 
-    internal IPluginClient Get(string? token)
-    {
-        lock (_sync)
-        {
-            return !_disposed && token is not null && _bindings.TryGetValue(token, out var client) ? client.Client : throw new UnauthorizedAccessException();
-        }
-    }
+    internal IPluginClient Get(string? token) => GetBinding(token).Client;
 
-    internal string GetTenant(string? token)
+    internal string GetTenant(string? token) => GetBinding(token).Tenant;
+
+    private Binding GetBinding(string? token)
     {
         lock (_sync)
         {
-            _ = Get(token);
-            return _bindings[token!].Tenant;
+            if (_disposed || token is null || !_bindings.TryGetValue(token, out var binding))
+            {
+                throw new UnauthorizedAccessException();
+            }
+
+            return binding;
         }
     }
 
@@ -159,20 +160,22 @@ public sealed class GatewayRegistry : IAsyncDisposable
     {
         lock (_sync)
         {
-            if (_disposal is null)
+            if (_disposal is not null)
             {
-                _disposed = true;
-                var pending = _bindings.Select(pair =>
-                {
-                    _streams.TryGetValue(pair.Key, out var stream);
-                    return (Client: pair.Value.Client, Stream: stream);
-                }).ToArray();
-                _bindings.Clear();
-                _streams.Clear();
-                Func<Task>[] actions = pending.Select(item => (Func<Task>)(() => ReleaseAsync(item.Client, item.Stream))).Concat(_revocations.Select(task => (Func<Task>)(() => task))).ToArray();
-                _revocations.Clear();
-                _disposal = Cleanup.RunAsync(actions);
+                return new ValueTask(_disposal);
             }
+
+            _disposed = true;
+            var pending = _bindings.Select(pair =>
+                (Client: pair.Value.Client, Stream: _streams.GetValueOrDefault(pair.Key))).ToArray();
+            _bindings.Clear();
+            _streams.Clear();
+            Func<Task>[] actions = pending
+                .Select(item => (Func<Task>)(() => ReleaseAsync(item.Client, item.Stream)))
+                .Concat(_revocations.Select(task => (Func<Task>)(() => task)))
+                .ToArray();
+            _revocations.Clear();
+            _disposal = Cleanup.RunAsync(actions);
 
             return new ValueTask(_disposal);
         }

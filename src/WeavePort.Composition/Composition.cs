@@ -7,6 +7,8 @@ namespace WeavePort.Composition;
 /// <summary>Technical composition primitives. Products own contracts, session identity, ordering and merge semantics.</summary>
 public static class Composition
 {
+    private const string BulkMapOperation = "bulk-map";
+    private const int MaximumFanOutBranches = 64;
     /// <summary>Collects an exclusive plugin byte source into an atomic, quota-bound result. The caller retains client ownership.</summary>
     public static async Task<ResultHandle> CollectAsync(ResultScope scope, IBoundPluginClient client, string operation, JsonElement input, int chunkBytes = ProtocolLimits.SourceChunkDefaultBytes, CancellationToken cancellationToken = default)
     {
@@ -37,7 +39,6 @@ public static class Composition
         }, cancellationToken);
     }
 
-    private const string BulkMapOperation = "bulk-map";
     /// <summary>Executes one externally bound plugin over bounded base64 chunks. The plugin must implement the bulk-map contract.</summary>
     public static Task<ResultHandle> MapAsync(ResultScope scope, ResultHandle input, IPluginSession session, int chunkBytes = ProtocolLimits.SourceChunkDefaultBytes, CancellationToken cancellationToken = default)
     {
@@ -78,7 +79,12 @@ public static class Composition
 
     private static byte[] Decode(JsonElement value, int chunkBytes)
     {
-        if (value.ValueKind != JsonValueKind.Object || !value.TryGetProperty(WireFields.Data, out var data) || data.ValueKind != JsonValueKind.String || !data.TryGetBytesFromBase64(out byte[]? decoded) || decoded.Length > chunkBytes)
+        if (value.ValueKind != JsonValueKind.Object || !value.TryGetProperty(WireFields.Data, out JsonElement data) || data.ValueKind != JsonValueKind.String)
+        {
+            throw new InvalidDataException("Invalid or oversized bulk-map data.");
+        }
+
+        if (!data.TryGetBytesFromBase64(out byte[]? decoded) || decoded.Length > chunkBytes)
         {
             throw new InvalidDataException("Invalid or oversized bulk-map data.");
         }
@@ -89,13 +95,21 @@ public static class Composition
     /// <summary>Runs required branches with bounded parallelism. Any failure cancels siblings and awaits started operations.</summary>
     public static async Task<ResultHandle[]> FanOutAsync(ResultScope scope, ResultHandle input, IReadOnlyList<Func<ResultScope, ResultHandle, CancellationToken, Task<ResultHandle>>> branches, int maximumParallelism, CancellationToken cancellationToken = default)
     {
-        if (maximumParallelism < 1 || branches.Count is < 1 or > 64)
+        if (maximumParallelism < 1 || branches.Count is < 1 or > MaximumFanOutBranches)
         {
             throw new ArgumentOutOfRangeException(nameof(maximumParallelism));
         }
 
         var results = new ResultHandle[branches.Count];
-        await Parallel.ForEachAsync(Enumerable.Range(0, branches.Count), new ParallelOptions { MaxDegreeOfParallelism = maximumParallelism, CancellationToken = cancellationToken }, async (index, token) => results[index] = await branches[index](scope, input, token));
+        var options = new ParallelOptions
+        {
+            MaxDegreeOfParallelism = maximumParallelism,
+            CancellationToken = cancellationToken
+        };
+        await Parallel.ForEachAsync(Enumerable.Range(0, branches.Count), options, async (index, token) =>
+        {
+            results[index] = await branches[index](scope, input, token);
+        });
         return results;
     }
 

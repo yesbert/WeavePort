@@ -26,7 +26,7 @@ export async function runConcurrent(
 ): Promise<void> {
     const config = await read();
     if (
-        config?.type !== 'configure' ||
+        config?.type !== FrameKinds.Configure ||
         !Number.isInteger(config.degree) ||
         config.degree < 1 ||
         config.degree > ProtocolLimits.MaximumConcurrentCalls
@@ -50,11 +50,11 @@ class ConcurrentRuntime {
         private readonly degree: number,
     ) {}
 
-    private async execute(request: Invocation, call: Call): Promise<void> {
-        const pending: Promise<unknown>[] = [];
-        const callback = <T>(operation: string, payload: unknown): Promise<T> => {
-            if (!call.active || call.abort.signal.aborted)
+    private createCallback(request: Invocation, call: Call, pending: Promise<boolean>[]) {
+        return <T>(operation: string, payload: unknown): Promise<T> => {
+            if (!call.active || call.abort.signal.aborted) {
                 return Promise.reject(new Error('Expired invocation'));
+            }
             const id = String(++this.callbackId);
             const promise = new Promise<T>((resolve, reject) => {
                 this.callbacks.set(id, {
@@ -72,12 +72,18 @@ class ConcurrentRuntime {
             });
             // Observe immediately even if author code does not await this callback.
             pending.push(
-                promise.catch((error) => {
-                    return { callbackError: error };
-                }),
+                promise.then(
+                    () => false,
+                    () => true,
+                ),
             );
             return promise;
         };
+    }
+
+    private async execute(request: Invocation, call: Call): Promise<void> {
+        const pending: Promise<boolean>[] = [];
+        const callback = this.createCallback(request, call, pending);
         const context = new SessionContext(
             request.context.tenant,
             request.context.configuration,
@@ -89,10 +95,13 @@ class ConcurrentRuntime {
             code: FailureCodes.SdkError,
         };
         try {
-            if (request.operation !== SdkOperations.Call)
+            if (request.operation !== SdkOperations.Call) {
                 throw new Error('Concurrent workers support unary functions only');
+            }
             const handler = this.functions.get(request.payload.operation ?? '');
-            if (!handler) throw new Error('Unknown operation');
+            if (!handler) {
+                throw new Error('Unknown operation');
+            }
             const value = await handler(request.payload.input, context, call.abort.signal);
             response = { type: FrameKinds.Result, id: request.id, value, reusable: true };
         } catch {
@@ -111,36 +120,43 @@ class ConcurrentRuntime {
                 };
             }
             const replies = await Promise.all(pending);
-            if (
-                replies.some(
-                    (reply) => reply && typeof reply === 'object' && 'callbackError' in reply,
-                ) &&
-                response.code !== FailureCodes.CleanupError
-            )
+            if (replies.some((failed) => failed) && response.code !== FailureCodes.CleanupError) {
                 response = { type: FrameKinds.Error, id: request.id, code: FailureCodes.SdkError };
-            if (call.abort.signal.aborted && response.code !== FailureCodes.CleanupError)
-                response = { type: FailureCodes.Cancelled, id: request.id };
+            }
+            if (call.abort.signal.aborted && response.code !== FailureCodes.CleanupError) {
+                response = { type: FrameKinds.Cancelled, id: request.id };
+            }
             try {
                 const encoded = JSON.stringify(response);
-                if (Buffer.byteLength(encoded) > ProtocolLimits.FrameBytes)
+                if (Buffer.byteLength(encoded) > ProtocolLimits.FrameBytes) {
                     throw new Error('Frame limit');
+                }
             } catch {
                 response = { type: FrameKinds.Error, id: request.id, code: FailureCodes.SdkError };
             }
-            // A cancelled host callback can ignore cancellation and never reply. Keep
-            // only bounded identity tombstones after releasing invocation-owned closures.
-            for (const [id, reply] of this.callbacks) {
-                if (reply.owner !== request.id) continue;
-                this.callbacks.delete(id);
-                this.cancelledCallbacks.set(id, request.id);
-                if (this.cancelledCallbacks.size <= MAXIMUM_RETIRED_IDENTITIES) continue;
-                this.cancelledCallbacks.delete(this.cancelledCallbacks.keys().next().value!);
-            }
+            this.retireCallbackRoutes(request.id);
             this.calls.delete(request.id);
             this.completed.add(request.id);
-            if (this.completed.size > MAXIMUM_RETIRED_IDENTITIES)
+            if (this.completed.size > MAXIMUM_RETIRED_IDENTITIES) {
                 this.completed.delete(this.completed.values().next().value!);
+            }
             await this.send(response);
+        }
+    }
+
+    private retireCallbackRoutes(requestId: string): void {
+        // A cancelled host callback can ignore cancellation and never reply. Keep
+        // only bounded identity tombstones after releasing invocation-owned closures.
+        for (const [id, reply] of this.callbacks) {
+            if (reply.owner !== requestId) {
+                continue;
+            }
+            this.callbacks.delete(id);
+            this.cancelledCallbacks.set(id, requestId);
+            if (this.cancelledCallbacks.size <= MAXIMUM_RETIRED_IDENTITIES) {
+                continue;
+            }
+            this.cancelledCallbacks.delete(this.cancelledCallbacks.keys().next().value!);
         }
     }
 
@@ -149,13 +165,13 @@ class ConcurrentRuntime {
             let frame: InboundFrame | undefined;
             while ((frame = await this.read()) !== undefined) {
                 switch (frame.type) {
-                    case 'invoke':
+                    case FrameKinds.Invoke:
                         this.admit(frame);
                         break;
-                    case 'callback-result':
+                    case FrameKinds.CallbackResult:
                         this.completeCallback(frame);
                         break;
-                    case 'cancel':
+                    case FrameKinds.Cancel:
                         this.cancel(frame);
                         break;
                     default:
@@ -163,8 +179,12 @@ class ConcurrentRuntime {
                 }
             }
         } finally {
-            for (const call of this.calls.values()) call.abort.abort();
-            for (const reply of this.callbacks.values()) reply.reject(new Error('Channel closed'));
+            for (const call of this.calls.values()) {
+                call.abort.abort();
+            }
+            for (const reply of this.callbacks.values()) {
+                reply.reject(new Error('Channel closed'));
+            }
             await Promise.allSettled([...this.calls.values()].map((call) => call.task));
         }
     }
@@ -175,8 +195,9 @@ class ConcurrentRuntime {
             this.calls.has(frame.id) ||
             this.completed.has(frame.id) ||
             this.calls.size >= this.degree
-        )
+        ) {
             throw new Error('Invalid invocation admission');
+        }
         if (
             typeof frame.operation !== 'string' ||
             !frame.payload ||
@@ -184,8 +205,9 @@ class ConcurrentRuntime {
             !frame.context ||
             typeof frame.context.tenant !== 'string' ||
             !('configuration' in frame.context)
-        )
+        ) {
             throw new Error('Malformed invocation');
+        }
         const call: Call = { abort: new AbortController(), active: true };
         this.calls.set(frame.id, call);
         call.task = this.execute(frame, call);
@@ -201,21 +223,33 @@ class ConcurrentRuntime {
             this.cancelledCallbacks.delete(frame.callbackId);
             return;
         }
-        if (!reply) throw new Error('Unknown callback identity');
-        if (reply.owner !== frame.id) throw new Error('Unknown callback identity');
+        if (!reply) {
+            throw new Error('Unknown callback identity');
+        }
+        if (reply.owner !== frame.id) {
+            throw new Error('Unknown callback identity');
+        }
         this.callbacks.delete(frame.callbackId);
-        if (frame.error != null || frame.success === false)
+        if (frame.error != null || frame.success === false) {
             reply.reject(new Error('Host callback failed'));
-        else reply.resolve(frame.value);
+        } else {
+            reply.resolve(frame.value);
+        }
     }
 
     private cancel(frame: Cancellation): void {
         const call = this.calls.get(frame.id);
-        if (!call && this.completed.has(frame.id)) return;
-        if (!call) throw new Error('Unknown cancellation identity');
+        if (!call && this.completed.has(frame.id)) {
+            return;
+        }
+        if (!call) {
+            throw new Error('Unknown cancellation identity');
+        }
         call.abort.abort();
         for (const reply of this.callbacks.values()) {
-            if (reply.owner !== frame.id) continue;
+            if (reply.owner !== frame.id) {
+                continue;
+            }
             reply.reject(new Error('Invocation cancelled'));
         }
     }

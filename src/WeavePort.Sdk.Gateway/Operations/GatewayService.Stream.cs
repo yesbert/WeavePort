@@ -5,8 +5,11 @@ using WeavePort.Sdk.Client;
 using WeavePort.Sdk.Gateway.Protocol;
 
 namespace WeavePort.Sdk.Gateway;
+
 public sealed partial class GatewayService
 {
+    private const int JsonArrayBracketsBytes = 2;
+    private const int JsonItemSeparatorBytes = 1;
     private static readonly TimeSpan BatchFlushInterval = TimeSpan.FromMilliseconds(100);
     private static async Task WriteLiveBatchesAsync(IAsyncEnumerable<JsonElement> source, IServerStreamWriter<Reply> output, GatewayRegistry.ActiveStream active)
     {
@@ -15,7 +18,7 @@ public sealed partial class GatewayService
         Task<bool>? advance = null;
         long total = 0;
         var items = new List<JsonElement>();
-        long bytes = 2;
+        long bytes = JsonArrayBracketsBytes;
         try
         {
             while (true)
@@ -45,7 +48,7 @@ public sealed partial class GatewayService
 
                 bytes = await FlushFullBatchAsync(items, output, bytes, size, token);
                 items.Add(item);
-                bytes += size + 1;
+                bytes += size + JsonItemSeparatorBytes;
             }
 
             if (items.Count != 0)
@@ -86,7 +89,7 @@ public sealed partial class GatewayService
         }
         catch (OperationCanceledException) when (active.Stop.IsCancellationRequested)
         {
-        // The outstanding advancement has released its iterator before disposal.
+            // The outstanding advancement has released its iterator before disposal.
         }
     }
 
@@ -99,18 +102,18 @@ public sealed partial class GatewayService
 
         await output.WriteAsync(Encode(items), token);
         items.Clear();
-        return (await ReadyAsync(advance, token), 2);
+        return (await ReadyAsync(advance, token), JsonArrayBracketsBytes);
     }
 
     private static async Task<long> FlushFullBatchAsync(List<JsonElement> items, IServerStreamWriter<Reply> output, long bytes, long size, CancellationToken token)
     {
-        if (items.Count < ProtocolLimits.StreamBatchItems && bytes + size + 1 <= ProtocolLimits.StreamBatchBytes)
+        if (items.Count < ProtocolLimits.StreamBatchItems && bytes + size + JsonItemSeparatorBytes <= ProtocolLimits.StreamBatchBytes)
         {
             return bytes;
         }
 
         await output.WriteAsync(Encode(items), token);
         items.Clear();
-        return 2;
+        return JsonArrayBracketsBytes;
     }
 }

@@ -3,6 +3,7 @@ using System.Text.Json;
 using WeavePort.Abstractions;
 
 namespace WeavePort.Hosting;
+
 internal sealed partial class PluginSession
 {
     private readonly SemaphoreSlim _operationGate = new(1);
@@ -12,7 +13,9 @@ internal sealed partial class PluginSession
     {
         if (!await _operationGate.WaitAsync(0, cancellationToken))
         {
-            return new(FailureCodes.Busy, JsonSerializer.SerializeToElement(new { }), Instance, 0);
+            return new(FailureCodes.Busy, JsonSerializer.SerializeToElement(new
+            {
+            }), Instance, 0);
         }
 
         try

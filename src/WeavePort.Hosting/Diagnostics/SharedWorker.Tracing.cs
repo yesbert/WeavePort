@@ -3,6 +3,7 @@ using WeavePort.Abstractions;
 using WeavePort.Internal;
 
 namespace WeavePort.Hosting;
+
 internal sealed partial class SharedWorker
 {
     private static readonly ActivitySource Traces = new("WeavePort.Hosting");

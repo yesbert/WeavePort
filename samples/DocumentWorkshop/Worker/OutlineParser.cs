@@ -3,6 +3,7 @@ using System.Text.RegularExpressions;
 using DocumentWorkshop.Contracts;
 
 namespace DocumentWorkshop.Worker;
+
 internal sealed class OutlineParser(string kind, string fileName)
 {
     private readonly StringBuilder _line = new();
@@ -54,7 +55,7 @@ internal sealed class OutlineParser(string kind, string fileName)
 
         if (_line.Length > 0)
         {
-            Line(_line.ToString());
+            ProcessLine(_line.ToString());
             _line.Clear();
         }
 
@@ -65,7 +66,7 @@ internal sealed class OutlineParser(string kind, string fileName)
     {
         if (character is '\r' or '\n')
         {
-            Line(_line.ToString());
+            ProcessLine(_line.ToString());
             _line.Clear();
             return;
         }
@@ -78,7 +79,7 @@ internal sealed class OutlineParser(string kind, string fileName)
         _line.Append(character);
     }
 
-    private void Line(string line)
+    private void ProcessLine(string line)
     {
         string trimmed = line.TrimStart(' ');
         bool heading = kind == "markdown" && _fence == '\0' && line.Length - trimmed.Length <= 3;
@@ -157,12 +158,11 @@ internal sealed class OutlineParser(string kind, string fileName)
             _heading = _heading[..explicitAnchor.Index];
         }
 
-        if (_heading.Length > 256 || !_anchors.Add(_anchor))
+        if (_heading.Length > Limits.HeadingCharacters || !_anchors.Add(_anchor))
         {
             throw new InvalidDataException("Invalid heading or duplicate anchor.");
         }
 
-        return;
     }
 
     private void UpdateFence(string trimmed)

@@ -1,6 +1,7 @@
 using WeavePort.Abstractions;
 
 namespace WeavePort.Hosting;
+
 internal sealed partial class WorkerPool
 {
     internal void ReportFailure(string instance, PluginFailure failure, Exception error)

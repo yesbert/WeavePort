@@ -2,9 +2,16 @@ using WeavePort.Internal;
 using System.Text.Json;
 
 namespace WeavePort.Hosting;
+
 internal static partial class WorkerEnvelope
 {
-    private static readonly string[] ReservedNames = ["type", "id", "callbackId", "operation", "payload", "value", "protocol", "pluginVersion", "code", "sessionCleanup", "reusable", "concurrentCalls", "degree", "primaryCode", "cleanupFailed"];
+    private static readonly string[] ReservedNames =
+    [
+        WireFields.Type, WireFields.Id, WireFields.CallbackId, WireFields.Operation,
+        WireFields.Payload, WireFields.Value, WireFields.Protocol, WireFields.PluginVersion,
+        WireFields.Code, WireFields.SessionCleanup, WireFields.Reusable, WireFields.ConcurrentCalls,
+        WireFields.Degree, WireFields.PrimaryCode, WireFields.CleanupFailed
+    ];
     internal static void Validate(JsonElement frame)
     {
         if (frame.ValueKind != JsonValueKind.Object)
@@ -42,7 +49,17 @@ internal static partial class WorkerEnvelope
     internal static void ValidateReady(JsonElement frame, string version, WorkerReusePolicy reusePolicy = WorkerReusePolicy.CustomerBound)
     {
         Validate(frame);
-        if (!frame.TryGetProperty(WireFields.Type, out JsonElement type) || type.ValueKind != JsonValueKind.String || type.GetString() != "ready" || !frame.TryGetProperty(WireFields.Protocol, out JsonElement protocol) || protocol.ValueKind != JsonValueKind.Number || !protocol.TryGetInt32(out int number) || number != (reusePolicy == WorkerReusePolicy.Shared ? ProtocolVersions.Concurrent : ProtocolVersions.Exclusive) || !frame.TryGetProperty(WireFields.PluginVersion, out JsonElement pluginVersion) || pluginVersion.ValueKind != JsonValueKind.String)
+        int expectedProtocol = reusePolicy == WorkerReusePolicy.Shared ? ProtocolVersions.Concurrent : ProtocolVersions.Exclusive;
+        if (!frame.TryGetProperty(WireFields.Type, out JsonElement type) ||
+            type.ValueKind != JsonValueKind.String || type.GetString() != FrameKinds.Ready ||
+            !frame.TryGetProperty(WireFields.Protocol, out JsonElement protocol) ||
+            protocol.ValueKind != JsonValueKind.Number || !protocol.TryGetInt32(out int number) || number != expectedProtocol)
+        {
+            throw new InvalidDataException("Unsupported worker protocol.");
+        }
+
+        if (!frame.TryGetProperty(WireFields.PluginVersion, out JsonElement pluginVersion) ||
+            pluginVersion.ValueKind != JsonValueKind.String)
         {
             throw new InvalidDataException("Unsupported worker protocol.");
         }

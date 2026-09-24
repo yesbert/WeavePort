@@ -42,9 +42,13 @@ InvocationResult result = await session.InvokeAsync(
     }));
 
 if (result.Status != "ok")
+{
     throw new InvalidOperationException($"Host exchange failed: {result.Status}");
+}
 if (result.Value.TryGetProperty("isError", out var error) && error.GetBoolean())
+{
     throw new InvalidOperationException("The tool reported an application error.");
+}
 Console.WriteLine(result.Value.GetProperty("structuredContent"));
 
 sealed class NoCallbacks : IHostCallbacks
