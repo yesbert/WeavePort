@@ -1,0 +1,152 @@
+{
+  "baseline_audit": "openspec/changes/archive/2026-09-24-audit-file-readability/files.json",
+  "analyzed_revision": "04eb2996256b20564acc19ccaff9e623020eac78",
+  "scope": "Files changed after the exhaustive audit, plus closure documentation. Original historical audit hashes remain unchanged.",
+  "files": [
+    {
+      "path": "docs/source-organization.md",
+      "sha256": "445119517d322a38e08943cb667d019bb507ad79f15b077e9e1f0cdc666604cc",
+      "assessment": "The navigation guide links dated audit evidence and distinguishes snapshots from later changes."
+    },
+    {
+      "path": "llms-full.txt",
+      "sha256": "1adb8bf21ab217a31af19f5b1651a7c3c4f74ac7e72ba1d0a3b35941de8e1f85",
+      "assessment": "Generated documentation was refreshed from maintained sources and checked for drift."
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-24-complete-readability-analysis/.openspec.yaml",
+      "sha256": "23bb15fba46ab16f4e9f834e4b42f1b6294e4f6e70a289e7b8a433eb394f0fc0",
+      "assessment": "Archived follow-up scope, decisions, completed tasks or verification evidence is consistent with merged changes and stated limits."
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-24-complete-readability-analysis/analysis/duplications.json",
+      "sha256": "8c03559b2c27573195a5c4e2a94587060d01b7ebdfe44a7924900d5d87d7aa64",
+      "assessment": "Verbatim complete Sonar export for the recorded main revision; data is historical evidence, not executable source."
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-24-complete-readability-analysis/analysis/hotspots.json",
+      "sha256": "8fb19d8832241a449cdeb250abfddd05543cbbc1c5fb52f667158ab61e2e707b",
+      "assessment": "Verbatim complete Sonar export for the recorded main revision; data is historical evidence, not executable source."
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-24-complete-readability-analysis/analysis/issues.json",
+      "sha256": "6e167c05e085dd98d424974bb4dd0d8db396f89ab6f18308f4bfed48a8909214",
+      "assessment": "Verbatim complete Sonar export for the recorded main revision; data is historical evidence, not executable source."
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-24-complete-readability-analysis/analysis/measures.json",
+      "sha256": "fce0f5a479b0bcceaf3290048fb27c4af700d2d21050db45e2a3d16d1eeb6f15",
+      "assessment": "Verbatim complete Sonar export for the recorded main revision; data is historical evidence, not executable source."
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-24-complete-readability-analysis/analysis/metadata.json",
+      "sha256": "38b57a1e774ca965663796c779fd74444dac36a95d2f1dba2a5e4bf212f1ecfe",
+      "assessment": "Verbatim complete Sonar export for the recorded main revision; data is historical evidence, not executable source."
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-24-complete-readability-analysis/analysis/quality-gate.json",
+      "sha256": "df9e678f773c799e5bc0149c87768418b769ae144baf8a64767f55c97704c69d",
+      "assessment": "Verbatim complete Sonar export for the recorded main revision; data is historical evidence, not executable source."
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-24-complete-readability-analysis/analysis/summary.md",
+      "sha256": "8e3cffcc9adc45a508b73526b57563774cc262194fa0f1b4775f28b5895cf753",
+      "assessment": "Verbatim complete Sonar export for the recorded main revision; data is historical evidence, not executable source."
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-24-complete-readability-analysis/design.md",
+      "sha256": "b6a40ee1764e1d6abc0fe1a3324a72407e428777569a9bd358e7178ed4a34f27",
+      "assessment": "Archived follow-up scope, decisions, completed tasks or verification evidence is consistent with merged changes and stated limits."
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-24-complete-readability-analysis/proposal.md",
+      "sha256": "d057f4af9c1b4d8186f676ec4fedb4b71da8a73698d9de23b05a575488970190",
+      "assessment": "Archived follow-up scope, decisions, completed tasks or verification evidence is consistent with merged changes and stated limits."
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-24-complete-readability-analysis/tasks.md",
+      "sha256": "ef93fa49aeda1a2645634f48952feed568ed2dab55b7161e4eca49957325fe43",
+      "assessment": "Archived follow-up scope, decisions, completed tasks or verification evidence is consistent with merged changes and stated limits."
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-24-complete-readability-analysis/verification.md",
+      "sha256": "f0e3740453f65d15a0c7af52871ce4ac1bfa9031d6c32aeab158a0eff2b2d3d0",
+      "assessment": "Archived follow-up scope, decisions, completed tasks or verification evidence is consistent with merged changes and stated limits."
+    },
+    {
+      "path": "scripts/ci/sonar/coverage.py",
+      "sha256": "c4091dcea1ccedf88f546ff549c6b8e75f4eca49e9edbd4390ad84b2ac4373e4",
+      "assessment": "Cleanup scenarios participate in the same coverage collection as other concurrent SDK modes."
+    },
+    {
+      "path": "src/WeavePort.Hosting/Diagnostics/PluginVersionMismatchException.cs",
+      "sha256": "a65f9afb8f5452f93861e35be098c512d95665b4c5693c6c15a134dfb02239a4",
+      "assessment": "The stable code remains an instance property without changing the public contract."
+    },
+    {
+      "path": "src/WeavePort.Hosting/Installations/InstalledPluginCatalog.cs",
+      "sha256": "69117612f5f71ed6c344cbf89fa88022d377b45a7190f67fca1a8e0e42b9ea64",
+      "assessment": "Manifest declaration checks form a named operation separate from compatibility and inventory validation."
+    },
+    {
+      "path": "src/WeavePort.Hosting/Sessions/PluginSession.Exchange.cs",
+      "sha256": "16c4501d9c73ed14bedf6ba487cbbcd4bf1280f9b6ed54ae1194e694010412c3",
+      "assessment": "The execution-error factory declares its concrete result type."
+    },
+    {
+      "path": "src/WeavePort.Hosting/Sessions/SharedCall.cs",
+      "sha256": "dd7a8d7b5b4b782bfb187ef6016300d7bddd75733501e9aafb4b4f9c8867b4b7",
+      "assessment": "Named failure description preserves status and phase without a nested conditional expression."
+    },
+    {
+      "path": "src/WeavePort.Hosting/Workers/WorkerPool.Acquisition.cs",
+      "sha256": "6bb14e689f17235d38f269bd80655f988e91d6861e813042f24809dce3f0cefd",
+      "assessment": "A named boolean lookup makes the optional warmup wait explicit without returning a nullable task."
+    },
+    {
+      "path": "src/WeavePort.Sdk/Sessions/SessionCleanup.cs",
+      "sha256": "8651aa8e1f1ae9bf3d594d36bca58ff94f8d648fc016b85e66cec392f14fd0aa",
+      "assessment": "Execution and cleanup failures are captured separately and propagated after finally; fatal primary failures retain priority."
+    },
+    {
+      "path": "src/WeavePort.Sdk/Sessions/SessionCleanupException.cs",
+      "sha256": "f858779f6d26c0965d70f5e1bb3a78fc4d640e7c14ac030cf44262507c05dfaa",
+      "assessment": "The stable code remains an instance property without changing the public contract."
+    },
+    {
+      "path": "tests/WeavePort.ConcurrentSdkTests/CleanupChecks.cs",
+      "sha256": "e6aa59dccde3ff244aea96d6abc4c821bbdcfc0f2bba6a720af26f93db37deb2",
+      "assessment": "Nine independent cleanup scenarios verify ownership, cause identity, stack sites, cancellation and fatal-error priority."
+    },
+    {
+      "path": "tests/WeavePort.ConcurrentSdkTests/CollectionChecks.cs",
+      "sha256": "b1311631864f2aa5faf4740968ce1a7bb6cefbe05bc6a0ea215280e010911787",
+      "assessment": "Repeated expected arrays have named fixture ownership."
+    },
+    {
+      "path": "tests/WeavePort.ConcurrentSdkTests/Program.cs",
+      "sha256": "ee07e85bf899e67721a154c16162611f3ab9b5346f1403a00969440d1caf11b4",
+      "assessment": "The cleanup scenario mode is discoverable beside existing concurrent SDK modes."
+    },
+    {
+      "path": "tests/WeavePort.Hosting.Tests/Lifecycle/DiagnosticCodeChecks.cs",
+      "sha256": "f2741a02bf21b35958427893f3e9224d5e3775719fa37883f0a46a8f6c07bc75",
+      "assessment": "Expected diagnostic-code values have named fixture ownership."
+    },
+    {
+      "path": "tests/WeavePort.Optional.Tests/Verification/OptionalVerification.cs",
+      "sha256": "597cddec73571a37258282ab6ff7c57f67f3250890f2fe6bd96e283778c47c41",
+      "assessment": "Serialization settings are shared by the verification fixture."
+    },
+    {
+      "path": "tools/candidate/shared.py",
+      "sha256": "65554bd90a8602bacc2ffdb41f6eaaa18519b3fa0221330ed5caee45a72db535",
+      "assessment": "Both source and packed SDK qualification execute cleanup scenarios."
+    },
+    {
+      "path": "openspec/changes/archive/2026-09-24-complete-readability-analysis/reviewed-files.json",
+      "sha256": null,
+      "assessment": "Supplemental audit ledger; its containing Git commit identifies these bytes, avoiding a recursive self-hash."
+    }
+  ]
+}

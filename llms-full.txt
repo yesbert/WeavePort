@@ -2358,6 +2358,10 @@ Installation and portable checks keep launcher fixtures as ordinary source files
 
 Python measurement entry points (`reuse.py`, `reuse_matrix.py`, `density.py`, `tools/soak/run.py`) select an experiment and delegate its lifetime. `MatrixMeasurement` owns one stage, with `matrix_workloads`, `matrix_execution`, `matrix_observation` and `matrix_lifecycle` separating requests, arrivals, reporting and cleanup. `SoakRun` owns the supervised native process group; `configuration.py` validates its limits and `support.py` supplies bounded process and evidence operations. The k6 workload separates transport (`session.js`), protocol encoding (`protocol.js`) and checked operations (`operations.js`). New helpers belong to the recorded source-hash set as well as the import graph.
 
+## Dated audit evidence
+
+The [September 2026 file audit](https://raw.githubusercontent.com/yesbert/WeavePort/main/openspec/changes/archive/2026-09-24-audit-file-readability/verification.md) records the complete reviewed inventory, changes and frozen qualification. Its [analysis follow-up](https://raw.githubusercontent.com/yesbert/WeavePort/main/openspec/changes/archive/2026-09-24-complete-readability-analysis/verification.md) records the remaining fixes and successful main-only quality gate. These are source-specific snapshots, not automatic certification of later edits.
+
 ---
 
 ## Engineering
