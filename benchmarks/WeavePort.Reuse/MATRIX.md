@@ -1,5 +1,7 @@
 # Security and capacity matrix
 
+This document describes the retained experimental fixture, not the current production API. For implemented ownership policies use [approved session reuse](../../docs/reusable-plugins.md) and [shared execution](../../docs/shared-execution.md).
+
 This is a source-built Python/Docker experiment on the MacBook Air, separate from the delivered SDK benchmark and from the production host path. It performs real alternating Python plugin modules, but its permission callback is a local stub. It does not include the production .NET protocol, host callbacks, application database, or network ingress. A distinct synthetic customer identity per successful call is the default. With `callsPerCustomer`, a customer counts as fully served only after that many correct calls.
 
 ## Execution profiles
@@ -55,7 +57,7 @@ The ready queue admits at most one in-flight invocation per customer/plugin key.
 
 A dedicated negative control reproduced cross-customer reads of System V shared memory after both fresh-interpreter and fork-server child replacement. These objects live in the container's IPC namespace, beyond Python heap and temporary-file cleanup. The runtime coordinator now checks `/proc/sysvipc/{shm,sem,msg}` and `/dev/mqueue` after the invocation. Any residue makes the container non-reusable; its exact instance is destroyed before a different customer can use the lane. Both transports explicitly request a private IPC namespace. Security checks cover shared memory, semaphores, System V/POSIX message queues, and denied process-keyring creation.
 
-The reproduced leak is in the experimental reuse fixture, not in the production scheduler's unchanged rule that a used worker never switches customers. Pre-audit performance runs remain diagnostic history, not qualified results for the corrected boundary. Fresh-process isolation alone is insufficient when shared kernel resources survive. See the Linux manual's [shared-memory lifetime rules](https://www.man7.org/linux/man-pages/man2/shmctl.2.html) and [message-queue persistence](https://man7.org/linux/man-pages/man7/mq_overview.7.html).
+The reproduced leak is in the experimental reuse fixture, not in the customer-bound policy's rule that a used worker never switches customers. Pre-audit performance runs remain diagnostic history, not qualified results for the corrected boundary. Fresh-process isolation alone is insufficient when shared kernel resources survive. See the Linux manual's [shared-memory lifetime rules](https://www.man7.org/linux/man-pages/man2/shmctl.2.html) and [message-queue persistence](https://man7.org/linux/man-pages/man7/mq_overview.7.html).
 
 The fork-child response and process exit share one 1.5-second invocation deadline. A separate 100-ms post-response exit limit produced false failures at 64 concurrent containers and was removed. Deterministic 250-ms and 2-second exit-delay controls verify acceptance within the overall budget and retirement beyond it. `pluginsPerCustomer: 1` selects a single plugin per customer in grouped workloads; the default alternates two modules.
 

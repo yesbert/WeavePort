@@ -21,18 +21,7 @@ internal sealed class Extraction(DocumentSource source, string kind)
 
         if (_parser.Pending.Count == 0 && !_ended && !_parser.Declined)
         {
-            var input = JsonSerializer.SerializeToElement(new ReadRequest(source.Id, _offset, Limits.ReadBytes), JsonSerializerOptions.Web);
-            ReadReply reply = (await context.CallHostAsync("document.read", input, token)).Deserialize<ReadReply>(JsonSerializerOptions.Web)!;
-            if (reply.Offset != _offset || reply.Data.Length > Limits.ReadBytes || _offset + reply.Data.Length > source.Length || reply.End != (_offset + reply.Data.Length == source.Length) || (!reply.End && reply.Data.Length == 0))
-            {
-                throw new InvalidDataException("Invalid source transfer.");
-            }
-
-            var characters = new char[Limits.ReadBytes + 2];
-            int count = _decoder.GetChars(reply.Data, characters, reply.End);
-            _parser.Feed(characters.AsSpan(0, count), reply.End);
-            _offset += reply.Data.Length;
-            _ended = reply.End;
+            await ReadSourceAsync(context, token);
         }
 
         var fragments = new List<Fragment>();
@@ -43,5 +32,21 @@ internal sealed class Extraction(DocumentSource source, string kind)
 
         _complete = _parser.Declined || (_ended && _parser.Pending.Count == 0);
         return new ExtractionPage(++_cursor, _offset, _complete, _parser.Declined, fragments.ToArray(), _parser.Declined ? "The outline reader requires an ATX heading as its first nonblank line." : null);
+    }
+
+    private async Task ReadSourceAsync(PluginCallContext context, CancellationToken token)
+    {
+        var input = JsonSerializer.SerializeToElement(new ReadRequest(source.Id, _offset, Limits.ReadBytes), JsonSerializerOptions.Web);
+        ReadReply reply = (await context.CallHostAsync("document.read", input, token)).Deserialize<ReadReply>(JsonSerializerOptions.Web)!;
+        if (reply.Offset != _offset || reply.Data.Length > Limits.ReadBytes || _offset + reply.Data.Length > source.Length || reply.End != (_offset + reply.Data.Length == source.Length) || (!reply.End && reply.Data.Length == 0))
+        {
+            throw new InvalidDataException("Invalid source transfer.");
+        }
+
+        var characters = new char[Limits.ReadBytes + 2];
+        int count = _decoder.GetChars(reply.Data, characters, reply.End);
+        _parser.Feed(characters.AsSpan(0, count), reply.End);
+        _offset += reply.Data.Length;
+        _ended = reply.End;
     }
 }

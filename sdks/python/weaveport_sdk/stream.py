@@ -1,6 +1,11 @@
 """A single retained producer batches ready items without per-item task scheduling."""
+
+from .protocol import ProtocolLimits
+
 import asyncio
 from collections import deque
+
+_BATCH_WAIT_SECONDS = 0.025
 
 
 class LiveStream:
@@ -20,18 +25,14 @@ class LiveStream:
     async def _produce(self):
         try:
             while True:
-                while len(self.items) >= 16:
-                    self.space.clear()
-                    await self.space.wait()
+                await self._wait_for_item_capacity()
                 item = await anext(self.iterator)
                 size = len(self.encode(item))
-                if size > 128 << 10:
+                if size > ProtocolLimits.StreamItemBytes:
                     raise ValueError("Item limit")
-                while self.buffer_bytes + size + 1 > 256 << 10:
-                    self.space.clear()
-                    await self.space.wait()
+                await self._wait_for_byte_capacity(size)
                 self.total_bytes += size
-                if self.total_bytes > 64 << 20:
+                if self.total_bytes > ProtocolLimits.StreamTotalBytes:
                     raise ValueError("Stream limit")
                 self.items.append(item)
                 self.buffer_bytes += size + 1
@@ -51,7 +52,7 @@ class LiveStream:
         if not self.items and not self.done and self.error is None:
             self.ready.clear()
             try:
-                async with asyncio.timeout(0.025):
+                async with asyncio.timeout(_BATCH_WAIT_SECONDS):
                     await self.ready.wait()
             except TimeoutError:
                 pass
@@ -78,3 +79,13 @@ class LiveStream:
         if self.error is not None:
             error, self.error = self.error, None
             raise error
+
+    async def _wait_for_item_capacity(self):
+        while len(self.items) >= ProtocolLimits.StreamBatchItems:
+            self.space.clear()
+            await self.space.wait()
+
+    async def _wait_for_byte_capacity(self, size):
+        while self.buffer_bytes + size + 1 > ProtocolLimits.StreamBatchBytes:
+            self.space.clear()
+            await self.space.wait()

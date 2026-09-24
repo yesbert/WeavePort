@@ -1,4 +1,4 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup><OutputType>Exe</OutputType><IsPackable>false</IsPackable><UseAppHost>false</UseAppHost><RestorePackagesPath>$(MSBuildThisFileDirectory)../../artifacts/portable/packages</RestorePackagesPath></PropertyGroup>
-  <ItemGroup><PackageReference Include="WeavePort.Hosting" Version="0.7.0" /><PackageReference Include="WeavePort.Sdk" Version="0.7.0" /></ItemGroup>
+  <ItemGroup><PackageReference Include="WeavePort.Hosting" /><PackageReference Include="WeavePort.Sdk" /></ItemGroup>
 </Project>

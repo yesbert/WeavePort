@@ -21,7 +21,7 @@ The executable [C# example](../examples/sdk/csharp/Program.cs) includes echo, au
 
 ## Python
 
-Install the local `weaveport-sdk` wheel; runtime dependencies are Python's standard library.
+Install the matching GitHub release or source-built `weaveport-sdk` wheel; runtime dependencies are Python's standard library.
 
 ```python
 app = PluginApplication()
@@ -42,7 +42,7 @@ See the [runnable Python example](../examples/sdk/python/plugin.py). Use ordinar
 
 ## TypeScript
 
-Install the packed `@weaveport/sdk` npm archive. The SDK includes JavaScript and type declarations, with no third-party runtime dependency.
+Install the matching GitHub release or source-packed `@weaveport/sdk` npm archive. The SDK includes JavaScript and type declarations, with no third-party runtime dependency.
 
 ```typescript
 const plugin = new PluginApplication();
@@ -142,3 +142,9 @@ All three SDKs now provide registered cleanup and resource ownership for a funct
 Set C# `PluginApplication.ConcurrentCalls = true`, Python `PluginApplication(concurrent_calls=True)` or TypeScript `new PluginApplication('1', { concurrentCalls: true })` for the shared protocol. The operator must separately approve Shared ownership and choose a degree. C# async functions and Python async functions can overlap; Python synchronous functions use bounded worker threads. TypeScript CPU-bound work still needs author-managed worker threads. Shared mutable state must be concurrency-safe. Shared clients refuse streams and sources before dispatch. See [shared execution](shared-execution.md).
 
 For plugin-originated files, C# `Source<TInput>` returns a readable `Stream`; Python `@app.source` returns a readable binary file; TypeScript `plugin.source` returns a `BinarySource` with `read(maxBytes)` and `close()` methods. The runtime owns source cleanup. `IBoundPluginClient.SourceAsync` reads bounded 4–256 KiB blocks under one exclusive lease; `Composition.CollectAsync` commits them into a quota-enforced result scope. JSON streams keep their existing 64 MiB limit. See [bulk composition](bulk-composition.md).
+
+## Failure handling in current source
+
+These details apply to qualified changes after published 0.7.0; use [matching source artifacts](status.md#qualified-source-after-070). Client failures expose `PluginCallException.Failure` when available. Prefer `error.Failure?.Code ?? error.ErrorCode`, retain `MayHaveExecuted`, and treat unknown codes conservatively. Low-level sessions expose the same optional details through `InvocationResult.Failure`. Normal argument exceptions and `OperationCanceledException` keep their standard categories; exception messages are human diagnostics, not machine contracts.
+
+If a handler and its registered resource cleanup both fail, the SDK attempts every cleanup in reverse order and retains the primary cause with the cleanup causes locally. Python's `SessionCleanupError.errors` is an immutable tuple and its `code` is `cleanup-error`; TypeScript's cleanup error retains `AggregateError` causes. Only bounded code/cleanup metadata crosses the worker boundary. Forced process termination can prevent cleanup; this is not a universal guarantee for arbitrary consumer iterator/finally failures. See [failure codes](failure-codes.md) and [logging ownership](runtime-diagnostics.md).

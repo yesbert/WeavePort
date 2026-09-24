@@ -37,12 +37,7 @@ internal sealed class PageValidator(long length)
 
         if (f.Section == Sections + 1)
         {
-            if (f.Part != 0 || !_anchors.Add(f.Anchor))
-            {
-                throw new InvalidDataException("Invalid section start.");
-            }
-
-            Sections++;
+            BeginSection(f);
         }
         else if (_last is null || f.Section != Sections || f.Part != _last.Part + 1 || f.Heading != _last.Heading || f.Level != _last.Level || f.Anchor != _last.Anchor)
         {
@@ -51,5 +46,15 @@ internal sealed class PageValidator(long length)
 
         _last = f;
         Fragments++;
+    }
+
+    private void BeginSection(Fragment f)
+    {
+        if (f.Part != 0 || !_anchors.Add(f.Anchor))
+        {
+            throw new InvalidDataException("Invalid section start.");
+        }
+
+        Sections++;
     }
 }

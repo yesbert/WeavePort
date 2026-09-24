@@ -5,11 +5,11 @@ Give your coding assistant WeavePort's guides, examples and reviewed API signatu
 ## Start with the documentation
 
 - [llms.txt](https://weaveport.dev/llms.txt): compact index for finding the right guide.
-- [llms-full.txt](https://weaveport.dev/llms-full.txt): combined guides, verified specifications and reviewed .NET API signatures.
+- [llms-full.txt](https://weaveport.dev/llms-full.txt): combined guides, verified specifications and reviewed core and optional .NET API signatures.
 
 The index follows the [llms.txt proposal](https://llmstxt.org/). Its project heading, summary and grouped Markdown links support targeted retrieval. The full file is a companion convention, not a separately standardized schema. Each documentation page also has a Markdown version: replace `.html` with `.md`. HTML discovery links identify both the Markdown version and `/llms.txt`.
 
-Website retrieval files and Markdown pages come from the same build. Repository copies use GitHub source URLs. Neither includes unfinished OpenSpec changes or historical reports as implemented guarantees. For installation details, read [status](status.md), [platform support](platform-qualification.md) and [compatibility](package-compatibility.md) first.
+Website retrieval files and Markdown pages come from the same build. Main-branch documentation can describe qualified source changes that have not been published; the version label alone is insufficient. Check the source-availability notice in status and compatibility before using a new API. Repository copies use GitHub source URLs. Neither includes unfinished OpenSpec changes or historical reports as implemented guarantees. For installation details, read [status](status.md), [platform support](platform-qualification.md) and [compatibility](package-compatibility.md) first.
 
 Paste this into an assistant with web-fetch access:
 
@@ -48,15 +48,16 @@ Then give the assistant this task:
 Use GitHub MCP to inspect owner "yesbert", repository "WeavePort".
 Read docs/status.md, docs/package-compatibility.md,
 docs/platform-qualification.md and compatibility/public-api.txt.
+For Composition or Gateway, also read compatibility/optional-api.txt.
 For a package-based integration, use the tag matching my installed package
-version (for 0.4.0: v0.4.0), and keep all source reads on that revision.
+version (for 0.7.0: v0.7.0), and keep all source reads on that revision.
 Use get_file_contents to inspect docs/plugin-sdk.md,
 docs/embedded-coordinator.md and samples/DecisionRoom/README.md.
 Find the corresponding host and plugin implementations before writing code.
 Build a minimal integration for my application using these exact contracts.
 ```
 
-Verify the connection by requesting `get_file_contents` with `owner: yesbert`, `repo: WeavePort`, `path: docs/status.md` and `ref: refs/tags/v0.4.0`. The result should contain the file from that revision. Tool prefixes vary by client. A missing tool usually means the server is not started or its repository tools are disabled; authentication failures need the client's sign-in or token setup. These setup instructions are based on GitHub's documentation; they are not a recorded authenticated client test.
+Verify the connection by requesting `get_file_contents` with `owner: yesbert`, `repo: WeavePort`, `path: docs/status.md` and `ref: refs/tags/v0.7.0`. The result should contain the file from that revision. Tool prefixes vary by client. A missing tool usually means the server is not started or its repository tools are disabled; authentication failures need the client's sign-in or token setup. These setup instructions are based on GitHub's documentation; they are not a recorded authenticated client test.
 
 GitHub MCP supplies repository context. To build or run an integration, your assistant additionally needs a local checkout, .NET and the required plugin runtimes, plus terminal access you authorize. WeavePort does not expose a plugin-execution MCP endpoint through this setup.
 
@@ -74,4 +75,4 @@ python3 scripts/build-website.py
 
 CI rejects stale repository copies. Every website build generates its own index, full reference and Markdown pages from the current sources, validates local retrieval targets and includes them in the same deployment artifact. Publish the whole artifact so pages and AI context move together. The server serves that published snapshot; it does not independently pull GitHub changes, and assistants may need to refresh their own caches.
 
-Add new consumer guides to the generator's curated `GUIDES` list; specifications are discovered under `openspec/specs/`. Regression tests cover index structure, source changes and website retrieval links. Keep the repository copies in the same commit as their source updates. For reproducible source work, pin all GitHub MCP reads to the installed release tag or commit rather than mixing `main` with a released package.
+Add new consumer and contributor guides to the generator's curated `GUIDES` list and the website's source mapping/navigation; specifications are discovered under `openspec/specs/`. Both core and optional API baselines are included. Keep dated historical delivery guidance visibly scoped to its original artifacts. Regression tests cover index structure, source changes and website retrieval links. Keep the repository copies in the same commit as their source updates. For reproducible source work, pin all GitHub MCP reads to the installed release tag or commit rather than mixing `main` with a released package.

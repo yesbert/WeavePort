@@ -162,9 +162,17 @@ def main():
         stage("scheduling-regressions", ["dotnet", "run", "--project", "tests/WeavePort.Scheduling.Tests", "-c", "Release"])
         stage("density-observer-controls", [sys.executable, "tools/performance/test_density.py"])
         stage("gateway-regressions", ["dotnet", "run", "--project", "tests/WeavePort.Gateway.Tests", "-c", "Release"])
+        stage("protocol-contract", ["python3", "scripts/generate-protocol.py", "--check"])
+        stage("protocol-fixtures", ["python3", "tests/documentation/test-protocol-contract.py"])
+        stage("architecture", ["python3", "scripts/check-architecture.py"])
+        stage("architecture-guards", ["python3", "tests/documentation/test-architecture.py"])
         stage("code-style", ["dotnet", "run", "--project", "tools/WeavePort.CodeStyle", "-c", "Release", "--", str(checkout)])
         stage("documentation-regressions", ["python3", "tests/documentation/check-links.py"])
         frozen, package_set = build_candidate(checkout, env, run, stage)
+        stage("python-control-flow", ["python3", "scripts/check-python-control-flow.py"])
+        stage("typescript-control-flow", ["node", "sdks/typescript/scripts/check-control-flow.mjs"])
+        stage("sdk-context", ["python3", "-m", "unittest", "discover", "-s", "sdks/python/tests"])
+        stage("typescript-context", ["node", "--test", "sdks/typescript/tests/session.mjs"])
         verify_candidate(checkout, env, run, stage, package_set)
         assert frozen == inventory(checkout), "Frozen consumer artifacts changed during verification"
         assert record["runtimeExecutables"] == {name: sha(Path(shutil.which(name)).resolve()) for name in ["dotnet", "python3", "node"]}

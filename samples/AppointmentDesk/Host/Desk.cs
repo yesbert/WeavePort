@@ -41,24 +41,10 @@ internal sealed class Desk(RuntimePaths runtime, CalendarStore store, EmbeddedCo
             await hooks.Bound(session, callbacks);
         }
 
+        entry ??= await PrepareEntryAsync(client, request, installed.Identity, token);
         if (entry is null)
         {
-            var proposal = await client.CallAsync<Wish, Proposal>("appointment.propose", request.Wish, token);
-            if (proposal is null)
-            {
-                throw new InvalidDataException("Missing proposal.");
-            }
-
-            if (proposal.Slot is null)
-            {
-                return new Outcome("unavailable", null, null);
-            }
-
-            entry = await store.PrepareAsync(request, proposal.Slot, token, installed.Identity);
-            if (entry.Installation != installed.Identity)
-            {
-                throw new InvalidDataException("Concurrent request selected another installation; retry exact request.");
-            }
+            return new Outcome("unavailable", null, null);
         }
 
         callbacks.Approved = entry.Command;
@@ -84,5 +70,27 @@ internal sealed class Desk(RuntimePaths runtime, CalendarStore store, EmbeddedCo
             // Dispatch may have committed. The same request must reconcile the recorded command.
             return new Outcome("uncertain", null, entry.Command.Slot);
         }
+    }
+
+    private async Task<Entry?> PrepareEntryAsync(IPluginClient client, Request request, InstallationIdentity installation, CancellationToken token)
+    {
+        var proposal = await client.CallAsync<Wish, Proposal>("appointment.propose", request.Wish, token);
+        if (proposal is null)
+        {
+            throw new InvalidDataException("Missing proposal.");
+        }
+
+        if (proposal.Slot is null)
+        {
+            return null;
+        }
+
+        var entry = await store.PrepareAsync(request, proposal.Slot, token, installation);
+        if (entry.Installation != installation)
+        {
+            throw new InvalidDataException("Concurrent request selected another installation; retry exact request.");
+        }
+
+        return entry;
     }
 }

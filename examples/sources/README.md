@@ -1,6 +1,6 @@
 # Plugin sources and live progress
 
-Run `dotnet run --project examples/sources -c Release` from the repository root.
+Prepare the matching local package feed with `./scripts/prepare-core-packages.sh`, then run `dotnet run --project examples/sources -c Release` from the repository root.
 The example starts a trusted local C# plugin, collects a 200 MiB generated source
 into an atomic request-owned result, delivers it to a bounded sink, and prints
 three progress items as they arrive. No Docker service is used.

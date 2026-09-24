@@ -3,6 +3,7 @@ using System.Text.Json;
 using WeavePort.Sdk.Client;
 using WeavePort.Sdk.Gateway;
 
+TransportFailureChecks.Run();
 await CallMetadataChecks.RunAsync();
 await ClientDisposalChecks.RunAsync();
 await RegistryChecks.RunAsync();

@@ -1,3 +1,4 @@
+using WeavePort.Internal;
 using System.Text.Json;
 using WeavePort.Abstractions;
 
@@ -8,7 +9,7 @@ public static class ContractChecks
     /// <summary>Checks a completed invocation without embedding a specific test framework.</summary>
     public static JsonElement Successful(InvocationResult result)
     {
-        if (result.Status != "ok")
+        if (result.Status != FailureCodes.Ok)
         {
             throw new InvalidOperationException($"Expected ok, received {result.Status}.");
         }

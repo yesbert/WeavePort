@@ -18,12 +18,7 @@ internal sealed class BookingCallbacks(CalendarStore store, Request request, str
 
         if (call.Operation == "calendar.available")
         {
-            if (call.Payload.Deserialize<Wish>() != request.Wish)
-            {
-                throw new UnauthorizedAccessException("Changed wish.");
-            }
-
-            return JsonSerializer.SerializeToElement(await store.AvailableAsync(request, token));
+            return await AvailableAsync(call, token);
         }
 
         if (call.Operation != "calendar.book" || Approved is null || call.Payload.Deserialize<Command>() != Approved)
@@ -39,5 +34,15 @@ internal sealed class BookingCallbacks(CalendarStore store, Request request, str
         }
 
         return JsonSerializer.SerializeToElement(outcome);
+    }
+
+    private async ValueTask<JsonElement> AvailableAsync(HostCall call, CancellationToken token)
+    {
+        if (call.Payload.Deserialize<Wish>() != request.Wish)
+        {
+            throw new UnauthorizedAccessException("Changed wish.");
+        }
+
+        return JsonSerializer.SerializeToElement(await store.AvailableAsync(request, token));
     }
 }

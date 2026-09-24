@@ -1,4 +1,7 @@
 """Exclusive, bounded binary source ownership."""
+
+from .protocol import ProtocolLimits
+
 import base64
 import inspect
 import uuid
@@ -21,7 +24,12 @@ class SourceSession:
 
     async def read(self, payload):
         size = payload.get("chunkBytes")
-        if type(size) is not int or not 4096 <= size <= 262144:
+        if (
+            type(size) is not int
+            or not ProtocolLimits.SourceChunkMinimumBytes
+            <= size
+            <= ProtocolLimits.SourceChunkMaximumBytes
+        ):
             raise ValueError("Source chunk limit")
         data = self.source.read(size)
         if inspect.isawaitable(data):

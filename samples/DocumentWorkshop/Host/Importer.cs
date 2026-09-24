@@ -110,22 +110,10 @@ internal sealed class Importer(RuntimePaths runtime, Catalog catalog, TextWriter
         while (true)
         {
             ExtractionPage page = await client.CallAsync<PageRequest, ExtractionPage>("reader.next", new PageRequest(cursor), token);
-            if (hooks?.TransformPage is not null)
-            {
-                page = hooks.TransformPage(page);
-            }
-
+            page = hooks?.TransformPage is { } transform ? transform(page) : page;
             validator.Accept(page);
-            foreach (var fragment in page.Fragments)
-            {
-                await WriteAsync(destination, new { kind = "fragment", fragment }, token);
-            }
-
-            if (hooks?.PageReceived is not null)
-            {
-                await hooks.PageReceived(session, page);
-            }
-
+            await WriteFragmentsAsync(destination, page.Fragments, token);
+            await NotifyPageReceivedAsync(hooks, session, page);
             token.ThrowIfCancellationRequested();
             cursor = page.NextCursor;
             if (page.Declined)
@@ -177,5 +165,21 @@ internal sealed class Importer(RuntimePaths runtime, Catalog catalog, TextWriter
         }
 
         await destination.WriteAsync(bytes, token);
+    }
+
+    private static async Task WriteFragmentsAsync(FileStream destination, Fragment[] fragments, CancellationToken token)
+    {
+        foreach (var fragment in fragments)
+        {
+            await WriteAsync(destination, new { kind = "fragment", fragment }, token);
+        }
+    }
+
+    private static async Task NotifyPageReceivedAsync(TestHooks? hooks, IPluginSession session, ExtractionPage page)
+    {
+        if (hooks?.PageReceived is not null)
+        {
+            await hooks.PageReceived(session, page);
+        }
     }
 }

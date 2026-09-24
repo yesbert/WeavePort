@@ -46,27 +46,17 @@ internal sealed class RoomRunner(RuntimePaths runtime, TextWriter output)
             await journal.CommitAsync(next.Evaluations, token);
             state = next;
             await output.WriteLineAsync($"{participant.Id} ({participant.Language}, {participant.Profile}) used {evaluation.Source}");
-            foreach (var p in config.Proposals)
+            await WriteEvaluationAsync(config.Proposals, evaluation);
+            if (state.Evaluations.Length != 1)
             {
-                await output.WriteLineAsync($"  {p.Id}: {p.Title}; cost={p.Cost}, benefit={p.Benefit}, risk={evaluation.Risks[p.Id]}, score={evaluation.Scores[p.Id]}");
+                continue;
             }
 
-            if (state.Evaluations.Length == 1)
+            await ApplyFirstCommitHookAsync(room, afterFirstCommit);
+            await RestartAfterFirstAsync(options, journal, room, roomClient, config.PluginVersion!, state, token);
+            if (options.PauseAfterFirst)
             {
-                if (afterFirstCommit is not null)
-                {
-                    await afterFirstCommit(room);
-                }
-
-                if (options.RestartAfterFirst)
-                {
-                    await RestartRoomAsync(journal, room, roomClient, config.PluginVersion!, state, token);
-                }
-
-                if (options.PauseAfterFirst)
-                {
-                    break;
-                }
+                break;
             }
         }
 
@@ -139,6 +129,30 @@ internal sealed class RoomRunner(RuntimePaths runtime, TextWriter output)
         if (evaluation.PluginVersion != config.PluginVersion || evaluation.Participant != participant.Id || evaluation.Source != config.Tenant + "/" + participant.Profile || !ids.SetEquals(evaluation.Scores.Keys) || !ids.SetEquals(evaluation.Risks.Keys) || evaluation.Scores.Values.Any(v => v is < -12000 or > 12000) || ids.Any(id => evaluation.Risks[id] != config.Knowledge[participant.Profile][id]))
         {
             throw new InvalidDataException("Invalid strategy evaluation or knowledge scope.");
+        }
+    }
+
+    private async Task WriteEvaluationAsync(Proposal[] proposals, Evaluation evaluation)
+    {
+        foreach (var p in proposals)
+        {
+            await output.WriteLineAsync($"  {p.Id}: {p.Title}; cost={p.Cost}, benefit={p.Benefit}, risk={evaluation.Risks[p.Id]}, score={evaluation.Scores[p.Id]}");
+        }
+    }
+
+    private static async Task ApplyFirstCommitHookAsync(IPluginSession room, Func<IPluginSession, Task>? hook)
+    {
+        if (hook is not null)
+        {
+            await hook(room);
+        }
+    }
+
+    private async Task RestartAfterFirstAsync(RunOptions options, Journal journal, IPluginSession room, IPluginClient client, string version, RoomState state, CancellationToken token)
+    {
+        if (options.RestartAfterFirst)
+        {
+            await RestartRoomAsync(journal, room, client, version, state, token);
         }
     }
 }

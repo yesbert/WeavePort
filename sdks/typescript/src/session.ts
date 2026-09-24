@@ -1,3 +1,4 @@
+import { FailureCodes } from './protocol.js';
 /** Public cooperative session API. It does not erase arbitrary globals or library state. */
 export interface PluginContext {
     readonly tenant: string;
@@ -9,16 +10,30 @@ export interface PluginContext {
     own<T extends { close(): void | Promise<void> }>(resource: T): T;
 }
 
-export class SessionCleanupError extends AggregateError {}
+export class SessionCleanupError extends AggregateError {
+    hasExecutionFailure = false;
+    readonly code = FailureCodes.CleanupError;
+}
 
 export class SessionContext implements PluginContext {
     private active = true;
     private cleanup: (() => void | Promise<void>)[] = [];
-    constructor(private owner: string | undefined, private config: unknown,
-        private callback: (<T>(operation: string, input: unknown) => Promise<T>) | undefined) {}
-    private check(): void { if (!this.active) throw new Error('Session completed'); }
-    get tenant(): string { this.check(); return this.owner!; }
-    get configuration(): unknown { this.check(); return this.config; }
+    constructor(
+        private owner: string | undefined,
+        private config: unknown,
+        private callback: (<T>(operation: string, input: unknown) => Promise<T>) | undefined,
+    ) {}
+    private check(): void {
+        if (!this.active) throw new Error('Session completed');
+    }
+    get tenant(): string {
+        this.check();
+        return this.owner!;
+    }
+    get configuration(): unknown {
+        this.check();
+        return this.config;
+    }
     onClose(action: () => void | Promise<void>): void {
         this.check();
         if (typeof action !== 'function') throw new TypeError('Cleanup must be callable');
@@ -34,12 +49,18 @@ export class SessionContext implements PluginContext {
     }
     async complete(): Promise<void> {
         this.active = false;
-        this.owner = undefined; this.config = undefined; this.callback = undefined;
+        this.owner = undefined;
+        this.config = undefined;
+        this.callback = undefined;
         const actions = this.cleanup;
         this.cleanup = [];
         const errors: unknown[] = [];
         for (const action of actions.reverse()) {
-            try { await action(); } catch (error) { errors.push(error); }
+            try {
+                await action();
+            } catch (error) {
+                errors.push(error);
+            }
         }
         if (errors.length) throw new SessionCleanupError(errors, 'Session cleanup failed');
     }

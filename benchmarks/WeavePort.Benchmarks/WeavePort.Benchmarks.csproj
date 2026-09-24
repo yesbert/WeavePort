@@ -1,9 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
  <PropertyGroup><OutputType>Exe</OutputType><IsPackable>false</IsPackable><RestoreSources>../../artifacts/packages;https://api.nuget.org/v3/index.json</RestoreSources><RestorePackagesPath>../../artifacts/sdk-packages</RestorePackagesPath><RestorePackagesWithLockFile>true</RestorePackagesWithLockFile></PropertyGroup>
  <ItemGroup>
-  <PackageReference Include="BenchmarkDotNet" Version="0.15.8" />
-  <PackageReference Include="WeavePort.Hosting" Version="0.7.0" />
-  <PackageReference Include="WeavePort.Sdk.Gateway" Version="0.7.0" />
+  <PackageReference Include="BenchmarkDotNet" />
+  <PackageReference Include="WeavePort.Hosting" />
+  <PackageReference Include="WeavePort.Sdk.Gateway" />
   <Reference Include="WeavePort.SdkFixture"><HintPath>../../artifacts/sdk-worker-host/WeavePort.SdkFixture.dll</HintPath><Private>true</Private></Reference>
  </ItemGroup>
  <Target Name="CopyFrozenFixture" AfterTargets="Build"><Copy SourceFiles="$(MSBuildThisFileDirectory)../../artifacts/sdk-worker-host/WeavePort.SdkFixture.dll" DestinationFolder="$(TargetDir)" SkipUnchangedFiles="false" /></Target>

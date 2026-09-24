@@ -11,9 +11,11 @@ WeavePort adds plugin execution to the application you already own. It is a libr
 
 ## Package boundaries
 
-`WeavePort.Abstractions` defines the shared contracts. Hosting depends on abstractions and caller-owned logging abstractions. The author SDK has no hosting dependency. `WeavePort.Sdk.Client` adapts host sessions. Optional Composition and Gateway packages implement separate concerns; applications choose them explicitly. Testing helpers belong to verification and are not application prerequisites.
+`WeavePort.Abstractions` defines the shared contracts. Hosting depends on Abstractions, Sdk.Client for installed-client binding, caller-owned logging abstractions and the [runtime declaration parsers](optional-dependencies.md#core-hosting-runtime-dependencies). The author SDK has no hosting dependency. `WeavePort.Sdk.Client` adapts host sessions. Optional Composition and Gateway packages implement separate concerns; applications choose them explicitly. Testing helpers belong to verification and are not application prerequisites.
 
 All current core packages target .NET 10. The [compatibility matrix](package-compatibility.md) identifies exact versions; API/protocol version 1 does not establish equality of artifact bytes.
+
+See [source organization](source-organization.md) for package dependency direction, feature folders and multilingual SDK ownership.
 
 ## Execution boundary
 

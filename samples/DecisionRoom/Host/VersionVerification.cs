@@ -76,10 +76,7 @@ internal static class VersionVerification
         {
             string destination = Path.Combine(copies, version);
             Directory.CreateDirectory(destination);
-            foreach (string file in Directory.GetFiles(runtime.ReleaseRoot(version)))
-            {
-                File.Copy(file, Path.Combine(destination, Path.GetFileName(file)));
-            }
+            CopyRelease(runtime.ReleaseRoot(version), destination);
         }
 
         var isolated = runtime with
@@ -137,5 +134,13 @@ internal static class VersionVerification
         }
 
         throw new InvalidDataException("Expected refusal.");
+    }
+
+    private static void CopyRelease(string source, string destination)
+    {
+        foreach (string file in Directory.GetFiles(source))
+        {
+            File.Copy(file, Path.Combine(destination, Path.GetFileName(file)));
+        }
     }
 }

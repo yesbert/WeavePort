@@ -1,6 +1,6 @@
 # Optional package dependency review
 
-Reviewed for the 0.5.0 release on 2026-09-18. `compatibility/optional-dependencies.json` records exact NuGet dependency declarations, source restore closures and license expressions. The optional package verifier checks these identities against actual restored artifacts. WeavePort source remains MIT; dependencies keep their own licenses.
+Introduced with the 0.5.0 release; these dependency identities remain in the 0.7.0 package family and were checked against the current central package declarations on 2026-09-24. `compatibility/optional-dependencies.json` records exact NuGet dependency declarations, source restore closures and license expressions. The optional package verifier checks these identities against actual restored artifacts. WeavePort source remains MIT; dependencies keep their own licenses.
 
 | Dependency | Version | Use | License and redistribution obligations |
 |---|---|---|---|
@@ -19,3 +19,16 @@ License text is retained with normalized text whitespace/line endings. Exact sou
 - Microsoft 8.0.0 nuspec commit `5535e31a712343a63f5d7d796cd874e563e5ac14`: exact package [MIT license](licenses/dotnet-8-license.txt) and [third-party notices](licenses/dotnet-8-third-party-notices.txt) are retained from the NuGet archives.
 
 The checked gRPC/Protobuf nupkgs declare SPDX expressions rather than embedded license files. Their exact source licenses are retained here and included with the gateway client package as supporting attribution. No third-party runtime DLL is embedded in a WeavePort nupkg; NuGet resolves dependencies separately. Applications redistributing a published output must preserve the dependency licenses/notices with those binaries. No source or binary modifications to these external dependencies are made. This is a dependency/notice review, not a vulnerability assessment or an assertion that every dependency is MIT.
+
+## Core Hosting runtime dependencies
+
+Portable runtime declarations added dependencies in 0.7.0 beyond the earlier logging-only Hosting closure. [External package identities](../compatibility/external-packages.json), the central package declarations and restored lockfiles record the current versions:
+
+| Package | Version | Responsibility | Retained license |
+| --- | --- | --- | --- |
+| Tomlyn | 0.19.0 | Parse Python project TOML declarations | [BSD-2-Clause text](licenses/tomlyn-LICENSE.txt) |
+| Chasm.SemanticVersioning | 2.8.2 | Interpret npm-compatible runtime ranges | [MIT text](licenses/chasm-LICENSE.txt) |
+| Chasm.Formatting | 2.4.0 | Transitive formatting dependency of semantic versioning | [MIT text](licenses/chasm-LICENSE.txt) |
+| Microsoft.Extensions.Logging.Abstractions and Microsoft.Extensions.DependencyInjection.Abstractions | 10.0.12 | Caller-owned logging and its dependency | MIT package metadata and upstream notices |
+
+Hosting includes the retained Tomlyn and Chasm license files in its package. These are runtime dependencies of Hosting, not dependencies introduced into the Python or TypeScript SDKs. No new dependency or license change is made by this documentation audit. Consumers should retain the notices supplied with the exact redistributed artifacts.

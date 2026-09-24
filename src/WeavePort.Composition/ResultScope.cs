@@ -1,25 +1,11 @@
+using WeavePort.Internal;
 using System.Security.Cryptography;
 
 namespace WeavePort.Composition;
-/// <summary>An immutable result belonging exclusively to its creating request scope. Contains no filesystem path.</summary>
-public sealed class ResultHandle
-{
-    internal ResultHandle(string id, long length)
-    {
-        Id = id;
-        Length = length;
-    }
-
-    internal string Id { get; }
-    /// <summary>Gets the committed byte length.</summary>
-    public long Length { get; }
-}
-
-/// <summary>Limits retained result bytes and object count within one trusted product request.</summary>
-public sealed record ResultLimits(long MaximumObjectBytes = 256L * 1024 * 1024, long MaximumScopeBytes = 1024L * 1024 * 1024, int MaximumObjects = 32);
 /// <summary>Private, request-owned immutable file results. The trusted product supplies tenant identity and a private storage root.</summary>
 public sealed class ResultScope : IAsyncDisposable
 {
+    private const int CopyBufferBytes = 65536;
     private readonly string _directory;
     private readonly ResultLimits _limits;
     private readonly object _sync = new();
@@ -88,7 +74,7 @@ public sealed class ResultScope : IAsyncDisposable
         }
     }
 
-    private FileStream Open(string id, bool write) => new(Path.Combine(_directory, id), new FileStreamOptions { Mode = write ? FileMode.CreateNew : FileMode.Open, Access = write ? FileAccess.Write : FileAccess.Read, Share = FileShare.Read, Options = FileOptions.Asynchronous | FileOptions.SequentialScan, BufferSize = 65536 });
+    private FileStream Open(string id, bool write) => new(Path.Combine(_directory, id), new FileStreamOptions { Mode = write ? FileMode.CreateNew : FileMode.Open, Access = write ? FileAccess.Write : FileAccess.Read, Share = FileShare.Read, Options = FileOptions.Asynchronous | FileOptions.SequentialScan, BufferSize = CopyBufferBytes });
     private string Resolve(ResultHandle handle)
     {
         lock (_sync)
@@ -184,13 +170,13 @@ public sealed class ResultScope : IAsyncDisposable
         using var active = Enter();
         using var linked = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, _lifetime.Token);
         await using FileStream source = Open(Resolve(handle), false);
-        await source.CopyToAsync(destination, 65536, linked.Token);
+        await source.CopyToAsync(destination, CopyBufferBytes, linked.Token);
     }
 
     /// <summary>Transforms one bounded chunk at a time. The transform must not retain its input memory after returning.</summary>
-    public async Task<ResultHandle> TransformAsync(ResultHandle input, Func<ReadOnlyMemory<byte>, CancellationToken, ValueTask<ReadOnlyMemory<byte>>> transform, int chunkBytes = 65536, CancellationToken cancellationToken = default)
+    public async Task<ResultHandle> TransformAsync(ResultHandle input, Func<ReadOnlyMemory<byte>, CancellationToken, ValueTask<ReadOnlyMemory<byte>>> transform, int chunkBytes = ProtocolLimits.SourceChunkDefaultBytes, CancellationToken cancellationToken = default)
     {
-        if (chunkBytes is < 4096 or > 262144)
+        if (chunkBytes is < ProtocolLimits.SourceChunkMinimumBytes or > ProtocolLimits.SourceChunkMaximumBytes)
         {
             throw new ArgumentOutOfRangeException(nameof(chunkBytes));
         }

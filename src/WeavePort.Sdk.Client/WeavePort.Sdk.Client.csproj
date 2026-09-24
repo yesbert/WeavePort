@@ -18,6 +18,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="../Shared/JsonSize.cs" Link="Internal/JsonSize.cs" />
-    <Compile Include="../Shared/SdkOperations.cs" Link="Internal/SdkOperations.cs" />
+    <Compile Include="../Shared/FailureCode.cs" Link="Internal/FailureCode.cs" />
+    <Compile Include="../Shared/ProtocolContract.g.cs" Link="Internal/ProtocolContract.g.cs" />
   </ItemGroup>
 </Project>

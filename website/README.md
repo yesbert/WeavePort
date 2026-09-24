@@ -1,6 +1,6 @@
 # Documentation website
 
-The design follows a focused product story, concrete examples and grouped documentation navigation, informed by Blume and other open-source projects. The static website targets `https://weaveport.dev` and follows Stratara's DocFX documentation approach. The maintained inputs are the English pages in this directory, canonical guides under `docs/`, the three sample readmes, the reviewed API baseline and the generated AI retrieval documents.
+The design follows a focused product story, concrete examples and grouped documentation navigation, informed by Blume and other open-source projects. The static website targets `https://weaveport.dev` and follows Stratara's DocFX documentation approach. The maintained inputs are the English pages in this directory, canonical guides under `docs/`, the three application sample readmes, runnable example and SDK guides, contributor/verification guidance, both reviewed API baselines and the generated AI retrieval documents.
 
 ## Build and preview
 
@@ -18,7 +18,7 @@ Open `http://127.0.0.1:8080`. The build recreates only its own ignored staging/o
 
 Edit canonical guides in their original locations. `scripts/build-website.py` maps guides and adoption pages into `docs/` and sample readmes into `docs/examples/`. Repository-only links are rewritten to GitHub. The build never treats unfinished OpenSpec changes as implemented behavior. Additional top-level site pages belong in this directory; add navigation entries to `GROUPS` in the build script.
 
-The public API page comes from `compatibility/public-api.txt`; it is a signature reference, not a newly generated contract. Every build generates website AI retrieval files and Markdown pages from the same canonical sources. The website index links to same-release Markdown on weaveport.dev; repository copies retain GitHub URLs. HTML discovery links expose the Markdown counterpart and llms.txt. CI rejects stale repository copies, and the website checker validates retrieval targets. Deploy the complete artifact to keep human and AI documentation synchronized.
+The core and optional public API pages come from `compatibility/public-api.txt` and `compatibility/optional-api.txt`; both are current-checkout signature references, not newly generated contracts or claims about original published packages. Keep post-release source availability explicit. The same build exports both raw baselines for retrieval. Every build generates website AI retrieval files and Markdown pages from the same canonical sources. The website index links to same-release Markdown on weaveport.dev; repository copies retain GitHub URLs. HTML discovery links expose the Markdown counterpart and llms.txt. CI rejects stale repository copies, and the website checker validates retrieval targets. Deploy the complete artifact to keep human and AI documentation synchronized.
 
 ## Branding
 

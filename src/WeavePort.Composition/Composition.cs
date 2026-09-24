@@ -1,3 +1,4 @@
+using WeavePort.Internal;
 using System.Text.Json;
 using WeavePort.Abstractions;
 using WeavePort.Sdk.Client;
@@ -7,12 +8,12 @@ namespace WeavePort.Composition;
 public static class Composition
 {
     /// <summary>Collects an exclusive plugin byte source into an atomic, quota-bound result. The caller retains client ownership.</summary>
-    public static async Task<ResultHandle> CollectAsync(ResultScope scope, IBoundPluginClient client, string operation, JsonElement input, int chunkBytes = 65536, CancellationToken cancellationToken = default)
+    public static async Task<ResultHandle> CollectAsync(ResultScope scope, IBoundPluginClient client, string operation, JsonElement input, int chunkBytes = ProtocolLimits.SourceChunkDefaultBytes, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(scope);
         ArgumentNullException.ThrowIfNull(client);
         ArgumentException.ThrowIfNullOrWhiteSpace(operation);
-        if (chunkBytes is < 4096 or > 262144)
+        if (chunkBytes is < ProtocolLimits.SourceChunkMinimumBytes or > ProtocolLimits.SourceChunkMaximumBytes)
         {
             throw new ArgumentOutOfRangeException(nameof(chunkBytes));
         }
@@ -38,7 +39,7 @@ public static class Composition
 
     private const string BulkMapOperation = "bulk-map";
     /// <summary>Executes one externally bound plugin over bounded base64 chunks. The plugin must implement the bulk-map contract.</summary>
-    public static Task<ResultHandle> MapAsync(ResultScope scope, ResultHandle input, IPluginSession session, int chunkBytes = 65536, CancellationToken cancellationToken = default)
+    public static Task<ResultHandle> MapAsync(ResultScope scope, ResultHandle input, IPluginSession session, int chunkBytes = ProtocolLimits.SourceChunkDefaultBytes, CancellationToken cancellationToken = default)
     {
         if (!StringComparer.Ordinal.Equals(scope.Tenant, session.Tenant))
         {
@@ -48,7 +49,7 @@ public static class Composition
         return scope.TransformAsync(input, async (bytes, token) =>
         {
             InvocationResult result = await session.InvokeAsync(BulkMapOperation, JsonSerializer.SerializeToElement(new BulkChunk(bytes), BulkJson.Default.BulkChunk), token);
-            if (result.Status != "ok")
+            if (result.Status != FailureCodes.Ok)
             {
                 throw new IOException("Plugin stage failed: " + result.Status);
             }
@@ -59,7 +60,7 @@ public static class Composition
     }
 
     /// <summary>Maps bounded chunks through an SDK operation after verifying local or authenticated remote binding identity. The caller retains client ownership.</summary>
-    public static async Task<ResultHandle> MapAsync(ResultScope scope, ResultHandle input, IBoundPluginClient client, int chunkBytes = 65536, CancellationToken cancellationToken = default)
+    public static async Task<ResultHandle> MapAsync(ResultScope scope, ResultHandle input, IBoundPluginClient client, int chunkBytes = ProtocolLimits.SourceChunkDefaultBytes, CancellationToken cancellationToken = default)
     {
         string tenant = await client.GetTenantAsync(cancellationToken);
         if (!StringComparer.Ordinal.Equals(scope.Tenant, tenant))
@@ -77,7 +78,7 @@ public static class Composition
 
     private static byte[] Decode(JsonElement value, int chunkBytes)
     {
-        if (value.ValueKind != JsonValueKind.Object || !value.TryGetProperty("data", out var data) || data.ValueKind != JsonValueKind.String || !data.TryGetBytesFromBase64(out byte[]? decoded) || decoded.Length > chunkBytes)
+        if (value.ValueKind != JsonValueKind.Object || !value.TryGetProperty(WireFields.Data, out var data) || data.ValueKind != JsonValueKind.String || !data.TryGetBytesFromBase64(out byte[]? decoded) || decoded.Length > chunkBytes)
         {
             throw new InvalidDataException("Invalid or oversized bulk-map data.");
         }

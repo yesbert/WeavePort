@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 2,
   "dependencies": {
     "net10.0": {
       "BenchmarkDotNet": {
@@ -53,14 +53,6 @@
         "resolved": "2.4.0",
         "contentHash": "boc3JDTJ/bum/LWlnjNqHZpb4bQqQTH3p8500xL/3VPAmQMvjcONx1SaMkGDg5fuwdXbk9OtyM0zVKYGnULY7A=="
       },
-      "Chasm.SemanticVersioning": {
-        "type": "Transitive",
-        "resolved": "2.8.2",
-        "contentHash": "6GLb6fU3klW0j4p14mRwk+11cOGMs3Nq41qfpjXv6EpFpwc6/X2CY+/iDPuHPauxXAe+9V1/qC0XVZN0s7Gipw==",
-        "dependencies": {
-          "Chasm.Formatting": "2.4.0"
-        }
-      },
       "CommandLineParser": {
         "type": "Transitive",
         "resolved": "2.9.1",
@@ -71,32 +63,10 @@
         "resolved": "2.3.0",
         "contentHash": "2ap/rYmjtzCOT8hxrnEW/QeiOt+paD8iRrIcdKX0cxVwWLFa1e+JDBNeECakmccXrSFeBQuu5AV8SNkipFMMMw=="
       },
-      "Google.Protobuf": {
-        "type": "Transitive",
-        "resolved": "3.36.1",
-        "contentHash": "77AqPEoaY1ODE+syYBHti0jXiwQq0J/fUr/fRyYhNlc9oKtH5dZZEr/OLKtdKNVG83PRnCYB2r8B80ZrObzOGQ=="
-      },
-      "Grpc.AspNetCore.Server": {
-        "type": "Transitive",
-        "resolved": "2.83.0",
-        "contentHash": "rWeSaXaSPIIerc82lhHKqmzlp/sgLnG+Zw1c3YEEVp/un+hJKPxJOXWuGUOS2cs3EvcZBZ2tliXsnAg5Mdk2Ew==",
-        "dependencies": {
-          "Grpc.Net.Common": "2.83.0"
-        }
-      },
       "Grpc.Core.Api": {
         "type": "Transitive",
         "resolved": "2.83.0",
         "contentHash": "xU8BT2bCw4Ct+/qIFJhhjkDEilKUbBOfp4US7l3Xa3hnlkN9l2LgISCbOw4PFYpW5jJFcK7FUAyWOFIQ94Hiqg=="
-      },
-      "Grpc.Net.Client": {
-        "type": "Transitive",
-        "resolved": "2.83.0",
-        "contentHash": "dHYtx7hW4muttsCrWNG4/Ysb1iAIhNPEq28eo7vF166CdXn/RXOr3SGvSreIGIjvmdrADrBNJ2cUeJBto/T0XA==",
-        "dependencies": {
-          "Grpc.Net.Common": "2.83.0",
-          "Microsoft.Extensions.Logging.Abstractions": "8.0.0"
-        }
       },
       "Grpc.Net.Common": {
         "type": "Transitive",
@@ -187,14 +157,6 @@
           "Microsoft.Extensions.Options": "6.0.0"
         }
       },
-      "Microsoft.Extensions.Logging.Abstractions": {
-        "type": "Transitive",
-        "resolved": "10.0.12",
-        "contentHash": "+24lC4plfbEDNfLAdTV/SWKS7dW+16X4HdydO3R++134kSNTzcbYA4KpR1Hdh6uWisB8Za3AzwyOn+K+NxWIug==",
-        "dependencies": {
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.12"
-        }
-      },
       "Microsoft.Extensions.Options": {
         "type": "Transitive",
         "resolved": "6.0.0",
@@ -240,24 +202,6 @@
         "resolved": "4.7.0",
         "contentHash": "VybpaOQQhqE6siHppMktjfGBw1GCwvCqiufqmP8F1nj7fTUNtW35LOEt3UZTEsECfo+ELAl/9o9nJx3U91i7vA=="
       },
-      "Tomlyn": {
-        "type": "Transitive",
-        "resolved": "0.19.0",
-        "contentHash": "GlI2o8R8jbZIaE+YX6uA/VoAOH7zIxYeqxDm7jHW2hqUhuB+q19oKold35FkMuv8IZDoCqsTMolaBv2eBLBmrQ=="
-      },
-      "WeavePort.Abstractions": {
-        "type": "Transitive",
-        "resolved": "0.7.0",
-        "contentHash": "wDSw9tu91T6BzWS9oCUI1TL4FyVrZPoWtvNQ95LfRt19wIsMMWdGmNu0u+lj5BcGQ/9YECPngoj/rR13XuKCsg=="
-      },
-      "WeavePort.Sdk.Client": {
-        "type": "Transitive",
-        "resolved": "0.7.0",
-        "contentHash": "anJvPtlPlMrAHmXJHJXhqxBsFyISZ5pH9DdaHru5/6HQ9OjvFnY6WQ5XtPIfN5ko3HyyHmLZPh613hFMbYUtUg==",
-        "dependencies": {
-          "WeavePort.Abstractions": "0.7.0"
-        }
-      },
       "WeavePort.Sdk.Gateway.Client": {
         "type": "Transitive",
         "resolved": "0.7.0",
@@ -266,6 +210,70 @@
           "Google.Protobuf": "3.36.1",
           "Grpc.Net.Client": "2.83.0",
           "WeavePort.Sdk.Client": "0.7.0"
+        }
+      },
+      "Chasm.SemanticVersioning": {
+        "type": "CentralTransitive",
+        "requested": "[2.8.2, )",
+        "resolved": "2.8.2",
+        "contentHash": "6GLb6fU3klW0j4p14mRwk+11cOGMs3Nq41qfpjXv6EpFpwc6/X2CY+/iDPuHPauxXAe+9V1/qC0XVZN0s7Gipw==",
+        "dependencies": {
+          "Chasm.Formatting": "2.4.0"
+        }
+      },
+      "Google.Protobuf": {
+        "type": "CentralTransitive",
+        "requested": "[3.36.1, )",
+        "resolved": "3.36.1",
+        "contentHash": "77AqPEoaY1ODE+syYBHti0jXiwQq0J/fUr/fRyYhNlc9oKtH5dZZEr/OLKtdKNVG83PRnCYB2r8B80ZrObzOGQ=="
+      },
+      "Grpc.AspNetCore.Server": {
+        "type": "CentralTransitive",
+        "requested": "[2.83.0, )",
+        "resolved": "2.83.0",
+        "contentHash": "rWeSaXaSPIIerc82lhHKqmzlp/sgLnG+Zw1c3YEEVp/un+hJKPxJOXWuGUOS2cs3EvcZBZ2tliXsnAg5Mdk2Ew==",
+        "dependencies": {
+          "Grpc.Net.Common": "2.83.0"
+        }
+      },
+      "Grpc.Net.Client": {
+        "type": "CentralTransitive",
+        "requested": "[2.83.0, )",
+        "resolved": "2.83.0",
+        "contentHash": "dHYtx7hW4muttsCrWNG4/Ysb1iAIhNPEq28eo7vF166CdXn/RXOr3SGvSreIGIjvmdrADrBNJ2cUeJBto/T0XA==",
+        "dependencies": {
+          "Grpc.Net.Common": "2.83.0",
+          "Microsoft.Extensions.Logging.Abstractions": "8.0.0"
+        }
+      },
+      "Microsoft.Extensions.Logging.Abstractions": {
+        "type": "CentralTransitive",
+        "requested": "[10.0.12, )",
+        "resolved": "10.0.12",
+        "contentHash": "+24lC4plfbEDNfLAdTV/SWKS7dW+16X4HdydO3R++134kSNTzcbYA4KpR1Hdh6uWisB8Za3AzwyOn+K+NxWIug==",
+        "dependencies": {
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.12"
+        }
+      },
+      "Tomlyn": {
+        "type": "CentralTransitive",
+        "requested": "[0.19.0, )",
+        "resolved": "0.19.0",
+        "contentHash": "GlI2o8R8jbZIaE+YX6uA/VoAOH7zIxYeqxDm7jHW2hqUhuB+q19oKold35FkMuv8IZDoCqsTMolaBv2eBLBmrQ=="
+      },
+      "WeavePort.Abstractions": {
+        "type": "CentralTransitive",
+        "requested": "[0.7.0, )",
+        "resolved": "0.7.0",
+        "contentHash": "wDSw9tu91T6BzWS9oCUI1TL4FyVrZPoWtvNQ95LfRt19wIsMMWdGmNu0u+lj5BcGQ/9YECPngoj/rR13XuKCsg=="
+      },
+      "WeavePort.Sdk.Client": {
+        "type": "CentralTransitive",
+        "requested": "[0.7.0, )",
+        "resolved": "0.7.0",
+        "contentHash": "anJvPtlPlMrAHmXJHJXhqxBsFyISZ5pH9DdaHru5/6HQ9OjvFnY6WQ5XtPIfN5ko3HyyHmLZPh613hFMbYUtUg==",
+        "dependencies": {
+          "WeavePort.Abstractions": "0.7.0"
         }
       }
     }

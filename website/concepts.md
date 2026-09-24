@@ -4,7 +4,7 @@ A plugin call connects your application to one approved piece of extension code.
 
 ## A binding is an authority boundary
 
-A binding combines the host-selected tenant context, plugin artifact/version, execution profile and callback grants. Request payloads do not choose tenant authority or executable paths. A used worker is never reassigned to another tenant.
+A binding combines the host-selected tenant context, plugin artifact/version, execution profile and callback grants. Request payloads do not choose tenant authority or executable paths. Customer-bound used workers retain tenant affinity. Explicitly approved sequential reuse and Shared ownership have different state and concurrency contracts; neither provides tenant heap isolation.
 
 Exclusive client bindings serialize work under host admission policy; streams retain worker residency for their complete enumeration. Approved Shared installations support concurrent unary tenant calls in resident workers. See [shared execution](../docs/shared-execution.md) for the trust and failure boundaries.
 

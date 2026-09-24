@@ -5,7 +5,7 @@
     <ProjectReference Include="../../src/WeavePort.Sdk.Client/WeavePort.Sdk.Client.csproj" />
   </ItemGroup>
   <ItemGroup Condition="'$(UsePackedCore)' == 'true'">
-    <PackageReference Include="WeavePort.Hosting" Version="$(Version)" />
-    <PackageReference Include="WeavePort.Sdk.Client" Version="$(Version)" />
+    <PackageReference Include="WeavePort.Hosting" />
+    <PackageReference Include="WeavePort.Sdk.Client" />
   </ItemGroup>
 </Project>

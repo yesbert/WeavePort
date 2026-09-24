@@ -1,0 +1,24 @@
+<Project>
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <CentralPackageTransitivePinningEnabled>false</CentralPackageTransitivePinningEnabled>
+    <CentralPackageVersionOverrideEnabled>false</CentralPackageVersionOverrideEnabled>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageVersion Include="BenchmarkDotNet" Version="0.15.8" />
+    <PackageVersion Include="Chasm.SemanticVersioning" Version="2.8.2" />
+    <PackageVersion Include="Google.Protobuf" Version="3.36.1" />
+    <PackageVersion Include="Grpc.AspNetCore.Server" Version="2.83.0" />
+    <PackageVersion Include="Grpc.Net.Client" Version="2.83.0" />
+    <PackageVersion Include="Grpc.Tools" Version="2.84.0" />
+    <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.12" />
+    <PackageVersion Include="Tomlyn" Version="0.19.0" />
+    <PackageVersion Include="WeavePort.Abstractions" Version="0.7.0" />
+    <PackageVersion Include="WeavePort.Composition" Version="0.7.0" />
+    <PackageVersion Include="WeavePort.Hosting" Version="0.7.0" />
+    <PackageVersion Include="WeavePort.Sdk" Version="0.7.0" />
+    <PackageVersion Include="WeavePort.Sdk.Client" Version="0.7.0" />
+    <PackageVersion Include="WeavePort.Sdk.Gateway" Version="0.7.0" />
+    <PackageVersion Include="WeavePort.Testing" Version="0.7.0" />
+  </ItemGroup>
+</Project>

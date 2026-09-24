@@ -1,5 +1,7 @@
 # Local package and contract compatibility
 
+**Source availability:** This checkout includes qualified changes made after the published `v0.7.0` release. Package labels still read .NET `0.7.0` and Python/TypeScript `0.3.0`; those labels do not make locally rebuilt artifacts identical to the published downloads. Structured `PluginFailure` details, `DetailedFailureSink`, event 1008 and combined primary/cleanup error metadata describe current source, not the original published packages. Use the matching release tag for a published-package integration; see [current status](status.md).
+
 Keep the host, SDKs and plugin artifacts on a known-compatible combination. This guide defines the exact identities checked during installation and startup.
 
 **Package policy for 0.7.0, reviewed 2026-09-23.** The [machine-readable matrix](../compatibility/local-v1.json) defines one exact combination. It is embedded in `WeavePort.Hosting` and consumed by the offline installation sealer. The public NuGet package set uses this exact matrix; no general SemVer range is accepted.
@@ -37,7 +39,7 @@ The [API baseline](../compatibility/public-api.txt) records exported types and p
 
 | Package | Consumer surface |
 |---|---|
-| Abstractions | `PluginContext`, `InvocationResult`, `HostCall`, `IPluginSession`, `IPluginOperationSession`, `IHostCallbacks` |
+| Abstractions | `PluginContext`, `InvocationResult`, current-source `PluginFailure`, `HostCall`, `IPluginSession`, `IPluginOperationSession`, `IHostCallbacks` |
 | Hosting | `PluginHost`, execution profiles/protection, worker budget/snapshot, installed catalog/result/identity and transport profile types |
 | Sdk.Client | `IPluginClient`, `IBoundPluginClient`, typed extensions, stream options, `LocalPluginClient`, `PluginCallException` |
 | Sdk | `PluginApplication`, `PluginCallContext` |

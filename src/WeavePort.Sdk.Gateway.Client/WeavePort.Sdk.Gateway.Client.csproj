@@ -9,13 +9,17 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="../WeavePort.Sdk.Client/WeavePort.Sdk.Client.csproj" />
-    <PackageReference Include="Grpc.Net.Client" Version="2.83.0" />
-    <PackageReference Include="Google.Protobuf" Version="3.36.1" />
-    <PackageReference Include="Grpc.Tools" Version="2.84.0" PrivateAssets="all" />
+    <PackageReference Include="Grpc.Net.Client" />
+    <PackageReference Include="Google.Protobuf" />
+    <PackageReference Include="Grpc.Tools" PrivateAssets="all" />
     <Protobuf Include="gateway.proto" GrpcServices="Both" />
     <Compile Include="../Shared/JsonSize.cs" Link="Internal/JsonSize.cs" />
-    <Compile Include="../WeavePort.Sdk.Gateway/GatewayMetadata.cs" Link="Internal/GatewayMetadata.cs" />
+    <Compile Include="../WeavePort.Sdk.Gateway/Protocol/GatewayMetadata.cs" Link="Internal/GatewayMetadata.cs" />
     <None Include="../../docs/licenses/*.txt" Exclude="../../docs/licenses/grpc-tools-LICENSE.txt" Pack="true" PackagePath="licenses/" />
     <None Include="../../docs/package-gateway-client.md" Pack="true" PackagePath="PACKAGE.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="../Shared/FailureCode.cs" Link="Internal/FailureCode.cs" />
+    <Compile Include="../Shared/ProtocolContract.g.cs" Link="Internal/ProtocolContract.g.cs" />
   </ItemGroup>
 </Project>

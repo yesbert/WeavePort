@@ -1,1 +1,23 @@
-{"name":"@weaveport/sdk","version":"0.3.0","private":true,"type":"module","main":"dist/index.js","types":"dist/index.d.ts","files":["dist"],"scripts":{"build":"tsc"},"devDependencies":{"typescript":"7.0.2","@types/node":"22.20.2"},"license":"MIT","description":"WeavePort author SDK with registered session cleanup"}
+{
+  "name": "@weaveport/sdk",
+  "version": "0.3.0",
+  "private": true,
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "prebuild": "node scripts/clean.mjs",
+    "test": "npm run check:control-flow && npm run build && node --test tests/*.mjs",
+    "check:control-flow": "node scripts/check-control-flow.mjs"
+  },
+  "devDependencies": {
+    "typescript": "7.0.2",
+    "@types/node": "22.20.2"
+  },
+  "license": "MIT",
+  "description": "WeavePort author SDK with registered session cleanup"
+}

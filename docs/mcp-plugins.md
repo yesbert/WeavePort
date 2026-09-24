@@ -1,6 +1,6 @@
 # Optional local MCP plugins
 
-Reuse local MCP tools from your .NET application while keeping native plugins for application-specific contracts. Hosting 0.4.0 supports MCP tools alongside the default WeavePort protocol. No extra runtime package dependency is required by Hosting.
+Reuse local MCP tools from your .NET application while keeping native plugins for application-specific contracts. Hosting 0.7.0 supports MCP tools alongside the default WeavePort protocol. No extra runtime package dependency is required by Hosting.
 
 A local MCP server is a child process offering functions over stdin/stdout. One process can offer many tools. It needs neither a network listener nor an AI model. Existing native plugins remain native. Consuming MCP servers is separate from exposing WeavePort functions through an external MCP gateway; this implementation only consumes local servers.
 
@@ -8,7 +8,7 @@ A local MCP server is a child process offering functions over stdin/stdout. One 
 
 ## Bind and call
 
-The snippet uses the public `McpMethods` constants available in Hosting 0.4.0.
+The snippet uses the public `McpMethods` constants introduced in Hosting 0.3.1 and included in 0.7.0.
 
 Use an absolute runtime executable and server entry-point path selected by the trusted application. Deploy dependencies beforehand: the host does not download servers or run package managers.
 
@@ -80,7 +80,7 @@ The host sends neither bound tenant/configuration data nor native callback grant
 
 Local execution still requires trusted code. The cleared environment, private cooperative workspace and separate process do not enforce filesystem/network confinement, hard memory ceilings or containment of escaped descendants. See [local execution](local-execution.md) and [worker lifecycle](worker-lifecycle.md). Requiring unavailable OS protection still rejects binding.
 
-Messages reuse the host's 1 MiB frame limit and depth-32 reader; MCP serialization also limits depth to 32. Oversized output is rejected before sending any part of the message. Response IDs and duplicate envelope fields are checked. At most 32 recognized notifications or legacy keepalive requests are handled per exchange; legacy ping requests receive empty acknowledgements, and other server requests are rejected; the total deadline does not reset. stderr is drained without retaining plugin-controlled text.
+Messages reuse the host's 1 MiB frame limit and depth-32 reader; MCP serialization also limits depth to 32. Oversized output is rejected before sending any part of the message. Response IDs and duplicate envelope fields are checked. At most 32 recognized notifications or legacy keepalive requests are handled per exchange; legacy ping requests receive empty acknowledgements, and other server requests are rejected; the total deadline does not reset. stderr is drained; raw forwarding is off by default. Explicit `ForwardStandardError` enables bounded event 1007 delivery, including potentially sensitive plugin-controlled text; see [diagnostics](runtime-diagnostics.md).
 
 Cancellation after a complete request write attempts a cancellation notification for at most 100 ms, then existing cleanup terminates the worker. An interrupted partial write does not append a notification. Legacy initialization is not cancelled with a protocol notification. MCP shutdown first closes stdin and allows up to 100 ms for exit, then uses existing forced termination and cleanup accounting. Cancellation does not roll back external actions.
 

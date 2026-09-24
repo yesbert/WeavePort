@@ -57,18 +57,21 @@ type WeavePort.Abstractions.InvocationResult : System.Object [Public, Sealed]
   Method System.Text.Json.JsonElement get_Value() [Public] ()
   Method Void Deconstruct(System.String ByRef, System.Text.Json.JsonElement ByRef, System.String ByRef, Double ByRef, Boolean ByRef) [Public] (Status, Value, Instance, ElapsedMs, MayHaveExecuted)
   Method Void set_ElapsedMs(Double) [Public] (value)
+  Method Void set_Failure(WeavePort.Abstractions.PluginFailure) [Public] (value)
   Method Void set_Instance(System.String) [Public] (value)
   Method Void set_MayHaveExecuted(Boolean) [Public] (value)
   Method Void set_Status(System.String) [Public] (value)
   Method Void set_Value(System.Text.Json.JsonElement) [Public] (value)
   Method Void set_VersionMismatch(WeavePort.Abstractions.PluginVersionMismatch) [Public] (value)
   Method WeavePort.Abstractions.InvocationResult <Clone>$() [Public] ()
+  Method WeavePort.Abstractions.PluginFailure get_Failure() [Public] ()
   Method WeavePort.Abstractions.PluginVersionMismatch get_VersionMismatch() [Public] ()
   Property Boolean MayHaveExecuted
   Property Double ElapsedMs
   Property System.String Instance
   Property System.String Status
   Property System.Text.Json.JsonElement Value
+  Property WeavePort.Abstractions.PluginFailure Failure
   Property WeavePort.Abstractions.PluginVersionMismatch VersionMismatch
 type WeavePort.Abstractions.PluginContext : System.Object [Public, Sealed]
   implements System.IEquatable`1[WeavePort.Abstractions.PluginContext]
@@ -96,6 +99,29 @@ type WeavePort.Abstractions.PluginContext : System.Object [Public, Sealed]
   Property System.String Tenant
   Property System.String Version
   Property System.Text.Json.JsonElement Configuration
+type WeavePort.Abstractions.PluginFailure : System.Object [Public, Sealed]
+  implements System.IEquatable`1[WeavePort.Abstractions.PluginFailure]
+  Constructor Void .ctor(System.String, System.String, System.String, Boolean) [Public] (Code, Phase, CorrelationId, CleanupFailed=False)
+  Method Boolean Equals(System.Object) [Public, Virtual] (obj)
+  Method Boolean Equals(WeavePort.Abstractions.PluginFailure) [Public, Final, Virtual] (other)
+  Method Boolean get_CleanupFailed() [Public] ()
+  Method Boolean op_Equality(WeavePort.Abstractions.PluginFailure, WeavePort.Abstractions.PluginFailure) [Public, Static] (left, right)
+  Method Boolean op_Inequality(WeavePort.Abstractions.PluginFailure, WeavePort.Abstractions.PluginFailure) [Public, Static] (left, right)
+  Method Int32 GetHashCode() [Public, Virtual] ()
+  Method System.String ToString() [Public, Virtual] ()
+  Method System.String get_Code() [Public] ()
+  Method System.String get_CorrelationId() [Public] ()
+  Method System.String get_Phase() [Public] ()
+  Method Void Deconstruct(System.String ByRef, System.String ByRef, System.String ByRef, Boolean ByRef) [Public] (Code, Phase, CorrelationId, CleanupFailed)
+  Method Void set_CleanupFailed(Boolean) [Public] (value)
+  Method Void set_Code(System.String) [Public] (value)
+  Method Void set_CorrelationId(System.String) [Public] (value)
+  Method Void set_Phase(System.String) [Public] (value)
+  Method WeavePort.Abstractions.PluginFailure <Clone>$() [Public] ()
+  Property Boolean CleanupFailed
+  Property System.String Code
+  Property System.String CorrelationId
+  Property System.String Phase
 type WeavePort.Abstractions.PluginVersionMismatch : System.Object [Public, Sealed]
   implements System.IEquatable`1[WeavePort.Abstractions.PluginVersionMismatch]
   Constructor Void .ctor(System.String, System.String) [Public] (Expected, Advertised)
@@ -197,6 +223,26 @@ type WeavePort.Hosting.ExecutionProtections : System.Enum [Public, Sealed]
   Field WeavePort.Hosting.ExecutionProtections HardResourceLimits=4
   Field WeavePort.Hosting.ExecutionProtections None=0
   Field WeavePort.Hosting.ExecutionProtections RestrictedFileSystem=1
+type WeavePort.Hosting.FailureDiagnostic : System.Object [Public, Sealed]
+  implements System.IEquatable`1[WeavePort.Hosting.FailureDiagnostic]
+  Constructor Void .ctor(System.String, WeavePort.Abstractions.PluginFailure, System.Exception) [Public] (WorkerInstance, Failure, Exception)
+  Method Boolean Equals(System.Object) [Public, Virtual] (obj)
+  Method Boolean Equals(WeavePort.Hosting.FailureDiagnostic) [Public, Final, Virtual] (other)
+  Method Boolean op_Equality(WeavePort.Hosting.FailureDiagnostic, WeavePort.Hosting.FailureDiagnostic) [Public, Static] (left, right)
+  Method Boolean op_Inequality(WeavePort.Hosting.FailureDiagnostic, WeavePort.Hosting.FailureDiagnostic) [Public, Static] (left, right)
+  Method Int32 GetHashCode() [Public, Virtual] ()
+  Method System.Exception get_Exception() [Public] ()
+  Method System.String ToString() [Public, Virtual] ()
+  Method System.String get_WorkerInstance() [Public] ()
+  Method Void Deconstruct(System.String ByRef, WeavePort.Abstractions.PluginFailure ByRef, System.Exception ByRef) [Public] (WorkerInstance, Failure, Exception)
+  Method Void set_Exception(System.Exception) [Public] (value)
+  Method Void set_Failure(WeavePort.Abstractions.PluginFailure) [Public] (value)
+  Method Void set_WorkerInstance(System.String) [Public] (value)
+  Method WeavePort.Abstractions.PluginFailure get_Failure() [Public] ()
+  Method WeavePort.Hosting.FailureDiagnostic <Clone>$() [Public] ()
+  Property System.Exception Exception
+  Property System.String WorkerInstance
+  Property WeavePort.Abstractions.PluginFailure Failure
 type WeavePort.Hosting.ISharedPlugin :  [Public, ClassSemanticsMask, Abstract]
   implements System.IAsyncDisposable
   Method WeavePort.Hosting.SharedPluginSnapshot get_Snapshot() [Public, Virtual, Abstract] ()
@@ -417,7 +463,9 @@ type WeavePort.Hosting.PluginSealOptions : System.Object [Public, Sealed]
 type WeavePort.Hosting.PluginVersionMismatchException : System.IO.IOException [Public, Sealed]
   implements System.Runtime.Serialization.ISerializable
   Constructor Void .ctor(System.String, System.String) [Public] (expected, advertised)
+  Method System.String get_ErrorCode() [Public] ()
   Method WeavePort.Abstractions.PluginVersionMismatch get_Mismatch() [Public] ()
+  Property System.String ErrorCode
   Property WeavePort.Abstractions.PluginVersionMismatch Mismatch
 type WeavePort.Hosting.PluginWorkClass : System.Enum [Public, Sealed]
   implements System.IComparable
@@ -728,11 +776,13 @@ type WeavePort.Hosting.WorkerPoolOptions : System.Object [Public, Sealed]
   Method Int32 get_MaximumWorkersPerTenant() [Public] ()
   Method Int64 get_MemoryBudgetMiB() [Public] ()
   Method Int64 get_MemoryBudgetPerTenantMiB() [Public] ()
+  Method System.Action`1[WeavePort.Hosting.FailureDiagnostic] get_DetailedFailureSink() [Public] ()
   Method System.Nullable`1[System.TimeSpan] get_MaintenanceInterval() [Public] ()
   Method System.Nullable`1[System.TimeSpan] get_PristineLifetime() [Public] ()
   Method System.String ToString() [Public, Virtual] ()
   Method System.TimeSpan get_ReusableIdleTimeout() [Public] ()
   Method Void Deconstruct(Int32 ByRef, Int64 ByRef, Int32 ByRef, Int32 ByRef, System.Nullable`1[System.TimeSpan] ByRef, System.Nullable`1[System.TimeSpan] ByRef, Int32 ByRef, Int64 ByRef) [Public] (MaximumWorkers, MemoryBudgetMiB, MaximumPristineWorkers, MaximumConcurrentStarts, PristineLifetime, MaintenanceInterval, MaximumWorkersPerTenant, MemoryBudgetPerTenantMiB)
+  Method Void set_DetailedFailureSink(System.Action`1[WeavePort.Hosting.FailureDiagnostic]) [Public] (value)
   Method Void set_MaintenanceInterval(System.Nullable`1[System.TimeSpan]) [Public] (value)
   Method Void set_MaximumConcurrentStarts(Int32) [Public] (value)
   Method Void set_MaximumPristineWorkers(Int32) [Public] (value)
@@ -751,6 +801,7 @@ type WeavePort.Hosting.WorkerPoolOptions : System.Object [Public, Sealed]
   Property Int32 MaximumWorkersPerTenant
   Property Int64 MemoryBudgetMiB
   Property Int64 MemoryBudgetPerTenantMiB
+  Property System.Action`1[WeavePort.Hosting.FailureDiagnostic] DetailedFailureSink
   Property System.Nullable`1[System.TimeSpan] MaintenanceInterval
   Property System.Nullable`1[System.TimeSpan] PristineLifetime
   Property System.TimeSpan ReusableIdleTimeout
@@ -876,11 +927,16 @@ type WeavePort.Sdk.Client.PluginCallException : System.IO.IOException [Public, S
   implements System.Runtime.Serialization.ISerializable
   Constructor Void .ctor(System.String, Boolean) [Public] (status, mayHaveExecuted=True)
   Method Boolean get_MayHaveExecuted() [Public] ()
+  Method System.String get_ErrorCode() [Public] ()
   Method System.String get_Status() [Public] ()
+  Method Void set_Failure(WeavePort.Abstractions.PluginFailure) [Public] (value)
   Method Void set_VersionMismatch(WeavePort.Abstractions.PluginVersionMismatch) [Public] (value)
+  Method WeavePort.Abstractions.PluginFailure get_Failure() [Public] ()
   Method WeavePort.Abstractions.PluginVersionMismatch get_VersionMismatch() [Public] ()
   Property Boolean MayHaveExecuted
+  Property System.String ErrorCode
   Property System.String Status
+  Property WeavePort.Abstractions.PluginFailure Failure
   Property WeavePort.Abstractions.PluginVersionMismatch VersionMismatch
 type WeavePort.Sdk.Client.PluginCallResult`1 : System.Object [Public, Sealed]
   implements System.IEquatable`1[WeavePort.Sdk.Client.PluginCallResult`1[T]]

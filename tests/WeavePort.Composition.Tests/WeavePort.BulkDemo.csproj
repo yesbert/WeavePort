@@ -6,8 +6,8 @@
   </PropertyGroup>
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
-    <PackageReference Include="WeavePort.Hosting" Version="0.7.0" />
-    <PackageReference Include="WeavePort.Composition" Version="0.7.0" />
+    <PackageReference Include="WeavePort.Hosting" />
+    <PackageReference Include="WeavePort.Composition" />
     <Compile Include="../../tools/SharedLocal/LocalConfiguration.cs" Link="LocalConfiguration.cs" />
   </ItemGroup>
 </Project>

@@ -1,5 +1,5 @@
 ## Purpose
-Make the supported internal local package, API, protocol and author SDK combinations explicit and reject undeclared compatibility before plugin execution.
+Make the supported local package, API, protocol and author SDK combinations explicit and reject undeclared compatibility before plugin execution.
 
 ## Requirements
 
@@ -15,7 +15,7 @@ Local installation resolution SHALL require supported host API and protocol leve
 - **THEN** resolution is refused before dispatch and activation does not replace the previous selector
 
 ### Requirement: Reviewable package surface
-The internal package check SHALL compare actual packed metadata and a retained core .NET API baseline, and SHALL report mismatches without updating that baseline automatically.
+The package verification check SHALL compare actual packed metadata and a retained core .NET API baseline, and SHALL report mismatches without updating that baseline automatically.
 
 #### Scenario: Package or surface drift
 - **WHEN** packed versions/dependencies or the selected public/protected surface differ from the reviewed baseline
