@@ -71,7 +71,7 @@ public sealed partial class RemotePluginClient : IBoundPluginClient
         bool complete = false;
         try
         {
-            await session.RequestStream.WriteAsync(request, stop.Token);
+            await WriteAsync(session, request, stop.Token);
             Reply reply = await ReadStreamReplyAsync(session, stop.Token);
             complete = reply.Complete;
             if (!complete)
@@ -100,16 +100,6 @@ public sealed partial class RemotePluginClient : IBoundPluginClient
         {
             _sessions.Return(session, complete);
         }
-    }
-
-    private static async Task<Reply> ReadAsync(AsyncDuplexStreamingCall<Request, Reply> session, CancellationToken token)
-    {
-        if (!await session.ResponseStream.MoveNext(token))
-        {
-            throw new IOException("Gateway session ended without a terminal reply.");
-        }
-
-        return session.ResponseStream.Current;
     }
 
     private static void CheckError(Reply reply, CancellationToken token)

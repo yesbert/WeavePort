@@ -20,6 +20,7 @@ internal static class CollectionChecks
 
     internal static async Task RunAsync(string[] args)
     {
+        await GatewayCancellationChecks.RunAsync();
         string root = Path.Combine(Path.GetTempPath(), "wp-source-" + Guid.NewGuid().ToString("N"));
         string repositoryRoot = Path.GetFullPath(args.ElementAtOrDefault(1) ?? Environment.CurrentDirectory);
         Directory.CreateDirectory(root);
