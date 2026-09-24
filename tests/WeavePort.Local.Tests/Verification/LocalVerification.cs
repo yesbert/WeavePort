@@ -21,7 +21,16 @@ internal static partial class LocalVerification
     }
 
     internal static PluginContext Context(string tenant) => new(tenant, "demo", "1", "default", JsonSerializer.SerializeToElement(new { marker = tenant + "-canary" }));
-    internal static async Task<JsonElement> CallAsync(IPluginSession session, string operation, object payload) => ContractChecks.Successful(await session.InvokeAsync(operation, JsonSerializer.SerializeToElement(payload)));
+    internal static async Task<JsonElement> CallAsync(IPluginSession session, string operation, object payload)
+    {
+        InvocationResult result = await session.InvokeAsync(operation, JsonSerializer.SerializeToElement(payload));
+        if (result.Status != "ok")
+        {
+            throw new LocalInvocationException(result);
+        }
+
+        return result.Value;
+    }
     private static void Assert(bool condition)
     {
         if (!condition)

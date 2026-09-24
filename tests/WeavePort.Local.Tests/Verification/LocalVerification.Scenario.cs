@@ -228,7 +228,19 @@ internal static partial class LocalVerification
                 });
                 Console.WriteLine("PASS " + name);
             }
-            catch (Exception error) { _failures++; _checks.Add(new { name, passed = false, error = error.GetType().Name }); Console.WriteLine("FAIL " + name + ": " + error.GetType().Name); }
+            catch (Exception error)
+            {
+                _failures++;
+                object? invocation = (error as LocalInvocationException)?.Diagnostic;
+                _checks.Add(new
+                {
+                    name,
+                    passed = false,
+                    error = error.GetType().Name,
+                    invocation
+                });
+                Console.WriteLine("FAIL " + name + ": " + error.GetType().Name + " " + JsonSerializer.Serialize(invocation));
+            }
         }
     }
 }
