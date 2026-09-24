@@ -20,4 +20,4 @@
 
 ## 5. Qualification
 - [x] 5.1 Run focused regressions and readability, architecture, generated-content and documentation checks.
-- [ ] 5.2 Qualify the frozen source and packed consumers; record exact evidence and archive the completed change.
+- [x] 5.2 Qualify the frozen source and packed consumers; record exact evidence and archive the completed change.

@@ -2368,6 +2368,54 @@
     "reviewed_sha256": "3a99571fca1e0e8f96ca954e01531ac78a2de8ae3e65516ed8f4a1dc5c266cca"
   },
   {
+    "path": "openspec/changes/archive/2026-09-24-audit-file-readability/.openspec.yaml",
+    "sha256": null,
+    "category": "audit record",
+    "status": "reviewed",
+    "assessment": "Reviewed completed audit artifact: scope, findings, file coverage and exact successful qualification are recorded. Archived after task completion; no specification delta or release.",
+    "reviewed_sha256": "23bb15fba46ab16f4e9f834e4b42f1b6294e4f6e70a289e7b8a433eb394f0fc0"
+  },
+  {
+    "path": "openspec/changes/archive/2026-09-24-audit-file-readability/design.md",
+    "sha256": null,
+    "category": "audit record",
+    "status": "reviewed",
+    "assessment": "Reviewed completed audit artifact: scope, findings, file coverage and exact successful qualification are recorded. Archived after task completion; no specification delta or release.",
+    "reviewed_sha256": "749f366da4e15b68035559b8a9bcc8fd1dbd636e67b1294fea646081ce7cee78"
+  },
+  {
+    "path": "openspec/changes/archive/2026-09-24-audit-file-readability/files.json",
+    "sha256": null,
+    "category": "audit record",
+    "status": "reviewed",
+    "assessment": "Reviewed completed audit artifact: scope, findings, file coverage and exact successful qualification are recorded. Archived after task completion; no specification delta or release.",
+    "identity_note": "Self-describing ledger: recursive content hash is intentionally omitted. The containing Git commit identifies its complete bytes."
+  },
+  {
+    "path": "openspec/changes/archive/2026-09-24-audit-file-readability/proposal.md",
+    "sha256": null,
+    "category": "audit record",
+    "status": "reviewed",
+    "assessment": "Reviewed completed audit artifact: scope, findings, file coverage and exact successful qualification are recorded. Archived after task completion; no specification delta or release.",
+    "reviewed_sha256": "72f8d074e784c6c757204bc5cb9d5d47501254bce9f38afdf52143479b7d8fff"
+  },
+  {
+    "path": "openspec/changes/archive/2026-09-24-audit-file-readability/tasks.md",
+    "sha256": null,
+    "category": "audit record",
+    "status": "reviewed",
+    "assessment": "Reviewed completed audit artifact: scope, findings, file coverage and exact successful qualification are recorded. Archived after task completion; no specification delta or release.",
+    "reviewed_sha256": "6d37623c75fbf9cc81646655be0315ceb04ef98d6b9114b8721116a1e28617f6"
+  },
+  {
+    "path": "openspec/changes/archive/2026-09-24-audit-file-readability/verification.md",
+    "sha256": null,
+    "category": "audit record",
+    "status": "reviewed",
+    "assessment": "Read complete final evidence record against candidate result: 71 stages, 3,581 assertions and 442 frozen artifacts. Failed attempt and platform/Docker/soak limits are explicit.",
+    "reviewed_sha256": "d8479c1624311df35ef067991dd5ddb289a1e37bf08754f371db5ace3c9c0850"
+  },
+  {
     "path": "openspec/changes/archive/2026-09-24-enforce-flat-control-flow/.openspec.yaml",
     "sha256": "23bb15fba46ab16f4e9f834e4b42f1b6294e4f6e70a289e7b8a433eb394f0fc0",
     "category": "historical evidence",
@@ -2517,7 +2565,7 @@
     "category": "audit record",
     "status": "reviewed",
     "assessment": "Reviewed audit scope, decisions, completed tasks and per-file evidence bookkeeping. Qualification task remains open until the frozen candidate passes.",
-    "reviewed_sha256": "23bb15fba46ab16f4e9f834e4b42f1b6294e4f6e70a289e7b8a433eb394f0fc0"
+    "moved_to": "openspec/changes/archive/2026-09-24-audit-file-readability/.openspec.yaml"
   },
   {
     "path": "openspec/changes/audit-file-readability/design.md",
@@ -2525,7 +2573,7 @@
     "category": "audit record",
     "status": "reviewed",
     "assessment": "Reviewed audit scope, decisions, completed tasks and per-file evidence bookkeeping. Qualification task remains open until the frozen candidate passes.",
-    "reviewed_sha256": "749f366da4e15b68035559b8a9bcc8fd1dbd636e67b1294fea646081ce7cee78"
+    "moved_to": "openspec/changes/archive/2026-09-24-audit-file-readability/design.md"
   },
   {
     "path": "openspec/changes/audit-file-readability/files.json",
@@ -2533,7 +2581,8 @@
     "category": "audit record",
     "status": "reviewed",
     "assessment": "Reviewed audit scope, decisions, completed tasks and per-file evidence bookkeeping. Qualification task remains open until the frozen candidate passes.",
-    "identity_note": "Self-describing ledger: recursive content hash is intentionally omitted. The containing Git commit identifies its complete bytes."
+    "identity_note": "Self-describing ledger: recursive content hash is intentionally omitted. The containing Git commit identifies its complete bytes.",
+    "moved_to": "openspec/changes/archive/2026-09-24-audit-file-readability/files.json"
   },
   {
     "path": "openspec/changes/audit-file-readability/proposal.md",
@@ -2541,7 +2590,7 @@
     "category": "audit record",
     "status": "reviewed",
     "assessment": "Reviewed audit scope, decisions, completed tasks and per-file evidence bookkeeping. Qualification task remains open until the frozen candidate passes.",
-    "reviewed_sha256": "72f8d074e784c6c757204bc5cb9d5d47501254bce9f38afdf52143479b7d8fff"
+    "moved_to": "openspec/changes/archive/2026-09-24-audit-file-readability/proposal.md"
   },
   {
     "path": "openspec/changes/audit-file-readability/tasks.md",
@@ -2549,7 +2598,7 @@
     "category": "audit record",
     "status": "reviewed",
     "assessment": "Reviewed audit scope, decisions, completed tasks and per-file evidence bookkeeping. Qualification task remains open until the frozen candidate passes.",
-    "reviewed_sha256": "5ec3bb29c1c930e5fc566ad81946a26f7e889c5a56d06729f0a74cb658b21a0a"
+    "moved_to": "openspec/changes/archive/2026-09-24-audit-file-readability/tasks.md"
   },
   {
     "path": "openspec/changes/qualify-native-capacity-and-platform-comparison/.openspec.yaml",
