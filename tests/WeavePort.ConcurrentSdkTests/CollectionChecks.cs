@@ -14,6 +14,8 @@ using WeavePort.Sdk.Gateway;
 
 internal static class CollectionChecks
 {
+    private static readonly string[] Languages = ["csharp", "python", "typescript"];
+    private static readonly bool[] RemoteModes = [false, true];
     private static readonly JsonSerializerOptions ReportJson = new() { WriteIndented = true };
 
     internal static async Task RunAsync(string[] args)
@@ -24,8 +26,8 @@ internal static class CollectionChecks
         var rows = new List<object>();
         try
         {
-            var cases = from language in new[] { "csharp", "python", "typescript" }
-                        from remote in new[] { false, true }
+            var cases = from language in Languages
+                        from remote in RemoteModes
                         select (language, remote);
             foreach (var (language, remote) in cases)
             {

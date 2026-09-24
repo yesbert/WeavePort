@@ -38,18 +38,7 @@ public sealed partial class InstalledPluginCatalog(string releases, IReadOnlyDic
         string path = Path.Combine(root, ManifestFileName);
         (Manifest manifest, byte[] bytes) = ReadManifest(root, path);
         var identity = new InstallationIdentity(plugin, version, contract, Convert.ToHexString(SHA256.HashData(bytes)));
-        if (manifest.Schema is not (1 or 2) || manifest.Plugin != plugin || manifest.Version != version ||
-            manifest.Contract != contract || (pinned is not null && identity != pinned))
-        {
-            throw new InvalidDataException("Installation identity, schema, contract or runtime selection mismatch.");
-        }
-
-        if (manifest.Files is null || manifest.EntryPoints is null ||
-            manifest.Files.Count is < 1 or > InstallationLimits.Files ||
-            manifest.EntryPoints.Count is < 1 or > InstallationLimits.EntryPoints)
-        {
-            throw new InvalidDataException("Installation identity, schema, contract or runtime selection mismatch.");
-        }
+        ValidateManifestDeclarations(manifest, identity, pinned);
 
         InstallationCompatibility.Validate(manifest.Compatibility, manifest.EntryPoints.Keys);
         var actualFiles = Inventory(root);
@@ -75,6 +64,23 @@ public sealed partial class InstalledPluginCatalog(string releases, IReadOnlyDic
         {
             RuntimeValidation = manifest.Schema == 2 ? new RuntimeValidation(root, manifest.Runtimes!, selectedRuntimes, manifest.Files) : null
         };
+    }
+
+    private static void ValidateManifestDeclarations(Manifest manifest, InstallationIdentity identity, InstallationIdentity? pinned)
+    {
+        if (manifest.Schema is not (1 or 2) || manifest.Plugin != identity.Plugin || manifest.Version != identity.Version ||
+            manifest.Contract != identity.Contract || (pinned is not null && identity != pinned))
+        {
+            throw new InvalidDataException("Installation identity, schema, contract or runtime selection mismatch.");
+        }
+
+        if (manifest.Files is null || manifest.EntryPoints is null ||
+            manifest.Files.Count is < 1 or > InstallationLimits.Files ||
+            manifest.EntryPoints.Count is < 1 or > InstallationLimits.EntryPoints)
+        {
+            throw new InvalidDataException("Installation identity, schema, contract or runtime selection mismatch.");
+        }
+
     }
 
     private static Dictionary<string, string> ResolveEntryPoints(string root, Manifest manifest)

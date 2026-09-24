@@ -1,3 +1,5 @@
+using System.Runtime.ExceptionServices;
+
 namespace WeavePort.Sdk;
 
 internal static class SessionCleanup
@@ -26,28 +28,48 @@ internal static class SessionCleanup
     internal static async Task<T> ExecuteAsync<T>(Func<Task<T>> action, Func<Task> cleanup)
     {
         Exception? primary = null;
+        Exception? secondary = null;
+        T? result = default;
         try
         {
-            return await action();
+            result = await action();
         }
         catch (Exception error) when (error is not OutOfMemoryException)
         {
             primary = error;
-            throw;
         }
         finally
         {
+            // Cleanup still runs for fatal execution errors; an ordinary secondary
+            // error must not replace the fatal exception already unwinding.
             try
             {
                 await cleanup();
             }
-            catch (Exception secondary) when (primary is not null && secondary is not OutOfMemoryException)
+            catch (Exception error) when (error is not OutOfMemoryException)
             {
-                throw new SessionCleanupException([primary, secondary])
-                {
-                    HasExecutionFailure = true
-                };
+                secondary = error;
             }
         }
+
+        if (primary is not null && secondary is not null)
+        {
+            throw new SessionCleanupException([primary, secondary])
+            {
+                HasExecutionFailure = true
+            };
+        }
+
+        if (primary is not null)
+        {
+            ExceptionDispatchInfo.Throw(primary);
+        }
+
+        if (secondary is not null)
+        {
+            ExceptionDispatchInfo.Throw(secondary);
+        }
+
+        return result!;
     }
 }

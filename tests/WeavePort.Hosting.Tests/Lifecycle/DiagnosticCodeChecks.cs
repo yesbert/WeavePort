@@ -3,10 +3,13 @@ using WeavePort.Sdk.Client;
 
 internal static class DiagnosticCodeChecks
 {
+    private static readonly string[] Statuses = ["busy", "denied", "timeout", "protocol-error", "future-peer-code"];
+    private static readonly bool[] ExecutionOutcomes = [false, true];
+
     internal static void Run()
     {
-        var cases = from status in new[] { "busy", "denied", "timeout", "protocol-error", "future-peer-code" }
-                    from mayHaveExecuted in new[] { false, true }
+        var cases = from status in Statuses
+                    from mayHaveExecuted in ExecutionOutcomes
                     select (status, mayHaveExecuted);
         foreach (var (status, mayHaveExecuted) in cases)
         {
