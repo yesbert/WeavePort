@@ -11,7 +11,7 @@ internal static class ApiChecks
         var lines = new List<string> { "# Reviewed optional package API including generated gateway protocol" };
         foreach (var assembly in assemblies.OrderBy(a => a.GetName().Name, StringComparer.Ordinal))
         {
-            Check.That(assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()!.InformationalVersion.Split('+')[0] == "0.7.0", assembly.GetName().Name + " loaded version");
+            Check.That(assembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()!.InformationalVersion.Split('+')[0] == "0.8.0", assembly.GetName().Name + " loaded version");
             AddAssembly(lines, assembly);
         }
         string snapshot = string.Join('\n', lines) + "\n";

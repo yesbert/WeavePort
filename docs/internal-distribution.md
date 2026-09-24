@@ -1,6 +1,6 @@
 # Internal distribution 0.1.0-internal.2
 
-**Historical delivery:** This guide applies only to the frozen 0.1.0-internal.2 bundle. It is not installation guidance for the public 0.7.0 package family or newer source. Start with [installed clients](installed-plugin-clients.md) for current integration.
+**Historical delivery:** This guide applies only to the frozen 0.1.0-internal.2 bundle. It is not installation guidance for the public 0.8.0 package family or newer source. Start with [installed clients](installed-plugin-clients.md) for current integration.
 
 This versioned delivery contains the qualified owner-controlled plugin platform and three reference applications for macOS arm64. The bundle version is distinct from component versions: four core NuGet packages are `0.1.0-internal.2`, the Python wheel and TypeScript npm package remain `0.1.0`. Their exact bytes come from the retained internal candidate qualification; packaging does not rebuild or relabel them.
 

@@ -1,11 +1,11 @@
 # Product status
 
-## Published release
+## Release 0.8.0
 
 
-Release version: **0.7.0**, under MIT, with four core packages and optional Composition, Gateway server and Gateway client packages. Windows, Linux and macOS are supported targets for trusted stdio execution. Current release validation covers macOS arm64; Windows and Linux release validation is pending. See [platform support and validation](platform-qualification.md). This pre-1.0 API remains subject to evolution. Python/TypeScript registry publication and a new offline distribution are outside this release. The historical internal distribution remains **0.1.0-internal.2**.
+Release version: **0.8.0**, under MIT, with four core packages and optional Composition, Gateway server and Gateway client packages. Windows, Linux and macOS are supported targets for trusted stdio execution. Current release validation covers macOS arm64; Windows and Linux release validation is pending. See [platform support and validation](platform-qualification.md). This pre-1.0 API remains subject to evolution. Python/TypeScript registry publication and a new offline distribution are outside this release. The historical internal distribution remains **0.1.0-internal.2**.
 
-The current [0.7.0 release evidence](../reports/release/0.7.0/README.md) records 3,533 reported qualification assertions, the clean static audit and verified downloads for all seven NuGet packages and 16 GitHub artifacts.
+The previous [0.7.0 release evidence](../reports/release/0.7.0/README.md) records 3,533 reported qualification assertions, the clean static audit and verified downloads for all seven NuGet packages and 16 GitHub artifacts.
 
 The previous [0.5.0 release evidence](../reports/release/0.5.0/README.md) records all seven published packages, 3,496 qualification assertions, artifact provenance and public download verification.
 
@@ -15,13 +15,11 @@ Implemented and checked: immutable installed-artifact selection, exact compatibi
 
 Current measurement methodology and results are in [benchmarking](benchmarking.md). The full historical comparison collection is described in [historical evidence](history.md), not a competing current status summary.
 
-## Qualified source after 0.7.0
+## Release qualification and availability
 
-The 2026-09-24 source adds structured failure details, explicit cancellation attribution, primary execution/cleanup cause preservation, safe diagnostic delivery, generated shared protocol definitions and readability/architecture checks. See [failure codes](failure-codes.md), [runtime diagnostics](runtime-diagnostics.md) and [source organization](source-organization.md).
+Release 0.8.0 includes structured failure details, explicit cancellation attribution, primary execution/cleanup cause preservation, safe diagnostic delivery, generated shared protocol definitions and the complete readability audit. Python/TypeScript author SDKs are 0.4.0. See [migration notes](releases.md#080-failure-contracts-and-code-quality), [failure codes](failure-codes.md), [runtime diagnostics](runtime-diagnostics.md) and [source organization](source-organization.md).
 
-The [source verification record](../openspec/changes/archive/2026-09-24-unify-errors-and-protocol-contracts/verification.md) records 3,581 assertions across 66 stages against one frozen source/package set, plus separate Python and TypeScript unit checks. It does not republish or replace v0.7.0. Version labels remain .NET 0.7.0 and Python/TypeScript 0.3.0 pending a separate release decision. Use artifacts from one qualified source build together, with isolated package caches; use the exact release tag and original artifacts when integrating published packages.
-
-The current API baselines and main-branch guides describe this checkout. Historical release reports below keep their original versions, counts and qualification limits.
+Publication is being prepared. The [0.8.0 release record](../reports/release/0.8.0/README.md) tracks exact-version qualification and public download verification; until publication completes, 0.7.0 remains the latest public delivery. Current API baselines and examples describe 0.8.0. Historical reports retain their original versions and qualification limits.
 
 ## Runtime optimization and soak verification
 
@@ -41,7 +39,7 @@ The [repository cleanup qualification](../reports/verification/current/README.md
 
 ## MCP support
 
-The 0.3.0 release adds [optional local MCP tools](mcp-plugins.md) alongside the native protocol, with explicit 2025-11-25/2026-07-28 selection. Included in subsequent releases, including 0.7.0. The guide and [measurement report](../reports/mcp/local-stdio/README.md) identify the tested subset and platform limits.
+The 0.3.0 release adds [optional local MCP tools](mcp-plugins.md) alongside the native protocol, with explicit 2025-11-25/2026-07-28 selection. Included in subsequent releases, including 0.8.0. The guide and [measurement report](../reports/mcp/local-stdio/README.md) identify the tested subset and platform limits.
 
 Version 0.3.1 adds public `McpMethods.ListTools` and `McpMethods.CallTool` constants used by the consumer examples. The MCP wire protocol and supported subset remain unchanged.
 
@@ -51,7 +49,7 @@ Version 0.5.0 includes the integrated runtime with optional Composition, Gateway
 
 ## Approved session reuse and fair scheduling
 
-Version 0.4.0 adds a memory-led fair scheduler and opt-in `WorkerReusePolicy.ApprovedSessions`. Customer-bound execution remains the default. The host requires the updated SDK cleanup handshake before sharing compatible reviewed deployments; C#, Python and TypeScript expose registered session resources. See [operator/author guidance](reusable-plugins.md), [candidate verification](../reports/verification/approved-session-reuse-20260920/README.md) and [public release evidence](../reports/release/0.4.0/README.md). Python/TypeScript 0.2.0 artifacts accompany that historical GitHub release; current 0.7.0 uses author SDK 0.3.0; separate registry publication is not claimed.
+Version 0.4.0 adds a memory-led fair scheduler and opt-in `WorkerReusePolicy.ApprovedSessions`. Customer-bound execution remains the default. The host requires the updated SDK cleanup handshake before sharing compatible reviewed deployments; C#, Python and TypeScript expose registered session resources. See [operator/author guidance](reusable-plugins.md), [candidate verification](../reports/verification/approved-session-reuse-20260920/README.md) and [public release evidence](../reports/release/0.4.0/README.md). Python/TypeScript 0.2.0 artifacts accompany that historical GitHub release; current 0.8.0 uses author SDK 0.4.0; separate registry publication is not claimed.
 
 ## Unified host and shared execution
 

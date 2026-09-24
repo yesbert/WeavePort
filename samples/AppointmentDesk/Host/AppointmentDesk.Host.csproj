@@ -6,7 +6,7 @@
     <Compile Include="../../Shared/EmbeddedCoordinator.cs" Link="EmbeddedCoordinator.cs" />
     <Compile Include="../../Shared/NativeRunGuard.cs" Link="NativeRunGuard.cs" />
     <ProjectReference Include="../Contracts/AppointmentDesk.Contracts.csproj" />
-    <PackageReference Include="WeavePort.Hosting" Version="0.7.0" />
-    <PackageReference Include="WeavePort.Sdk.Client" Version="0.7.0" />
+    <PackageReference Include="WeavePort.Hosting" Version="0.8.0" />
+    <PackageReference Include="WeavePort.Sdk.Client" Version="0.8.0" />
   </ItemGroup>
 </Project>

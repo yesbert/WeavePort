@@ -1,6 +1,6 @@
 # Portable installed plugins
 
-Version 0.7.0 introduces portable schema-2 installations and a .NET sealing API. These APIs require the 0.7.0 package family. Existing schema-1 manifests retain their executable hash checks, exact package compatibility and recovery pins.
+Version 0.7.0 introduced portable schema-2 installations and a .NET sealing API, retained in 0.8.0. Use one coherent package family and its exact embedded compatibility matrix. Existing schema-1 manifests retain their executable hash checks, exact package compatibility and recovery pins.
 
 ## Seal an offline release
 

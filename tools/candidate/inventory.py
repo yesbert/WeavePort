@@ -47,7 +47,7 @@ def inventory(checkout):
         ]
     files += [
         checkout / f"artifacts/sdk-version-tests/{name}"
-        for name in ["worker.py", "worker.mjs", "weaveport-sdk-0.3.0.tgz"]
+        for name in ["worker.py", "worker.mjs", "weaveport-sdk-0.4.0.tgz"]
     ]
     return {str(p.relative_to(checkout)): sha(p) for p in sorted(set(files))}
 

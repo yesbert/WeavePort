@@ -10,11 +10,11 @@ Build document readers, evaluation strategies or customer-specific scheduling ru
 
 [Get started](website/getting-started.md) · [Why WeavePort?](website/introduction.md) · [Write a plugin](docs/plugin-sdk.md) · [NuGet packages](website/packages.md) · [Use MCP tools](docs/mcp-plugins.md)
 
-**MIT · .NET 10 · Windows, Linux & macOS · Release version 0.7.0**
+**MIT · .NET 10 · Windows, Linux & macOS · Release version 0.8.0**
 
 Built for .NET. Designed for Windows, Linux and macOS. The supported cross-platform execution path uses standard input/output (stdio) for owner-controlled plugins. Current release validation covers macOS arm64; Windows and Linux release validation is pending. See the [platform support and validation matrix](docs/platform-qualification.md). The pre-1.0 API is evolving; native processes are not a sandbox for hostile code.
 
-The published package family is 0.7.0. This checkout also contains qualified post-release changes under the same development version labels; see [source availability](docs/status.md#qualified-source-after-070) before using the latest APIs with published packages.
+The 0.8.0 package family includes structured failure diagnostics and the completed readability refactor. Review the [migration notes](docs/releases.md#080-failure-contracts-and-code-quality) and [release status](docs/status.md) before upgrading.
 
 ## Build with your AI assistant
 
@@ -72,11 +72,11 @@ The same SDK supports asynchronous result streams and granted host callbacks. Py
 In the .NET application project:
 
 ```sh
-dotnet add package WeavePort.Hosting --version 0.7.0
-dotnet add package WeavePort.Sdk.Client --version 0.7.0
+dotnet add package WeavePort.Hosting --version 0.8.0
+dotnet add package WeavePort.Sdk.Client --version 0.8.0
 ```
 
-For a C# plugin, reference `WeavePort.Sdk` at the same version. `WeavePort.Abstractions` contains the shared contracts. These are the four core packages. Version 0.7.0 also includes `WeavePort.Composition`, `WeavePort.Sdk.Gateway` and `WeavePort.Sdk.Gateway.Client`; Testing remains internal. See the [gateway example](examples/gateway/README.md), [composition guide](docs/bulk-composition.md) and [release status](docs/releases.md). Use one coherent 0.7.0 package family; upgrade core references and exact installation declarations together.
+For a C# plugin, reference `WeavePort.Sdk` at the same version. `WeavePort.Abstractions` contains the shared contracts. These are the four core packages. Version 0.8.0 also includes `WeavePort.Composition`, `WeavePort.Sdk.Gateway` and `WeavePort.Sdk.Gateway.Client`; Testing remains internal. See the [gateway example](examples/gateway/README.md), [composition guide](docs/bulk-composition.md) and [release status](docs/releases.md). Use one coherent 0.8.0 package family; upgrade core references and exact installation declarations together.
 
 [Compose one host](docs/embedded-coordinator.md), [bind verified plugins with one approval](docs/installed-plugin-clients.md) and [check exact compatibility](docs/package-compatibility.md). Package installation supplies the libraries; the runnable examples show the complete integration.
 

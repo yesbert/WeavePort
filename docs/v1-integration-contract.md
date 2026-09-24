@@ -1,6 +1,6 @@
 # V1 integration agreement
 
-**Status: current integration guidance, reviewed on 2026-09-24.** The published package family is 0.7.0; [post-release source additions](status.md#qualified-source-after-070) are identified separately. This guide defines how our applications should integrate WeavePort. It introduces no new runtime API or released compatibility promise. Existing [baseline specifications](../openspec/specs) define verified behavior; the [current status](status.md) separates remaining work from that behavior. Packages use version `0.7.0`; API evolution remains subject to the exact compatibility matrix.
+**Status: current integration guidance, reviewed on 2026-09-24.** The target package family is 0.8.0; see [release availability](status.md#release-080). This guide defines how our applications should integrate WeavePort. It introduces no new runtime API or released compatibility promise. Existing [baseline specifications](../openspec/specs) define verified behavior; the [current status](status.md) separates remaining work from that behavior. Packages use version `0.8.0`; API evolution remains subject to the exact compatibility matrix.
 
 ## Product boundary
 
@@ -78,6 +78,6 @@ All three examples now consume the [shared installed-plugin resolver](installed-
 
 Before an application integration is accepted, its own domain tests should show: a successful packaged call; alternate implementation where relevant; denied/foreign callback authority; worker loss at the commit boundary; cancellation with honest effect status; two scopes active while one fails; and preserved release/schema identity on recovery. Add capacity and cleanup tests for the application's actual operating envelope. Passing an example does not qualify a different deployment automatically.
 
-Historical example assertions are development evidence, not a new combined release run: Decision Room 33, Document Workshop 41, Appointment Desk 30, plus 12 multilingual SDK version checks. The earlier internal candidate recorded a combined 234-assertion run against its fixed package/artifact set. Use [current status](status.md) for the separate published-release and post-release source qualification records.
+Historical example assertions are development evidence, not a new combined release run: Decision Room 33, Document Workshop 41, Appointment Desk 30, plus 12 multilingual SDK version checks. The earlier internal candidate recorded a combined 234-assertion run against its fixed package/artifact set. Use [current status](status.md) for the dated release and source qualification records.
 
 The [native operations runbook](native-operations.md) qualifies guarded manual recovery for Appointment Desk. Other integrations must adopt equivalent run ownership and restart gates; automatic descendant cleanup and power-loss durability are not implied.

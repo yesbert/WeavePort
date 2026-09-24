@@ -2,22 +2,22 @@
   "HostApi": 2,
   "Protocol": 1,
   "HostPackages": {
-    "WeavePort.Abstractions": "0.7.0",
-    "WeavePort.Hosting": "0.7.0",
-    "WeavePort.Sdk.Client": "0.7.0"
+    "WeavePort.Abstractions": "0.8.0",
+    "WeavePort.Hosting": "0.8.0",
+    "WeavePort.Sdk.Client": "0.8.0"
   },
   "AuthorSdks": {
     "dotnet": {
       "Package": "WeavePort.Sdk",
-      "Version": "0.7.0"
+      "Version": "0.8.0"
     },
     "python": {
       "Package": "weaveport-sdk",
-      "Version": "0.3.0"
+      "Version": "0.4.0"
     },
     "node": {
       "Package": "@weaveport/sdk",
-      "Version": "0.3.0"
+      "Version": "0.4.0"
     }
   },
   "Protocols": [
