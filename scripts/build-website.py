@@ -15,12 +15,13 @@ OUTPUT = ROOT / 'artifacts/documentation/site'
 REPOSITORY = 'https://github.com/yesbert/WeavePort/blob/main/'
 GROUPS = {
     'Getting started': [('website/introduction.md', 'Introduction'), ('website/getting-started.md', 'Quickstart'), ('website/concepts.md', 'Core concepts'), ('website/packages.md', 'Packages'), ('website/faq.md', 'FAQ')],
-    'Build plugins': [('docs/mcp-plugins.md', 'MCP tools'), ('docs/plugin-sdk.md', 'Language SDKs'), ('docs/gateway.md', 'HTTPS gateway'), ('docs/installed-plugins.md', 'Installed artifacts'), ('docs/package-compatibility.md', 'Compatibility')],
+    'Build plugins': [('docs/portable-installations.md', 'Portable sealing'), ('docs/reusable-plugins.md', 'Approved reuse'), ('docs/mcp-plugins.md', 'MCP tools'), ('docs/plugin-sdk.md', 'Language SDKs'), ('docs/gateway.md', 'HTTPS gateway'), ('docs/installed-plugins.md', 'Installed artifacts'), ('docs/package-compatibility.md', 'Compatibility')],
     'Integration': [('docs/installed-plugin-clients.md', 'Installed clients'), ('docs/shared-execution.md', 'Concurrent plugins'), ('docs/embedded-coordinator.md', 'Shared coordinator'), ('docs/v1-integration-contract.md', 'Integration contract'), ('docs/local-execution.md', 'Local execution'), ('docs/bulk-composition.md', 'Bulk composition')],
-    'Operate': [('docs/continuous-integration.md', 'CI and deployment'), ('docs/native-operations.md', 'Recovery runbook'), ('docs/worker-lifecycle.md', 'Worker lifecycle'), ('docs/runtime-diagnostics.md', 'Diagnostics'), ('docs/internal-distribution.md', 'Offline distribution')],
-    'Platform': [('docs/architecture.md', 'Architecture'), ('docs/security-architecture.md', 'Security'), ('docs/protocol.md', 'Protocol'), ('docs/status.md', 'Current status'), ('docs/platform-qualification.md', 'Platform qualification'), ('docs/benchmarking.md', 'Benchmarks'), ('docs/soak-testing.md', 'Soak testing')],
-    'Examples': [('examples/shared/README.md', 'Shared worker'), ('examples/sources/README.md', 'Binary sources'), ('samples/DecisionRoom/README.md', 'Decision Room'), ('samples/DocumentWorkshop/README.md', 'Document Workshop'), ('samples/AppointmentDesk/README.md', 'Appointment Desk')],
-    'Reference': [('docs/api.md', 'Public API'), ('docs/releases.md', 'Releases'), ('docs/ai-documentation.md', 'AI documentation'), ('docs/history.md', 'Historical evidence'), ('docs/specifications.md', 'Behavioral specifications')],
+    'Operate': [('docs/fair-scheduling.md', 'Fair scheduling'), ('docs/failure-codes.md', 'Failure codes'), ('docs/continuous-integration.md', 'CI and deployment'), ('docs/native-operations.md', 'Recovery runbook'), ('docs/worker-lifecycle.md', 'Worker lifecycle'), ('docs/runtime-diagnostics.md', 'Diagnostics'), ('docs/internal-distribution.md', 'Offline distribution')],
+    'Platform': [('docs/density-testing.md', 'Customer density'), ('docs/architecture.md', 'Architecture'), ('docs/security-architecture.md', 'Security'), ('docs/protocol.md', 'Protocol'), ('docs/status.md', 'Current status'), ('docs/platform-qualification.md', 'Platform qualification'), ('docs/benchmarking.md', 'Benchmarks'), ('docs/soak-testing.md', 'Soak testing')],
+    'Examples': [('examples/mcp/README.md', 'MCP tools'), ('examples/reuse/README.md', 'Resource cleanup'), ('examples/gateway/README.md', 'HTTPS composition'), ('examples/shared/README.md', 'Shared worker'), ('examples/sources/README.md', 'Binary sources'), ('samples/DecisionRoom/README.md', 'Decision Room'), ('samples/DocumentWorkshop/README.md', 'Document Workshop'), ('samples/AppointmentDesk/README.md', 'Appointment Desk')],
+    'Development': [('CONTRIBUTING.md', 'Contributing'), ('docs/engineering.md', 'Engineering rules'), ('docs/source-organization.md', 'Source organization'), ('docs/dotnet-guidance.md', '.NET guidance'), ('tests/README.md', 'Verification'), ('sdks/python/README.md', 'Python SDK'), ('sdks/typescript/README.md', 'TypeScript SDK')],
+    'Reference': [('docs/optional-api.md', 'Optional public API'), ('docs/optional-dependencies.md', 'Dependency notices'), ('docs/api.md', 'Public API'), ('docs/releases.md', 'Releases'), ('docs/ai-documentation.md', 'AI documentation'), ('docs/history.md', 'Historical evidence'), ('docs/specifications.md', 'Behavioral specifications')],
 }
 LINK = re.compile(r'\[([^\]\n]*)\]\(([^)\n]+)\)')
 HTML_LINK = re.compile(r'((?:href|src)=")([^"\n]+)(")')
@@ -30,7 +31,9 @@ def sources():
     mapping = {p.relative_to(ROOT).as_posix(): 'docs/' + p.name for p in sorted((ROOT / 'docs').glob('*.md'))}
     mapping.update({p.relative_to(ROOT).as_posix(): (p.name if p.name in {'index.md', 'imprint.md', 'privacy.md'} else 'docs/' + p.name) for p in sorted((ROOT / 'website').rglob('*.md')) if p.name != 'README.md'})
     mapping.update({f'samples/{name}/README.md': f'docs/examples/{name}.md' for name in ('DecisionRoom', 'DocumentWorkshop', 'AppointmentDesk')})
-    mapping.update({f'examples/{name}/README.md': f'docs/examples/{name}.md' for name in ('shared', 'sources')})
+    mapping.update({f'examples/{name}/README.md': f'docs/examples/{name}.md' for name in ('shared', 'sources', 'mcp', 'reuse', 'gateway')})
+    mapping.update({'CONTRIBUTING.md': 'docs/contributing.md', 'tests/README.md': 'docs/verification.md',
+                    'sdks/python/README.md': 'docs/python-sdk.md', 'sdks/typescript/README.md': 'docs/typescript-sdk.md'})
     return mapping
 
 
@@ -68,7 +71,14 @@ def stage():
     shutil.copytree(ROOT / 'website/templates', STAGE / 'templates')
     for name in ('llms.txt', 'llms-full.txt'):
         shutil.copy2(ROOT / name, STAGE / name)
-    (STAGE / 'docs/api.md').write_text('# Reviewed public API\n\nThese are the exact reviewed signatures from `compatibility/public-api.txt`. See [package compatibility](package-compatibility.md) for the package scope and [author SDKs](plugin-sdk.md) for usage. This inventory is generated from the maintained compatibility baseline, not an additional API contract.\n\n```csharp\n' + (ROOT / 'compatibility/public-api.txt').read_text() + '\n```\n')
+    for name, baseline, title in (('api', 'public-api', 'Core'), ('optional-api', 'optional-api', 'Composition and Gateway')):
+        (STAGE / f'docs/{name}.md').write_text(
+            f'# Reviewed {title} public API\n\n'
+            f'These are the exact current-checkout signatures from `compatibility/{baseline}.txt`. '
+            'They include qualified source additions after published v0.7.0; the unchanged development package labels do not establish published availability. '
+            'See [current status](status.md#qualified-source-after-070), [package compatibility](package-compatibility.md) '
+            'and [author SDKs](plugin-sdk.md) before choosing artifacts. This generated inventory is not an additional compatibility guarantee.\n\n```csharp\n'
+            + (ROOT / f'compatibility/{baseline}.txt').read_text() + '\n```\n')
     specs = '# Behavioral specifications\n\nOpenSpec requirements are the source of verified product behavior. Guides explain their use; active changes describe work that may still be unfinished.\n\n'
     for p in sorted((ROOT / 'openspec/specs').glob('*/spec.md')):
         specs += f'- [{p.parent.name}]({REPOSITORY}{p.relative_to(ROOT).as_posix()})\n'
@@ -83,7 +93,7 @@ def stage():
     config = json.loads((ROOT / 'website/docfx.json').read_text())
     config['build']['dest'] = str(OUTPUT)
     (STAGE / 'docfx.json').write_text(json.dumps(config, indent=2) + '\n')
-    print(f'Staged {len(mapping) + 2} pages from canonical sources.', flush=True)
+    print(f'Staged {len(mapping) + 3} pages from canonical sources.', flush=True)
 
 
 
@@ -96,7 +106,7 @@ def publish_ai_resources():
     mapping['README.md'] = 'overview.md'
     mapping.update({p.relative_to(ROOT).as_posix(): p.relative_to(ROOT).as_posix()
                     for p in (ROOT / 'openspec/specs').glob('*/spec.md')})
-    mapping['compatibility/public-api.txt'] = 'compatibility/public-api.txt'
+    mapping.update({path: path for path, _ in llms.API_REFERENCES})
     urls = {source: 'https://weaveport.dev/' + destination for source, destination in mapping.items()}
     urls.update({name: 'https://weaveport.dev/' + name for name in ('llms.txt', 'llms-full.txt')})
     urls['website/assets/logo.png'] = 'https://weaveport.dev/assets/logo.png'
@@ -109,8 +119,8 @@ def publish_ai_resources():
         target.write_text(llms.rewrite(source, content, urls) if source.endswith(".md") else content)
     for name, content in llms.generate(urls).items():
         (OUTPUT / name).write_text(content)
-    # The two generated references have no canonical Markdown input.
-    for name in ('api', 'specifications'):
+    # The generated references have no canonical Markdown input.
+    for name in ('api', 'optional-api', 'specifications'):
         content = (STAGE / f'docs/{name}.md').read_text()
         prose, fence, code = content.partition('```')
         content = LINK.sub(lambda m: '[' + m[1] + '](' +

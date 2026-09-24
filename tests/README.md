@@ -4,6 +4,9 @@
 
 | Scope | Command |
 | --- | --- |
+| Documentation and AI retrieval | `python3 scripts/generate-llms.py --check`, `python3 tests/documentation/check-links.py`, `python3 tests/documentation/test-website.py`, then `python3 scripts/build-website.py` (after `dotnet tool restore`) |
+| Source architecture | `python3 scripts/check-architecture.py` and `python3 tests/documentation/test-architecture.py` |
+| SDK protocol and context | `npm run build --prefix sdks/typescript`, `node --test sdks/typescript/tests/session.mjs`, then `python3 -m unittest discover -s sdks/python/tests` |
 | Host regressions | `dotnet run --project tests/WeavePort.Hosting.Tests -c Release` |
 | Fair scheduler public API | `dotnet run --project tests/WeavePort.Scheduling.Tests -c Release` (also checked as a packed consumer) |
 | Density observer controls | `python3 tools/performance/test_density.py` |
@@ -37,3 +40,5 @@ After `./scripts/prepare-core-packages.sh`, run `python3 scripts/verify-optional
 ## Portable installations
 
 `./scripts/verify-portable.sh` exercises the public sealer from freshly extracted packages, local execution, Python/Node ownership modes and initial/replacement runtime refusal. Add `--docker` to run the exact macOS-sealed managed bundle in a Linux runtime-only host with an external plugin-root mount. It does not reconfigure Docker. Run `python3 tests/portable/verify-frameworks.py "$(command -v dotnet)"` for real .NET framework selection conformance (the small oracle targets an installed .NET 8 runtime). Hosting regressions also execute independent Python packaging/npm fixtures and probe/manifest boundary checks. See [portable installation guidance](../docs/portable-installations.md).
+
+The readability checks also reject nested business branches and loops: `dotnet run --project tools/WeavePort.CodeStyle -c Release -- "$PWD"`, `python3 scripts/check-python-control-flow.py` and `npm run check:control-flow --prefix sdks/typescript` (after SDK `npm ci`). Each runs positive/negative syntax fixtures. Loop guards with early exits remain allowed; see [the exact policy](../docs/engineering.md#flat-control-flow-and-clean-code-review).

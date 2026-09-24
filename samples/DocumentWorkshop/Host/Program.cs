@@ -70,12 +70,7 @@ try
     var catalog = new Catalog(config);
     if (list)
     {
-        var release = runtime.Resolve().Identity.Version;
-        foreach (var installed in catalog.Installed())
-        {
-            Console.WriteLine($"{installed.Id} v{release}: {string.Join(", ", installed.MediaTypes)}");
-        }
-
+        ListReaders(catalog, runtime);
         return 0;
     }
 
@@ -115,4 +110,13 @@ catch (Exception error) when (error is IOException or InvalidDataException or Ar
 {
     Console.Error.WriteLine("Import refused: " + error.Message);
     return 1;
+}
+
+static void ListReaders(Catalog catalog, RuntimePaths runtime)
+{
+    var release = runtime.Resolve().Identity.Version;
+    foreach (var installed in catalog.Installed())
+    {
+        Console.WriteLine($"{installed.Id} v{release}: {string.Join(", ", installed.MediaTypes)}");
+    }
 }

@@ -34,24 +34,7 @@ internal sealed class Journal : IDisposable
                 PluginVersion = config.PluginVersion ?? pinned ?? runtime.CurrentVersion()
             };
             var expected = new JournalData(2, Wire.Serialize(Configuration), runtime.Identity(Configuration.PluginVersion!), []);
-            if (saved is not null)
-            {
-                if (saved.Configuration != expected.Configuration || Wire.Serialize(saved.Artifacts) != Wire.Serialize(expected.Artifacts) || saved.Events.Length > 2)
-                {
-                    throw new InvalidDataException("Journal configuration, schema or artifacts do not match.");
-                }
-
-                Data = saved;
-            }
-            else
-            {
-                if (File.Exists(_path))
-                {
-                    throw new InvalidDataException("Journal already exists; use --resume or a new --journal path.");
-                }
-
-                Data = expected;
-            }
+            Data = SelectData(saved, expected);
         }
         catch
         {
@@ -91,4 +74,23 @@ internal sealed class Journal : IDisposable
     }
 
     public void Dispose() => _lock.Dispose();
+    private JournalData SelectData(JournalData? saved, JournalData expected)
+    {
+        if (saved is null && File.Exists(_path))
+        {
+            throw new InvalidDataException("Journal already exists; use --resume or a new --journal path.");
+        }
+
+        if (saved is null)
+        {
+            return expected;
+        }
+
+        if (saved.Configuration != expected.Configuration || Wire.Serialize(saved.Artifacts) != Wire.Serialize(expected.Artifacts) || saved.Events.Length > 2)
+        {
+            throw new InvalidDataException("Journal configuration, schema or artifacts do not match.");
+        }
+
+        return saved;
+    }
 }

@@ -1,6 +1,6 @@
 # V1 integration agreement
 
-**Status: integration contract for the 0.7.0 release, reviewed on 2026-09-18.** This guide defines how our applications should integrate WeavePort. It introduces no new runtime API or released compatibility promise. Existing [baseline specifications](../openspec/specs) define verified behavior; the [current status](status.md) separates remaining work from that behavior. Packages use version `0.7.0`; API evolution remains subject to the exact compatibility matrix.
+**Status: current integration guidance, reviewed on 2026-09-24.** The published package family is 0.7.0; [post-release source additions](status.md#qualified-source-after-070) are identified separately. This guide defines how our applications should integrate WeavePort. It introduces no new runtime API or released compatibility promise. Existing [baseline specifications](../openspec/specs) define verified behavior; the [current status](status.md) separates remaining work from that behavior. Packages use version `0.7.0`; API evolution remains subject to the exact compatibility matrix.
 
 ## Product boundary
 
@@ -27,13 +27,14 @@ Callback grants authorize names, not every object referenced by their payloads. 
 
 | Surface | Intended use | Current source |
 |---|---|---|
-| `WeavePort.Abstractions` | `PluginContext`, `IPluginSession`, `InvocationResult`, `IHostCallbacks` | [Contracts](../src/WeavePort.Abstractions/Contracts.cs) |
+| `WeavePort.Abstractions` | `PluginContext`, `IPluginSession`, `InvocationResult`, `IHostCallbacks` | [Contracts](../src/WeavePort.Abstractions/IPluginSession.cs) |
 | `WeavePort.Hosting` | Coordinator and selected execution profile | [Lifecycle](worker-lifecycle.md), [native execution](local-execution.md) |
-| `WeavePort.Sdk.Client` | Typed local functions/streams over a session | [Client contract](../src/WeavePort.Sdk.Client/IPluginClient.cs), [implementation](../src/WeavePort.Sdk.Client/LocalPluginClient.cs) |
+| `WeavePort.Sdk.Client` | Typed local functions/streams over a session | [Client contract](../src/WeavePort.Sdk.Client/IPluginClient.cs), [implementation](../src/WeavePort.Sdk.Client/Local/LocalPluginClient.cs) |
 | C#/Python/TypeScript author SDKs | Author functions, streams and host callbacks | [SDK guide](plugin-sdk.md) |
 | Optional Composition | Bounded application-controlled large-result composition | [Composition guide](bulk-composition.md) |
+| Optional Gateway server/client | Authenticated remote calls, streams and sources | [Gateway guide](gateway.md) |
 
-The [local compatibility policy](package-compatibility.md) now records the exact core package set and reviewed .NET API baseline. This is an internal review boundary, not a published stability guarantee for every experimental package. Gateway/remote deployment and Docker have separate PoC evidence; the three product reference applications currently qualify native local macOS execution. C#/Python behavior is exercised by Decision Room; Document Workshop and Appointment Desk use C#. TypeScript startup/version checks are separate SDK evidence, not a TypeScript implementation of all three examples. Windows qualification remains open in the existing capacity/platform change.
+The [local compatibility policy](package-compatibility.md) now records the exact core package set and reviewed .NET API baseline. This is an internal review boundary, not a published stability guarantee for every experimental package. The optional Gateway packages have packed direct HTTP/2 TLS and composition qualification on one machine; arbitrary remote production topologies remain unqualified. Docker fixtures have separate adapter evidence; the three product reference applications currently qualify native local macOS execution. C#/Python behavior is exercised by Decision Room; Document Workshop and Appointment Desk use C#. TypeScript startup/version checks are separate SDK evidence, not a TypeScript implementation of all three examples. Windows qualification remains open in the existing capacity/platform change.
 
 ## Integration sequence
 
@@ -63,6 +64,8 @@ These are distinct application semantics. Document Workshop does not resume a pa
 
 `InvocationResult.MayHaveExecuted` and `PluginCallException.MayHaveExecuted` express dispatch uncertainty. `false` means that attempted dispatch did not execute; it says nothing about earlier attempts under the same application request. `true` requires effect-aware reconciliation. The typed local client turns runtime cancellation into `OperationCanceledException`, which does not carry that flag. Conservatively retain action identity on cancellation rather than assuming no effect occurred. Appointment Desk demonstrates this behavior.
 
+Current source also supplies optional `InvocationResult.Failure` / `PluginCallException.Failure` details with a stable code, phase, correlation and cleanup outcome; see [failure codes](failure-codes.md) for availability and interpretation. Do not parse exception messages.
+
 A `busy` result is an admission outcome, not permission for unbounded retries. The application must bound queueing, retry time and concurrency. A worker replacement can reconstruct execution capacity but cannot reconstruct application state by itself. Callback completion can outlive caller cancellation; idempotency and durable results remain application/provider responsibilities.
 
 ## Versions and installation gaps
@@ -75,6 +78,6 @@ All three examples now consume the [shared installed-plugin resolver](installed-
 
 Before an application integration is accepted, its own domain tests should show: a successful packaged call; alternate implementation where relevant; denied/foreign callback authority; worker loss at the commit boundary; cancellation with honest effect status; two scopes active while one fails; and preserved release/schema identity on recovery. Add capacity and cleanup tests for the application's actual operating envelope. Passing an example does not qualify a different deployment automatically.
 
-Historical example assertions are development evidence, not a new combined release run: Decision Room 33, Document Workshop 41, Appointment Desk 30, plus 12 multilingual SDK version checks. The [qualified internal candidate (historical) — pre-public record](history.md) now records a combined 234-assertion run against one fixed package/artifact set.
+Historical example assertions are development evidence, not a new combined release run: Decision Room 33, Document Workshop 41, Appointment Desk 30, plus 12 multilingual SDK version checks. The earlier internal candidate recorded a combined 234-assertion run against its fixed package/artifact set. Use [current status](status.md) for the separate published-release and post-release source qualification records.
 
 The [native operations runbook](native-operations.md) qualifies guarded manual recovery for Appointment Desk. Other integrations must adopt equivalent run ownership and restart gates; automatic descendant cleanup and power-loss durability are not implied.

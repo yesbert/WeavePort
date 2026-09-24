@@ -94,7 +94,12 @@ internal static class CatalogChecks
         else
         {
             string package = Path.GetDirectoryName(Environment.GetEnvironmentVariable("WP_SHARED_NODE_SDK") ?? Path.Combine(root, "sdks/typescript/dist/index.js"))!;
-            foreach (string file in Directory.EnumerateFiles(package, "*.js")) File.Copy(file, Path.Combine(sdk, Path.GetFileName(file)));
+            foreach (string file in Directory.EnumerateFiles(package, "*.js", SearchOption.AllDirectories))
+            {
+                string destination = Path.Combine(sdk, Path.GetRelativePath(package, file));
+                Directory.CreateDirectory(Path.GetDirectoryName(destination)!);
+                File.Copy(file, destination);
+            }
             File.WriteAllText(Path.Combine(sdk, "package.json"), "{\"type\":\"module\"}");
             arguments.AddRange(["--sdk-path", Path.Combine(sdk, "index.js")]);
         }

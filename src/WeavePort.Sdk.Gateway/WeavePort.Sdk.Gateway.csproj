@@ -10,7 +10,7 @@
   <ItemGroup>
     <ProjectReference Include="../WeavePort.Sdk.Gateway.Client/WeavePort.Sdk.Gateway.Client.csproj" />
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
-    <PackageReference Include="Grpc.AspNetCore.Server" Version="2.83.0" />
+    <PackageReference Include="Grpc.AspNetCore.Server" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="../Shared/Cleanup.cs" Link="Internal/Cleanup.cs" />
@@ -20,5 +20,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="../../docs/package-gateway.md" Pack="true" PackagePath="PACKAGE.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="../Shared/FailureCode.cs" Link="Internal/FailureCode.cs" />
+    <Compile Include="../Shared/ProtocolContract.g.cs" Link="Internal/ProtocolContract.g.cs" />
   </ItemGroup>
 </Project>

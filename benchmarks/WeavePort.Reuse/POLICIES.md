@@ -1,5 +1,7 @@
 # Approved-session and bound-container benchmarks
 
+This document describes the retained experimental fixture, not the current production API. For implemented ownership policies use [approved session reuse](../../docs/reusable-plugins.md) and [shared execution](../../docs/shared-execution.md).
+
 This experiment follows the two agreed policies without adding a sandbox product or changing the production host:
 
 - `approved`: one call per warm interpreter/container, followed by cooperative registered-session cleanup; compatible customer/plugin switches may reuse it. Unregistered global state remains an accepted risk.

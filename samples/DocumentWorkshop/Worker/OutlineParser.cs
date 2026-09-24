@@ -25,13 +25,11 @@ internal sealed class OutlineParser(string kind, string fileName)
     {
         foreach (char character in characters)
         {
-            if (_firstCharacter)
+            bool skipBom = _firstCharacter && character == '\uFEFF';
+            _firstCharacter = false;
+            if (skipBom)
             {
-                _firstCharacter = false;
-                if (character == '\uFEFF')
-                {
-                    continue;
-                }
+                continue;
             }
 
             if (Declined)
@@ -46,32 +44,38 @@ internal sealed class OutlineParser(string kind, string fileName)
             }
 
             _previousCr = character == '\r';
-            if (character is '\r' or '\n')
-            {
-                Line(_line.ToString());
-                _line.Clear();
-            }
-            else
-            {
-                if (_line.Length >= Limits.TextCharacters)
-                {
-                    throw new InvalidDataException("Line exceeds 4096 characters.");
-                }
-
-                _line.Append(character);
-            }
+            FeedCharacter(character);
         }
 
-        if (end && !Declined)
+        if (!end || Declined)
         {
-            if (_line.Length > 0)
-            {
-                Line(_line.ToString());
-                _line.Clear();
-            }
-
-            Flush(force: _section > 0 && _part == 0 && kind == "markdown");
+            return;
         }
+
+        if (_line.Length > 0)
+        {
+            Line(_line.ToString());
+            _line.Clear();
+        }
+
+        Flush(force: _section > 0 && _part == 0 && kind == "markdown");
+    }
+
+    private void FeedCharacter(char character)
+    {
+        if (character is '\r' or '\n')
+        {
+            Line(_line.ToString());
+            _line.Clear();
+            return;
+        }
+
+        if (_line.Length >= Limits.TextCharacters)
+        {
+            throw new InvalidDataException("Line exceeds 4096 characters.");
+        }
+
+        _line.Append(character);
     }
 
     private void Line(string line)
@@ -82,48 +86,19 @@ internal sealed class OutlineParser(string kind, string fileName)
         heading = level is >= 1 and <= 6 && (trimmed.Length == level || trimmed[level] == ' ');
         if (kind == "markdown" && _section == 0 && !heading)
         {
-            if (!string.IsNullOrWhiteSpace(line))
-            {
-                Declined = true;
-            }
-
+            Declined = !string.IsNullOrWhiteSpace(line);
             return;
         }
 
         if (heading)
         {
-            Flush(force: _section > 0 && _part == 0);
-            _section++;
-            _part = 0;
-            _level = level;
-            _heading = trimmed[level..].Trim();
-            var explicitAnchor = Regex.Match(_heading, @" \{#([A-Za-z0-9_-]{1,128})\}$");
-            _anchor = explicitAnchor.Success ? explicitAnchor.Groups[1].Value : "section-" + _section;
-            if (explicitAnchor.Success)
-            {
-                _heading = _heading[..explicitAnchor.Index];
-            }
-
-            if (_heading.Length > 256 || !_anchors.Add(_anchor))
-            {
-                throw new InvalidDataException("Invalid heading or duplicate anchor.");
-            }
-
+            BeginHeading(trimmed, level);
             return;
         }
 
         if (kind == "markdown" && trimmed.Length >= 3 && trimmed[0] is '`' or '~')
         {
-            int length = trimmed.TakeWhile(c => c == trimmed[0]).Count();
-            if (_fence == '\0' && length >= 3)
-            {
-                _fence = trimmed[0];
-                _fenceLength = length;
-            }
-            else if (_fence == trimmed[0] && length >= _fenceLength && string.IsNullOrWhiteSpace(trimmed[length..]))
-            {
-                _fence = '\0';
-            }
+            UpdateFence(trimmed);
         }
 
         Append(line + "\n");
@@ -134,12 +109,7 @@ internal sealed class OutlineParser(string kind, string fileName)
         int offset = 0;
         while (offset < text.Length)
         {
-            int take = Math.Min(Limits.TextCharacters - _body.Length, text.Length - offset);
-            if (offset + take < text.Length && take > 0 && char.IsHighSurrogate(text[offset + take - 1]) && char.IsLowSurrogate(text[offset + take]))
-            {
-                take--;
-            }
-
+            int take = FragmentLength(text, offset);
             if (take == 0)
             {
                 Flush(false);
@@ -148,10 +118,12 @@ internal sealed class OutlineParser(string kind, string fileName)
 
             _body.Append(text.AsSpan(offset, take));
             offset += take;
-            if (_body.Length == Limits.TextCharacters)
+            if (_body.Length != Limits.TextCharacters)
             {
-                Flush(false);
+                continue;
             }
+
+            Flush(false);
         }
     }
 
@@ -169,5 +141,52 @@ internal sealed class OutlineParser(string kind, string fileName)
 
         Pending.Enqueue(new Fragment(_sequence++, _section, _part++, _heading, _level, _anchor, _body.ToString()));
         _body.Clear();
+    }
+
+    private void BeginHeading(string trimmed, int level)
+    {
+        Flush(force: _section > 0 && _part == 0);
+        _section++;
+        _part = 0;
+        _level = level;
+        _heading = trimmed[level..].Trim();
+        var explicitAnchor = Regex.Match(_heading, @" \{#([A-Za-z0-9_-]{1,128})\}$");
+        _anchor = explicitAnchor.Success ? explicitAnchor.Groups[1].Value : "section-" + _section;
+        if (explicitAnchor.Success)
+        {
+            _heading = _heading[..explicitAnchor.Index];
+        }
+
+        if (_heading.Length > 256 || !_anchors.Add(_anchor))
+        {
+            throw new InvalidDataException("Invalid heading or duplicate anchor.");
+        }
+
+        return;
+    }
+
+    private void UpdateFence(string trimmed)
+    {
+        int length = trimmed.TakeWhile(c => c == trimmed[0]).Count();
+        if (_fence == '\0' && length >= 3)
+        {
+            _fence = trimmed[0];
+            _fenceLength = length;
+        }
+        else if (_fence == trimmed[0] && length >= _fenceLength && string.IsNullOrWhiteSpace(trimmed[length..]))
+        {
+            _fence = '\0';
+        }
+    }
+
+    private int FragmentLength(string text, int offset)
+    {
+        int take = Math.Min(Limits.TextCharacters - _body.Length, text.Length - offset);
+        if (offset + take < text.Length && take > 0 && char.IsHighSurrogate(text[offset + take - 1]) && char.IsLowSurrogate(text[offset + take]))
+        {
+            take--;
+        }
+
+        return take;
     }
 }

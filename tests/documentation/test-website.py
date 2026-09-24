@@ -1,5 +1,6 @@
 """Regressions for source links and the public landing-page examples."""
 import ast
+import json
 import importlib.util
 from pathlib import Path
 import re
@@ -74,7 +75,7 @@ class WebsiteTests(unittest.TestCase):
             stage = Path(directory) / 'stage'
             output.mkdir()
             (stage / 'docs').mkdir(parents=True)
-            for name in ('api', 'specifications'):
+            for name in ('api', 'optional-api', 'specifications'):
                 (stage / f'docs/{name}.md').write_text('# Reference\n\n```csharp\nT[A](System.String)\n```\n')
             (output / 'index.html').write_text('<head></head>')
             with patch.object(website, 'OUTPUT', output), patch.object(website, 'STAGE', stage):
@@ -84,12 +85,32 @@ class WebsiteTests(unittest.TestCase):
                 self.assertEqual(url.netloc, 'weaveport.dev')
                 self.assertTrue((output / url.path.lstrip('/')).is_file(), href)
             self.assertIn('T[A](System.String)', (output / 'docs/api.md').read_text())
-            self.assertEqual((output / 'compatibility/public-api.txt').read_bytes(),
-                             (ROOT / 'compatibility/public-api.txt').read_bytes())
+            for baseline, _ in llms.API_REFERENCES:
+                self.assertEqual((output / baseline).read_bytes(), (ROOT / baseline).read_bytes())
             page = (output / 'index.html').read_text()
             self.assertIn('rel="describedby" href="/llms.txt"', page)
             self.assertIn('type="text/markdown" href="/index.md"', page)
             self.assertIn('https://weaveport.dev/docs/status.md', (output / 'llms-full.txt').read_text())
+
+    def test_current_contracts_are_retrievable_and_navigable(self):
+        required = {'docs/failure-codes.md', 'docs/protocol.md', 'docs/portable-installations.md',
+                    'docs/reusable-plugins.md', 'docs/source-organization.md', 'docs/engineering.md',
+                    'examples/gateway/README.md', 'examples/mcp/README.md', 'examples/reuse/README.md'}
+        guides = {path for path, _, _ in llms.GUIDES}
+        navigation = {path for entries in website.GROUPS.values() for path, _ in entries}
+        self.assertLessEqual(required, guides)
+        self.assertLessEqual(required, navigation)
+        self.assertLessEqual(guides - {'README.md'}, set(website.sources()))
+        full = llms.generate()['llms-full.txt']
+        for path, _ in llms.API_REFERENCES:
+            self.assertIn((ROOT / path).read_text().rstrip(), full)
+        self.assertIn('post-release', full)
+
+    def test_every_wire_failure_category_has_a_documented_meaning(self):
+        contract = json.loads((ROOT / 'contracts/protocol.json').read_text())
+        catalogue = (ROOT / 'docs/failure-codes.md').read_text()
+        codes = set(re.findall(r'^\| `([^`]+)` \|', catalogue, re.M))
+        self.assertEqual(codes, set(contract['FailureCodes'].values()))
 
     def test_python_example_matches_the_maintained_provider(self):
         page = (ROOT / 'website/index.md').read_text()

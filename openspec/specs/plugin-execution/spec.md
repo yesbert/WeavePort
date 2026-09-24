@@ -1,6 +1,6 @@
 ## Purpose
 
-Provide observable PoC evidence and contracts for plugin execution in an independent plugin platform.
+Define verified packaged plugin execution contracts in an independent plugin platform, with execution evidence scoped to the documented adapters and platforms.
 
 ## Requirements
 

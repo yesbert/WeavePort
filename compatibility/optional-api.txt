@@ -76,16 +76,21 @@ type WeavePort.Sdk.Gateway.Protocol.Reply : System.Object [Public, Sealed]
   Constructor Void .ctor(WeavePort.Sdk.Gateway.Protocol.Reply) [Public] (other)
   Field Int32 AdvertisedVersionFieldNumber=9
   Field Int32 CancelledFieldNumber=5
+  Field Int32 CleanupFailedFieldNumber=13
   Field Int32 CompleteFieldNumber=2
+  Field Int32 CorrelationIdFieldNumber=12
   Field Int32 DataFieldNumber=6
   Field Int32 ElapsedMsFieldNumber=7
   Field Int32 ErrorFieldNumber=3
   Field Int32 ExpectedVersionFieldNumber=8
+  Field Int32 FailureCodeFieldNumber=10
+  Field Int32 FailurePhaseFieldNumber=11
   Field Int32 JsonFieldNumber=1
   Field Int32 MayHaveExecutedFieldNumber=4
   Method Boolean Equals(System.Object) [Public, Virtual] (other)
   Method Boolean Equals(WeavePort.Sdk.Gateway.Protocol.Reply) [Public, Final, Virtual] (other)
   Method Boolean get_Cancelled() [Public] ()
+  Method Boolean get_CleanupFailed() [Public] ()
   Method Boolean get_Complete() [Public] ()
   Method Boolean get_HasAdvertisedVersion() [Public] ()
   Method Boolean get_HasElapsedMs() [Public] ()
@@ -100,8 +105,11 @@ type WeavePort.Sdk.Gateway.Protocol.Reply : System.Object [Public, Sealed]
   Method Int32 GetHashCode() [Public, Virtual] ()
   Method System.String ToString() [Public, Virtual] ()
   Method System.String get_AdvertisedVersion() [Public] ()
+  Method System.String get_CorrelationId() [Public] ()
   Method System.String get_Error() [Public] ()
   Method System.String get_ExpectedVersion() [Public] ()
+  Method System.String get_FailureCode() [Public] ()
+  Method System.String get_FailurePhase() [Public] ()
   Method Void ClearAdvertisedVersion() [Public] ()
   Method Void ClearElapsedMs() [Public] ()
   Method Void ClearExpectedVersion() [Public] ()
@@ -110,15 +118,20 @@ type WeavePort.Sdk.Gateway.Protocol.Reply : System.Object [Public, Sealed]
   Method Void WriteTo(Google.Protobuf.CodedOutputStream) [Public, Final, Virtual] (output)
   Method Void set_AdvertisedVersion(System.String) [Public] (value)
   Method Void set_Cancelled(Boolean) [Public] (value)
+  Method Void set_CleanupFailed(Boolean) [Public] (value)
   Method Void set_Complete(Boolean) [Public] (value)
+  Method Void set_CorrelationId(System.String) [Public] (value)
   Method Void set_Data(Google.Protobuf.ByteString) [Public] (value)
   Method Void set_ElapsedMs(Double) [Public] (value)
   Method Void set_Error(System.String) [Public] (value)
   Method Void set_ExpectedVersion(System.String) [Public] (value)
+  Method Void set_FailureCode(System.String) [Public] (value)
+  Method Void set_FailurePhase(System.String) [Public] (value)
   Method Void set_Json(Google.Protobuf.ByteString) [Public] (value)
   Method Void set_MayHaveExecuted(Boolean) [Public] (value)
   Method WeavePort.Sdk.Gateway.Protocol.Reply Clone() [Public, Final, Virtual] ()
   Property Boolean Cancelled
+  Property Boolean CleanupFailed
   Property Boolean Complete
   Property Boolean HasAdvertisedVersion
   Property Boolean HasElapsedMs
@@ -130,8 +143,11 @@ type WeavePort.Sdk.Gateway.Protocol.Reply : System.Object [Public, Sealed]
   Property Google.Protobuf.MessageParser`1[WeavePort.Sdk.Gateway.Protocol.Reply] Parser
   Property Google.Protobuf.Reflection.MessageDescriptor Descriptor
   Property System.String AdvertisedVersion
+  Property System.String CorrelationId
   Property System.String Error
   Property System.String ExpectedVersion
+  Property System.String FailureCode
+  Property System.String FailurePhase
 type WeavePort.Sdk.Gateway.Protocol.Request : System.Object [Public, Sealed]
   implements Google.Protobuf.IBufferMessage
   implements Google.Protobuf.IDeepCloneable`1[WeavePort.Sdk.Gateway.Protocol.Request]

@@ -1,6 +1,6 @@
 # Packages and support
 
-Install the runtime in your .NET application and the author SDK in each C# plugin project. The package version in this source is **0.7.0**, licensed under MIT. Use the same exact version across the selected .NET packages. The optional packages can be installed independently of one another.
+Install the runtime in your .NET application and the author SDK in each C# plugin project. The published package version is **0.7.0**, licensed under MIT. This checkout retains that label while containing later qualified changes; see [source availability](../docs/status.md#qualified-source-after-070). Use the same exact version across the selected .NET packages. The optional packages can be installed independently of one another.
 
 | Package | Use it for |
 |---|---|
@@ -32,14 +32,14 @@ Package installation supplies libraries. The application still composes a host, 
 | Area | Current boundary |
 |---|---|
 | C# | Public NuGet author SDK; .NET 10 |
-| Python | Repository-built `weaveport-sdk` wheel; no PyPI publication |
-| TypeScript | Repository-packed `@weaveport/sdk` archive; no npm publication |
+| Python | Qualified GitHub release wheel or matching source build; no PyPI publication |
+| TypeScript | Qualified GitHub release archive or matching source build; no npm publication |
 | Windows, Linux and macOS | Supported targets for trusted stdio execution with .NET 10 and required plugin runtimes |
 | Release validation | macOS arm64 validated; Windows and Linux release validation pending |
 | Optional Unix-socket transport | Linux and macOS only; unavailable on Windows |
 | Example scripts / offline bundle | Bash scripts assume Unix paths; the historical offline bundle is macOS arm64-specific |
 | Container deployment | Separate execution profile; historical experiments do not qualify every topology |
-| Optional Gateway, Composition, Testing | Outside the four-package public release |
+| Optional Gateway and Composition | Three independently selectable packages in the seven-package public release; Testing remains internal |
 | NativeAOT / remote production | Not qualified by this release |
 
 See [platform support and validation](../docs/platform-qualification.md) for the distinction between supported execution paths and tested releases.

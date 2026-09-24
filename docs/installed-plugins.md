@@ -8,7 +8,7 @@ Construct a catalog with a trusted releases directory and a mapping of runtime a
 
 `ReadSelection` reads a default only for a new logical operation. `Activate` validates a selected installation before atomically replacing the default selector. Existing pins do not reference that selector. The application owns when a logical operation begins and where its pin is committed.
 
-For new integrations, use `catalog.List(contract)` over `root/plugin/releases/version` plus each plugin’s `active.txt`, then pass the selected installation and one `PluginApproval` to `host.BindAsync` or `host.ShareAsync`. The returned client already carries the installation identity. See [the complete integration path](installed-plugin-clients.md). The lower-level entry-point API remains available for custom launch composition. The existing startup guard independently rejects a worker that advertises another version. See [the API source](../src/WeavePort.Hosting/InstalledPluginCatalog.cs) and [packed consumer checks](../tests/installations/Program.cs).
+For new integrations, use `catalog.List(contract)` over `root/plugin/releases/version` plus each plugin’s `active.txt`, then pass the selected installation and one `PluginApproval` to `host.BindAsync` or `host.ShareAsync`. The returned client already carries the installation identity. See [the complete integration path](installed-plugin-clients.md). The lower-level entry-point API remains available for custom launch composition. The existing startup guard independently rejects a worker that advertises another version. See [the API source](../src/WeavePort.Hosting/Installations/InstalledPluginCatalog.cs) and [packed consumer checks](../tests/installations/Program.cs).
 
 ## Manifest and identities
 

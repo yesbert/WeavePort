@@ -1,6 +1,6 @@
 # Gateway packages and HTTPS deployment
 
-The 0.5.0 release adds `WeavePort.Sdk.Gateway` (server) and `WeavePort.Sdk.Gateway.Client` (remote client). The client package targets .NET 10 without requiring the ASP.NET Core shared framework. The server requires ASP.NET Core. Both preserve the `WeavePort.Sdk.Gateway` namespace. See the [runnable example](../examples/gateway/README.md), [client package](package-gateway-client.md) and [server package](package-gateway.md).
+Introduced in 0.5.0 and included in the current 0.7.0 family: `WeavePort.Sdk.Gateway` (server) and `WeavePort.Sdk.Gateway.Client` (remote client). The client package targets .NET 10 without requiring the ASP.NET Core shared framework. The server requires ASP.NET Core. Both preserve the `WeavePort.Sdk.Gateway` namespace. See the [runnable example](../examples/gateway/README.md), [client package](package-gateway-client.md) and [server package](package-gateway.md).
 
 ## Register and call
 
@@ -17,7 +17,7 @@ string boundTenant = await client.GetTenantAsync();
 var result = await client.CallAsync<MyInput, MyResult>("operation", input, cancellationToken);
 ```
 
-`GetTenantAsync` authenticates a describe exchange and checks gateway protocol version 1 without invoking plugins. Use coherent 0.7.0 endpoints; arbitrary version combinations are not qualified. Unary `CallWithMetadataAsync` preserves optional host elapsed timing, including `null` when an older server or custom client cannot provide it. Artifact mismatch fields also reach authorized remote callers. These additive fields do not change native worker protocol numbers. Generated public protocol types and field numbers are included in the optional API baseline. The additive describe operation does not change native worker protocol version 1.
+`GetTenantAsync` authenticates a describe exchange and checks gateway protocol version 1 without invoking plugins. Use coherent 0.7.0 endpoints; arbitrary version combinations are not qualified. Unary `CallWithMetadataAsync` preserves optional host elapsed timing, including `null` when an older server or custom client cannot provide it. Artifact mismatch fields also reach authorized remote callers. These additive fields do not change native worker protocol numbers. Generated public protocol types and field numbers are included in the optional API baseline. The gateway protocol and native worker protocols are separate identities.
 
 ## TLS and transport ownership
 
@@ -38,3 +38,9 @@ No operation is automatically replayed by the default client. A network failure,
 The automated TLS topology runs on one machine with separate plugin worker processes. It is not a two-machine performance/availability measurement. The example can run the server and client on separate machines with a trusted DNS certificate; validate firewall, DNS, certificate provisioning and connection lifetime at the deployment site. Reverse proxies, load balancers, WAN performance, arbitrary cloud hosting and hostile native plugins are not qualified by these tests. Platform execution evidence must be recorded separately; .NET portability alone is not Windows/Linux execution qualification.
 
 Bound remote clients also expose `SourceAsync`. The gateway reads the existing authorized local client source and carries bounded binary blocks over gRPC. `Composition.CollectAsync` checks the authenticated binding tenant before committing a scoped result. Shared client views retain unary-only behavior through the gateway.
+
+## Post-release structured failures
+
+Current qualified source adds optional protobuf Reply fields `failure_code` (10), `failure_phase` (11), `correlation_id` (12) and `cleanup_failed` (13), preserving fields 1–9 and existing status/possible-execution semantics. These fields are not part of the original published v0.7.0 artifacts; see [source availability](status.md#qualified-source-after-070). Older peers can omit them.
+
+Remote clients map gRPC status categories to fixed codes, never parse `Status.Detail` as a code, and normalize unknown peer categories to `unknown-error`. Recognized platform codes travel separately from transport categories. Safe phases and bounded correlation identifiers are validated before entering `PluginFailure`. Local protected diagnostic sinks do not transport raw exception messages or plugin stacks. See [failure codes](failure-codes.md) and the [optional API baseline](../compatibility/optional-api.txt).

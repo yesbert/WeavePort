@@ -1,5 +1,7 @@
 # Cross-customer reuse experiment
 
+This document describes the retained experimental fixture, not the current production API. For implemented ownership policies use [approved session reuse](../../docs/reusable-plugins.md) and [shared execution](../../docs/shared-execution.md).
+
 This is a benchmark prototype, not a production SDK/runtime change. It compares the same small Python operation over Docker CLI stdio using two actual plugin modules and alternating synthetic customers:
 
 - `fresh`: create a container, invoke once, confirm removal before the next invocation.

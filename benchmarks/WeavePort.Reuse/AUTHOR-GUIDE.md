@@ -1,6 +1,6 @@
 # Author examples for cooperative reuse
 
-These examples use the **experimental** `fixture/scope.py` API. They are not part of the published WeavePort SDK and do not enable cross-customer reuse in `ScheduledPluginHost`. The production host still binds used workers to one customer/plugin. Examples reduce mistakes; they do not make unchecked code safe.
+These examples use the **experimental** `fixture/scope.py` API. They are not part of the published WeavePort SDK. At the time of this experiment, the separate `ScheduledPluginHost` retained customer-bound workers. The current unified host also supports explicitly [approved SDK reuse](../../docs/reusable-plugins.md) and [Shared ownership](../../docs/shared-execution.md); use those guides for production API integration. Examples reduce mistakes; they do not make unchecked code safe.
 
 ## Put customer data in the invocation
 

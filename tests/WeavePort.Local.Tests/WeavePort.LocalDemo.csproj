@@ -5,8 +5,8 @@
     <RestorePackagesPath>$(MSBuildThisFileDirectory)../../artifacts/local-consumer-packages</RestorePackagesPath>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="WeavePort.Hosting" Version="0.7.0" />
-    <PackageReference Include="WeavePort.Testing" Version="0.7.0" />
+    <PackageReference Include="WeavePort.Hosting" />
+    <PackageReference Include="WeavePort.Testing" />
     <Compile Include="../../tools/SharedLocal/LocalConfiguration.cs" Link="LocalConfiguration.cs" />
   </ItemGroup>
 </Project>

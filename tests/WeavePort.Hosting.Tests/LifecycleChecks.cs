@@ -18,6 +18,16 @@ internal static class LifecycleChecks
             using var request = JsonDocument.Parse(line);
             string id = request.RootElement.GetProperty("id").GetString()!;
             string operation = request.RootElement.GetProperty("operation").GetString()!;
+            if (operation == "sdk-failure")
+            {
+                Console.WriteLine(JsonSerializer.Serialize(new { type = "error", id, code = "cleanup-error", primaryCode = "sdk-error", cleanupFailed = true }));
+                continue;
+            }
+            if (operation == "malformed")
+            {
+                Console.WriteLine(JsonSerializer.Serialize(new { type = "result", id }));
+                continue;
+            }
             if (operation == "callback")
             {
                 Console.WriteLine(JsonSerializer.Serialize(new { type = "callback", id, callbackId = "1", operation = "probe", payload = Empty }));
@@ -35,6 +45,8 @@ internal static class LifecycleChecks
             int checks = await SetupAsync(root);
             checks += await CancellationAsync(root);
             checks += await CallbackFailureAsync(root);
+            checks += await StructuredFailuresAsync(root);
+            checks += await StartupDeadlineAsync();
             checks += await StartupAndCleanupAsync();
             return checks;
         }
@@ -124,13 +136,61 @@ internal static class LifecycleChecks
         return 3;
     }
 
+    private static async Task<int> StructuredFailuresAsync(string root)
+    {
+        var details = new List<FailureDiagnostic>();
+        await using var host = new PluginHost(options: new WorkerPoolOptions { DetailedFailureSink = detail => { details.Add(detail); throw new InvalidOperationException("sink secret"); } });
+        await using var session = await BindAsync(host, Profile(root), new UnrelatedCancellation());
+        var failed = await session.InvokeAsync("sdk-failure", Empty);
+        Check(failed.Status == "failed" && failed.Failure is { Code: "sdk-error", CleanupFailed: true, Phase: "exchange" }, "SDK code and cleanup metadata retained");
+        Check(failed.Failure!.CorrelationId.Length > 0 && failed.MayHaveExecuted, "correlation and uncertainty retained");
+        var malformed = await session.InvokeAsync("malformed", Empty);
+        Check(malformed.Failure?.Code == "protocol-error", "malformed result classified at protocol boundary");
+        var cancelled = await session.InvokeAsync("callback", Empty);
+        Check(cancelled.Status == "internal-error" && cancelled.Failure?.Code == "internal-error", "unrelated callback cancellation is not a timeout");
+        Check(details.Count == 3 && details[^1].Exception is OperationCanceledException, "opted-in destination gets original exception and cannot mask outcome");
+        return 5;
+    }
+
+    private sealed class UnrelatedCancellation : IHostCallbacks
+    {
+        public ValueTask<JsonElement> InvokeAsync(HostCall call, CancellationToken cancellationToken) => throw new OperationCanceledException("unrelated secret");
+    }
+
+    private static async Task<int> StartupDeadlineAsync()
+    {
+        await using var host = new PluginHost();
+        await using var session = await BindAsync(host, new SlowStartupProfile { StartupTimeout = TimeSpan.FromMilliseconds(25) });
+        var result = await session.InvokeAsync("echo", Empty);
+        Check(result.Status == "timeout" && result.Failure is { Code: "timeout", Phase: "prepare" } && !result.MayHaveExecuted, "owned startup deadline remains a pre-dispatch timeout");
+        return 1;
+    }
+
+    private sealed record SlowStartupProfile() : ExecutionProfile(256, TimeSpan.FromSeconds(5), null)
+    {
+        public override ExecutionProtections Protection => ExecutionProtections.None;
+        internal override Task<ExecutionProfile> ResolveAsync(CancellationToken token) => Task.FromResult<ExecutionProfile>(this);
+        internal override ExecutionProfile Normalize() => this;
+        internal override Worker CreateWorker(string version, TimeProvider clock) => new SlowStartupWorker(this, version);
+    }
+    private sealed class SlowStartupWorker(ExecutionProfile profile, string version) : Worker(profile, version)
+    {
+        internal override Stream Input => Stream.Null;
+        internal override bool Running => false;
+        internal override Task StartAsync(CancellationToken token) => Task.Delay(Timeout.Infinite, token);
+        internal override Task<JsonElement> DestroyAsync() => Task.FromResult(Empty);
+    }
+
     private static async Task<int> StartupAndCleanupAsync()
     {
         var log = new CapturingLogger();
-        var host = new PluginHost(log, options: new WorkerPoolOptions(MaintenanceInterval: TimeSpan.FromMilliseconds(20)));
+        var details = new List<FailureDiagnostic>();
+        var host = new PluginHost(log, options: new WorkerPoolOptions(MaintenanceInterval: TimeSpan.FromMilliseconds(20)) { DetailedFailureSink = details.Add });
         var profile = new FailingProfile();
         await using var session = await BindAsync(host, profile);
-        Check((await session.InvokeAsync("echo", Empty)).Status == "failed", "startup failure mapped");
+        var failure = await session.InvokeAsync("echo", Empty);
+        Check(failure.Status == "failed" && failure.Failure?.CleanupFailed == true, "startup and cleanup failure mapped");
+        Check(details.Single().Exception.InnerException is AggregateException aggregate && aggregate.InnerExceptions.Count == 2, "startup primary and cleanup causes retained");
         Check(host.Snapshot.Quarantined == 1, "uncertain cleanup retains reservation");
         for (int i = 0; i < 100 && !log.Events.Any(item => item.Id == 1005); i++) await Task.Delay(20);
         Check(log.Events.Any(item => item.Id == 1005), "maintenance failure logged");
@@ -140,7 +200,7 @@ internal static class LifecycleChecks
         await ExpectAsync<AggregateException>(() => host.DisposeAsync().AsTask());
         Check(log.Events.Any(item => item.Id == 1001) && log.Events.Any(item => item.Id == 1004), "startup and cleanup stages logged");
         log.AssertSafe();
-        return 6;
+        return 7;
     }
 
     private static void Check(bool condition, string description)

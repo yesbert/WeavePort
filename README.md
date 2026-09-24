@@ -14,6 +14,8 @@ Build document readers, evaluation strategies or customer-specific scheduling ru
 
 Built for .NET. Designed for Windows, Linux and macOS. The supported cross-platform execution path uses standard input/output (stdio) for owner-controlled plugins. Current release validation covers macOS arm64; Windows and Linux release validation is pending. See the [platform support and validation matrix](docs/platform-qualification.md). The pre-1.0 API is evolving; native processes are not a sandbox for hostile code.
 
+The published package family is 0.7.0. This checkout also contains qualified post-release changes under the same development version labels; see [source availability](docs/status.md#qualified-source-after-070) before using the latest APIs with published packages.
+
 ## Build with your AI assistant
 
 Point your assistant at [llms.txt](https://weaveport.dev/llms.txt), or load the [full reference](https://weaveport.dev/llms-full.txt). [Connect GitHub MCP](docs/ai-documentation.md#connect-the-official-github-mcp-server) to retrieve matching source, examples and API contracts directly from the repository.
@@ -63,7 +65,7 @@ async def echo(value, context):
 app.run()
 ```
 
-The same SDK supports asynchronous result streams and granted host callbacks. Python and TypeScript SDKs are built from the repository; they are not yet published to PyPI or npm. See the complete [Python](examples/sdk/python/plugin.py), [C#](examples/sdk/csharp/Program.cs) and [TypeScript](examples/sdk/typescript/plugin.ts) examples and the [authoring guide](docs/plugin-sdk.md).
+The same SDK supports asynchronous result streams and granted host callbacks. Python and TypeScript SDKs accompany the GitHub release as qualified downloads and can be built from a matching checkout; they are not published to PyPI or npm. See the complete [Python](examples/sdk/python/plugin.py), [C#](examples/sdk/csharp/Program.cs) and [TypeScript](examples/sdk/typescript/plugin.ts) examples and the [authoring guide](docs/plugin-sdk.md).
 
 ## Add WeavePort to your application
 

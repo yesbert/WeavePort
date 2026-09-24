@@ -34,6 +34,11 @@ jobs:
       - run: npm install --global @fission-ai/openspec@1.9.0
       - run: openspec validate --all --strict
       - run: python3 scripts/check-public-tree.py
+      - run: python3 scripts/check-python-control-flow.py
+      - run: python3 scripts/generate-protocol.py --check
+      - run: python3 tests/documentation/test-protocol-contract.py
+      - run: python3 scripts/check-architecture.py
+      - run: python3 tests/documentation/test-architecture.py
       - run: python3 tests/documentation/test-public-tree.py
       - run: python3 scripts/generate-llms.py --check
       - run: python3 tests/documentation/check-links.py

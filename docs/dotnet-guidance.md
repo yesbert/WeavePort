@@ -1,6 +1,6 @@
 # Framework and memory guidance
 
-Reviewed 2026-09-10. The repository currently resolves SDK 10.0.401, target `net10.0` and C# 14.0. Recheck rather than treating this snapshot as a permanent version mandate:
+SDK/target/language rechecked 2026-09-24. The repository currently resolves SDK 10.0.401, target `net10.0` and C# 14.0. Recheck rather than treating this snapshot as a permanent version mandate:
 
 ```sh
 dotnet --version

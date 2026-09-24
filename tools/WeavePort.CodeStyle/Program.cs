@@ -3,11 +3,13 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Text.Json;
 
+ControlFlow.VerifyFixtures();
 string root = Path.GetFullPath(args[0]);
 bool write = args.Contains("--write");
 string[] areas = ["src", "samples/DecisionRoom", "samples/DocumentWorkshop", "samples/AppointmentDesk", "samples/Shared"];
 var sizes = new List<object>();
 var failures = new List<string>();
+var nesting = new List<string>();
 foreach (string area in areas)
 {
     foreach (string path in Directory.EnumerateFiles(Path.Combine(root, area), "*.cs", SearchOption.AllDirectories))
@@ -33,6 +35,7 @@ foreach (string area in areas)
             failures.Add(relative);
         }
         SyntaxNode measured = CSharpSyntaxTree.ParseText(formatted).GetRoot();
+        nesting.AddRange(ControlFlow.Violations(measured).Select(node => $"{relative}:{node.GetLocation().GetLineSpan().StartLinePosition.Line + 1}"));
         int lines = formatted.Split('\n').Length - 1;
         foreach (var method in measured.DescendantNodes().OfType<BaseMethodDeclarationSyntax>())
         {
@@ -48,8 +51,8 @@ foreach (string area in areas)
         }
     }
 }
-Console.WriteLine(JsonSerializer.Serialize(new { formattingFailures = failures, sizeReview = sizes }, new JsonSerializerOptions { WriteIndented = true }));
-return failures.Count == 0 && sizes.Count == 0 ? 0 : 1;
+Console.WriteLine(JsonSerializer.Serialize(new { formattingFailures = failures, sizeReview = sizes, controlFlowFailures = nesting }, new JsonSerializerOptions { WriteIndented = true }));
+return failures.Count == 0 && sizes.Count == 0 && nesting.Count == 0 ? 0 : 1;
 
 internal sealed class Braces : CSharpSyntaxRewriter
 {

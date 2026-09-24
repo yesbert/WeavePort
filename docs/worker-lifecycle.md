@@ -2,7 +2,7 @@
 
 Control how workers start, stay available and get cleaned up through one `PluginHost`. The hosting package provides one shared, bounded pristine reserve per host. Use one coordinator for each intended node budget. Several hosts have independent budgets; this is not a distributed allocator or an automatic machine-wide singleton.
 
-For reconstructible plugins, the optional [fair scheduler](fair-scheduling.md) adds queued tenant fairness, pressure eviction and separate normal/heavy policy over a private host. The direct-host defaults described below remain unchanged.
+For reconstructible plugins, the optional [fair scheduler](fair-scheduling.md) selects queued tenant fairness, pressure eviction and separate normal/heavy policy on the same host type. The direct-host defaults described below remain unchanged.
 
 ```csharp
 await using var host = new PluginHost(
@@ -31,7 +31,7 @@ The consumer supplies `PluginContext`, `IHostCallbacks`, granted operations and 
 
 Defaults are 64 workers, 16,384 MiB of summed configured worker ceilings, eight concurrent starts, at most four pristine workers, eight assigned workers and 2,048 MiB per tenant. Maintenance runs every second; unused pristine workers expire after 30 seconds. No warm target is configured automatically, so the default does not speculatively launch workers. Limits are coordinator policy values, not machine sizing recommendations.
 
-`PrewarmAsync` sets a persistent target by resolved image digest, plugin version, Docker context and sandbox resource profile. Targets share the global pristine ceiling; they are not multiplied by customer count. Zero removes a target. Initial fill and later replenishment obey the same budgets as real work. Read `Snapshot.Pristine` to see achieved readiness when resource pressure prevents a full target. Failed configuration attempts restore the prior target. Under capacity pressure, actual demand can reclaim unused pristine workers for another image; quarantined workers are never assigned. Clean approved workers can also be destroyed to make room for incompatible demand.
+`PrewarmAsync` sets a persistent target by normalized execution profile and plugin version. Docker keys include resolved image digest, Docker context and resource restrictions; native keys include frozen executable/arguments, transport and resource policy. Targets share the global pristine ceiling; they are not multiplied by customer count. Zero removes a target. Initial fill and later replenishment obey the same budgets as real work. Read `Snapshot.Pristine` to see achieved readiness when resource pressure prevents a full target. Failed configuration attempts restore the prior target. Under capacity pressure, actual demand can reclaim unused pristine workers for another image; quarantined workers are never assigned. Clean approved workers can also be destroyed to make room for incompatible demand.
 
 Pristine ready workers have received no customer context, credentials or callback authority. Each checkout is exclusive and sets its tenant owner once. Its immutable session supplies the same context and grants throughout that binding. By default, warm used instances stay with their binding and never return to a shared reserve. Explicit `ApprovedSessions` profiles can instead return successfully cleaned SDK workers to a separate compatible pool; see [approved reuse](reusable-plugins.md). A configuration, principal, grant or secret change requires disposal and a new binding. A changed image tag does not silently change an existing binding's resolved digest.
 
@@ -39,7 +39,7 @@ Optional host logging identifies admission refusals with event 1006 and fixed re
 
 `foreground-priority` means speculative replenishment was deferred for an actual acquisition; it does not mean a customer invocation failed.
 
-Admission counts starting, assigned, pristine and cleanup-uncertain workers globally, and assigned/starting/cleanup-uncertain workers against their tenant. Reserved memory sums configured container ceilings; it is not measured Docker residency or RSS. Exceeding worker, memory, tenant or concurrent-start admission returns `busy` without dispatch. Hosts still need sizing headroom and application-level overload handling; caps do not eliminate shared CPU/engine interference or ensure fairness across an unlimited number of tenants.
+Admission counts starting, assigned, pristine and cleanup-uncertain workers globally, and assigned/starting/cleanup-uncertain workers against their tenant. Reserved memory sums configured Docker ceilings or native admission reservations; it is not measured Docker residency or RSS. Exceeding worker, memory, tenant or concurrent-start admission returns `busy` without dispatch. Hosts still need sizing headroom and application-level overload handling; caps do not eliminate shared CPU/engine interference or ensure fairness across an unlimited number of tenants.
 
 Foreground acquisitions take priority over speculative replenishment. With `WaitForStartCapacity = true`, a call can wait within its existing invocation deadline for a pending unassigned startup when that startup occupies needed capacity. It adopts only a compatible ready profile; an incompatible pristine worker is replaced within the same budget. Caller cancellation stops its wait without destroying a shared startup it never acquired. The default direct host remains fail-fast. This closes a reserve/foreground race reproduced in low-frequency Docker population tests.
 
@@ -51,7 +51,7 @@ Idle maintenance only stops opted-in sessions after their call gate is free. The
 
 Disposal removes the host's session registration. Shared tenant admission records remain while any binding or detached callback references them. Nested calls from a completed or cancelled invocation scope are denied, and callback arguments retain their original immutable authority. Callbacks that ignore cancellation may still finish external actions: the consumer must handle uncertain outcomes and idempotency.
 
-Worker removal attempts `docker rm --force` and confirms absence if Docker reports failure. Unconfirmed removal leaves the reservation quarantined, even after the client process is stopped. Maintenance retries cleanup; `Snapshot.Quarantined` exposes the retained count, including destruction in progress. `Snapshot.OldestQuarantineSeconds` reports the oldest pending removal age from first quarantine entry, retaining age across retries and reporting zero when none remain. `MaintenanceFailure` retains the last background failure type. Explicit maintenance/disposal surfaces failures. No quarantined worker is eligible for checkout. Container deletion removes its private writable layer/tmpfs; immutable images may remain cached.
+For Docker, worker removal attempts `docker rm --force` and confirms absence if Docker reports failure. Unconfirmed removal leaves the reservation quarantined, even after the client process is stopped. Maintenance retries cleanup; `Snapshot.Quarantined` exposes the retained count, including destruction in progress. `Snapshot.OldestQuarantineSeconds` reports the oldest pending removal age from first quarantine entry, retaining age across retries and reporting zero when none remain. `MaintenanceFailure` retains the last background failure type. Explicit maintenance/disposal surfaces failures. No quarantined worker is eligible for checkout. Container deletion removes its private writable layer/tmpfs; immutable images may remain cached.
 
 ## Verification and limits
 
@@ -77,7 +77,7 @@ Use `ExecutionProtections` to combine required restrictions. `BindAsync` and `Pr
 
 ### Optional MCP workers
 
-The source MCP integration shares these local lifecycle policies, with explicit protocol selection and no additional SDK-owned process launcher. [MCP plugins](mcp-plugins.md) documents cancellation, result semantics and the tools-only boundary. Available in the 0.4.0 package line.
+The source MCP integration shares these local lifecycle policies, with explicit protocol selection and no additional SDK-owned process launcher. [MCP plugins](mcp-plugins.md) documents cancellation, result semantics and the tools-only boundary. Introduced in 0.3.0 and included in the current 0.7.0 package family.
 
 ## Approved session reuse
 

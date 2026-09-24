@@ -5,7 +5,7 @@
   <PropertyGroup><UseAppHost>false</UseAppHost></PropertyGroup>
   <ItemGroup><ProjectReference Condition="'$(UsePackedCore)' != 'true'" Include="../../src/WeavePort.Hosting/WeavePort.Hosting.csproj" /></ItemGroup>
   <ItemGroup Condition="'$(UsePackedCore)' == 'true'">
-    <PackageReference Include="WeavePort.Hosting" Version="0.7.0" />
+    <PackageReference Include="WeavePort.Hosting" />
   </ItemGroup>
   <ItemGroup><Compile Include="../../src/Shared/JsonSize.cs" Link="Internal/JsonSize.cs" /></ItemGroup>
 <ItemGroup><None Include="fixtures/*" CopyToOutputDirectory="PreserveNewest" /></ItemGroup>

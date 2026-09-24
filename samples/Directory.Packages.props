@@ -1,0 +1,6 @@
+<Project>
+  <!-- Standalone consumer templates retain explicit versions when copied out. -->
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>false</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+</Project>

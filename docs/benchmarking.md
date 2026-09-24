@@ -1,8 +1,8 @@
-# Current product benchmarks
+# Product benchmark baselines
 
 Use the retained measurements to evaluate a specific workload and reproduce it against the exact delivered artifacts. Results identify their platform and topology; they are not universal throughput or capacity promises.
 
-Run one complete suite against the current delivered core:
+The retained baseline uses the frozen **0.1.0-internal.2** core. It does not measure published 0.7.0 or the current checkout. Run its complete suite against that exact delivery:
 
 ```sh
 ./scripts/benchmark.sh --distribution /absolute/path/to/WeavePort/0.1.0-internal.2/payload

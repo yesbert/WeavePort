@@ -8,7 +8,7 @@ Define unified host scheduling for exclusive and explicitly approved concurrent 
 The unified host SHALL offer bounded queued or zero-wait admission under one worker budget. It SHALL serialize exclusive registrations and admit shared invocations up to their approved degree. Streams SHALL retain worker residency across all exchanges and consumer pauses. Registration limits and queued payload bounds SHALL remain effective.
 
 #### Scenario: Concurrent same-plugin work
-- **WHEN** a customer submits multiple calls on one registration
+- **WHEN** a customer submits multiple calls on one exclusive registration
 - **THEN** admitted calls execute in arrival order without creating concurrent duplicate workers for that registration
 
 #### Scenario: Registration replacement

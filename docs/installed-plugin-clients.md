@@ -40,10 +40,13 @@ For administrative discovery, use `ListAll()` or `await ListAllAsync(contract, c
 ```csharp
 foreach (InstallationDiscovery entry in await catalog.ListAllAsync("text-tools/v1", cancellationToken))
 {
-    if (entry.Installation is { } available)
-        Console.WriteLine(available.Identity.Plugin);
-    else
+    if (entry.Installation is not { } available)
+    {
         Console.WriteLine($"{entry.Directory}: {entry.Refusal}: {entry.Diagnostic}");
+        continue;
+    }
+
+    Console.WriteLine(available.Identity.Plugin);
 }
 ```
 

@@ -1,6 +1,6 @@
 # Writing plugins for approved session reuse
 
-Introduced in core packages 0.4.0 and Python/TypeScript author SDKs 0.2.0. Cross-customer reuse is an explicit operator decision with accepted cooperative-state risk. Docker remains the execution boundary; no additional sandbox runtime is required.
+Introduced in core packages 0.4.0 and Python/TypeScript author SDKs 0.2.0. Cross-customer reuse is an explicit operator decision with accepted cooperative-state risk. Current .NET 0.7.0 and Python/TypeScript 0.3.0 retain this capability. Both Docker and trusted native process profiles support sequential reuse; their isolation guarantees differ.
 
 ## The two policies
 
@@ -73,7 +73,7 @@ Close readers, cursors, response bodies and streams. Roll back unfinished databa
 
 ## Parallel work and cancellation
 
-One container executes one invocation at a time. Related parallel subtasks belong inside that invocation, with bounded concurrency. Await every task before returning. Use external orchestration for independent plugin fan-out/fan-in.
+One approved-session worker executes one invocation at a time. Related parallel subtasks belong inside that invocation, with bounded concurrency. Await every task before returning. Use external orchestration for independent plugin fan-out/fan-in.
 
 Do not start fire-and-forget threads, timers, subprocesses or tasks that can continue into the next customer's session. If work needs a stop signal, register an action that **requests stop and awaits actual completion**. Merely cancelling a token or clearing a timer reference does not prove completion. Unregistered background work is not automatically detected by these SDKs.
 
@@ -97,7 +97,7 @@ Run tests against the actual packaged language SDK, host and deployment image. T
 
 ## Operations
 
-`PluginHost.Snapshot` expose `ReusableWorkers`, `ReuseHits`, `SessionReturns`, `SessionCleanupFailures` and `WorkersStarted`, alongside reservations and quarantine. `SessionCleanupFailures` counts explicit SDK cleanup errors and invalid cleanup acknowledgement shapes, not every timeout or arbitrary hidden-state leak. Scheduler queue/latency and failure counters remain available.
+`PluginHost.Snapshot` exposes `ReusableWorkers`, `ReuseHits`, `SessionReturns`, `SessionCleanupFailures` and `WorkersStarted`, alongside reservations and quarantine. `SessionCleanupFailures` counts explicit SDK cleanup errors and invalid cleanup acknowledgement shapes, not every timeout or arbitrary hidden-state leak. Scheduler queue/latency and failure counters remain available.
 
 Watch low reuse hit rates, many worker starts, cleanup errors and queue tails. A falling hit rate can mean incompatible deployments or short idle retention; it is not automatically a lack of RAM. Hard Docker memory exhaustion retires a failed worker. There is no automatic leak detector or forced garbage collection that makes arbitrary libraries safe for reuse.
 

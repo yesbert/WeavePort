@@ -1,6 +1,6 @@
 # Supervised customer-density measurements
 
-This experiment measures the new optional scheduler separately from the retained M2 Ultra release benchmarks. It is a source-built candidate on the current machine, not qualification of published 0.4.0 binaries. The first pilot uses a MacBook Air M4, 32 GiB physical RAM, ten CPU cores and the existing approximately 24 GiB Docker allocation. Existing background services remain running.
+This guide retains the September 2026 scheduler experiment and its reproducible harness separately from the M2 Ultra release benchmarks. Its results describe the recorded source candidates, not qualification of later published packages or the current checkout. The first pilot used a MacBook Air M4, 32 GiB physical RAM, ten CPU cores and the existing approximately 24 GiB Docker allocation. Existing background services remain running.
 
 ## Customer-population pilot
 
@@ -22,7 +22,7 @@ The default pilot has no pristine reserve to expose cold execution cost. Use `--
 
 ## Technical saturation controls
 
-`--traffic saturation --clients 4,8,16 --workers 8 --seconds 8` retains the initial closed-loop stress experiment. One outstanding call per client drives the next call immediately after completion. The first cache-sized set is warmed; additional customers retain cold-start cost. These controls deliberately expose cache thrashing but do not represent the intended infrequent-customer traffic. No worker is shared between customers.
+`--traffic saturation --clients 4,8,16 --workers 8 --seconds 8` retains the initial closed-loop stress experiment. One outstanding call per client drives the next call immediately after completion. The first cache-sized set is warmed; additional customers retain cold-start cost. These controls deliberately expose cache thrashing but do not represent the intended infrequent-customer traffic. The customer-bound saturation control does not share used workers between customers; the explicit approved SDK mode below has a different policy.
 
 `--modes direct,scheduled` provides a same-machine direct-host control when clients fit the worker budget. A direct-host oversubscription failure is not a measured scheduler speedup. `--language` selects Python, TypeScript or C#; prepare that language's image and native fixture before using it. `--payload-bytes 65536` measures a larger context result. Transport, runtime and fixture identities must be kept separate across these variants.
 

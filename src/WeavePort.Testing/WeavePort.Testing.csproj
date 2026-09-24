@@ -12,4 +12,8 @@
   <ItemGroup>
     <None Include="../../docs/package.md" Pack="true" PackagePath="PACKAGE.md" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Include="../Shared/FailureCode.cs" Link="Internal/FailureCode.cs" />
+    <Compile Include="../Shared/ProtocolContract.g.cs" Link="Internal/ProtocolContract.g.cs" />
+  </ItemGroup>
 </Project>

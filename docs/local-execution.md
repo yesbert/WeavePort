@@ -39,7 +39,7 @@ Instance strings include the native PID for diagnostics and the local load obser
 
 ## Installation and measurement
 
-See [installation](internal-distribution.md) for the portable self-contained macOS output and language-runtime prerequisites. [Local results (historical) — pre-public record](history.md) records actual functional, BenchmarkDotNet and capacity evidence.
+Use [installed clients](installed-plugin-clients.md) and [portable installations](portable-installations.md) for current deployment. The [historical internal distribution](internal-distribution.md) is a framework-dependent macOS bundle with its own fixed runtime identities, not the current public release or a self-contained .NET runtime. [Local results (historical) — pre-public record](history.md) records actual functional, BenchmarkDotNet and capacity evidence.
 
 The current local capacity executable offers one outstanding call per customer, 16 or 65,536 ASCII payload characters plus JSON envelopes, and a 20-second default active window. It records exact retained request durations, status counts and per-customer p99, with an eight-million-observation budget per stage. A customer reaching its share of that budget stops the experiment; it is not a statistically sampled p99.
 

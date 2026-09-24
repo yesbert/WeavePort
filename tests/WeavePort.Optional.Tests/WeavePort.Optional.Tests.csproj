@@ -1,9 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup><IsPackable>false</IsPackable><UsePackedCore Condition="'$(UsePackedCore)' == ''">true</UsePackedCore><RestorePackagesPath>../../artifacts/optional/packages</RestorePackagesPath></PropertyGroup>
   <ItemGroup Condition="'$(UsePackedCore)' == 'true'">
-    <PackageReference Include="WeavePort.Composition" Version="0.7.0" />
-    <PackageReference Include="WeavePort.Sdk.Gateway" Version="0.7.0" />
-    <PackageReference Include="WeavePort.Hosting" Version="0.7.0" />
+    <PackageReference Include="WeavePort.Composition" />
+    <PackageReference Include="WeavePort.Sdk.Gateway" />
+    <PackageReference Include="WeavePort.Hosting" />
   </ItemGroup>
   <ItemGroup Condition="'$(UsePackedCore)' != 'true'">
     <ProjectReference Include="../../src/WeavePort.Composition/WeavePort.Composition.csproj" />

@@ -53,7 +53,7 @@ def check(root):
             text = asset.read_text()
             if '/Volumes/' in text or '/Users/' in text:
                 errors.append('Machine-local path in public artifact: ' + str(asset.relative_to(root)))
-    for required in ('index.html', 'docs/getting-started.html', 'docs/api.html', 'docs/introduction.html', 'docs/toc.html', 'assets/logo.png', 'public/main.css', 'public/main.js', 'index.json', 'sitemap.xml', 'llms.txt', 'llms-full.txt', 'robots.txt'):
+    for required in ('index.html', 'docs/getting-started.html', 'docs/api.html', 'docs/optional-api.html', 'docs/failure-codes.html', 'compatibility/optional-api.txt', 'docs/introduction.html', 'docs/toc.html', 'assets/logo.png', 'public/main.css', 'public/main.js', 'index.json', 'sitemap.xml', 'llms.txt', 'llms-full.txt', 'robots.txt'):
         if not (root / required).is_file():
             errors.append('Missing required file: ' + required)
     index = json.loads((root / 'index.json').read_text())

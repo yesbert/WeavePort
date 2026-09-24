@@ -21,7 +21,7 @@ You embed the libraries where you need plugin execution. Your existing services,
 
 Yes. WeavePort has author SDKs for C#, Python and TypeScript and a shared .NET client interface. Your application defines the function name and JSON schema, then selects a compatible artifact. Changing language is not a promise that arbitrary implementations have the same business behavior.
 
-C# packages are public on NuGet. Python and TypeScript SDKs are built and packaged from the repository; they are not currently published to PyPI or npm. See [author SDKs](../docs/plugin-sdk.md).
+C# packages are public on NuGet. Python and TypeScript SDKs accompany the GitHub release as qualified downloads and can also be built from a matching checkout; they are not currently published to PyPI or npm. See [author SDKs](../docs/plugin-sdk.md).
 
 ## Does it sandbox plugins?
 

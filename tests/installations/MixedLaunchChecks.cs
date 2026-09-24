@@ -16,7 +16,7 @@ internal static class MixedLaunchChecks
             ["python"] = Executable("python3"), ["node"] = Executable("node")
         };
         var pythonFiles = Directory.GetFiles(Path.Combine(repository, "sdks/python/weaveport_sdk"), "*.py");
-        var nodeFiles = Directory.GetFiles(Path.Combine(repository, "sdks/typescript/dist"), "*.js");
+        var nodeFiles = Directory.GetFiles(Path.Combine(repository, "sdks/typescript/dist"), "*.js", SearchOption.AllDirectories);
         foreach (string path in pythonFiles.Concat(nodeFiles)) runtimes["sdk/" + Path.GetRelativePath(repository, path).Replace('\\', '/')] = path;
         Seal(repository, root, "python-provider", "python", "plugin.py", """
 import sys

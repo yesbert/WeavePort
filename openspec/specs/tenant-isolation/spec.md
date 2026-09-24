@@ -60,10 +60,10 @@ Nested plugin invocations from any callback scope SHALL be denied, including act
 - **THEN** the host denies the nested invocation without dispatch
 
 ### Requirement: Private worker transport endpoints
-A worker using the local transport SHALL receive access only to its own invocation endpoint, without a writable shared host directory or Docker control endpoint. Removal uncertainty SHALL retain endpoint ownership and capacity accounting.
+A Docker worker using the private socket transport SHALL receive access only to its own invocation endpoint, without a writable shared host directory or Docker control endpoint. Removal uncertainty SHALL retain endpoint ownership and capacity accounting.
 
 #### Scenario: Inspect endpoint exposure
-- **WHEN** two customers run the same plugin over local endpoints
+- **WHEN** two customers run the same Docker plugin over private socket endpoints
 - **THEN** each worker can communicate only through its assigned endpoint and cannot create files in its read-only endpoint mount or access the other worker's endpoint
 
 #### Scenario: Fault and replacement

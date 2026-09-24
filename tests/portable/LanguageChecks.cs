@@ -27,7 +27,13 @@ internal static class LanguageChecks
                 }
                 else
                 {
-                    foreach (string file in Directory.GetFiles(Path.Combine(repository, "sdks/typescript/dist"), "*.js")) File.Copy(file, Path.Combine(sdk, Path.GetFileName(file)), true);
+                    string package = Path.Combine(repository, "sdks/typescript/dist");
+                    foreach (string file in Directory.EnumerateFiles(package, "*.js", SearchOption.AllDirectories))
+                    {
+                        string destination = Path.Combine(sdk, Path.GetRelativePath(package, file));
+                        Directory.CreateDirectory(Path.GetDirectoryName(destination)!);
+                        File.Copy(file, destination, true);
+                    }
                     File.WriteAllText(Path.Combine(release, "package.json"), "{\"type\":\"module\",\"engines\":{\"node\":\">=20 <30\"}}");
                     File.WriteAllText(Path.Combine(release, entry), "import { PluginApplication } from './sdk/index.js';\nconst app = new PluginApplication('1', { concurrentCalls: " + (shared ? "true" : "false") + " });\napp.function('echo', async value => value);\nawait app.run();\n");
                 }
