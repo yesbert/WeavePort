@@ -11,6 +11,7 @@ import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parents[3]
 OUTPUT = ROOT / "artifacts/analysis"
+CONCURRENT_MODES = ("collect", "streams", "cleanup")
 SUITES = (
     "WeavePort.Hosting.Tests",
     "WeavePort.Gateway.Tests",
@@ -62,7 +63,7 @@ def execute():
     results = []
     cases = [
         (name, None) for name in SUITES if name != "WeavePort.ConcurrentSdkTests"
-    ] + [("WeavePort.ConcurrentSdkTests", mode) for mode in ("collect", "streams")]
+    ] + [("WeavePort.ConcurrentSdkTests", mode) for mode in CONCURRENT_MODES]
     for name, mode in cases:
         label = name + ("-" + mode if mode else "")
         with (OUTPUT / (label + ".log")).open("w") as log:
@@ -141,7 +142,7 @@ def collect():
         check=True,
     )
     results = json.loads((OUTPUT / "tests.json").read_text())
-    if len(results) != len(SUITES) + 2 or any(
+    if len(results) != len(SUITES) + len(CONCURRENT_MODES) or any(
         item["exitCode"] != 0 for item in results
     ):
         raise SystemExit("Regression execution failed")
