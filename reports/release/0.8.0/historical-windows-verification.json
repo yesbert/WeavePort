@@ -1,0 +1,160 @@
+{
+  "failures": 1,
+  "checks": [
+    {
+      "name": "csharp: contract and callback",
+      "passed": true
+    },
+    {
+      "name": "csharp: environment not inherited",
+      "passed": true
+    },
+    {
+      "name": "csharp: independent workspace and context",
+      "passed": true
+    },
+    {
+      "name": "csharp: crash and B continuity",
+      "passed": true
+    },
+    {
+      "name": "csharp: exception and B continuity",
+      "passed": true
+    },
+    {
+      "name": "csharp: malformed and B continuity",
+      "passed": true
+    },
+    {
+      "name": "csharp: hang and B continuity",
+      "passed": true
+    },
+    {
+      "name": "csharp: restart and state replay",
+      "passed": true
+    },
+    {
+      "name": "csharp: forged callback denied",
+      "passed": true
+    },
+    {
+      "name": "csharp: cancellation",
+      "passed": true
+    },
+    {
+      "name": "python: contract and callback",
+      "passed": true
+    },
+    {
+      "name": "python: environment not inherited",
+      "passed": true
+    },
+    {
+      "name": "python: independent workspace and context",
+      "passed": true
+    },
+    {
+      "name": "python: crash and B continuity",
+      "passed": true
+    },
+    {
+      "name": "python: exception and B continuity",
+      "passed": true
+    },
+    {
+      "name": "python: malformed and B continuity",
+      "passed": true
+    },
+    {
+      "name": "python: hang and B continuity",
+      "passed": true
+    },
+    {
+      "name": "python: restart and state replay",
+      "passed": true
+    },
+    {
+      "name": "python: forged callback denied",
+      "passed": true
+    },
+    {
+      "name": "python: cancellation",
+      "passed": true
+    },
+    {
+      "name": "typescript: contract and callback",
+      "passed": false,
+      "error": "InvalidOperationException"
+    },
+    {
+      "name": "typescript: environment not inherited",
+      "passed": true
+    },
+    {
+      "name": "typescript: independent workspace and context",
+      "passed": true
+    },
+    {
+      "name": "typescript: crash and B continuity",
+      "passed": true
+    },
+    {
+      "name": "typescript: exception and B continuity",
+      "passed": true
+    },
+    {
+      "name": "typescript: malformed and B continuity",
+      "passed": true
+    },
+    {
+      "name": "typescript: hang and B continuity",
+      "passed": true
+    },
+    {
+      "name": "typescript: restart and state replay",
+      "passed": true
+    },
+    {
+      "name": "typescript: forged callback denied",
+      "passed": true
+    },
+    {
+      "name": "typescript: cancellation",
+      "passed": true
+    },
+    {
+      "name": "untrusted profile rejected before launch",
+      "passed": true
+    },
+    {
+      "name": "unmet protection rejected for bind and prewarm: RestrictedFileSystem",
+      "passed": true
+    },
+    {
+      "name": "unmet protection rejected for bind and prewarm: DisabledNetwork",
+      "passed": true
+    },
+    {
+      "name": "unmet protection rejected for bind and prewarm: HardResourceLimits",
+      "passed": true
+    },
+    {
+      "name": "missing executable rejected",
+      "passed": true
+    },
+    {
+      "name": "equivalent profiles share pristine reserve without reuse",
+      "passed": true
+    },
+    {
+      "name": "idle policy destroys used process",
+      "passed": true
+    },
+    {
+      "name": "owned roots and reservations released",
+      "passed": true
+    }
+  ],
+  "hostAssemblySha256": "9CB0AE568CC60C07DA5ED6F182A08AA828492FDC7D49F04CB1ED84D06ADDEFB7",
+  "scope": "Trusted cooperative local processes, no OS sandbox or hard resource ceiling; no native memory-exhaustion attack."
+}

@@ -1,0 +1,1364 @@
+{
+  "components": [
+    {
+      "key": "weaveport:src/WeavePort.Hosting/AssemblyInfo.cs",
+      "name": "AssemblyInfo.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/AssemblyInfo.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Sdk.Gateway/AssemblyInfo.cs",
+      "name": "AssemblyInfo.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Sdk.Gateway/AssemblyInfo.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Installations/AuthorSdk.cs",
+      "name": "AuthorSdk.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Installations/AuthorSdk.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Composition/BoundedOutput.cs",
+      "name": "BoundedOutput.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Composition/BoundedOutput.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Composition/BulkChunk.cs",
+      "name": "BulkChunk.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Composition/BulkChunk.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Composition/BulkJson.cs",
+      "name": "BulkJson.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Composition/BulkJson.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Protocol/Native/CallbackResultFrame.cs",
+      "name": "CallbackResultFrame.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Protocol/Native/CallbackResultFrame.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Sdk/Runtime/Channel.cs",
+      "name": "Channel.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Sdk/Runtime/Channel.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/Shared/Cleanup.cs",
+      "name": "Cleanup.cs",
+      "qualifier": "FIL",
+      "path": "src/Shared/Cleanup.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Installations/CompatibilityDeclaration.cs",
+      "name": "CompatibilityDeclaration.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Installations/CompatibilityDeclaration.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Composition/Composition.cs",
+      "name": "Composition.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Composition/Composition.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Sdk/Runtime/ConcurrentRuntime.Callbacks.cs",
+      "name": "ConcurrentRuntime.Callbacks.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Sdk/Runtime/ConcurrentRuntime.Callbacks.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Sdk/Runtime/ConcurrentRuntime.cs",
+      "name": "ConcurrentRuntime.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Sdk/Runtime/ConcurrentRuntime.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Testing/ContractChecks.cs",
+      "name": "ContractChecks.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Testing/ContractChecks.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Adapters/Docker/DockerCommand.cs",
+      "name": "DockerCommand.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Adapters/Docker/DockerCommand.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Adapters/Docker/DockerProfile.cs",
+      "name": "DockerProfile.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Adapters/Docker/DockerProfile.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Adapters/Docker/DockerWorker.cs",
+      "name": "DockerWorker.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Adapters/Docker/DockerWorker.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Installations/Runtimes/DotnetFrameworks.cs",
+      "name": "DotnetFrameworks.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Installations/Runtimes/DotnetFrameworks.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Installations/Runtimes/DotnetRequirements.cs",
+      "name": "DotnetRequirements.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Installations/Runtimes/DotnetRequirements.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Adapters/ExecutionProfile.cs",
+      "name": "ExecutionProfile.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Adapters/ExecutionProfile.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Adapters/ExecutionProtections.cs",
+      "name": "ExecutionProtections.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Adapters/ExecutionProtections.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/Shared/FailureCode.cs",
+      "name": "FailureCode.cs",
+      "qualifier": "FIL",
+      "path": "src/Shared/FailureCode.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Diagnostics/FailureDiagnostic.cs",
+      "name": "FailureDiagnostic.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Diagnostics/FailureDiagnostic.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Protocol/Native/FrameBuffer.cs",
+      "name": "FrameBuffer.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Protocol/Native/FrameBuffer.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Protocol/Native/Frames.cs",
+      "name": "Frames.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Protocol/Native/Frames.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Installations/Runtimes/FrameworkRequirement.cs",
+      "name": "FrameworkRequirement.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Installations/Runtimes/FrameworkRequirement.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Sdk.Gateway/Hosting/GatewayHostingExtensions.cs",
+      "name": "GatewayHostingExtensions.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Sdk.Gateway/Hosting/GatewayHostingExtensions.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Sdk.Gateway/Protocol/GatewayMetadata.cs",
+      "name": "GatewayMetadata.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Sdk.Gateway/Protocol/GatewayMetadata.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Sdk.Gateway/Hosting/GatewayRegistry.cs",
+      "name": "GatewayRegistry.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Sdk.Gateway/Hosting/GatewayRegistry.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Sdk.Gateway/Operations/GatewayService.cs",
+      "name": "GatewayService.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Sdk.Gateway/Operations/GatewayService.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Sdk.Gateway/Operations/GatewayService.Failures.cs",
+      "name": "GatewayService.Failures.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Sdk.Gateway/Operations/GatewayService.Failures.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Sdk.Gateway/Operations/GatewayService.Source.cs",
+      "name": "GatewayService.Source.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Sdk.Gateway/Operations/GatewayService.Source.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Sdk.Gateway/Operations/GatewayService.Stream.cs",
+      "name": "GatewayService.Stream.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Sdk.Gateway/Operations/GatewayService.Stream.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Sdk.Gateway.Client/Remote/GatewaySessions.cs",
+      "name": "GatewaySessions.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Sdk.Gateway.Client/Remote/GatewaySessions.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Abstractions/HostCall.cs",
+      "name": "HostCall.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Abstractions/HostCall.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Sdk.Client/IBoundPluginClient.cs",
+      "name": "IBoundPluginClient.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Sdk.Client/IBoundPluginClient.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Abstractions/IHostCallbacks.cs",
+      "name": "IHostCallbacks.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Abstractions/IHostCallbacks.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Installations/InstallationCompatibility.cs",
+      "name": "InstallationCompatibility.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Installations/InstallationCompatibility.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Installations/InstallationDiscovery.cs",
+      "name": "InstallationDiscovery.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Installations/InstallationDiscovery.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Installations/InstallationFiles.cs",
+      "name": "InstallationFiles.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Installations/InstallationFiles.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Installations/InstallationIdentity.cs",
+      "name": "InstallationIdentity.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Installations/InstallationIdentity.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Installations/InstallationLimits.cs",
+      "name": "InstallationLimits.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Installations/InstallationLimits.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Installations/InstalledPlugin.cs",
+      "name": "InstalledPlugin.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Installations/InstalledPlugin.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Installations/InstalledPluginCatalog.cs",
+      "name": "InstalledPluginCatalog.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Installations/InstalledPluginCatalog.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Installations/InstalledPluginCatalog.Discovery.cs",
+      "name": "InstalledPluginCatalog.Discovery.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Installations/InstalledPluginCatalog.Discovery.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Installations/InstalledPluginCatalog.Runtimes.cs",
+      "name": "InstalledPluginCatalog.Runtimes.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Installations/InstalledPluginCatalog.Runtimes.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Sessions/InvocationPolicy.cs",
+      "name": "InvocationPolicy.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Sessions/InvocationPolicy.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Abstractions/InvocationResult.cs",
+      "name": "InvocationResult.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Abstractions/InvocationResult.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Sessions/InvocationScope.cs",
+      "name": "InvocationScope.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Sessions/InvocationScope.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Protocol/Native/InvokeFrame.cs",
+      "name": "InvokeFrame.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Protocol/Native/InvokeFrame.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Sdk.Client/IPluginClient.cs",
+      "name": "IPluginClient.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Sdk.Client/IPluginClient.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Abstractions/IPluginOperationSession.cs",
+      "name": "IPluginOperationSession.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Abstractions/IPluginOperationSession.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Abstractions/IPluginSession.cs",
+      "name": "IPluginSession.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Abstractions/IPluginSession.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Workers/ISharedPlugin.cs",
+      "name": "ISharedPlugin.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Workers/ISharedPlugin.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/Shared/JsonSize.cs",
+      "name": "JsonSize.cs",
+      "qualifier": "FIL",
+      "path": "src/Shared/JsonSize.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Sdk.Client/Local/LocalPluginClient.cs",
+      "name": "LocalPluginClient.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Sdk.Client/Local/LocalPluginClient.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Sdk.Client/Local/LocalPluginClient.Residency.cs",
+      "name": "LocalPluginClient.Residency.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Sdk.Client/Local/LocalPluginClient.Residency.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Sdk.Client/Local/LocalPluginClient.Sources.cs",
+      "name": "LocalPluginClient.Sources.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Sdk.Client/Local/LocalPluginClient.Sources.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Sdk.Client/Local/LocalPluginClient.Streams.cs",
+      "name": "LocalPluginClient.Streams.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Sdk.Client/Local/LocalPluginClient.Streams.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Protocol/Mcp/McpFields.cs",
+      "name": "McpFields.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Protocol/Mcp/McpFields.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Protocol/Mcp/McpMessages.cs",
+      "name": "McpMessages.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Protocol/Mcp/McpMessages.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Protocol/Mcp/McpMethods.cs",
+      "name": "McpMethods.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Protocol/Mcp/McpMethods.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Protocol/Mcp/McpNames.cs",
+      "name": "McpNames.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Protocol/Mcp/McpNames.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Protocol/Mcp/McpProtocol.cs",
+      "name": "McpProtocol.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Protocol/Mcp/McpProtocol.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Protocol/Mcp/McpProtocol.Transport.cs",
+      "name": "McpProtocol.Transport.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Protocol/Mcp/McpProtocol.Transport.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Protocol/Mcp/McpRequest.cs",
+      "name": "McpRequest.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Protocol/Mcp/McpRequest.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Protocol/Mcp/McpResponse.cs",
+      "name": "McpResponse.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Protocol/Mcp/McpResponse.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Protocol/Mcp/McpWireJson.cs",
+      "name": "McpWireJson.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Protocol/Mcp/McpWireJson.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Scheduling/OperationSession.cs",
+      "name": "OperationSession.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Scheduling/OperationSession.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Sdk/PluginApplication.cs",
+      "name": "PluginApplication.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Sdk/PluginApplication.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Installations/PluginApproval.cs",
+      "name": "PluginApproval.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Installations/PluginApproval.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Sdk/Sessions/PluginCallContext.cs",
+      "name": "PluginCallContext.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Sdk/Sessions/PluginCallContext.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Sdk.Client/PluginCallException.cs",
+      "name": "PluginCallException.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Sdk.Client/PluginCallException.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Sdk.Client/PluginCallResult.cs",
+      "name": "PluginCallResult.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Sdk.Client/PluginCallResult.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Sdk.Client/PluginClientExtensions.cs",
+      "name": "PluginClientExtensions.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Sdk.Client/PluginClientExtensions.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Abstractions/PluginContext.cs",
+      "name": "PluginContext.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Abstractions/PluginContext.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Abstractions/PluginFailure.cs",
+      "name": "PluginFailure.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Abstractions/PluginFailure.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Hosting/PluginHost.cs",
+      "name": "PluginHost.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Hosting/PluginHost.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Hosting/PluginHost.Installations.cs",
+      "name": "PluginHost.Installations.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Hosting/PluginHost.Installations.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Hosting/PluginHost.Lifecycle.cs",
+      "name": "PluginHost.Lifecycle.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Hosting/PluginHost.Lifecycle.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Hosting/PluginHost.Scheduling.cs",
+      "name": "PluginHost.Scheduling.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Hosting/PluginHost.Scheduling.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Hosting/PluginHost.Shared.cs",
+      "name": "PluginHost.Shared.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Hosting/PluginHost.Shared.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Installations/PluginInstallationSealer.cs",
+      "name": "PluginInstallationSealer.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Installations/PluginInstallationSealer.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Installations/PluginLaunchDeclaration.cs",
+      "name": "PluginLaunchDeclaration.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Installations/PluginLaunchDeclaration.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Scheduling/PluginScheduler.Admission.cs",
+      "name": "PluginScheduler.Admission.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Scheduling/PluginScheduler.Admission.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Scheduling/PluginScheduler.Completion.cs",
+      "name": "PluginScheduler.Completion.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Scheduling/PluginScheduler.Completion.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Scheduling/PluginScheduler.cs",
+      "name": "PluginScheduler.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Scheduling/PluginScheduler.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Scheduling/PluginScheduler.Dispatch.cs",
+      "name": "PluginScheduler.Dispatch.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Scheduling/PluginScheduler.Dispatch.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Scheduling/PluginScheduler.Indexes.cs",
+      "name": "PluginScheduler.Indexes.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Scheduling/PluginScheduler.Indexes.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Scheduling/PluginScheduler.Lifecycle.cs",
+      "name": "PluginScheduler.Lifecycle.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Scheduling/PluginScheduler.Lifecycle.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Scheduling/PluginScheduler.Operations.cs",
+      "name": "PluginScheduler.Operations.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Scheduling/PluginScheduler.Operations.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Installations/PluginSealOptions.cs",
+      "name": "PluginSealOptions.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Installations/PluginSealOptions.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Sessions/PluginSession.cs",
+      "name": "PluginSession.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Sessions/PluginSession.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Sessions/PluginSession.Exchange.cs",
+      "name": "PluginSession.Exchange.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Sessions/PluginSession.Exchange.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Sessions/PluginSession.Failures.cs",
+      "name": "PluginSession.Failures.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Sessions/PluginSession.Failures.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Sessions/PluginSession.Operations.cs",
+      "name": "PluginSession.Operations.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Sessions/PluginSession.Operations.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Sessions/PluginSession.Reuse.cs",
+      "name": "PluginSession.Reuse.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Sessions/PluginSession.Reuse.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Sdk.Client/PluginStreamOptions.cs",
+      "name": "PluginStreamOptions.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Sdk.Client/PluginStreamOptions.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Abstractions/PluginVersionMismatch.cs",
+      "name": "PluginVersionMismatch.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Abstractions/PluginVersionMismatch.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Diagnostics/PluginVersionMismatchException.cs",
+      "name": "PluginVersionMismatchException.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Diagnostics/PluginVersionMismatchException.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Scheduling/PluginWorkClass.cs",
+      "name": "PluginWorkClass.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Scheduling/PluginWorkClass.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Diagnostics/ProcessDiagnostics.cs",
+      "name": "ProcessDiagnostics.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Diagnostics/ProcessDiagnostics.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Adapters/Native/ProcessProfile.cs",
+      "name": "ProcessProfile.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Adapters/Native/ProcessProfile.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Protocol/Native/ProcessProtocol.cs",
+      "name": "ProcessProtocol.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Protocol/Native/ProcessProtocol.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Adapters/Native/ProcessSocket.cs",
+      "name": "ProcessSocket.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Adapters/Native/ProcessSocket.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Adapters/Native/ProcessWorker.cs",
+      "name": "ProcessWorker.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Adapters/Native/ProcessWorker.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Installations/Runtimes/PythonReleasePhase.cs",
+      "name": "PythonReleasePhase.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Installations/Runtimes/PythonReleasePhase.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Installations/Runtimes/PythonSpecifier.cs",
+      "name": "PythonSpecifier.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Installations/Runtimes/PythonSpecifier.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Installations/Runtimes/PythonVersion.cs",
+      "name": "PythonVersion.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Installations/Runtimes/PythonVersion.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Sdk.Gateway.Client/Remote/RemotePluginClient.cs",
+      "name": "RemotePluginClient.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Sdk.Gateway.Client/Remote/RemotePluginClient.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Sdk.Gateway.Client/Remote/RemotePluginClient.Deadlines.cs",
+      "name": "RemotePluginClient.Deadlines.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Sdk.Gateway.Client/Remote/RemotePluginClient.Deadlines.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Sdk.Gateway.Client/Remote/RemotePluginClient.Failures.cs",
+      "name": "RemotePluginClient.Failures.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Sdk.Gateway.Client/Remote/RemotePluginClient.Failures.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Sdk.Gateway.Client/Remote/RemotePluginClient.Source.cs",
+      "name": "RemotePluginClient.Source.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Sdk.Gateway.Client/Remote/RemotePluginClient.Source.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Sdk.Gateway.Client/Remote/RemotePluginClient.Streams.cs",
+      "name": "RemotePluginClient.Streams.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Sdk.Gateway.Client/Remote/RemotePluginClient.Streams.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Sdk.Gateway.Client/Remote/RemotePluginClient.Transport.cs",
+      "name": "RemotePluginClient.Transport.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Sdk.Gateway.Client/Remote/RemotePluginClient.Transport.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Composition/ResultHandle.cs",
+      "name": "ResultHandle.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Composition/ResultHandle.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Composition/ResultLimits.cs",
+      "name": "ResultLimits.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Composition/ResultLimits.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Composition/ResultScope.cs",
+      "name": "ResultScope.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Composition/ResultScope.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Sdk/Runtime/Runtime.Callback.cs",
+      "name": "Runtime.Callback.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Sdk/Runtime/Runtime.Callback.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Sdk/Runtime/Runtime.Cleanup.cs",
+      "name": "Runtime.Cleanup.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Sdk/Runtime/Runtime.Cleanup.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Sdk/Runtime/Runtime.cs",
+      "name": "Runtime.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Sdk/Runtime/Runtime.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Sdk/Runtime/Runtime.Source.cs",
+      "name": "Runtime.Source.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Sdk/Runtime/Runtime.Source.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Sdk/Runtime/Runtime.Stream.cs",
+      "name": "Runtime.Stream.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Sdk/Runtime/Runtime.Stream.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Installations/RuntimeDeclaration.cs",
+      "name": "RuntimeDeclaration.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Installations/RuntimeDeclaration.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Diagnostics/RuntimeLog.cs",
+      "name": "RuntimeLog.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Diagnostics/RuntimeLog.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Diagnostics/RuntimeLogEvents.cs",
+      "name": "RuntimeLogEvents.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Diagnostics/RuntimeLogEvents.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Installations/Runtimes/RuntimeProbe.cs",
+      "name": "RuntimeProbe.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Installations/Runtimes/RuntimeProbe.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Installations/Runtimes/RuntimeProbeProcess.cs",
+      "name": "RuntimeProbeProcess.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Installations/Runtimes/RuntimeProbeProcess.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Installations/RuntimeRequirements.cs",
+      "name": "RuntimeRequirements.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Installations/RuntimeRequirements.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Installations/Runtimes/RuntimeValidation.cs",
+      "name": "RuntimeValidation.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Installations/Runtimes/RuntimeValidation.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Scheduling/ScheduledCall.cs",
+      "name": "ScheduledCall.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Scheduling/ScheduledCall.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Scheduling/ScheduledInvocationResult.cs",
+      "name": "ScheduledInvocationResult.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Scheduling/ScheduledInvocationResult.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Scheduling/ScheduledPlugin.cs",
+      "name": "ScheduledPlugin.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Scheduling/ScheduledPlugin.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Scheduling/SchedulingOptions.cs",
+      "name": "SchedulingOptions.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Scheduling/SchedulingOptions.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Scheduling/SchedulingSnapshot.cs",
+      "name": "SchedulingSnapshot.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Scheduling/SchedulingSnapshot.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Sessions/SessionBinding.cs",
+      "name": "SessionBinding.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Sessions/SessionBinding.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Sdk/Sessions/SessionCleanup.cs",
+      "name": "SessionCleanup.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Sdk/Sessions/SessionCleanup.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Sdk/Sessions/SessionCleanupException.cs",
+      "name": "SessionCleanupException.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Sdk/Sessions/SessionCleanupException.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Sessions/SharedCall.cs",
+      "name": "SharedCall.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Sessions/SharedCall.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Sessions/SharedInvocationSession.cs",
+      "name": "SharedInvocationSession.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Sessions/SharedInvocationSession.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Workers/SharedPlugin.cs",
+      "name": "SharedPlugin.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Workers/SharedPlugin.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Workers/SharedPluginSnapshot.cs",
+      "name": "SharedPluginSnapshot.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Workers/SharedPluginSnapshot.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Workers/SharedView.cs",
+      "name": "SharedView.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Workers/SharedView.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Workers/SharedWorker.Callbacks.cs",
+      "name": "SharedWorker.Callbacks.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Workers/SharedWorker.Callbacks.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Workers/SharedWorker.cs",
+      "name": "SharedWorker.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Workers/SharedWorker.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Workers/SharedWorker.Exchange.cs",
+      "name": "SharedWorker.Exchange.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Workers/SharedWorker.Exchange.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Workers/SharedWorker.Lifecycle.cs",
+      "name": "SharedWorker.Lifecycle.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Workers/SharedWorker.Lifecycle.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Diagnostics/SharedWorker.Tracing.cs",
+      "name": "SharedWorker.Tracing.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Diagnostics/SharedWorker.Tracing.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Workers/SharedWorkerOptions.cs",
+      "name": "SharedWorkerOptions.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Workers/SharedWorkerOptions.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Sessions/TenantAdmission.cs",
+      "name": "TenantAdmission.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Sessions/TenantAdmission.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Installations/TenantBinding.cs",
+      "name": "TenantBinding.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Installations/TenantBinding.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Adapters/Native/UnixSocketTransport.cs",
+      "name": "UnixSocketTransport.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Adapters/Native/UnixSocketTransport.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Protocol/Native/WireJson.cs",
+      "name": "WireJson.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Protocol/Native/WireJson.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Workers/Worker.cs",
+      "name": "Worker.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Workers/Worker.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Workers/WorkerCapacityException.cs",
+      "name": "WorkerCapacityException.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Workers/WorkerCapacityException.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Diagnostics/WorkerDiagnostics.cs",
+      "name": "WorkerDiagnostics.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Diagnostics/WorkerDiagnostics.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Protocol/Native/WorkerEnvelope.cs",
+      "name": "WorkerEnvelope.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Protocol/Native/WorkerEnvelope.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Protocol/Native/WorkerEnvelope.Exchange.cs",
+      "name": "WorkerEnvelope.Exchange.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Protocol/Native/WorkerEnvelope.Exchange.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Diagnostics/WorkerExecutionException.cs",
+      "name": "WorkerExecutionException.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Diagnostics/WorkerExecutionException.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Workers/WorkerPool.Acquisition.cs",
+      "name": "WorkerPool.Acquisition.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Workers/WorkerPool.Acquisition.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Workers/WorkerPool.cs",
+      "name": "WorkerPool.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Workers/WorkerPool.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Diagnostics/WorkerPool.Diagnostics.cs",
+      "name": "WorkerPool.Diagnostics.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Diagnostics/WorkerPool.Diagnostics.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Workers/WorkerPool.Maintenance.cs",
+      "name": "WorkerPool.Maintenance.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Workers/WorkerPool.Maintenance.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Workers/WorkerPool.Reuse.cs",
+      "name": "WorkerPool.Reuse.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Workers/WorkerPool.Reuse.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Workers/WorkerPool.Startup.cs",
+      "name": "WorkerPool.Startup.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Workers/WorkerPool.Startup.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Workers/WorkerPoolOptions.cs",
+      "name": "WorkerPoolOptions.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Workers/WorkerPoolOptions.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Workers/WorkerPoolSnapshot.cs",
+      "name": "WorkerPoolSnapshot.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Workers/WorkerPoolSnapshot.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Workers/WorkerReusePolicy.cs",
+      "name": "WorkerReusePolicy.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Workers/WorkerReusePolicy.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Adapters/WorkerSocket.cs",
+      "name": "WorkerSocket.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Adapters/WorkerSocket.cs",
+      "language": "cs",
+      "measures": []
+    },
+    {
+      "key": "weaveport:src/WeavePort.Hosting/Diagnostics/WorkerStartupException.cs",
+      "name": "WorkerStartupException.cs",
+      "qualifier": "FIL",
+      "path": "src/WeavePort.Hosting/Diagnostics/WorkerStartupException.cs",
+      "language": "cs",
+      "measures": []
+    }
+  ]
+}

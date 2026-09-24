@@ -19,7 +19,7 @@ Current measurement methodology and results are in [benchmarking](benchmarking.m
 
 Release 0.8.0 includes structured failure details, explicit cancellation attribution, primary execution/cleanup cause preservation, safe diagnostic delivery, generated shared protocol definitions and the complete readability audit. Python/TypeScript author SDKs are 0.4.0. See [migration notes](releases.md#080-failure-contracts-and-code-quality), [failure codes](failure-codes.md), [runtime diagnostics](runtime-diagnostics.md) and [source organization](source-organization.md).
 
-Publication is being prepared. The [0.8.0 release record](../reports/release/0.8.0/README.md) tracks exact-version qualification and public download verification; until publication completes, 0.7.0 remains the latest public delivery. Current API baselines and examples describe 0.8.0. Historical reports retain their original versions and qualification limits.
+Release 0.8.0 is published. The [release record](../reports/release/0.8.0/README.md) retains exact-tag qualification (3,599 reported assertions, 73 stages, 442 frozen artifacts), successful publication and verified downloads for all seven NuGet packages and 16 package/symbol/SDK assets. Current API baselines and examples describe 0.8.0. Historical reports retain their original versions and qualification limits.
 
 ## Runtime optimization and soak verification
 
