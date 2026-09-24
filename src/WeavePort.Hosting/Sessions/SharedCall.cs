@@ -47,8 +47,19 @@ internal sealed class SharedCall
 
     internal InvocationResult Result(string status, string instance, JsonElement value) => new(status, value, instance, Stopwatch.GetElapsedTime(_started).TotalMilliseconds, Dispatched)
     {
-        Failure = Failure ?? (status == FailureCodes.Ok ? null : new PluginFailure(status, Dispatched ? FailurePhases.Exchange : FailurePhases.Prepare, Id))
+        Failure = DescribeFailure(status)
     };
+    private PluginFailure? DescribeFailure(string status)
+    {
+        if (Failure is not null || status == FailureCodes.Ok)
+        {
+            return Failure;
+        }
+
+        string phase = Dispatched ? FailurePhases.Exchange : FailurePhases.Prepare;
+        return new PluginFailure(status, phase, Id);
+    }
+
     internal void Finish(string status, string instance, JsonElement value)
     {
         if (Interlocked.Exchange(ref _finished, 1) != 0)

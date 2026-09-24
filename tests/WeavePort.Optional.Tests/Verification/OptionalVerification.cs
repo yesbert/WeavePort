@@ -6,6 +6,8 @@ using WeavePort.Sdk.Client;
 
 internal static class OptionalVerification
 {
+    private static readonly JsonSerializerOptions ReportJson = new() { WriteIndented = true };
+
     internal static async Task RunAsync(string[] args)
     {
         if (args[0] == "--api")
@@ -49,7 +51,7 @@ internal static class OptionalVerification
             topology = "direct HTTP/2 TLS on loopback with real separate SDK worker processes",
             os = System.Runtime.InteropServices.RuntimeInformation.OSDescription,
             runtime = Environment.Version.ToString()
-        }, new JsonSerializerOptions { WriteIndented = true }));
+        }, ReportJson));
 
     }
     private static async Task VerifyTlsAsync(Func<string, Task<LocalPluginClient>> bindAsync, string storage)

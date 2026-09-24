@@ -97,7 +97,7 @@ internal sealed partial class PluginSession
         return value;
     }
 
-    private IOException ExecutionError(JsonElement frame)
+    private WorkerExecutionException ExecutionError(JsonElement frame)
     {
         if (frame.TryGetProperty(WireFields.Code, out JsonElement code) && code.GetString() == FailureCodes.CleanupError)
         {

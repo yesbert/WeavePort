@@ -2,6 +2,12 @@ using System.Runtime.CompilerServices;
 using System.Text.Json;
 using WeavePort.Sdk;
 
+if (args.Contains("cleanup"))
+{
+    await CleanupChecks.RunAsync();
+    return;
+}
+
 if (args.Contains("--stream-worker"))
 {
     await StreamFixture.RunAsync();

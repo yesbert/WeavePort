@@ -6,7 +6,7 @@ namespace WeavePort.Hosting;
 public sealed class PluginVersionMismatchException(string expected, string advertised) : IOException("Worker artifact version mismatch.")
 {
     /// <summary>Gets the stable failure code without version metadata.</summary>
-    public string ErrorCode => FailureCodes.VersionMismatch;
+    public string ErrorCode { get; } = FailureCodes.VersionMismatch;
     /// <summary>Gets the expected and advertised artifact versions.</summary>
     public PluginVersionMismatch Mismatch { get; } = new(expected, advertised);
 }

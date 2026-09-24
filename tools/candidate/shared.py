@@ -100,6 +100,7 @@ def verify(checkout, env, stage):
             f"concurrent-sdk-{mode}-wire",
             ["python3", "tests/WeavePort.ConcurrentSdkTests/check.py"],
         )
+        stage(f"concurrent-sdk-{mode}-cleanup", ["dotnet", str(dll), "cleanup"])
         stage(f"concurrent-sdk-{mode}-collection", ["dotnet", str(dll), "collect"])
         stage(
             f"concurrent-sdk-{mode}-streams",

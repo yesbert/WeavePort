@@ -59,8 +59,7 @@ internal sealed partial class WorkerPool
                 return (ready, null, []);
             }
 
-            Task? warming = PendingWarmup(profile);
-            if (warming is not null)
+            if (TryGetPendingWarmup(profile, out Task warming))
             {
                 return (null, warming, []);
             }
@@ -121,16 +120,23 @@ internal sealed partial class WorkerPool
         }
     }
 
-    private Task? PendingWarmup(ExecutionProfile profile)
+    private bool TryGetPendingWarmup(ExecutionProfile profile, out Task pending)
     {
+        pending = Task.CompletedTask;
         if (!options.WaitForStartCapacity || HasCapacity(profile))
         {
-            return null;
+            return false;
         }
 
         Task[] warming = _workers.Where(w => w.Starting && w.Tenant is null).Select(w => w.StartupCompletion.Task).ToArray();
         // Resume as soon as any shared startup changes capacity.
-        return warming.Length == 0 ? null : Task.WhenAny(warming);
+        if (warming.Length == 0)
+        {
+            return false;
+        }
+
+        pending = Task.WhenAny(warming);
+        return true;
     }
 
     private async Task DestroyReclaimedAsync(IEnumerable<Worker> workers)
