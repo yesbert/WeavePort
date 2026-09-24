@@ -21,6 +21,7 @@ internal static class RemotePauseChecks
             stop.Cancel();
             await ReleasedAsync(host);
             int pid = await PidAsync(client);
+            await ObserveCancellationAsync(source);
             await source.DisposeAsync();
             if (await PidAsync(client) != pid)
             {
@@ -42,6 +43,7 @@ internal static class RemotePauseChecks
             stop.Cancel();
             await ReleasedAsync(host);
             int pid = await PidAsync(client);
+            await ObserveCancellationAsync(stream);
             await stream.DisposeAsync();
             if (await PidAsync(client) != pid)
             {
@@ -61,10 +63,24 @@ internal static class RemotePauseChecks
 
         await ReleasedAsync(host);
         int current = await PidAsync(client);
+        await ObserveCancellationAsync(expired);
         await expired.DisposeAsync();
         if (await PidAsync(client) != current)
         {
             throw new InvalidOperationException("Expired remote stream disposal disrupted new worker.");
+        }
+    }
+
+    private static async Task ObserveCancellationAsync<T>(IAsyncEnumerator<T> reader)
+    {
+        try
+        {
+            await reader.MoveNextAsync();
+            throw new InvalidOperationException("Cancelled remote reader resumed without cancellation.");
+        }
+        catch (OperationCanceledException error) when (error.CancellationToken.IsCancellationRequested)
+        {
+            Console.WriteLine("PASS remote reader observes owned cancellation after transport disposal");
         }
     }
 

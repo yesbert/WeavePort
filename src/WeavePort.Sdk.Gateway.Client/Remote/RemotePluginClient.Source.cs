@@ -77,7 +77,7 @@ public sealed partial class RemotePluginClient
         {
             using var exchange = CancellationTokenSource.CreateLinkedTokenSource(token);
             exchange.CancelAfter(_streamOptions.ExchangeTimeout);
-            await session.RequestStream.WriteAsync(request, exchange.Token);
+            await WriteAsync(session, request, exchange.Token);
         }
         catch (RpcException error)
         {

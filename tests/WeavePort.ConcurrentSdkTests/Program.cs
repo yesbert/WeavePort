@@ -2,6 +2,12 @@ using System.Runtime.CompilerServices;
 using System.Text.Json;
 using WeavePort.Sdk;
 
+if (args.Contains("gateway-cancellation"))
+{
+    await GatewayCancellationChecks.RunAsync();
+    return;
+}
+
 if (args.Contains("cleanup"))
 {
     await CleanupChecks.RunAsync();
