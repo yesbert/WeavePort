@@ -23,4 +23,4 @@
 - [x] 4.1 Add a publisher pipeline and consumer upload-staging example with separate key/trust/installation authority, protected immutable promotion, key rotation and withdrawal procedures.
 - [x] 4.2 Document catalog-wide publisher authority, unsupported rollback prevention, running-worker limitations, old-reader incompatibility and signature-versus-sandbox boundaries.
 - [x] 4.3 Update public API baseline, consumer/security guides and generated documentation; run focused tests, public-tree, architecture, style and strict OpenSpec checks.
-- [ ] 4.4 Qualify committed candidate with the normal verification workflow, record exact platform evidence, then synchronize verified deltas and archive the change.
+- [x] 4.4 Qualify committed candidate with the normal verification workflow, record exact platform evidence, then synchronize verified deltas and archive the change.
