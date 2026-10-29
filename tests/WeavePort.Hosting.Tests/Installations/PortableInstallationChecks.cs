@@ -28,6 +28,7 @@ internal static class PortableInstallationChecks
         InstallationIdentity identity = PluginInstallationSealer.Seal(options);
         string path = Path.Combine(release, "installation.json");
         byte[] bytes = File.ReadAllBytes(path);
+        InstallationJsonChecks.AssertCompatible(bytes);
         if (identity.Digest != Convert.ToHexString(SHA256.HashData(bytes)))
         {
             throw new Exception("Identity isn't manifest hash");

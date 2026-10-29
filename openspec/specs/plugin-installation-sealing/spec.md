@@ -15,6 +15,10 @@ A public .NET API SHALL seal an offline built release from its identity, entry p
 - **WHEN** a .NET consumer seals Python or Node plugin files and valid ecosystem metadata without those runtimes installed
 - **THEN** portable sealing succeeds without executing or downloading a runtime
 
+#### Scenario: Reflection-disabled consumer
+- **WHEN** a .NET consumer disables reflection-based JSON serialization and seals a valid .NET, Python or Node release
+- **THEN** sealing succeeds without enabling reflection, retains the same manifest bytes and identity as the existing format, and the .NET release can be resolved with its original pin by a compatible host with JSON reflection disabled
+
 ### Requirement: Safe deterministic manifest generation
 Sealing SHALL use the same path, link, inventory and metadata constraints as resolution, hash declaration files as bundle content, and produce identical manifest bytes for identical input bytes and options regardless of absolute release path. It SHALL atomically replace only the manifest after validation succeeds, without deleting bundle files, changing selectors or migrating pins. Missing, dynamic-only or unsupported runtime requirements SHALL be rejected with a source-specific diagnostic. Strict runtime hashes SHALL require explicit local runtime inputs.
 

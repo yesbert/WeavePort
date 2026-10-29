@@ -4,6 +4,7 @@ cd "$(dirname "$0")/.."
 ./scripts/build-local.sh
 openspec validate --all --strict
 dotnet run --project tests/WeavePort.Hosting.Tests -c Release
+dotnet run --project tests/WeavePort.Sealing.Tests -c Release
 wp_local_output="artifacts/runs/local/$(date -u +%Y%m%d-%H%M%S)-verification"
 mkdir -p "$wp_local_output"
 # Give this verification its own ownership root; older experiments may retain theirs.

@@ -24,7 +24,7 @@ internal static class DotnetRequirements
             throw new InvalidDataException("Invalid or repeated .NET framework requirements.");
         }
 
-        return JsonSerializer.Serialize(requirements);
+        return JsonSerializer.Serialize(requirements, InstallationJsonContext.Default.FrameworkRequirementArray);
     }
 
     private static FrameworkRequirement ReadFramework(JsonElement element, string fallback)

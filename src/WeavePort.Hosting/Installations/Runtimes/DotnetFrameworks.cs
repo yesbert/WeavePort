@@ -11,7 +11,7 @@ internal static class DotnetFrameworks
     internal static bool Matches(string requirement, string output)
     {
         List<Installed> available = ReadInventory(output);
-        var constraints = JsonSerializer.Deserialize<FrameworkRequirement[]>(requirement)!.ToList();
+        var constraints = JsonSerializer.Deserialize(requirement, InstallationJsonContext.Default.FrameworkRequirementArray)!.ToList();
         var expanded = new HashSet<(string, Version)>();
         for (int iteration = 0; iteration < MaximumDependencyExpansionRounds; iteration++)
         {
@@ -96,6 +96,6 @@ internal static class DotnetFrameworks
         string content = File.ReadAllText(path);
         using var config = JsonDocument.Parse(content);
         JsonElement options = config.RootElement.GetProperty("runtimeOptions");
-        return options.TryGetProperty("framework", out _) || options.TryGetProperty("frameworks", out _) ? JsonSerializer.Deserialize<FrameworkRequirement[]>(DotnetRequirements.Read(content))! : [];
+        return options.TryGetProperty("framework", out _) || options.TryGetProperty("frameworks", out _) ? JsonSerializer.Deserialize(DotnetRequirements.Read(content), InstallationJsonContext.Default.FrameworkRequirementArray)! : [];
     }
 }

@@ -57,6 +57,6 @@ internal static class InstallationCompatibility
     private static CompatibilityDeclaration Load()
     {
         using var stream = typeof(InstallationCompatibility).Assembly.GetManifestResourceStream("WeavePort.LocalCompatibility") ?? throw new InvalidOperationException("Missing packaged compatibility matrix.");
-        return JsonSerializer.Deserialize<CompatibilityDeclaration>(stream) ?? throw new InvalidOperationException("Invalid packaged compatibility matrix.");
+        return JsonSerializer.Deserialize(stream, InstallationJsonContext.Default.CompatibilityDeclaration) ?? throw new InvalidOperationException("Invalid packaged compatibility matrix.");
     }
 }

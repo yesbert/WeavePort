@@ -9,6 +9,7 @@ public sealed partial class InstalledPluginCatalog(string releases, IReadOnlyDic
 {
     internal static readonly JsonSerializerOptions ManifestJson = new()
     {
+        TypeInfoResolver = InstallationJsonContext.Default,
         Converters =
         {
             new JsonStringEnumConverter<WorkerReusePolicy>()
