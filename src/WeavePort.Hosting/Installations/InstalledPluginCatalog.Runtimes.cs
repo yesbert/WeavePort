@@ -11,26 +11,10 @@ public sealed partial class InstalledPluginCatalog
             return SelectLegacyRuntimes(manifest);
         }
 
-        if (manifest.RuntimeFiles is not null || manifest.Runtimes is null || manifest.ExternalFiles is null ||
-            !manifest.Runtimes.Keys.ToHashSet(StringComparer.Ordinal).SetEquals(manifest.EntryPoints.Keys) ||
-            manifest.ExternalFiles.Keys.Intersect(manifest.Runtimes.Keys, StringComparer.Ordinal).Any())
-        {
-            throw new InvalidDataException("Invalid schema-2 runtime policy.");
-        }
-
-        manifest.Launch?.ValidatePortable();
-        VerifyExternal(manifest.ExternalFiles);
+        VerifyExternal(manifest.ExternalFiles!);
         var selected = new Dictionary<string, string>(StringComparer.Ordinal);
-        foreach (var (alias, declaration) in manifest.Runtimes)
+        foreach (var (alias, declaration) in manifest.Runtimes!)
         {
-            if (declaration is null || string.IsNullOrWhiteSpace(declaration.Source) ||
-                string.IsNullOrWhiteSpace(declaration.Requirement) || !manifest.Files.ContainsKey(declaration.Source) ||
-                declaration.Ecosystem != alias ||
-                RuntimeRequirements.Read(root, alias, manifest.EntryPoints[alias], declaration.Source, declaration.Sha256) != declaration)
-            {
-                throw new InvalidDataException($"Runtime '{alias}' declaration disagrees with its bundle source.");
-            }
-
             if (!runtimeFiles.TryGetValue(alias, out string? executable) || !Path.IsPathFullyQualified(executable))
             {
                 throw new InvalidDataException($"Runtime '{alias}' is not approved at an absolute executable path.");

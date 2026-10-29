@@ -1,6 +1,6 @@
 # Installed plugin resolution
 
-Choose a known plugin artifact and keep its identity stable throughout an operation. `WeavePort.Hosting` provides `InstalledPluginCatalog`, `InstalledPlugin` and `InstallationIdentity` for that selection. All three reference applications consume this API through packed NuGet artifacts. This is local integrity validation for owner-controlled deployments; it is not a downloader, signature verifier or hostile-code sandbox.
+Choose a known plugin artifact and keep its identity stable throughout an operation. `WeavePort.Hosting` provides `InstalledPluginCatalog`, `InstalledPlugin` and `InstallationIdentity` for that selection. All three reference applications consume this API through packed NuGet artifacts. The existing constructor provides local integrity validation for owner-controlled deployments. Current source also supports an explicit [trusted publisher policy](publisher-trust.md); neither mode is a downloader or hostile-code sandbox.
 
 ## Host integration
 
@@ -20,7 +20,7 @@ Each release directory contains `installation.json` with case-sensitive fields:
 | `Plugin`, `Version` | Expected plugin installation ID and exact artifact release |
 | `Contract` | Application contract identifier, independent of artifact release |
 | `EntryPoints` | Trusted aliases mapped to declared relative bundle files |
-| `Files` | Complete bundle file inventory with uppercase SHA-256 hashes, excluding the manifest itself |
+| `Files` | Complete bundle file inventory with uppercase SHA-256 hashes, excluding the manifest and reserved root signature metadata |
 | `RuntimeFiles` | Schema 1 only: approved runtime/external-code aliases and exact file hashes |
 | `Runtimes` | Schema 2 only: ecosystem, relative declaration source, extracted requirement and optional strict executable SHA-256 per entry alias |
 | `ExternalFiles` | Schema 2 only: additional approved external-code aliases and exact hashes |
@@ -33,7 +33,7 @@ Version 0.7.0 adds a [public .NET sealing API](portable-installations.md), using
 
 ## Stable deployment precondition
 
-The manifest is trusted installation metadata. Someone able to replace both metadata and files can describe a different installation for a new operation. Persisted pins still detect changed metadata, but this does not authenticate a publisher. Keep release directories, selectors and durable application state under the appropriate deployment/application authority.
+With the existing integrity-only constructor, the manifest is trusted installation metadata. Someone able to replace both metadata and files can describe a different installation for a new operation. Persisted pins still detect changed metadata, but integrity-only validation does not authenticate a publisher. Require `PluginPublisherPolicy.RequireTrustedPublisher` for authenticated releases; see [publisher trust and key withdrawal](publisher-trust.md). Keep release directories, selectors and durable application state under the appropriate deployment/application authority.
 
 Files must remain unchanged from verification through execution and any automatic worker replacement. Hashing before a call does not prevent a time-of-check/time-of-use race. No read-only mount, kernel enforcement or code snapshot is introduced. OS/.NET shared framework/Python standard library and environment dependencies outside the declared file set remain deployment-owned and must also stay fixed. Runtime executable hashing does not attest their full dependency closure.
 

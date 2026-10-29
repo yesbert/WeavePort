@@ -1029,6 +1029,75 @@ one exchange timeout and the total operation lifetime, including consumer pauses
 
 ---
 
+## Publisher trust
+
+Source: https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/publisher-trust.md
+
+# Publisher trust for installed releases
+
+**Availability:** Implemented in current source; package version allocation and publication are separate release operations. Use a freshly packed build for the examples below.
+
+Installation hashes protect content against a manifest. Publisher signatures authenticate that manifest against a host-owned public key. Require publisher authentication when accepting releases from callers whose installation credentials must not grant authority to introduce arbitrary code.
+
+## Pipeline and host APIs
+
+Seal built files with `PluginInstallationSealer.Seal`, then call `PluginInstallationSigner.Sign(releaseDirectory, plugin, version, contract, privateKey)`. The signer validates the complete sealed schema-2 bundle before atomically replacing only `installation.signature.json`. It neither executes code nor probes runtimes, changes selectors or rewrites manifest bytes/pins. It uses the supplied RSA instance without taking ownership, discovering keys or persisting private material. Keep signing keys in the publisher pipeline, outside all release files and the host upload API.
+
+Configure trust separately from installation credentials:
+
+```csharp
+var publisher = new TrustedPluginPublisher("release-pipeline", publicKeyDer);
+var policy = PluginPublisherPolicy.RequireTrustedPublisher([publisher]);
+var catalog = new InstalledPluginCatalog(pluginRoot, approvedRuntimeFiles, policy);
+var installation = await catalog.ResolveAsync(plugin, version, contract, pinnedIdentity);
+VerifiedPluginPublisher? authenticated = installation.Publisher;
+```
+
+`TrustedPluginPublisher` validates and copies one canonical DER SubjectPublicKeyInfo RSA public key. `PluginPublisherPolicy` copies the publisher set; it has no mutable trust collection. Multiple publishers and overlapping rotation keys are supported. Duplicate fingerprints, unsupported key sizes and an empty required trust set fail configuration. Publisher labels come from host configuration, never from release metadata. All keys in a catalog authorize every plugin it admits; separate catalogs and application authorization are needed for partner-specific scope.
+
+`PluginInstallationVerifier.Verify(releaseDirectory, plugin, version, contract, policy, pinned)` is the offline staging API. It authenticates the manifest and checks complete bundle content and declarations without probing runtimes. It returns `PluginInstallationVerification` with the identity and authenticated publisher. External files and installed runtime compatibility are deployment-owned checks performed by catalog resolution. Keep staging exclusively owned and immutable through same-filesystem promotion to protected release storage. See the [compiled pipeline and staging examples](https://raw.githubusercontent.com/yesbert/WeavePort/main/examples/signed-releases/README.md).
+
+The policy is enforced by sync/async resolution, listing, diagnostic discovery, activation and pinned recovery before runtime probes and plugin dispatch. Failed activation leaves the selector unchanged. `ListAll`/`ListAllAsync` return publisher refusal codes alongside valid siblings. Normal identity, content, compatibility and runtime checks remain mandatory after signature verification.
+
+## Rotation, withdrawal and existing workers
+
+Add the new public key before switching the pipeline. Re-signing unchanged manifest bytes with a new trusted key preserves installation identity. Remove the old key by replacing the installer/catalog trust snapshot and stopping new admissions through the old snapshot. Re-resolution under the replacement policy rejects a withdrawn key even when an old persisted pin still matches.
+
+A verified publisher result is an observation at verification time, not a live revocation capability. Previously returned installations, existing bindings, resident workers and their automatic replacements are not retroactively revoked. For immediate revocation, the host must stop admissions, dispose affected bindings/workers and re-resolve using its replacement policy. Trust replacement does not itself terminate processes.
+
+## Detached signature format
+
+Schema-2 manifests retain their exact bytes and SHA-256 identity. The reserved root file `installation.signature.json` is detached metadata; it cannot be declared as hashed bundle content or as an entry point. A nested file with this name is ordinary hashed content. Other inventory, link and path checks remain intact. Sealing a release with an existing root signature refuses without changing either file: remove it explicitly in offline staging before changing/resealing content.
+
+The envelope contains exactly `Schema` (1), `Algorithm` (`RSA-PSS-SHA256`), `KeyId` and `Signature`. Unknown/duplicate/missing fields, null or invalid values, noncanonical base64, links and envelopes over 16 KiB are refused. Unknown versions/algorithms are refused without negotiation. `KeyId` is lowercase SHA-256 hex of canonical DER SubjectPublicKeyInfo. `Signature` is canonical base64 of the RSA signature.
+
+The signed message is UTF-8 `WeavePort.InstallationSignature.v1\n` followed by the exact `installation.json` bytes, including whitespace. RSA-PSS uses SHA-256, MGF1-SHA-256 and 32 salt bytes with 3072- or 4096-bit keys. Reformatting a signed manifest invalidates its signature. Signing may produce different signature bytes for identical input without changing the manifest pin. No certificate trust, embedded public key, remote key lookup or online revocation is used.
+
+## Refusals and compatibility
+
+`PluginSignatureException` retains the `IOException` category and exposes `ErrorCode`. Diagnostic discovery exposes the same code in `Refusal`. Messages explain the cause; do not parse them or infer retry safety from a code.
+
+| Code | Meaning |
+| --- | --- |
+| `publisher-signature-missing` | Required root signature is absent. |
+| `publisher-signature-malformed` | Envelope is malformed, ambiguous, linked or oversized. |
+| `publisher-signature-unsupported` | Envelope schema or algorithm is unsupported. |
+| `publisher-key-untrusted` | Fingerprint is absent from this snapshot, including withdrawn keys. |
+| `publisher-signature-invalid` | Signature does not authenticate the manifest bytes. |
+| `publisher-schema-unsupported` | Publisher authentication/signing requires offline migration to schema 2. |
+
+Configuration errors retain argument/cryptographic exception categories; ordinary filesystem failures retain their I/O/access categories. No keys, signatures or raw manifests are added to default logs.
+
+The existing catalog constructor and `PluginPublisherPolicy.IntegrityOnly` preserve unsigned schema-1/schema-2 operation and make no authenticity claim (`Publisher` is null). New readers recognize detached metadata. Older readers reject signed bundles as an extra inventory file: upgrade readers before distributing signed releases. Required policy never falls back to unsigned acceptance. A legacy bundle using the reserved root filename as content must rename it and be resealed. Schema-1 migration changes identity and never rewrites persisted pins automatically.
+
+Signatures are not a sandbox, a claim of safe code, runtime integrity or freshness. A trusted publisher can sign vulnerable code; a stolen installation credential can still select older signed releases unless the application enforces version-admission policy. Protect public-key configuration with authority separate from installation credentials. Hostile same-user modification of deployment files remains outside the stable-files guarantee.
+
+## Verification scope
+
+`tests/WeavePort.Publisher.Tests` verifies installation operations with JSON reflection disabled, independent OpenSSL fixture compatibility, byte-preserving signing, malformed/tampered releases, multiple publishers, copied trust snapshots, rotation/withdrawal, mixed discovery, unchanged selectors and an actual worker surviving trust snapshot replacement. The worker/lifecycle subprocess uses the existing reflection-enabled author/runtime path; this does not qualify all Hosting functionality for Native AOT. The portable script repeats the consumer suite against fresh packages. No broader platform or containment claim follows from cryptographic API availability.
+
+---
+
 ## Author SDKs
 
 Source: https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/plugin-sdk.md
@@ -1453,7 +1522,7 @@ Source: https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/installed-
 
 # Installed plugin resolution
 
-Choose a known plugin artifact and keep its identity stable throughout an operation. `WeavePort.Hosting` provides `InstalledPluginCatalog`, `InstalledPlugin` and `InstallationIdentity` for that selection. All three reference applications consume this API through packed NuGet artifacts. This is local integrity validation for owner-controlled deployments; it is not a downloader, signature verifier or hostile-code sandbox.
+Choose a known plugin artifact and keep its identity stable throughout an operation. `WeavePort.Hosting` provides `InstalledPluginCatalog`, `InstalledPlugin` and `InstallationIdentity` for that selection. All three reference applications consume this API through packed NuGet artifacts. The existing constructor provides local integrity validation for owner-controlled deployments. Current source also supports an explicit [trusted publisher policy](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/publisher-trust.md); neither mode is a downloader or hostile-code sandbox.
 
 ## Host integration
 
@@ -1473,7 +1542,7 @@ Each release directory contains `installation.json` with case-sensitive fields:
 | `Plugin`, `Version` | Expected plugin installation ID and exact artifact release |
 | `Contract` | Application contract identifier, independent of artifact release |
 | `EntryPoints` | Trusted aliases mapped to declared relative bundle files |
-| `Files` | Complete bundle file inventory with uppercase SHA-256 hashes, excluding the manifest itself |
+| `Files` | Complete bundle file inventory with uppercase SHA-256 hashes, excluding the manifest and reserved root signature metadata |
 | `RuntimeFiles` | Schema 1 only: approved runtime/external-code aliases and exact file hashes |
 | `Runtimes` | Schema 2 only: ecosystem, relative declaration source, extracted requirement and optional strict executable SHA-256 per entry alias |
 | `ExternalFiles` | Schema 2 only: additional approved external-code aliases and exact hashes |
@@ -1486,7 +1555,7 @@ Version 0.7.0 adds a [public .NET sealing API](https://raw.githubusercontent.com
 
 ## Stable deployment precondition
 
-The manifest is trusted installation metadata. Someone able to replace both metadata and files can describe a different installation for a new operation. Persisted pins still detect changed metadata, but this does not authenticate a publisher. Keep release directories, selectors and durable application state under the appropriate deployment/application authority.
+With the existing integrity-only constructor, the manifest is trusted installation metadata. Someone able to replace both metadata and files can describe a different installation for a new operation. Persisted pins still detect changed metadata, but integrity-only validation does not authenticate a publisher. Require `PluginPublisherPolicy.RequireTrustedPublisher` for authenticated releases; see [publisher trust and key withdrawal](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/publisher-trust.md). Keep release directories, selectors and durable application state under the appropriate deployment/application authority.
 
 Files must remain unchanged from verification through execution and any automatic worker replacement. Hashing before a call does not prevent a time-of-check/time-of-use race. No read-only mount, kernel enforcement or code snapshot is introduced. OS/.NET shared framework/Python standard library and environment dependencies outside the declared file set remain deployment-owned and must also stay fixed. Runtime executable hashing does not attest their full dependency closure.
 
@@ -1972,6 +2041,8 @@ Admission reasons are fixed codes (`concurrent-starts`, `foreground-priority`, `
 
 Directly constructing `PluginCallException` preserves the supplied `Status`/`ErrorCode`. Native and gateway wire boundaries normalize unrecognized peer codes to `unknown-error`; callers must still have a fallback. Standard argument, cancellation and transport exceptions are not converted into a universal platform exception. Python `SessionCleanupError.code` and TypeScript `SessionCleanupError.code` expose `cleanup-error` while retaining their cause/aggregate information; the C# SDK's internal cleanup exception carries the equivalent code. Existing wire values remain stable; current source adds optional failure metadata.
 
+`PluginSignatureException` retains `IOException` and exposes stable `publisher-*` refusal codes before dispatch. Diagnostic discovery preserves the same codes in `Refusal`. See [publisher refusal codes](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/publisher-trust.md#refusals-and-compatibility). Default logs contain no key or signature material.
+
 ## Event ownership and response
 
 The source-generated methods in Hosting's `Diagnostics/RuntimeLog.cs` reference the named constants in `RuntimeLogEvents.cs`. Numeric IDs and existing event names remain stable and must not be reused for another meaning.
@@ -2185,7 +2256,7 @@ Unary input/output is limited to 512 KiB, stream items to 128 KiB, batches to 16
 
 Native profiles are trusted same-user processes with cooperative private workspaces and admission memory reservations; they do not enforce filesystem/network isolation or hard resource ceilings. Docker's default profile requests 256 MiB memory, no extra swap, 0.5 CPU, 64 PIDs, a read-only root, private 16 MiB tmpfs, uid/gid 65532, no capabilities, no-new-privileges and no network. Effective Docker protection depends on the deployment. The default stdio adapter requires no host mount; the socket fixture mounts only its endpoint directory, never a Docker control socket.
 
-stderr is drained independently; raw event 1007 forwarding is opt-in and may disclose plugin data. Bindings start lazily, while explicit prewarming/shared startup can start workers earlier. Restart/disposal and uncertain cleanup follow [worker lifecycle](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/worker-lifecycle.md). Public packages and installed-artifact sealing are implemented; publisher signing, public plugin-store installation, distributed quotas and hostile-plugin containment remain separate work. See [security boundaries](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/security-architecture.md).
+stderr is drained independently; raw event 1007 forwarding is opt-in and may disclose plugin data. Bindings start lazily, while explicit prewarming/shared startup can start workers earlier. Restart/disposal and uncertain cleanup follow [worker lifecycle](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/worker-lifecycle.md). Public packages and installed-artifact sealing are implemented. Current source adds [publisher signing](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/publisher-trust.md) independently of the worker protocol; public plugin-store installation, distributed quotas and hostile-plugin containment remain separate work. See [security boundaries](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/security-architecture.md).
 
 ---
 
@@ -2201,7 +2272,7 @@ The first product version runs only owner-controlled plugins. Its qualified nati
 
 | Boundary | Platform responsibility | Application responsibility |
 | --- | --- | --- |
-| Installation | Validate immutable artifacts and exact compatibility metadata | Decide which owner-controlled artifacts may execute |
+| Installation | Validate immutable artifacts, compatibility metadata and explicitly required publisher signatures | Own trusted publisher keys independently of upload credentials, protect release files and decide which artifacts may execute |
 | Tenant binding | Preserve host-selected context and operation grants | Authenticate users and select their authorized installation |
 | Callback | Route bounded calls with immutable binding context and cancellation | Check object ownership, argument shape, destinations and side effects |
 | Protocol | Enforce envelope identity, UTF-8, byte/depth limits and reserved-field rules | Treat plugin results as domain input requiring validation |
@@ -2215,6 +2286,10 @@ Treat data intentionally sent to a plugin as disclosed to it. Configuration is n
 Docker regression fixtures remain under `tests/` and `plugins/`. Their restricted container profile and adversarial parser/callback scenarios cover a different execution surface. Ordinary containers share a kernel and do not establish arbitrary hostile-plugin production support. Docker measurements from the PoC are historical, not the current native package baseline.
 
 Public third-party plugins, stronger sandboxes, a privileged lifecycle broker and cross-node security protocols require separate design and qualification. The earlier threat assessment and rejected alternatives remain retrievable through the [history index](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/history.md); they are not current release requirements or implemented guarantees.
+
+## Publisher authentication
+
+Current source supports [required publisher signatures](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/publisher-trust.md) over exact sealed manifests. Multiple trusted publishers and key rotation are supported without changing manifest pins. Configuration belongs to the deployment authority, outside the installation API. Trust applies to every plugin admitted by a catalog and does not prove safe code, prevent rollback or add process isolation. Key withdrawal takes effect on verification under a replacement snapshot; existing bindings/workers require explicit host-owned disposal and re-resolution. Package publication is separate from source implementation.
 
 ---
 
@@ -2892,6 +2967,7 @@ Source: https://raw.githubusercontent.com/yesbert/WeavePort/main/tests/README.md
 | Source architecture | `python3 scripts/check-architecture.py` and `python3 tests/documentation/test-architecture.py` |
 | SDK protocol and context | `npm run build --prefix sdks/typescript`, `npm test --prefix sdks/typescript`, then `python3 -m unittest discover -s sdks/python/tests` |
 | Reflection-free installation JSON | `dotnet run --project tests/WeavePort.Sealing.Tests -c Release` (also packed in `verify-portable.sh`) |
+| Publisher authentication | `dotnet run --project tests/WeavePort.Publisher.Tests -c Release` (also packed in `verify-portable.sh`) |
 | Host regressions | `dotnet run --project tests/WeavePort.Hosting.Tests -c Release` |
 | Fair scheduler public API | `dotnet run --project tests/WeavePort.Scheduling.Tests -c Release` (also checked as a packed consumer) |
 | Density observer controls | `python3 tools/performance/test_density.py` |
@@ -5310,11 +5386,14 @@ type WeavePort.Hosting.InstalledPlugin : System.Object [Public, Sealed]
   Method System.Collections.Generic.IReadOnlyDictionary`2[System.String,System.String] get_EntryPoints() [Public] ()
   Method WeavePort.Hosting.InstallationIdentity get_Identity() [Public] ()
   Method WeavePort.Hosting.PluginLaunchDeclaration get_Launch() [Public] ()
+  Method WeavePort.Hosting.VerifiedPluginPublisher get_Publisher() [Public] ()
   Property System.Collections.Generic.IReadOnlyDictionary`2[System.String,System.String] EntryPoints
   Property WeavePort.Hosting.InstallationIdentity Identity
   Property WeavePort.Hosting.PluginLaunchDeclaration Launch
+  Property WeavePort.Hosting.VerifiedPluginPublisher Publisher
 type WeavePort.Hosting.InstalledPluginCatalog : System.Object [Public, Sealed]
   Constructor Void .ctor(System.String, System.Collections.Generic.IReadOnlyDictionary`2[System.String,System.String]) [Public] (releases, runtimeFiles)
+  Constructor Void .ctor(System.String, System.Collections.Generic.IReadOnlyDictionary`2[System.String,System.String], WeavePort.Hosting.PluginPublisherPolicy) [Public] (releases, runtimeFiles, publisherPolicy)
   Method System.Collections.Generic.IReadOnlyList`1[WeavePort.Hosting.InstallationDiscovery] ListAll(System.String) [Public] (contract=null)
   Method System.Collections.Generic.IReadOnlyList`1[WeavePort.Hosting.InstalledPlugin] List(System.String) [Public] (contract)
   Method System.String ReadSelection(System.String) [Public, Static] (path)
@@ -5410,6 +5489,27 @@ type WeavePort.Hosting.PluginHost : System.Object [Public, Sealed]
   Property WeavePort.Hosting.WorkerPoolSnapshot Snapshot
 type WeavePort.Hosting.PluginInstallationSealer : System.Object [Public, Abstract, Sealed]
   Method WeavePort.Hosting.InstallationIdentity Seal(WeavePort.Hosting.PluginSealOptions) [Public, Static] (options)
+type WeavePort.Hosting.PluginInstallationSigner : System.Object [Public, Abstract, Sealed]
+  Method WeavePort.Hosting.InstallationIdentity Sign(System.String, System.String, System.String, System.String, System.Security.Cryptography.RSA) [Public, Static] (releaseDirectory, plugin, version, contract, privateKey)
+type WeavePort.Hosting.PluginInstallationVerification : System.Object [Public, Sealed]
+  implements System.IEquatable`1[WeavePort.Hosting.PluginInstallationVerification]
+  Constructor Void .ctor(WeavePort.Hosting.InstallationIdentity, WeavePort.Hosting.VerifiedPluginPublisher) [Public] (Identity, Publisher)
+  Method Boolean Equals(System.Object) [Public, Virtual] (obj)
+  Method Boolean Equals(WeavePort.Hosting.PluginInstallationVerification) [Public, Final, Virtual] (other)
+  Method Boolean op_Equality(WeavePort.Hosting.PluginInstallationVerification, WeavePort.Hosting.PluginInstallationVerification) [Public, Static] (left, right)
+  Method Boolean op_Inequality(WeavePort.Hosting.PluginInstallationVerification, WeavePort.Hosting.PluginInstallationVerification) [Public, Static] (left, right)
+  Method Int32 GetHashCode() [Public, Virtual] ()
+  Method System.String ToString() [Public, Virtual] ()
+  Method Void Deconstruct(WeavePort.Hosting.InstallationIdentity ByRef, WeavePort.Hosting.VerifiedPluginPublisher ByRef) [Public] (Identity, Publisher)
+  Method Void set_Identity(WeavePort.Hosting.InstallationIdentity) [Public] (value)
+  Method Void set_Publisher(WeavePort.Hosting.VerifiedPluginPublisher) [Public] (value)
+  Method WeavePort.Hosting.InstallationIdentity get_Identity() [Public] ()
+  Method WeavePort.Hosting.PluginInstallationVerification <Clone>$() [Public] ()
+  Method WeavePort.Hosting.VerifiedPluginPublisher get_Publisher() [Public] ()
+  Property WeavePort.Hosting.InstallationIdentity Identity
+  Property WeavePort.Hosting.VerifiedPluginPublisher Publisher
+type WeavePort.Hosting.PluginInstallationVerifier : System.Object [Public, Abstract, Sealed]
+  Method WeavePort.Hosting.PluginInstallationVerification Verify(System.String, System.String, System.String, System.String, WeavePort.Hosting.PluginPublisherPolicy, WeavePort.Hosting.InstallationIdentity) [Public, Static] (releaseDirectory, plugin, version, contract, publisherPolicy, pinned=null)
 type WeavePort.Hosting.PluginLaunchDeclaration : System.Object [Public, Sealed]
   implements System.IEquatable`1[WeavePort.Hosting.PluginLaunchDeclaration]
   Constructor Void .ctor() [Public] ()
@@ -5435,6 +5535,12 @@ type WeavePort.Hosting.PluginLaunchDeclaration : System.Object [Public, Sealed]
   Property System.String Runtime
   Property System.String[] Arguments
   Property WeavePort.Hosting.WorkerReusePolicy[] Ownership
+type WeavePort.Hosting.PluginPublisherPolicy : System.Object [Public, Sealed]
+  Method Boolean get_RequiresSignature() [Public] ()
+  Method WeavePort.Hosting.PluginPublisherPolicy RequireTrustedPublisher(System.Collections.Generic.IEnumerable`1[WeavePort.Hosting.TrustedPluginPublisher]) [Public, Static] (publishers)
+  Method WeavePort.Hosting.PluginPublisherPolicy get_IntegrityOnly() [Public, Static] ()
+  Property Boolean RequiresSignature
+  Property WeavePort.Hosting.PluginPublisherPolicy IntegrityOnly
 type WeavePort.Hosting.PluginSealOptions : System.Object [Public, Sealed]
   implements System.IEquatable`1[WeavePort.Hosting.PluginSealOptions]
   Constructor Void .ctor() [Public] ()
@@ -5472,6 +5578,10 @@ type WeavePort.Hosting.PluginSealOptions : System.Object [Public, Sealed]
   Property System.String ReleaseDirectory
   Property System.String Version
   Property WeavePort.Hosting.PluginLaunchDeclaration Launch
+type WeavePort.Hosting.PluginSignatureException : System.IO.IOException [Public, Sealed]
+  implements System.Runtime.Serialization.ISerializable
+  Method System.String get_ErrorCode() [Public] ()
+  Property System.String ErrorCode
 type WeavePort.Hosting.PluginVersionMismatchException : System.IO.IOException [Public, Sealed]
   implements System.Runtime.Serialization.ISerializable
   Constructor Void .ctor(System.String, System.String) [Public] (expected, advertised)
@@ -5756,6 +5866,12 @@ type WeavePort.Hosting.TenantBinding : System.Object [Public, Sealed]
   Method WeavePort.Hosting.TenantBinding <Clone>$() [Public] ()
   Property System.String Tenant
   Property System.Text.Json.JsonElement Configuration
+type WeavePort.Hosting.TrustedPluginPublisher : System.Object [Public, Sealed]
+  Constructor Void .ctor(System.String, Byte[]) [Public] (publisher, subjectPublicKeyInfo)
+  Method System.String get_KeyId() [Public] ()
+  Method System.String get_Publisher() [Public] ()
+  Property System.String KeyId
+  Property System.String Publisher
 type WeavePort.Hosting.UnixSocketTransport : System.Object [Public, Sealed]
   implements System.IEquatable`1[WeavePort.Hosting.UnixSocketTransport]
   Constructor Void .ctor(System.String, System.String) [Public] (LocalDirectory, DockerDirectory)
@@ -5773,6 +5889,23 @@ type WeavePort.Hosting.UnixSocketTransport : System.Object [Public, Sealed]
   Method WeavePort.Hosting.UnixSocketTransport <Clone>$() [Public] ()
   Property System.String DockerDirectory
   Property System.String LocalDirectory
+type WeavePort.Hosting.VerifiedPluginPublisher : System.Object [Public, Sealed]
+  implements System.IEquatable`1[WeavePort.Hosting.VerifiedPluginPublisher]
+  Constructor Void .ctor(System.String, System.String) [Public] (Publisher, KeyId)
+  Method Boolean Equals(System.Object) [Public, Virtual] (obj)
+  Method Boolean Equals(WeavePort.Hosting.VerifiedPluginPublisher) [Public, Final, Virtual] (other)
+  Method Boolean op_Equality(WeavePort.Hosting.VerifiedPluginPublisher, WeavePort.Hosting.VerifiedPluginPublisher) [Public, Static] (left, right)
+  Method Boolean op_Inequality(WeavePort.Hosting.VerifiedPluginPublisher, WeavePort.Hosting.VerifiedPluginPublisher) [Public, Static] (left, right)
+  Method Int32 GetHashCode() [Public, Virtual] ()
+  Method System.String ToString() [Public, Virtual] ()
+  Method System.String get_KeyId() [Public] ()
+  Method System.String get_Publisher() [Public] ()
+  Method Void Deconstruct(System.String ByRef, System.String ByRef) [Public] (Publisher, KeyId)
+  Method Void set_KeyId(System.String) [Public] (value)
+  Method Void set_Publisher(System.String) [Public] (value)
+  Method WeavePort.Hosting.VerifiedPluginPublisher <Clone>$() [Public] ()
+  Property System.String KeyId
+  Property System.String Publisher
 type WeavePort.Hosting.WorkerPoolOptions : System.Object [Public, Sealed]
   implements System.IEquatable`1[WeavePort.Hosting.WorkerPoolOptions]
   Constructor Void .ctor(Int32, Int64, Int32, Int32, System.Nullable`1[System.TimeSpan], System.Nullable`1[System.TimeSpan], Int32, Int64) [Public] (MaximumWorkers=64, MemoryBudgetMiB=16384, MaximumPristineWorkers=4, MaximumConcurrentStarts=8, PristineLifetime=null, MaintenanceInterval=null, MaximumWorkersPerTenant=8, MemoryBudgetPerTenantMiB=2048)

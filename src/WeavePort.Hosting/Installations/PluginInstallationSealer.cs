@@ -26,6 +26,10 @@ public static class PluginInstallationSealer
         ArgumentException.ThrowIfNullOrWhiteSpace(options.Contract);
         string root = Path.GetFullPath(options.ReleaseDirectory);
         RejectLink(root);
+        if (Path.Exists(Path.Combine(root, PublisherSignature.FileName)))
+        {
+            throw new InvalidDataException("Remove the existing signature explicitly in offline staging before resealing this release.");
+        }
         Dictionary<string, string> files = Inventory(root).Order(StringComparer.Ordinal).ToDictionary(p => p, p => Digest(BundlePath(root, p)), StringComparer.Ordinal);
         if (files.Count is < 1 or > InstallationLimits.Files || options.EntryPoints.Count is < 1 or > InstallationLimits.EntryPoints)
         {

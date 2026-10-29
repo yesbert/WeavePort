@@ -9,6 +9,9 @@ public sealed class InstalledPlugin
     /// <summary>Gets the resolved, verified entry points by trusted alias.</summary>
     public IReadOnlyDictionary<string, string> EntryPoints { get; }
 
+    /// <summary>Gets publisher authentication at resolution time, or null for integrity-only policy. This is not a live revocation check.</summary>
+    public VerifiedPluginPublisher? Publisher { get; internal init; }
+
     private readonly PluginLaunchDeclaration? _launch;
     /// <summary>Gets a copy of the verified launch declaration, when supplied by the installation.</summary>
     public PluginLaunchDeclaration? Launch => _launch?.Freeze();

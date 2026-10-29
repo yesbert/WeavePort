@@ -6,7 +6,7 @@ The first product version runs only owner-controlled plugins. Its qualified nati
 
 | Boundary | Platform responsibility | Application responsibility |
 | --- | --- | --- |
-| Installation | Validate immutable artifacts and exact compatibility metadata | Decide which owner-controlled artifacts may execute |
+| Installation | Validate immutable artifacts, compatibility metadata and explicitly required publisher signatures | Own trusted publisher keys independently of upload credentials, protect release files and decide which artifacts may execute |
 | Tenant binding | Preserve host-selected context and operation grants | Authenticate users and select their authorized installation |
 | Callback | Route bounded calls with immutable binding context and cancellation | Check object ownership, argument shape, destinations and side effects |
 | Protocol | Enforce envelope identity, UTF-8, byte/depth limits and reserved-field rules | Treat plugin results as domain input requiring validation |
@@ -20,3 +20,7 @@ Treat data intentionally sent to a plugin as disclosed to it. Configuration is n
 Docker regression fixtures remain under `tests/` and `plugins/`. Their restricted container profile and adversarial parser/callback scenarios cover a different execution surface. Ordinary containers share a kernel and do not establish arbitrary hostile-plugin production support. Docker measurements from the PoC are historical, not the current native package baseline.
 
 Public third-party plugins, stronger sandboxes, a privileged lifecycle broker and cross-node security protocols require separate design and qualification. The earlier threat assessment and rejected alternatives remain retrievable through the [history index](history.md); they are not current release requirements or implemented guarantees.
+
+## Publisher authentication
+
+Current source supports [required publisher signatures](publisher-trust.md) over exact sealed manifests. Multiple trusted publishers and key rotation are supported without changing manifest pins. Configuration belongs to the deployment authority, outside the installation API. Trust applies to every plugin admitted by a catalog and does not prove safe code, prevent rollback or add process isolation. Key withdrawal takes effect on verification under a replacement snapshot; existing bindings/workers require explicit host-owned disposal and re-resolution. Package publication is separate from source implementation.

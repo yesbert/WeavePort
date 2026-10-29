@@ -27,6 +27,10 @@
       "Portable sealing"
     ],
     [
+      "docs/publisher-trust.md",
+      "Publisher signatures"
+    ],
+    [
       "docs/reusable-plugins.md",
       "Approved reuse"
     ],
