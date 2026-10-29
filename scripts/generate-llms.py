@@ -62,6 +62,7 @@ GUIDES = [
         "Source sample",
         "Live streams and plugin-originated bytes",
     ),
+    ("docs/publisher-trust.md", "Publisher trust", "Signed releases, key rotation and host trust policy"),
     ("docs/plugin-sdk.md", "Author SDKs", "C#, Python and TypeScript plugins"),
     (
         "docs/reusable-plugins.md",

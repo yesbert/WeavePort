@@ -87,13 +87,31 @@ internal static class InstallationFiles
                 continue;
             }
 
-            if (path == Path.Combine(root, ManifestFileName))
+            if (path == Path.Combine(root, ManifestFileName) || path == Path.Combine(root, PublisherSignature.FileName))
             {
                 continue;
             }
 
             files.Add(Path.GetRelativePath(root, path).Replace(Path.DirectorySeparatorChar, '/'));
         }
+    }
+
+    internal static byte[] ReadBounded(string path, int maximumBytes)
+    {
+        using var input = File.OpenRead(path);
+        if (input.Length > maximumBytes)
+        {
+            throw new InvalidDataException("Installation metadata exceeds its byte limit.");
+        }
+
+        byte[] bytes = new byte[(int)input.Length];
+        input.ReadExactly(bytes);
+        if (input.ReadByte() != -1)
+        {
+            throw new InvalidDataException("Installation metadata changed while being read.");
+        }
+
+        return bytes;
     }
 
     internal static void VerifyFile(string path, string digest)

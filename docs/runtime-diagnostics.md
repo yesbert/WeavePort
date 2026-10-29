@@ -49,6 +49,8 @@ Admission reasons are fixed codes (`concurrent-starts`, `foreground-priority`, `
 
 Directly constructing `PluginCallException` preserves the supplied `Status`/`ErrorCode`. Native and gateway wire boundaries normalize unrecognized peer codes to `unknown-error`; callers must still have a fallback. Standard argument, cancellation and transport exceptions are not converted into a universal platform exception. Python `SessionCleanupError.code` and TypeScript `SessionCleanupError.code` expose `cleanup-error` while retaining their cause/aggregate information; the C# SDK's internal cleanup exception carries the equivalent code. Existing wire values remain stable; current source adds optional failure metadata.
 
+`PluginSignatureException` retains `IOException` and exposes stable `publisher-*` refusal codes before dispatch. Diagnostic discovery preserves the same codes in `Refusal`. See [publisher refusal codes](publisher-trust.md#refusals-and-compatibility). Default logs contain no key or signature material.
+
 ## Event ownership and response
 
 The source-generated methods in Hosting's `Diagnostics/RuntimeLog.cs` reference the named constants in `RuntimeLogEvents.cs`. Numeric IDs and existing event names remain stable and must not be reused for another meaning.

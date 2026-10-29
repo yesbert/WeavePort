@@ -1,0 +1,45 @@
+{
+  "Schema": 2,
+  "Plugin": "interop",
+  "Version": "1",
+  "Contract": "test/v1",
+  "EntryPoints": {
+    "python": "worker.txt"
+  },
+  "Files": {
+    "pyproject.toml": "8A0D6E82B420D5E3646ED802AA391F7CB68AF6F4E8D37DB1E9C83DE60D35E0FB",
+    "worker.txt": "BEE7A990A5B64781D7A5C9C2BEC826F6B17FE404CC532234CA01530F189A62B9"
+  },
+  "Compatibility": {
+    "HostApi": 2,
+    "Protocol": 1,
+    "HostPackages": {
+      "WeavePort.Abstractions": "0.8.0",
+      "WeavePort.Hosting": "0.8.0",
+      "WeavePort.Sdk.Client": "0.8.0"
+    },
+    "AuthorSdks": {
+      "python": {
+        "Package": "weaveport-sdk",
+        "Version": "0.4.0"
+      }
+    }
+  },
+  "Launch": {
+    "Runtime": "python",
+    "Arguments": [],
+    "MemoryMiB": 256,
+    "Ownership": [
+      "CustomerBound"
+    ],
+    "MaximumDegree": 1
+  },
+  "Runtimes": {
+    "python": {
+      "Ecosystem": "python",
+      "Source": "pyproject.toml",
+      "Requirement": ">=3.11,<4"
+    }
+  },
+  "ExternalFiles": {}
+}

@@ -1,5 +1,4 @@
 using static WeavePort.Hosting.InstallationFiles;
-using System.Security.Cryptography;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -7,8 +6,19 @@ namespace WeavePort.Hosting;
 /// <summary>Validates trusted local release manifests; does not install code or provide an OS sandbox.</summary>
 public sealed partial class InstalledPluginCatalog(string releases, IReadOnlyDictionary<string, string> runtimeFiles)
 {
+    private readonly PluginPublisherPolicy _publisherPolicy = PluginPublisherPolicy.IntegrityOnly;
+
+    /// <summary>Creates a catalog with an immutable publisher trust snapshot. Existing installations and workers are not revoked by a replacement catalog.</summary>
+    public InstalledPluginCatalog(string releases, IReadOnlyDictionary<string, string> runtimeFiles, PluginPublisherPolicy publisherPolicy)
+        : this(releases, runtimeFiles)
+    {
+        ArgumentNullException.ThrowIfNull(publisherPolicy);
+        _publisherPolicy = publisherPolicy;
+    }
+
     internal static readonly JsonSerializerOptions ManifestJson = new()
     {
+        TypeInfoResolver = InstallationJsonContext.Default,
         Converters =
         {
             new JsonStringEnumConverter<WorkerReusePolicy>()
@@ -35,33 +45,14 @@ public sealed partial class InstalledPluginCatalog(string releases, IReadOnlyDic
         }
 
         string root = Path.GetFullPath(Path.Combine(Directory.Exists(nested) ? nested : releases, version));
-        string path = Path.Combine(root, ManifestFileName);
-        (Manifest manifest, byte[] bytes) = ReadManifest(root, path);
-        var identity = new InstallationIdentity(plugin, version, contract, Convert.ToHexString(SHA256.HashData(bytes)));
-        ValidateManifestDeclarations(manifest, identity, pinned);
-
-        InstallationCompatibility.Validate(manifest.Compatibility, manifest.EntryPoints.Keys);
-        var actualFiles = Inventory(root);
-        if (!manifest.Files.Keys.ToHashSet(StringComparer.Ordinal).SetEquals(actualFiles))
-        {
-            throw new InvalidDataException("Installation bundle file set changed.");
-        }
-
-        foreach (var file in manifest.Files)
-        {
-            VerifyFile(BundlePath(root, file.Key), file.Value);
-        }
-
+        InstallationRelease release = ReadValidatedRelease(root, plugin, version, contract, _publisherPolicy, pinned);
+        Manifest manifest = release.Manifest;
         Dictionary<string, string> selectedRuntimes = SelectRuntimes(root, manifest);
         var entries = ResolveEntryPoints(root, manifest);
         manifest.Launch?.Validate(entries, selectedRuntimes);
-        if (manifest.Launch is { } launch && manifest.Compatibility!.Protocol != (launch.Ownership.Contains(WorkerReusePolicy.Shared) ? 2 : 1))
+        return new InstalledPlugin(release.Identity, entries, selectedRuntimes, manifest.Launch)
         {
-            throw new InvalidDataException("Launch ownership does not match its declared wire protocol.");
-        }
-
-        return new InstalledPlugin(identity, entries, selectedRuntimes, manifest.Launch)
-        {
+            Publisher = release.Publisher,
             RuntimeValidation = manifest.Schema == 2 ? new RuntimeValidation(root, manifest.Runtimes!, selectedRuntimes, manifest.Files) : null
         };
     }
@@ -149,7 +140,7 @@ public sealed partial class InstalledPluginCatalog(string releases, IReadOnlyDic
             throw new InvalidDataException("Linked installation roots/manifests are unsupported.");
         }
 
-        byte[] bytes = File.ReadAllBytes(path);
+        byte[] bytes = ReadBounded(path, InstallationLimits.ManifestBytes);
         Manifest manifest;
         try
         {

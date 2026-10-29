@@ -85,6 +85,7 @@ public sealed partial class InstalledPluginCatalog
     private static bool DiscoveryFailure(Exception error) => error is InvalidDataException or IOException or UnauthorizedAccessException or ArgumentException or FormatException or NotSupportedException;
     private static InstallationDiscovery Refused(string directory, Exception error) => new(directory, null, error switch
     {
+        PluginSignatureException signature => signature.ErrorCode,
         FileNotFoundException => "missing-file",
         UnauthorizedAccessException => "access-denied",
         InvalidDataException or ArgumentException or FormatException or NotSupportedException => "invalid-installation",

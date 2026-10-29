@@ -4,6 +4,8 @@ cd "$(dirname "$0")/.."
 ./scripts/prepare-core-packages.sh
 wp_portable_run="$PWD/artifacts/portable-check-$(date +%s)-$$"
 mkdir -p "$wp_portable_run"
+dotnet run --project tests/WeavePort.Sealing.Tests -c Release -p:UsePackedCore=true -p:RestorePackagesPath="$wp_portable_run/sealing-packages"
+dotnet run --project tests/WeavePort.Publisher.Tests -c Release -p:UsePackedCore=true -p:RestorePackagesPath="$wp_portable_run/publisher-packages"
 dotnet publish tests/portable -c Release --force -p:RestorePackagesPath="$wp_portable_run/packages" -o "$wp_portable_run/host" --nologo
 dotnet "$wp_portable_run/host/Portable.dll" seal "$wp_portable_run/plugins" | tee "$wp_portable_run/seal.json"
 dotnet "$wp_portable_run/host/Portable.dll" run "$wp_portable_run/plugins" | tee "$wp_portable_run/local.json"

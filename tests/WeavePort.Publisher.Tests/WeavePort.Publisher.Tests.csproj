@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <IsPackable>false</IsPackable>
+    <UseAppHost>false</UseAppHost>
+    <JsonSerializerIsReflectionEnabledByDefault>false</JsonSerializerIsReflectionEnabledByDefault>
+  </PropertyGroup>
+  <ItemGroup Condition="'$(UsePackedCore)' != 'true'">
+    <ProjectReference Include="../../src/WeavePort.Hosting/WeavePort.Hosting.csproj" />
+    <ProjectReference Include="../../src/WeavePort.Sdk/WeavePort.Sdk.csproj" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(UsePackedCore)' == 'true'">
+    <PackageReference Include="WeavePort.Hosting" />
+    <PackageReference Include="WeavePort.Sdk" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="../../examples/signed-releases/*.cs" Link="Examples/%(Filename)%(Extension)" />
+    <None Include="fixtures/**/*" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

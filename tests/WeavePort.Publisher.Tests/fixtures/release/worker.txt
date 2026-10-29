@@ -1,0 +1,1 @@
+Independent publisher fixture; never execute.
