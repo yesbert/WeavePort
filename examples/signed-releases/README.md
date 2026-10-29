@@ -1,6 +1,6 @@
 # Sign and admit plugin releases
 
-These two C# source files are copyable integration examples and compile/run as linked sources in `tests/WeavePort.Publisher.Tests`. They use the current Hosting source APIs; no released package version is claimed yet.
+These two C# source files are copyable integration examples and compile/run as linked sources in `tests/WeavePort.Publisher.Tests`. They target the prepared Hosting 0.9.0 APIs. Version 0.9.0 is not yet published; use a freshly packed local build.
 
 `ReleasePipeline.SealAndSign` takes the built release options and a caller-owned RSA private-key instance obtained from the publisher pipeline's protected key storage. It seals, then signs without executing the plugin or a runtime. Keep that key out of release directories, command-line arguments, logs and the installing host. Dispose it after the pipeline operation. Re-sign unchanged content with `PluginInstallationSigner.Sign`; to change content, explicitly remove its old signature in offline staging before resealing.
 

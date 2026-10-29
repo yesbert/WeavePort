@@ -5,7 +5,7 @@
     <UseAppHost>false</UseAppHost>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="WeavePort.Hosting" Version="0.8.0" />
-    <PackageReference Include="WeavePort.Sdk" Version="0.8.0" />
+    <PackageReference Include="WeavePort.Hosting" Version="0.9.0" />
+    <PackageReference Include="WeavePort.Sdk" Version="0.9.0" />
   </ItemGroup>
 </Project>

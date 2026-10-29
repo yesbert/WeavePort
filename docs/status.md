@@ -1,9 +1,9 @@
 # Product status
 
-## Release 0.8.0
+## Release 0.9.0
 
 
-Release version: **0.8.0**, under MIT, with four core packages and optional Composition, Gateway server and Gateway client packages. Windows, Linux and macOS are supported targets for trusted stdio execution. Current release validation covers macOS arm64; Windows and Linux release validation is pending. See [platform support and validation](platform-qualification.md). This pre-1.0 API remains subject to evolution. Python/TypeScript registry publication and a new offline distribution are outside this release. The historical internal distribution remains **0.1.0-internal.2**.
+Prepared release version: **0.9.0** (not yet published), under MIT, with four core packages and optional Composition, Gateway server and Gateway client packages. Windows, Linux and macOS are supported targets for trusted stdio execution. Current release validation covers macOS arm64; Windows and Linux release validation is pending. See [platform support and validation](platform-qualification.md). This pre-1.0 API remains subject to evolution. Python/TypeScript registry publication and a new offline distribution are outside this release. The historical internal distribution remains **0.1.0-internal.2**.
 
 The previous [0.7.0 release evidence](../reports/release/0.7.0/README.md) records 3,533 reported qualification assertions, the clean static audit and verified downloads for all seven NuGet packages and 16 GitHub artifacts.
 
@@ -17,9 +17,11 @@ Current measurement methodology and results are in [benchmarking](benchmarking.m
 
 ## Release qualification and availability
 
+Version 0.9.0 adds reflection-free installation JSON and opt-in trusted publisher signatures. See [migration notes](releases.md#090-trusted-publishers-and-reflection-free-installation-json), [publisher trust](publisher-trust.md) and the [preparation record](../reports/release/0.9.0/README.md). Tagging, publication and public-download verification remain pending.
+
 Release 0.8.0 includes structured failure details, explicit cancellation attribution, primary execution/cleanup cause preservation, safe diagnostic delivery, generated shared protocol definitions and the complete readability audit. Python/TypeScript author SDKs are 0.4.0. See [migration notes](releases.md#080-failure-contracts-and-code-quality), [failure codes](failure-codes.md), [runtime diagnostics](runtime-diagnostics.md) and [source organization](source-organization.md).
 
-Release 0.8.0 is published. The [release record](../reports/release/0.8.0/README.md) retains exact-tag qualification (3,599 reported assertions, 73 stages, 442 frozen artifacts), successful publication and verified downloads for all seven NuGet packages and 16 package/symbol/SDK assets. Current API baselines and examples describe 0.8.0. Historical reports retain their original versions and qualification limits.
+Release 0.8.0 is published. The [release record](../reports/release/0.8.0/README.md) retains exact-tag qualification (3,599 reported assertions, 73 stages, 442 frozen artifacts), successful publication and verified downloads for all seven NuGet packages and 16 package/symbol/SDK assets. Current API baselines and examples target the prepared 0.9.0 family. Historical reports retain their original versions and qualification limits.
 
 ## Runtime optimization and soak verification
 
@@ -33,7 +35,7 @@ This qualifies the recorded native macOS arm64 profile. Individual latency reach
 
 The remaining platform change is [qualify-native-capacity-and-platform-comparison](../openspec/changes/qualify-native-capacity-and-platform-comparison/tasks.md): Windows capacity/performance qualification remains outstanding. Native source adapter checks now pass in [Windows/Linux CI](continuous-integration.md), including 38 Windows stdio assertions and 38/39 Linux stdio/socket assertions. Those source checks do not replace current public-package installation qualification. See [platform requirements](platform-qualification.md).
 
-HiveWeaver, TreeWeaver and NextPA integration remains separate application work. Signing/notarization, stronger sandboxing and automatic deployment/migration are separate release decisions, not hidden tasks needed to run the current internal examples.
+HiveWeaver, TreeWeaver and NextPA integration remains separate application work. Application signing/notarization, stronger sandboxing and automatic deployment/migration are separate release decisions, not hidden tasks needed to run the current internal examples.
 
 The [repository cleanup qualification](../reports/verification/current/README.md) adds a maintained-link check (399 assertion executions), moved adapter checks and a packaging regression. It does not replace the exact current release evidence above.
 
