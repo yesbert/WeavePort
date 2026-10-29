@@ -19,11 +19,14 @@ internal static class CatalogChecks
         string selector = Path.Combine(fixture.Root, "selection.txt");
         catalog.Activate(selector, "test", "1", "test/v1");
         await catalog.ActivateAsync(selector, "test", "1", "test/v1");
+        File.WriteAllText(selector, "previous\n");
+        byte[] previousSelection = File.ReadAllBytes(selector);
         var withdrawn = fixture.Catalog(Trust(second));
         Refuse(() => withdrawn.Resolve("test", "1", "test/v1", pin), "publisher-key-untrusted");
         Refuse(() => withdrawn.Activate(selector, "test", "1", "test/v1"), "publisher-key-untrusted");
+        Check(previousSelection.SequenceEqual(File.ReadAllBytes(selector)), "Refused sync activation changed selector.");
         await RefuseAsync(() => withdrawn.ActivateAsync(selector, "test", "1", "test/v1"), "publisher-key-untrusted");
-        Check(File.ReadAllText(selector).Trim() == "1", "Refused activation changed selector.");
+        Check(previousSelection.SequenceEqual(File.ReadAllBytes(selector)), "Refused async activation changed selector.");
         await MixedDiscoveryAsync(fixture, first, unknown);
         await IndependentPoliciesAsync(fixture, first, second, pin);
         LegacyCompatibility(first);

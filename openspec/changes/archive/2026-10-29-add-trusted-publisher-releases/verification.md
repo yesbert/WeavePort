@@ -27,3 +27,9 @@ After qualification, only evidence/task completion, specification synchronizatio
 ## Limits
 
 This qualifies the documented native macOS surface. It does not establish new Windows/Linux execution support, general Hosting Native AOT support, hostile-code containment, rollback prevention or automatic worker revocation. Installation operations run with JSON reflection disabled; the existing author/lifecycle subprocess uses its reflection-enabled runtime path. No packages were published by this change.
+
+## Follow-up code review — 2026-10-29
+
+A second code review found a false-positive risk in the activation-refusal test: the selector already named the requested version, so a premature write could escape detection. The test now starts from a different version and compares exact selector bytes independently after synchronous and asynchronous refusal. No production code changed.
+
+The strengthened publisher suite and focused C# style gate pass. Two temporary negative controls injected selector writes before signature validation, separately in sync and async activation; each failed at its corresponding preservation assertion. Both mutations were reverted and the publisher suite passed again. Reflection-free sealing tests, strict OpenSpec validation and diff checks also passed during this review. This is a test-only follow-up to the qualified implementation above, not an independent third-party approval.
