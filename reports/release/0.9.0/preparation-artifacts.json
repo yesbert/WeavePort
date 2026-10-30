@@ -1,0 +1,23 @@
+{
+  "sourceCommit": "90cd2863e5f21dca55bf22ec26a17a5a68b6a7af",
+  "status": "qualified-preparation-not-published",
+  "artifactManifestSha256": "35763fce047a02cbcec02bb6a06a877baa673a73773934d49db0c3f32a907d2c",
+  "sha256": {
+    "WeavePort.Abstractions.0.9.0.nupkg": "72ccb0088a08c1b195c310598e14ad42cf1cdd8ec2212cf6563ce2f826cf15b1",
+    "WeavePort.Abstractions.0.9.0.snupkg": "da182d90650f8c25fe834f60dc02724500c006f375677545b7577e152d944b0b",
+    "WeavePort.Composition.0.9.0.nupkg": "cbbde30a9bd22214af3dd43871eeb79daf27c8e84f4308a27d8f5356789a0299",
+    "WeavePort.Composition.0.9.0.snupkg": "06fa0a33c6b3d42b81c414395f423624c0df77201d5e8540f276c315cb9de144",
+    "WeavePort.Hosting.0.9.0.nupkg": "ee35cf93e3f926c369bcf0c635d5359b6596811713e9e0a008ed4c9d1de3ac18",
+    "WeavePort.Hosting.0.9.0.snupkg": "bc34f3357292edc58828bdd116a5bb018f08259f549173d0ade49b5e5201c0c4",
+    "WeavePort.Sdk.0.9.0.nupkg": "5368ac4f9f4c56ee9df0a2e1c0b0b7342876832b55ce8b66f28705c9d9e8130b",
+    "WeavePort.Sdk.0.9.0.snupkg": "82d157a6f6d847f8ca77aed09489b10e0415947956021f3997fe1ee316d7bae7",
+    "WeavePort.Sdk.Client.0.9.0.nupkg": "db29c454805f964456e79a007166e5cf7bd86ff7ba901fdcde0ae7211991ff71",
+    "WeavePort.Sdk.Client.0.9.0.snupkg": "c552621195263bb1d4067d218f007085b370640b76cae91e9a7127e436d744f0",
+    "WeavePort.Sdk.Gateway.0.9.0.nupkg": "c4521006307b862a1f84b42b4844a145d7058923f633f8c060501e2e2cda508b",
+    "WeavePort.Sdk.Gateway.0.9.0.snupkg": "95882e60cecf6ae35752a0182c819005b2d6292c7de92754f250ccfbbe707984",
+    "WeavePort.Sdk.Gateway.Client.0.9.0.nupkg": "9738d630d555a25284e92d2360802dad5948aa383169a338c6b2f4dddf355e33",
+    "WeavePort.Sdk.Gateway.Client.0.9.0.snupkg": "98158e6016cdacf6e562ebcf453959bf72141f84c4a77a75a558cd4caab8bd5d",
+    "weaveport-sdk-0.4.0.tgz": "eab40e98aeda7ee7b2e339353bedaeee1a39e75ea33de14b25bd60f172feab0f",
+    "weaveport_sdk-0.4.0-py3-none-any.whl": "61487ccdcda1b27cf56fd5fbfbeb14fb96383ac6265e36f2aeff96303708108f"
+  }
+}

@@ -1,10 +1,10 @@
 # Local package and contract compatibility
 
-**Release availability:** Structured failure details, diagnostic delivery and combined execution/cleanup metadata are included in .NET 0.8.0 and author SDKs 0.4.0. See the [0.8.0 migration notes](releases.md#080-failure-contracts-and-code-quality) before upgrading from 0.7.0.
+**Release availability:** This matrix targets prepared .NET 0.9.0 (not yet published) and unchanged author SDKs 0.4.0. See [migration notes](releases.md#090-trusted-publishers-and-reflection-free-installation-json).
 
 Keep the host, SDKs and plugin artifacts on a known-compatible combination. This guide defines the exact identities checked during installation and startup.
 
-**Package policy for 0.8.0, reviewed 2026-09-24.** The [machine-readable matrix](../compatibility/local-v1.json) defines one exact combination. It is embedded in `WeavePort.Hosting` and consumed by the offline installation sealer. The public NuGet package set uses this exact matrix; no general SemVer range is accepted.
+**Package policy for 0.9.0, reviewed 2026-10-29.** The [machine-readable matrix](../compatibility/local-v1.json) defines one exact combination. It is embedded in `WeavePort.Hosting` and consumed by the offline installation sealer. The public NuGet package set uses this exact matrix; no general SemVer range is accepted.
 
 ## Separate compatibility identities
 
@@ -12,8 +12,8 @@ Keep the host, SDKs and plugin artifacts on a known-compatible combination. This
 |---|---|---|
 | Local host API level | `2` | Installation compatibility declaration against the embedded matrix |
 | Transport protocol | `1` exclusive, `2` shared | Compatibility declaration and existing worker startup protocol checks |
-| Core host packages | Abstractions, Hosting, Sdk.Client, each `0.8.0` | Exact declaration plus actual packed/loaded metadata checks |
-| C# author SDK (`dotnet`) | `WeavePort.Sdk` `0.8.0` | Entry-specific declaration, packed metadata and native startup/call checks |
+| Core host packages | Abstractions, Hosting, Sdk.Client, each `0.9.0` | Exact declaration plus actual packed/loaded metadata checks |
+| C# author SDK (`dotnet`) | `WeavePort.Sdk` `0.9.0` | Entry-specific declaration, packed metadata and native startup/call checks |
 | Python author SDK (`python`) | `weaveport-sdk` `0.4.0` | Entry-specific declaration, wheel/installed metadata and native startup/call checks |
 | TypeScript author SDK (`node`) | `@weaveport/sdk` `0.4.0` | Entry-specific declaration, npm/installed metadata and native startup/call checks |
 | Plugin artifact release | Exact chosen installation, e.g. `1` or `2` | Manifest identity/content pin and worker's advertised release |
@@ -72,4 +72,4 @@ From the repository root:
 
 The final script checks actual NuGet identity/dependency closure/target libraries, installed and packed author SDK metadata, loaded versions, embedded policy, the API baseline and installation compatibility/refusal cases. Negative checks use copies to prove that real package dependency drift and an API mismatch fail. Separate sample processes verify state preservation. Historical internal-candidate evidence is in the [retained report](../reports/release/0.1.0-internal.2/candidate/report.md).
 
-The 0.8.0 package family includes Abstractions, Hosting, Sdk, Sdk.Client, Composition, Sdk.Gateway and Sdk.Gateway.Client. All selected .NET packages must come from the same qualified delivery. Hosting now depends on Sdk.Client so installed bindings return ready-to-use clients; Client depends only on Abstractions, so this introduces no dependency cycle or new third-party package. Optional package identities remain outside mandatory installation declarations.
+The 0.9.0 package family includes Abstractions, Hosting, Sdk, Sdk.Client, Composition, Sdk.Gateway and Sdk.Gateway.Client. All selected .NET packages must come from the same qualified delivery. Hosting now depends on Sdk.Client so installed bindings return ready-to-use clients; Client depends only on Abstractions, so this introduces no dependency cycle or new third-party package. Optional package identities remain outside mandatory installation declarations.

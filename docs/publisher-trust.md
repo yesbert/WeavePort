@@ -1,6 +1,6 @@
 # Publisher trust for installed releases
 
-**Availability:** Implemented in current source; package version allocation and publication are separate release operations. Use a freshly packed build for the examples below.
+**Availability:** Included in the prepared 0.9.0 package family, not yet published. Use a freshly packed build for the examples below; see [release preparation](../reports/release/0.9.0/README.md).
 
 Installation hashes protect content against a manifest. Publisher signatures authenticate that manifest against a host-owned public key. Require publisher authentication when accepting releases from callers whose installation credentials must not grant authority to introduce arbitrary code.
 
