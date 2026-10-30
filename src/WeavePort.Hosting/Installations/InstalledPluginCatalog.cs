@@ -47,7 +47,7 @@ public sealed partial class InstalledPluginCatalog(string releases, IReadOnlyDic
         string root = Path.GetFullPath(Path.Combine(Directory.Exists(nested) ? nested : releases, version));
         InstallationRelease release = ReadValidatedRelease(root, plugin, version, contract, _publisherPolicy, pinned);
         Manifest manifest = release.Manifest;
-        Dictionary<string, string> selectedRuntimes = SelectRuntimes(root, manifest);
+        Dictionary<string, string> selectedRuntimes = SelectRuntimes(manifest);
         var entries = ResolveEntryPoints(root, manifest);
         manifest.Launch?.Validate(entries, selectedRuntimes);
         return new InstalledPlugin(release.Identity, entries, selectedRuntimes, manifest.Launch)

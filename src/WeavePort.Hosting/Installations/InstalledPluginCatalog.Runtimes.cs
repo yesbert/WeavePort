@@ -4,7 +4,7 @@ namespace WeavePort.Hosting;
 
 public sealed partial class InstalledPluginCatalog
 {
-    private Dictionary<string, string> SelectRuntimes(string root, Manifest manifest)
+    private Dictionary<string, string> SelectRuntimes(Manifest manifest)
     {
         if (manifest.Schema == 1)
         {
@@ -13,7 +13,7 @@ public sealed partial class InstalledPluginCatalog
 
         VerifyExternal(manifest.ExternalFiles!);
         var selected = new Dictionary<string, string>(StringComparer.Ordinal);
-        foreach (var (alias, declaration) in manifest.Runtimes!)
+        foreach (string alias in manifest.Runtimes!.Keys)
         {
             if (!runtimeFiles.TryGetValue(alias, out string? executable) || !Path.IsPathFullyQualified(executable))
             {

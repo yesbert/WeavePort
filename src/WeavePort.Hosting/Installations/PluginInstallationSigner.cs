@@ -18,8 +18,8 @@ public static class PluginInstallationSigner
         var envelope = new PublisherSignature.Envelope
         {
             Schema = 1,
-            Algorithm = PublisherSignature.Algorithm,
-            KeyId = PublisherSignature.KeyId(privateKey),
+            Algorithm = PublisherSignature.SigningAlgorithm,
+            KeyId = PublisherSignature.ComputeKeyId(privateKey),
             Signature = Convert.ToBase64String(signature)
         };
         byte[] bytes = JsonSerializer.SerializeToUtf8Bytes(envelope, InstallationJsonContext.Default.Envelope);

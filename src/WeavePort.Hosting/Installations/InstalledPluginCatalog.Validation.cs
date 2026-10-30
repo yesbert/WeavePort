@@ -22,7 +22,7 @@ public sealed partial class InstalledPluginCatalog
 
     private static void ValidateContent(string root, Manifest manifest)
     {
-        if (manifest.Files.ContainsKey(PublisherSignature.FileName) || manifest.EntryPoints.Values.Contains(PublisherSignature.FileName))
+        if (manifest.Files.ContainsKey(PublisherSignature.FileName) || manifest.EntryPoints.ContainsValue(PublisherSignature.FileName))
         {
             throw new InvalidDataException("The root publisher signature is reserved metadata, not bundle content or an entry point.");
         }
