@@ -26,7 +26,7 @@ public sealed class TrustedPluginPublisher
         }
 
         Publisher = publisher;
-        KeyId = PublisherSignature.KeyId(key);
+        KeyId = PublisherSignature.ComputeKeyId(key);
     }
 
     internal RSA OpenKey()

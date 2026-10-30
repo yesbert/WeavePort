@@ -8,7 +8,7 @@ namespace WeavePort.Hosting;
 internal static class PublisherSignature
 {
     internal const string FileName = "installation.signature.json";
-    internal const string Algorithm = "RSA-PSS-SHA256";
+    internal const string SigningAlgorithm = "RSA-PSS-SHA256";
     internal const string Missing = "publisher-signature-missing";
     internal const string Malformed = "publisher-signature-malformed";
     internal const string Unsupported = "publisher-signature-unsupported";
@@ -35,7 +35,7 @@ internal static class PublisherSignature
         }
     }
 
-    internal static string KeyId(RSA key) => Convert.ToHexStringLower(SHA256.HashData(key.ExportSubjectPublicKeyInfo()));
+    internal static string ComputeKeyId(RSA key) => Convert.ToHexStringLower(SHA256.HashData(key.ExportSubjectPublicKeyInfo()));
     internal static byte[] Message(byte[] manifest) => [.. Domain, .. manifest];
 
     internal static VerifiedPluginPublisher? Verify(string root, int schema, byte[] manifest, PluginPublisherPolicy policy)
@@ -96,7 +96,7 @@ internal static class PublisherSignature
 
     private static void ValidateEnvelope(Envelope envelope)
     {
-        if (envelope.Schema != 1 || envelope.Algorithm != Algorithm)
+        if (envelope.Schema != 1 || envelope.Algorithm != SigningAlgorithm)
         {
             throw new PluginSignatureException(Unsupported, "Unsupported publisher signature format or algorithm.");
         }
