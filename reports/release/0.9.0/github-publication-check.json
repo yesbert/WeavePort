@@ -1,0 +1,98 @@
+[
+  {
+    "name": "WeavePort.Abstractions.0.9.0.nupkg",
+    "sha256": "27aca794d87d797bd464974787c56715a5dc16b2b5c7bb6c64169e769a576301",
+    "matchesQualifiedArtifact": true,
+    "url": "https://github.com/yesbert/WeavePort/releases/download/v0.9.0/WeavePort.Abstractions.0.9.0.nupkg"
+  },
+  {
+    "name": "WeavePort.Abstractions.0.9.0.snupkg",
+    "sha256": "70387b24c4c4ec605db4b6921e8c85d252548fa6f4da074a46f475df156d6480",
+    "matchesQualifiedArtifact": true,
+    "url": "https://github.com/yesbert/WeavePort/releases/download/v0.9.0/WeavePort.Abstractions.0.9.0.snupkg"
+  },
+  {
+    "name": "WeavePort.Composition.0.9.0.nupkg",
+    "sha256": "9ca31dd44bdd3e4785df38c640c03f30b1c65bcbc8e4621e98e91faa3829057b",
+    "matchesQualifiedArtifact": true,
+    "url": "https://github.com/yesbert/WeavePort/releases/download/v0.9.0/WeavePort.Composition.0.9.0.nupkg"
+  },
+  {
+    "name": "WeavePort.Composition.0.9.0.snupkg",
+    "sha256": "8e76099fec07f7d5f59996695e666e353c165c3dc98eecc8706f49016899a5a4",
+    "matchesQualifiedArtifact": true,
+    "url": "https://github.com/yesbert/WeavePort/releases/download/v0.9.0/WeavePort.Composition.0.9.0.snupkg"
+  },
+  {
+    "name": "WeavePort.Hosting.0.9.0.nupkg",
+    "sha256": "646b3ce1db1b9e5f50479bb52d44cb30d4dbd7a9e293bc4d380171708919b7d4",
+    "matchesQualifiedArtifact": true,
+    "url": "https://github.com/yesbert/WeavePort/releases/download/v0.9.0/WeavePort.Hosting.0.9.0.nupkg"
+  },
+  {
+    "name": "WeavePort.Hosting.0.9.0.snupkg",
+    "sha256": "b85a1d8e74bbadf4630138e33c836e28bbbb477b65a6b3cd33ee19a5a7071f90",
+    "matchesQualifiedArtifact": true,
+    "url": "https://github.com/yesbert/WeavePort/releases/download/v0.9.0/WeavePort.Hosting.0.9.0.snupkg"
+  },
+  {
+    "name": "WeavePort.Sdk.0.9.0.nupkg",
+    "sha256": "b609627fba9b68d403c89d347a577106f342e86be3650dc51fee85472d9dc740",
+    "matchesQualifiedArtifact": true,
+    "url": "https://github.com/yesbert/WeavePort/releases/download/v0.9.0/WeavePort.Sdk.0.9.0.nupkg"
+  },
+  {
+    "name": "WeavePort.Sdk.0.9.0.snupkg",
+    "sha256": "fbafe8fbd617a8e529daa1d84599846fd3b863f8cabf0bce6ddcbbd3b4e34f19",
+    "matchesQualifiedArtifact": true,
+    "url": "https://github.com/yesbert/WeavePort/releases/download/v0.9.0/WeavePort.Sdk.0.9.0.snupkg"
+  },
+  {
+    "name": "WeavePort.Sdk.Client.0.9.0.nupkg",
+    "sha256": "3a5026228649de61c3aa1343ffbf7021578b56261462271eba62ea96a31f2745",
+    "matchesQualifiedArtifact": true,
+    "url": "https://github.com/yesbert/WeavePort/releases/download/v0.9.0/WeavePort.Sdk.Client.0.9.0.nupkg"
+  },
+  {
+    "name": "WeavePort.Sdk.Client.0.9.0.snupkg",
+    "sha256": "d8f0a2a385cfd2ee43e9486e1cb70c818532d98678e46f16cb198f1da6ddf789",
+    "matchesQualifiedArtifact": true,
+    "url": "https://github.com/yesbert/WeavePort/releases/download/v0.9.0/WeavePort.Sdk.Client.0.9.0.snupkg"
+  },
+  {
+    "name": "WeavePort.Sdk.Gateway.0.9.0.nupkg",
+    "sha256": "feefd38e7ca27f72877a3e832fff9505f13f3716c47d1d49570350e7a3ea80f3",
+    "matchesQualifiedArtifact": true,
+    "url": "https://github.com/yesbert/WeavePort/releases/download/v0.9.0/WeavePort.Sdk.Gateway.0.9.0.nupkg"
+  },
+  {
+    "name": "WeavePort.Sdk.Gateway.0.9.0.snupkg",
+    "sha256": "63f9ba72d4c9f9b2a182d1bb81369aead060637d556b6bc2fbdcc32f1e411b7e",
+    "matchesQualifiedArtifact": true,
+    "url": "https://github.com/yesbert/WeavePort/releases/download/v0.9.0/WeavePort.Sdk.Gateway.0.9.0.snupkg"
+  },
+  {
+    "name": "WeavePort.Sdk.Gateway.Client.0.9.0.nupkg",
+    "sha256": "f9b543152e27d8ea93204a7ab3e7bdf4c984f29b3c4c4d2cd8e07b835180bb39",
+    "matchesQualifiedArtifact": true,
+    "url": "https://github.com/yesbert/WeavePort/releases/download/v0.9.0/WeavePort.Sdk.Gateway.Client.0.9.0.nupkg"
+  },
+  {
+    "name": "WeavePort.Sdk.Gateway.Client.0.9.0.snupkg",
+    "sha256": "48d33cee4393ddd97987aec666b2306ec88dc52de1e1723e99d6a5c0cefbf426",
+    "matchesQualifiedArtifact": true,
+    "url": "https://github.com/yesbert/WeavePort/releases/download/v0.9.0/WeavePort.Sdk.Gateway.Client.0.9.0.snupkg"
+  },
+  {
+    "name": "weaveport-sdk-0.4.0.tgz",
+    "sha256": "eab40e98aeda7ee7b2e339353bedaeee1a39e75ea33de14b25bd60f172feab0f",
+    "matchesQualifiedArtifact": true,
+    "url": "https://github.com/yesbert/WeavePort/releases/download/v0.9.0/weaveport-sdk-0.4.0.tgz"
+  },
+  {
+    "name": "weaveport_sdk-0.4.0-py3-none-any.whl",
+    "sha256": "81cf339748aac3e2b2c2e4113b1a8e79b9ba520bb9867ca3596ccb6932911136",
+    "matchesQualifiedArtifact": true,
+    "url": "https://github.com/yesbert/WeavePort/releases/download/v0.9.0/weaveport_sdk-0.4.0-py3-none-any.whl"
+  }
+]

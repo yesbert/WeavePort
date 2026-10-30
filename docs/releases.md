@@ -6,9 +6,9 @@ The GitHub delivery target is [yesbert/WeavePort](https://github.com/yesbert/Wea
 
 The release allowlist in `build/release-packages.json` contains the four core packages plus `WeavePort.Composition`, `WeavePort.Sdk.Gateway.Client` and `WeavePort.Sdk.Gateway`. Testing remains internal. The three optional packages have a separate API baseline and packed-consumer qualification. Python and TypeScript author SDK publication is separate from NuGet delivery.
 
-The prepared release version is `0.9.0` (not yet published), licensed under [MIT](../LICENSE). All seven .NET packages and the exact compatibility matrix use 0.9.0; host API is 2, exclusive native protocol is 1 and concurrent native protocol is 2. Python/TypeScript SDK versions are 0.4.0; the qualified wheel and tarball accompany the GitHub release without claiming PyPI/npm registry publication. Historical internal distribution and measurement evidence retain their original identities. Public releases require complete clean candidate qualification and publication verification; see [current release status](status.md#release-090). A tag override cannot substitute for updating compatibility inputs.
+The published release version is `0.9.0`, licensed under [MIT](../LICENSE). All seven .NET packages and the exact compatibility matrix use 0.9.0; host API is 2, exclusive native protocol is 1 and concurrent native protocol is 2. Python/TypeScript SDK versions are 0.4.0; the qualified wheel and tarball accompany the GitHub release without claiming PyPI/npm registry publication. Historical internal distribution and measurement evidence retain their original identities. Public releases require complete clean candidate qualification and publication verification; see [current release status](status.md#release-090). A tag override cannot substitute for updating compatibility inputs.
 
-The latest published [0.8.0 release report](../reports/release/0.8.0/README.md) records exact-tag qualification, the prepublication cancellation correction and verified public downloads. The previous [0.7.0 release report](../reports/release/0.7.0/README.md) records exact-tag qualification, the completed audit and verified public downloads. The [0.5.0 release report](../reports/release/0.5.0/README.md) records all seven public packages, tag qualification and download verification. The [0.4.0 release report](../reports/release/0.4.0/README.md) retains the exact qualification, artifact hashes and publication verification.
+The previous [0.8.0 release report](../reports/release/0.8.0/README.md) records exact-tag qualification, the prepublication cancellation correction and verified public downloads. The previous [0.7.0 release report](../reports/release/0.7.0/README.md) records exact-tag qualification, the completed audit and verified public downloads. The [0.5.0 release report](../reports/release/0.5.0/README.md) records all seven public packages, tag qualification and download verification. The [0.4.0 release report](../reports/release/0.4.0/README.md) retains the exact qualification, artifact hashes and publication verification.
 
 ## Trusted Publishing setup
 
@@ -121,7 +121,7 @@ Host API 2 and native protocols 1/2 remain unchanged. Gateway Reply fields 10–
 
 ## 0.9.0 trusted publishers and reflection-free installation JSON
 
-Version 0.9.0 is prepared, not yet published. See the [preparation record](../reports/release/0.9.0/README.md).
+Version 0.9.0 is published. See the [release record](../reports/release/0.9.0/README.md).
 
 Installation sealing, requirements and compatibility JSON now use explicit generated metadata with reflection disabled. Existing manifest serialization remains byte-compatible for unchanged inputs; this does not promise general NativeAOT support.
 
