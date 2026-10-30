@@ -1,6 +1,6 @@
 # Local package and contract compatibility
 
-**Release availability:** This matrix targets prepared .NET 0.9.0 (not yet published) and unchanged author SDKs 0.4.0. See [migration notes](releases.md#090-trusted-publishers-and-reflection-free-installation-json).
+**Release availability:** This matrix targets published .NET 0.9.0 and unchanged author SDKs 0.4.0. See [migration notes](releases.md#090-trusted-publishers-and-reflection-free-installation-json).
 
 Keep the host, SDKs and plugin artifacts on a known-compatible combination. This guide defines the exact identities checked during installation and startup.
 

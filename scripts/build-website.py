@@ -130,7 +130,7 @@ def stage_references():
         (STAGE / f"docs/{name}.md").write_text(
             f"# Reviewed {title} public API\n\n"
             f"These are the exact current-checkout signatures from `compatibility/{baseline}.txt`. "
-            "They document prepared release 0.9.0 (not yet published), including trusted publisher APIs and its migration requirements. "
+            "They document release 0.9.0, including trusted publisher APIs and its migration requirements. "
             "See [current status](status.md#release-090), [package compatibility](package-compatibility.md) "
             "and [author SDKs](plugin-sdk.md) before choosing artifacts. This generated inventory is not an additional compatibility guarantee.\n\n```csharp\n"
             + (ROOT / f"compatibility/{baseline}.txt").read_text()
