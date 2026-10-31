@@ -11,15 +11,24 @@ internal static class GatewayCancellationChecks
         await VerifyAsync(cancel: false, write: false);
         await VerifyAsync(cancel: true, write: true);
         await VerifyAsync(cancel: false, write: true);
+        foreach (bool write in new[] { false, true })
+        {
+            await VerifyAsync(true, write, StatusCode.Cancelled, rpc: true);
+            await VerifyAsync(false, write, StatusCode.Cancelled, rpc: true);
+            await VerifyAsync(true, write, StatusCode.Unavailable, rpc: true);
+            await VerifyAsync(true, write, null, rpc: true);
+        }
     }
 
-    private static async Task VerifyAsync(bool cancel, bool write)
+    private static async Task VerifyAsync(bool cancel, bool write, StatusCode? completedStatus = null, bool rpc = false)
     {
         using var stop = new CancellationTokenSource();
-        var failure = new ObjectDisposedException("cancelled transport fixture");
+        Exception failure = rpc
+            ? new RpcException(new Status(StatusCode.Unavailable, "Read interrupted", new IOException("Transport closed")))
+            : new ObjectDisposedException("cancelled transport fixture");
         var reader = new DisposedReader(stop, failure, cancel);
         using var call = new AsyncDuplexStreamingCall<Request, Reply>(new DisposedWriter(stop, failure, cancel), reader,
-            Task.FromResult(new Metadata()), () => Status.DefaultSuccess, () => new Metadata(), () => { });
+            Task.FromResult(new Metadata()), () => completedStatus is { } code ? new Status(code, "") : throw new InvalidOperationException("Call is not complete"), () => new Metadata(), () => { });
         var method = typeof(RemotePluginClient).GetMethod(write ? "WriteAsync" : "ReadAsync", BindingFlags.NonPublic | BindingFlags.Static)!;
         Exception observed;
         try
@@ -33,7 +42,7 @@ internal static class GatewayCancellationChecks
             observed = error;
         }
 
-        bool expected = cancel
+        bool expected = cancel && (!rpc || completedStatus == StatusCode.Cancelled)
             ? observed is OperationCanceledException cancelled && cancelled.CancellationToken == stop.Token && ReferenceEquals(cancelled.InnerException, failure)
             : ReferenceEquals(observed, failure);
         if (!expected)
@@ -41,7 +50,7 @@ internal static class GatewayCancellationChecks
             throw new InvalidOperationException("Gateway disposal must follow actual cancellation ownership.", observed);
         }
 
-        Console.WriteLine("PASS gateway transport disposal preserves cancellation ownership: " + cancel + ", write: " + write);
+        Console.WriteLine("PASS gateway transport preserves cancellation ownership: " + cancel + ", write: " + write + ", RPC: " + rpc + ", status: " + completedStatus);
     }
 
     private sealed class DisposedWriter(CancellationTokenSource stop, Exception failure, bool cancel) : IClientStreamWriter<Request>
