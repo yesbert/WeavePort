@@ -1,6 +1,6 @@
 # Gateway packages and HTTPS deployment
 
-Introduced in 0.5.0 and included in the current 0.9.0 family: `WeavePort.Sdk.Gateway` (server) and `WeavePort.Sdk.Gateway.Client` (remote client). The client package targets .NET 10 without requiring the ASP.NET Core shared framework. The server requires ASP.NET Core. Both preserve the `WeavePort.Sdk.Gateway` namespace. See the [runnable example](../examples/gateway/README.md), [client package](package-gateway-client.md) and [server package](package-gateway.md).
+Introduced in 0.5.0 and included in the current 0.9.1 family: `WeavePort.Sdk.Gateway` (server) and `WeavePort.Sdk.Gateway.Client` (remote client). The client package targets .NET 10 without requiring the ASP.NET Core shared framework. The server requires ASP.NET Core. Both preserve the `WeavePort.Sdk.Gateway` namespace. See the [runnable example](../examples/gateway/README.md), [client package](package-gateway-client.md) and [server package](package-gateway.md).
 
 ## Register and call
 
@@ -17,7 +17,7 @@ string boundTenant = await client.GetTenantAsync();
 var result = await client.CallAsync<MyInput, MyResult>("operation", input, cancellationToken);
 ```
 
-`GetTenantAsync` authenticates a describe exchange and checks gateway protocol version 1 without invoking plugins. Use coherent 0.9.0 endpoints; arbitrary version combinations are not qualified. Unary `CallWithMetadataAsync` preserves optional host elapsed timing, including `null` when an older server or custom client cannot provide it. Artifact mismatch fields also reach authorized remote callers. These additive fields do not change native worker protocol numbers. Generated public protocol types and field numbers are included in the optional API baseline. The gateway protocol and native worker protocols are separate identities.
+`GetTenantAsync` authenticates a describe exchange and checks gateway protocol version 1 without invoking plugins. Use coherent 0.9.1 endpoints; arbitrary version combinations are not qualified. Unary `CallWithMetadataAsync` preserves optional host elapsed timing, including `null` when an older server or custom client cannot provide it. Artifact mismatch fields also reach authorized remote callers. These additive fields do not change native worker protocol numbers. Generated public protocol types and field numbers are included in the optional API baseline. The gateway protocol and native worker protocols are separate identities.
 
 ## TLS and transport ownership
 

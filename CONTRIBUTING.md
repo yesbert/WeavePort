@@ -10,6 +10,8 @@ openspec validate --all --strict
 
 Read [engineering guidelines](docs/engineering.md), [framework guidance](docs/dotnet-guidance.md) and the applicable product specifications before changing behavior.
 
+For package refreshes, use the [dependency update workflow](docs/dependency-updates.md).
+
 ## Specifications and changes
 
 Current product requirements live in `openspec/specs/`. Proposed work lives in `openspec/changes/`, with a proposal, design, specification deltas where behavior changes, and verifiable tasks. Tooling and documentation changes with no product behavior change use `skip_specs: true` in their `.openspec.yaml`.

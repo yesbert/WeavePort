@@ -278,6 +278,7 @@ def main():
             ("performance-tool-controls", "tools/performance", "test_*.py"),
             ("soak-tool-controls", "tests/soak", "test_*.py"),
             ("release-tool-controls", "tests/release", "test_release.py"),
+            ("dependency-tool-controls", "tests/dependencies", "test_update.py"),
         ):
             stage(
                 name,

@@ -1,7 +1,7 @@
 {
-  "Microsoft.Extensions.Logging.Abstractions": "10.0.12",
-  "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.12",
-  "Tomlyn": "0.19.0",
+  "Microsoft.Extensions.Logging.Abstractions": "10.0.14",
+  "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.14",
+  "Tomlyn": "2.10.1",
   "Chasm.SemanticVersioning": "2.8.2",
   "Chasm.Formatting": "2.4.0"
 }

@@ -41,7 +41,7 @@ internal static class RuntimeRequirements
 
     private static string PythonRequirement(string content)
     {
-        TomlTable table = Toml.ToModel(content);
+        TomlTable table = TomlSerializer.Deserialize<TomlTable>(content)!;
         if (!table.TryGetValue("project", out var project) || project is not TomlTable metadata ||
             !metadata.TryGetValue("requires-python", out var value) || value is not string requirement)
         {

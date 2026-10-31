@@ -14,14 +14,14 @@
     "HostApi": 2,
     "Protocol": 1,
     "HostPackages": {
-      "WeavePort.Abstractions": "0.9.0",
-      "WeavePort.Hosting": "0.9.0",
-      "WeavePort.Sdk.Client": "0.9.0"
+      "WeavePort.Abstractions": "0.9.1",
+      "WeavePort.Hosting": "0.9.1",
+      "WeavePort.Sdk.Client": "0.9.1"
     },
     "AuthorSdks": {
       "python": {
         "Package": "weaveport-sdk",
-        "Version": "0.4.0"
+        "Version": "0.4.1"
       }
     }
   },

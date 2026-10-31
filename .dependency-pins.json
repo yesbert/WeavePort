@@ -1,0 +1,4 @@
+{
+  "$comment": "Explicit package hold-backs. Each entry requires registry, package, version, reason and review_when; optional path scopes a hold. The updater reports holds and repairs drift. Remove a hold after its review condition is verified. No shell commands are executed from this file.",
+  "pins": []
+}

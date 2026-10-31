@@ -32,7 +32,7 @@ jobs:
       - uses: actions/setup-node@v7.0.0
         with:
           node-version: '24.21.0'
-      - run: dotnet tool install dotnet-coverage --version 18.11.2 --tool-path artifacts/analysis-tools
+      - run: dotnet tool install dotnet-coverage --version 18.12.0 --tool-path artifacts/analysis-tools
       - run: python scripts/ci/sonar/coverage.py
       - name: Retain coverage and actual test exits
         if: always()
@@ -63,7 +63,7 @@ jobs:
       - uses: actions/setup-python@v7.0.0
         with:
           python-version: '3.13'
-      - run: dotnet tool install dotnet-sonarscanner --version 11.3.0 --tool-path artifacts/analysis-tools
+      - run: dotnet tool install dotnet-sonarscanner --version 12.0.0 --tool-path artifacts/analysis-tools
       - name: Begin analysis
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

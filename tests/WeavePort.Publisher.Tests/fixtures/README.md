@@ -1,6 +1,6 @@
 # Independent publisher signature fixture
 
-Generated on 2026-10-29 with OpenSSL 4.1.0, independently of the WeavePort signer. Regenerated for the exact 0.9.0 compatibility matrix during release preparation. The manifest was assembled as ordinary JSON and file hashes computed with Python hashlib. The RSA private key was temporary and discarded; publisher.der is public SubjectPublicKeyInfo only. These are test bytes, never production keys or executable plugin code.
+Generated on 2026-10-31 with OpenSSL 4.1.0, independently of the WeavePort signer. Regenerated for the exact 0.9.1 compatibility matrix during release preparation. The manifest was assembled as ordinary JSON and file hashes computed with Python hashlib. The RSA private key was temporary and discarded; publisher.der is public SubjectPublicKeyInfo only. These are test bytes, never production keys or executable plugin code.
 
 The signed input is UTF-8 `WeavePort.InstallationSignature.v1\n` followed by the exact release/installation.json bytes. OpenSSL signing used:
 
