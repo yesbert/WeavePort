@@ -1,6 +1,6 @@
 # Packages and support
 
-Install the runtime in your .NET application and the author SDK in each C# plugin project. The prepared package version is **0.9.1**; the latest published version remains **0.9.0**, licensed under MIT. Review the [migration notes](../docs/releases.md#090-trusted-publishers-and-reflection-free-installation-json) when upgrading. Use the same exact version across the selected .NET packages. The optional packages can be installed independently of one another.
+Install the runtime in your .NET application and the author SDK in each C# plugin project. The published package version is **0.9.1**, licensed under MIT. Review the [migration notes](../docs/releases.md#091-dependency-refresh) when upgrading. Use the same exact version across the selected .NET packages. The optional packages can be installed independently of one another.
 
 | Package | Use it for |
 |---|---|

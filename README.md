@@ -14,7 +14,7 @@ Build document readers, evaluation strategies or customer-specific scheduling ru
 
 Built for .NET. Designed for Windows, Linux and macOS. The supported cross-platform execution path uses standard input/output (stdio) for owner-controlled plugins. Current release validation covers macOS arm64; Windows and Linux release validation is pending. See the [platform support and validation matrix](docs/platform-qualification.md). The pre-1.0 API is evolving; native processes are not a sandbox for hostile code.
 
-The 0.9.1 package family adds reflection-free installation JSON and trusted publisher signatures. Version 0.9.1 is in preparation; the latest published version is 0.9.0. Review the [migration notes](docs/releases.md#090-trusted-publishers-and-reflection-free-installation-json) and [release status](docs/status.md) before upgrading.
+The 0.9.1 package family retains reflection-free installation JSON and trusted publisher signatures with refreshed dependencies and corrected gateway cancellation. Version 0.9.1 is published on NuGet and GitHub. Review the [migration notes](docs/releases.md#091-dependency-refresh) and [release status](docs/status.md) before upgrading.
 
 ## Build with your AI assistant
 

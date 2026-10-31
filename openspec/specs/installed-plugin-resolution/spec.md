@@ -50,7 +50,7 @@ The catalog SHALL list verified selected releases by contract from a multi-plugi
 
 ### Requirement: Ecosystem runtime requirements
 
-Portable installations SHALL derive requirements from hashed declarations: framework-dependent .NET entry-point runtime configuration, Python project `requires-python`, and Node `engines.node`. Missing, malformed, conflicting or unsupported declarations SHALL be refused, never unrestricted. Supported syntax and deployment forms SHALL be documented. Requirements SHALL preserve ecosystem semantics rather than use a common numeric range.
+Portable installations SHALL derive requirements from hashed declarations: framework-dependent .NET entry-point runtime configuration, Python project `requires-python`, and Node package `engines.node`. Missing, malformed, conflicting or unsupported declarations SHALL be refused, never unrestricted. Supported syntax and deployment forms SHALL be documented. Requirements SHALL preserve ecosystem semantics rather than use a common numeric range.
 
 #### Scenario: Framework compatibility
 - **WHEN** a .NET plugin requires Microsoft.NETCore.App 10.0.0 with default Minor roll-forward
@@ -104,7 +104,7 @@ The catalog SHALL offer diagnostic enumeration of immediate plugin directories, 
 
 ### Requirement: Publisher policy across installation entry points
 
-Staging validation, sync/async resolution, discovery, activation and pinned recovery SHALL apply catalog publisher policy before returning usable installations or changing selectors. Diagnostic discovery SHALL preserve actionable stable publisher refusal reasons and report healthy siblings. Unsigned integrity-only callers SHALL retain content validation and pin behavior. Signature metadata SHALL NOT replace bundle validation or change manifest-based identity.
+Offline staging validation, sync/async resolution, discovery, activation and pinned recovery SHALL apply catalog publisher policy before returning usable installations or changing selectors. Diagnostic discovery SHALL preserve actionable stable publisher refusal reasons and report healthy siblings. Unsigned integrity-only callers SHALL retain content validation and pin behavior. Signature metadata SHALL NOT replace complete bundle validation or change manifest-based identity.
 
 #### Scenario: Activation refusal
 - **WHEN** required publisher validation fails during activation
