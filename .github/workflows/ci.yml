@@ -31,7 +31,7 @@ jobs:
       - uses: actions/setup-node@v7.0.0
         with:
           node-version: '24.21.0'
-      - run: npm install --global @fission-ai/openspec@1.9.0
+      - run: npm install --global @fission-ai/openspec@1.16.0
       - run: openspec validate --all --strict
       - run: python3 scripts/check-public-tree.py
       - run: python3 scripts/check-python-control-flow.py
@@ -43,6 +43,7 @@ jobs:
       - run: python3 scripts/generate-llms.py --check
       - run: python3 tests/documentation/check-links.py
       - run: python3 tests/release/test_release.py
+      - run: python3 tests/dependencies/test_update.py
       - run: python3 tests/ci/test_sonar_export.py
       - run: python3 tests/ci/test_coverage_runner.py
       - uses: actions/setup-dotnet@v6.0.0

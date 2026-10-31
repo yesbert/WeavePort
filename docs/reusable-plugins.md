@@ -1,6 +1,6 @@
 # Writing plugins for approved session reuse
 
-Introduced in core packages 0.4.0 and Python/TypeScript author SDKs 0.2.0. Cross-customer reuse is an explicit operator decision with accepted cooperative-state risk. Current .NET 0.9.0 and Python/TypeScript 0.4.0 retain this capability. Both Docker and trusted native process profiles support sequential reuse; their isolation guarantees differ.
+Introduced in core packages 0.4.0 and Python/TypeScript author SDKs 0.2.0. Cross-customer reuse is an explicit operator decision with accepted cooperative-state risk. Current .NET 0.9.1 and Python/TypeScript 0.4.1 retain this capability. Both Docker and trusted native process profiles support sequential reuse; their isolation guarantees differ.
 
 ## The two policies
 

@@ -7,7 +7,8 @@ Define explicit trusted resident concurrent plugin execution with bounded admiss
 ## Requirements
 
 ### Requirement: Approved resident concurrent execution
-The host SHALL require agreement between installation declaration, operator approval and shared binding selection before starting a resident shared worker. It SHALL retain per-invocation tenant context, enforce a configured degree and bounded fair waiting, and refuse shared streams and unsupported adapters. A failed invocation SHALL NOT terminate unrelated invocations; channel failures SHALL fail all dispatched calls without replay. Cancelled work SHALL retain its slot until terminal acknowledgement or bounded worker retirement. Restart attempts SHALL be bounded and exhaustion SHALL expose disabled state.
+
+Shared workers SHALL require installation, operator and binding agreement; isolate invocation contexts; enforce configured concurrency and bounded fair waiting; and refuse streams and unsupported adapters. Invocation failure SHALL spare other calls; channel failure SHALL fail dispatched calls without replay. Cancellation SHALL hold slots until terminal acknowledgement or bounded retirement. Restarts SHALL be bounded; exhaustion SHALL expose disabled state.
 
 #### Scenario: Sixteen tenants and isolated cancellation
 - **WHEN** sixteen tenants invoke one approved worker and one invocation fails while another is cancelled

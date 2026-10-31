@@ -5,7 +5,8 @@ Define tested tenant boundaries across Docker and cooperative trusted local exec
 ## Requirements
 
 ### Requirement: Independent tenant execution
-The customer-bound Docker execution profile SHALL isolate worker state, configuration and writable files between tenants using the same artifact version. Trusted local execution SHALL preserve cooperative bound context separation without promising hostile same-user confinement. Explicitly approved session reuse SHALL follow its cooperative cleanup contract rather than claim complete heap or filesystem separation. Explicit Shared ownership SHALL preserve per-invocation authority while accepting shared memory and a shared process-failure boundary.
+
+Customer-bound Docker workers SHALL isolate state, configuration and writable files between tenants using the same artifact. Trusted local workers SHALL separate cooperative bound contexts without claiming hostile same-user confinement. Approved reuse SHALL follow cooperative cleanup, not claim full heap/filesystem separation. Shared ownership SHALL preserve per-invocation authority while accepting shared memory and process-failure boundaries.
 
 #### Scenario: Failure of tenant A
 - **WHEN** A crashes, exceeds memory, hangs or is deactivated in the customer-bound Docker profile while B calls the same plugin

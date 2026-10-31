@@ -1,6 +1,6 @@
 # V1 integration agreement
 
-**Status: current integration guidance, reviewed on 2026-10-29.** The target package family is 0.9.0; see [release availability](status.md#release-090). This guide defines how our applications should integrate WeavePort. It introduces no new runtime API or released compatibility promise. Existing [baseline specifications](../openspec/specs) define verified behavior; the [current status](status.md) separates remaining work from that behavior. Packages use version `0.9.0`; API evolution remains subject to the exact compatibility matrix.
+**Status: current integration guidance, reviewed on 2026-10-29.** The target package family is 0.9.1; see [release availability](status.md#release-091). This guide defines how our applications should integrate WeavePort. It introduces no new runtime API or released compatibility promise. Existing [baseline specifications](../openspec/specs) define verified behavior; the [current status](status.md) separates remaining work from that behavior. Packages use version `0.9.1`; API evolution remains subject to the exact compatibility matrix.
 
 ## Product boundary
 

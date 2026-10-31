@@ -6,7 +6,7 @@ The GitHub delivery target is [yesbert/WeavePort](https://github.com/yesbert/Wea
 
 The release allowlist in `build/release-packages.json` contains the four core packages plus `WeavePort.Composition`, `WeavePort.Sdk.Gateway.Client` and `WeavePort.Sdk.Gateway`. Testing remains internal. The three optional packages have a separate API baseline and packed-consumer qualification. Python and TypeScript author SDK publication is separate from NuGet delivery.
 
-The published release version is `0.9.0`, licensed under [MIT](../LICENSE). All seven .NET packages and the exact compatibility matrix use 0.9.0; host API is 2, exclusive native protocol is 1 and concurrent native protocol is 2. Python/TypeScript SDK versions are 0.4.0; the qualified wheel and tarball accompany the GitHub release without claiming PyPI/npm registry publication. Historical internal distribution and measurement evidence retain their original identities. Public releases require complete clean candidate qualification and publication verification; see [current release status](status.md#release-090). A tag override cannot substitute for updating compatibility inputs.
+The prepared release version is `0.9.1`, licensed under [MIT](../LICENSE). All seven .NET packages and the exact compatibility matrix use 0.9.1; host API is 2, exclusive native protocol is 1 and concurrent native protocol is 2. Python/TypeScript author SDK versions are 0.4.1. Their qualified wheel and tarball will accompany the GitHub release without claiming PyPI/npm registry publication. The latest published release remains 0.9.0 until protected delivery and download verification complete. See [current release status](status.md#release-091). Historical evidence retains its original identities. A tag override cannot substitute for updating compatibility inputs.
 
 The previous [0.8.0 release report](../reports/release/0.8.0/README.md) records exact-tag qualification, the prepublication cancellation correction and verified public downloads. The previous [0.7.0 release report](../reports/release/0.7.0/README.md) records exact-tag qualification, the completed audit and verified public downloads. The [0.5.0 release report](../reports/release/0.5.0/README.md) records all seven public packages, tag qualification and download verification. The [0.4.0 release report](../reports/release/0.4.0/README.md) retains the exact qualification, artifact hashes and publication verification.
 
@@ -135,3 +135,11 @@ Migration:
 - Trust is catalog-wide. Replacing a policy does not revoke existing handles or running workers: dispose them and resolve again under the replacement policy. Signatures do not provide sandboxing, namespace authorization or rollback protection.
 
 No new runtime dependency, protocol version, platform support qualification or performance guarantee is introduced. Publication requires a reviewed preparation merge, green checks and separate authorization for tagging and the protected release workflow.
+
+## 0.9.1 dependency refresh
+
+Version 0.9.1 is in preparation. It refreshes Tomlyn, Microsoft logging/DI abstractions, Protobuf/gRPC, author SDK build dependencies and CI tools. The TOML parser migration retains static runtime declaration validation with reflection disabled. Public APIs and host/native protocol numbers remain unchanged.
+
+Upgrade selected .NET packages together to 0.9.1 and use Python/TypeScript author SDKs 0.4.1. Rebuild and reseal installations offline for the exact matrix, then sign the resulting manifest bytes and deliberately migrate application pins. Existing signatures cannot authenticate changed manifests.
+
+Use the [dependency update workflow](dependency-updates.md) for future refreshes. The [release record](../reports/release/0.9.1/README.md) will retain qualification and verified publication evidence.

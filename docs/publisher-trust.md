@@ -1,6 +1,6 @@
 # Publisher trust for installed releases
 
-**Availability:** Included in the published 0.9.0 package family; see [release evidence](../reports/release/0.9.0/README.md).
+**Availability:** Included in the prepared 0.9.1 package family; see [release evidence](../reports/release/0.9.1/README.md).
 
 Installation hashes protect content against a manifest. Publisher signatures authenticate that manifest against a host-owned public key. Require publisher authentication when accepting releases from callers whose installation credentials must not grant authority to introduce arbitrary code.
 
