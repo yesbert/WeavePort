@@ -156,7 +156,7 @@ Updated SDKs SHALL advertise native cleanup capability revision one and include 
 
 ### Requirement: Concurrent authoring and live stream delivery
 
-All three SDKs SHALL support approved concurrent unary calls with isolated contexts/cleanup, correlated callbacks, atomic frames and cooperative per-call cancellation. Concurrent protocol revisions SHALL be rejected by serial-only hosts. Exclusive streams SHALL flush promptly and permit empty unfinished heartbeat batches. Stream exchange and total deadlines SHALL be configured together, separately from unary deadlines. Callback limits SHALL be configurable, defaulting to eight.
+All three SDKs SHALL support approved concurrent unary calls with isolated contexts/cleanup, correlated callbacks, atomic frames and cooperative per-call cancellation. Concurrent workers SHALL use a revision rejected by serial-only hosts. Exclusive streams SHALL flush promptly and permit empty unfinished heartbeat batches. Stream exchange and total deadlines SHALL be configured together, separately from unary deadlines. Callback limits SHALL be configurable, defaulting to eight.
 
 #### Scenario: Slow stream and bounded callbacks
 - **WHEN** a stream first yields after twelve seconds under a sufficient stream deadline and the same binding has a five-second unary deadline

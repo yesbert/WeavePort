@@ -30,7 +30,7 @@ Build document readers, evaluation strategies or customer-specific scheduling ru
 
 Built for .NET. Designed for Windows, Linux and macOS. The supported cross-platform execution path uses standard input/output (stdio) for owner-controlled plugins. Current release validation covers macOS arm64; Windows and Linux release validation is pending. See the [platform support and validation matrix](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/platform-qualification.md). The pre-1.0 API is evolving; native processes are not a sandbox for hostile code.
 
-The 0.9.1 package family adds reflection-free installation JSON and trusted publisher signatures. Version 0.9.1 is in preparation; the latest published version is 0.9.0. Review the [migration notes](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/releases.md#090-trusted-publishers-and-reflection-free-installation-json) and [release status](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/status.md) before upgrading.
+The 0.9.1 package family retains reflection-free installation JSON and trusted publisher signatures with refreshed dependencies and corrected gateway cancellation. Version 0.9.1 is published on NuGet and GitHub. Review the [migration notes](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/releases.md#091-dependency-refresh) and [release status](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/status.md) before upgrading.
 
 ## Build with your AI assistant
 
@@ -303,7 +303,7 @@ description: Decide whether WeavePort fits your .NET application, understand plu
 
 # Is WeavePort right for my product?
 
-Start here if you are deciding how to make your .NET backend extensible. These answers describe the prepared 0.9.1 release and link to the detailed contracts.
+Start here if you are deciding how to make your .NET backend extensible. These answers describe the published 0.9.1 release and link to the detailed contracts.
 
 ## What would I use it for?
 
@@ -343,7 +343,7 @@ The host observes worker failure and manages restart and cleanup under its lifec
 
 ## Is it free to use?
 
-The seven public NuGet packages are released under the [MIT license](https://raw.githubusercontent.com/yesbert/WeavePort/main/LICENSE). The current prepared version is 0.9.1; 0.9.0 remains published; see [release status](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/status.md) for qualification evidence. Review [packages and compatibility](https://raw.githubusercontent.com/yesbert/WeavePort/main/website/packages.md) before adopting or upgrading the evolving API.
+The seven public NuGet packages are released under the [MIT license](https://raw.githubusercontent.com/yesbert/WeavePort/main/LICENSE). The current published version is 0.9.1; see [release status](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/status.md) for qualification evidence. Review [packages and compatibility](https://raw.githubusercontent.com/yesbert/WeavePort/main/website/packages.md) before adopting or upgrading the evolving API.
 
 ## Where should I start?
 
@@ -420,7 +420,7 @@ Source: https://raw.githubusercontent.com/yesbert/WeavePort/main/website/package
 
 # Packages and support
 
-Install the runtime in your .NET application and the author SDK in each C# plugin project. The prepared package version is **0.9.1**; the latest published version remains **0.9.0**, licensed under MIT. Review the [migration notes](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/releases.md#090-trusted-publishers-and-reflection-free-installation-json) when upgrading. Use the same exact version across the selected .NET packages. The optional packages can be installed independently of one another.
+Install the runtime in your .NET application and the author SDK in each C# plugin project. The published package version is **0.9.1**, licensed under MIT. Review the [migration notes](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/releases.md#091-dependency-refresh) when upgrading. Use the same exact version across the selected .NET packages. The optional packages can be installed independently of one another.
 
 | Package | Use it for |
 |---|---|
@@ -485,7 +485,7 @@ Source: https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/status.md
 ## Release 0.9.1
 
 
-Prepared release version: **0.9.1**, under MIT, with four core packages and optional Composition, Gateway server and Gateway client packages. Windows, Linux and macOS are supported targets for trusted stdio execution. Current release validation covers macOS arm64; Windows and Linux release validation is pending. See [platform support and validation](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/platform-qualification.md). This pre-1.0 API remains subject to evolution. Python/TypeScript registry publication and a new offline distribution are outside this release. The historical internal distribution remains **0.1.0-internal.2**.
+Release version: **0.9.1**, under MIT, with four core packages and optional Composition, Gateway server and Gateway client packages. Windows, Linux and macOS are supported targets for trusted stdio execution. Current release validation covers macOS arm64; Windows and Linux release validation is pending. See [platform support and validation](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/platform-qualification.md). This pre-1.0 API remains subject to evolution. Python/TypeScript registry publication and a new offline distribution are outside this release. The historical internal distribution remains **0.1.0-internal.2**.
 
 The previous [0.7.0 release evidence](https://raw.githubusercontent.com/yesbert/WeavePort/main/reports/release/0.7.0/README.md) records 3,533 reported qualification assertions, the clean static audit and verified downloads for all seven NuGet packages and 16 GitHub artifacts.
 
@@ -499,13 +499,13 @@ Current measurement methodology and results are in [benchmarking](https://raw.gi
 
 ## Release qualification and availability
 
-Version 0.9.1 is in preparation with refreshed packages, a reusable dependency update workflow and author SDKs 0.4.1. Qualification, all SonarQube findings and protected publication must complete before availability is claimed. See the [release record](https://raw.githubusercontent.com/yesbert/WeavePort/main/reports/release/0.9.1/README.md).
+Version 0.9.1 is published with refreshed packages, a reusable dependency update workflow and author SDKs 0.4.1. Exact-tag qualification, clean SonarQube analysis, protected publication and public download verification are complete. See the [release record](https://raw.githubusercontent.com/yesbert/WeavePort/main/reports/release/0.9.1/README.md).
 
 Version 0.9.0 adds reflection-free installation JSON and opt-in trusted publisher signatures. See [migration notes](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/releases.md#090-trusted-publishers-and-reflection-free-installation-json), [publisher trust](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/publisher-trust.md) and the [release record](https://raw.githubusercontent.com/yesbert/WeavePort/main/reports/release/0.9.0/README.md). The annotated tag, protected publication and public-download verification are complete.
 
 Release 0.8.0 includes structured failure details, explicit cancellation attribution, primary execution/cleanup cause preservation, safe diagnostic delivery, generated shared protocol definitions and the complete readability audit. Python/TypeScript author SDKs are 0.4.0. See [migration notes](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/releases.md#080-failure-contracts-and-code-quality), [failure codes](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/failure-codes.md), [runtime diagnostics](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/runtime-diagnostics.md) and [source organization](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/source-organization.md).
 
-Release 0.8.0 is published. The [release record](https://raw.githubusercontent.com/yesbert/WeavePort/main/reports/release/0.8.0/README.md) retains exact-tag qualification (3,599 reported assertions, 73 stages, 442 frozen artifacts), successful publication and verified downloads for all seven NuGet packages and 16 package/symbol/SDK assets. Current API baselines and examples describe the prepared 0.9.1 family. Historical reports retain their original versions and qualification limits.
+Release 0.8.0 is published. The [release record](https://raw.githubusercontent.com/yesbert/WeavePort/main/reports/release/0.8.0/README.md) retains exact-tag qualification (3,599 reported assertions, 73 stages, 442 frozen artifacts), successful publication and verified downloads for all seven NuGet packages and 16 package/symbol/SDK assets. Current API baselines and examples describe the published 0.9.1 family. Historical reports retain their original versions and qualification limits.
 
 ## Runtime optimization and soak verification
 
@@ -535,7 +535,7 @@ Version 0.5.0 includes the integrated runtime with optional Composition, Gateway
 
 ## Approved session reuse and fair scheduling
 
-Version 0.4.0 adds a memory-led fair scheduler and opt-in `WorkerReusePolicy.ApprovedSessions`. Customer-bound execution remains the default. The host requires the updated SDK cleanup handshake before sharing compatible reviewed deployments; C#, Python and TypeScript expose registered session resources. See [operator/author guidance](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/reusable-plugins.md), [candidate verification](https://raw.githubusercontent.com/yesbert/WeavePort/main/reports/verification/approved-session-reuse-20260920/README.md) and [public release evidence](https://raw.githubusercontent.com/yesbert/WeavePort/main/reports/release/0.4.0/README.md). Python/TypeScript 0.2.0 artifacts accompany that historical GitHub release; current 0.8.0 uses author SDK 0.4.0; separate registry publication is not claimed.
+Version 0.4.0 adds a memory-led fair scheduler and opt-in `WorkerReusePolicy.ApprovedSessions`. Customer-bound execution remains the default. The host requires the updated SDK cleanup handshake before sharing compatible reviewed deployments; C#, Python and TypeScript expose registered session resources. See [operator/author guidance](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/reusable-plugins.md), [candidate verification](https://raw.githubusercontent.com/yesbert/WeavePort/main/reports/verification/approved-session-reuse-20260920/README.md) and [public release evidence](https://raw.githubusercontent.com/yesbert/WeavePort/main/reports/release/0.4.0/README.md). Python/TypeScript 0.2.0 artifacts accompany that historical GitHub release; current 0.9.1 uses author SDK 0.4.1; separate registry publication is not claimed.
 
 ## Unified host and shared execution
 
@@ -1039,7 +1039,7 @@ Source: https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/publisher-
 
 # Publisher trust for installed releases
 
-**Availability:** Included in the prepared 0.9.1 package family; see [release evidence](https://raw.githubusercontent.com/yesbert/WeavePort/main/reports/release/0.9.1/README.md).
+**Availability:** Included in the published 0.9.1 package family; see [release evidence](https://raw.githubusercontent.com/yesbert/WeavePort/main/reports/release/0.9.1/README.md).
 
 Installation hashes protect content against a manifest. Publisher signatures authenticate that manifest against a host-owned public key. Require publisher authentication when accepting releases from callers whose installation credentials must not grant authority to introduce arbitrary code.
 
@@ -1596,7 +1596,7 @@ Source: https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/package-co
 
 # Local package and contract compatibility
 
-**Release availability:** This matrix targets prepared .NET 0.9.1 and author SDKs 0.4.1. See [migration notes](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/releases.md#090-trusted-publishers-and-reflection-free-installation-json).
+**Release availability:** This matrix targets published .NET 0.9.1 and author SDKs 0.4.1. See [migration notes](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/releases.md#091-dependency-refresh).
 
 Keep the host, SDKs and plugin artifacts on a known-compatible combination. This guide defines the exact identities checked during installation and startup.
 
@@ -3194,7 +3194,7 @@ The GitHub delivery target is [yesbert/WeavePort](https://github.com/yesbert/Wea
 
 The release allowlist in `build/release-packages.json` contains the four core packages plus `WeavePort.Composition`, `WeavePort.Sdk.Gateway.Client` and `WeavePort.Sdk.Gateway`. Testing remains internal. The three optional packages have a separate API baseline and packed-consumer qualification. Python and TypeScript author SDK publication is separate from NuGet delivery.
 
-The prepared release version is `0.9.1`, licensed under [MIT](https://raw.githubusercontent.com/yesbert/WeavePort/main/LICENSE). All seven .NET packages and the exact compatibility matrix use 0.9.1; host API is 2, exclusive native protocol is 1 and concurrent native protocol is 2. Python/TypeScript author SDK versions are 0.4.1. Their qualified wheel and tarball will accompany the GitHub release without claiming PyPI/npm registry publication. The latest published release remains 0.9.0 until protected delivery and download verification complete. See [current release status](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/status.md#release-091). Historical evidence retains its original identities. A tag override cannot substitute for updating compatibility inputs.
+The published release version is `0.9.1`, licensed under [MIT](https://raw.githubusercontent.com/yesbert/WeavePort/main/LICENSE). All seven .NET packages and the exact compatibility matrix use 0.9.1; host API is 2, exclusive native protocol is 1 and concurrent native protocol is 2. Python/TypeScript author SDK versions are 0.4.1. Their qualified wheel and tarball accompany the GitHub release without claiming PyPI/npm registry publication. Protected delivery and public download verification are complete. See [current release status](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/status.md#release-091). Historical evidence retains its original identities. A tag override cannot substitute for updating compatibility inputs.
 
 The previous [0.8.0 release report](https://raw.githubusercontent.com/yesbert/WeavePort/main/reports/release/0.8.0/README.md) records exact-tag qualification, the prepublication cancellation correction and verified public downloads. The previous [0.7.0 release report](https://raw.githubusercontent.com/yesbert/WeavePort/main/reports/release/0.7.0/README.md) records exact-tag qualification, the completed audit and verified public downloads. The [0.5.0 release report](https://raw.githubusercontent.com/yesbert/WeavePort/main/reports/release/0.5.0/README.md) records all seven public packages, tag qualification and download verification. The [0.4.0 release report](https://raw.githubusercontent.com/yesbert/WeavePort/main/reports/release/0.4.0/README.md) retains the exact qualification, artifact hashes and publication verification.
 
@@ -3326,11 +3326,11 @@ No new runtime dependency, protocol version, platform support qualification or p
 
 ## 0.9.1 dependency refresh
 
-Version 0.9.1 is in preparation. It refreshes Tomlyn, Microsoft logging/DI abstractions, Protobuf/gRPC, author SDK build dependencies and CI tools. The TOML parser migration retains static runtime declaration validation with reflection disabled. Public APIs and host/native protocol numbers remain unchanged.
+Version 0.9.1 is published. It refreshes Tomlyn, Microsoft logging/DI abstractions, Protobuf/gRPC, author SDK build dependencies and CI tools. The TOML parser migration retains static runtime declaration validation with reflection disabled. Gateway I/O preserves owned cancellation when the completed gRPC call confirms cancellation, while unrelated transport failures retain their error. Public APIs and host/native protocol numbers remain unchanged.
 
 Upgrade selected .NET packages together to 0.9.1 and use Python/TypeScript author SDKs 0.4.1. Rebuild and reseal installations offline for the exact matrix, then sign the resulting manifest bytes and deliberately migrate application pins. Existing signatures cannot authenticate changed manifests.
 
-Use the [dependency update workflow](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/dependency-updates.md) for future refreshes. The [release record](https://raw.githubusercontent.com/yesbert/WeavePort/main/reports/release/0.9.1/README.md) will retain qualification and verified publication evidence.
+Use the [dependency update workflow](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/dependency-updates.md) for future refreshes. The [release record](https://raw.githubusercontent.com/yesbert/WeavePort/main/reports/release/0.9.1/README.md) retains qualification and verified publication evidence.
 
 ---
 
@@ -4055,7 +4055,7 @@ The unified host SHALL prefer eligible tenants with fewer active invocations and
 
 ### Requirement: Reconstructible residency
 
-The host SHALL retain customer-bound state by default and evict only explicitly reconstructible workers under pressure or configured idle eviction. Approved clean unary sessions SHALL return residency to the compatible pool. A separate pristine reserve SHALL use recently requested registered profiles, bounded independently of customer count. Shared workers SHALL remain resident until disposal or failure. Active stream leases SHALL prevent eviction during consumer pauses.
+The host SHALL retain customer-bound state by default and evict only explicitly reconstructible customer-bound workers under pressure or configured idle eviction. Approved clean unary sessions SHALL return residency to the compatible pool. A separate pristine reserve SHALL use recently requested registered profiles, bounded independently of customer count. Shared workers SHALL remain resident until disposal or failure. Active stream leases SHALL prevent eviction during consumer pauses.
 
 #### Scenario: Cold customer replaces idle customer
 - **WHEN** capacity is full of explicitly reconstructible customer-bound workers and a customer without a resident worker is selected
@@ -4182,7 +4182,7 @@ The catalog SHALL list verified selected releases by contract from a multi-plugi
 
 ### Requirement: Ecosystem runtime requirements
 
-Portable installations SHALL derive requirements from hashed declarations: framework-dependent .NET entry-point runtime configuration, Python project `requires-python`, and Node `engines.node`. Missing, malformed, conflicting or unsupported declarations SHALL be refused, never unrestricted. Supported syntax and deployment forms SHALL be documented. Requirements SHALL preserve ecosystem semantics rather than use a common numeric range.
+Portable installations SHALL derive requirements from hashed declarations: framework-dependent .NET entry-point runtime configuration, Python project `requires-python`, and Node package `engines.node`. Missing, malformed, conflicting or unsupported declarations SHALL be refused, never unrestricted. Supported syntax and deployment forms SHALL be documented. Requirements SHALL preserve ecosystem semantics rather than use a common numeric range.
 
 #### Scenario: Framework compatibility
 - **WHEN** a .NET plugin requires Microsoft.NETCore.App 10.0.0 with default Minor roll-forward
@@ -4236,7 +4236,7 @@ The catalog SHALL offer diagnostic enumeration of immediate plugin directories, 
 
 ### Requirement: Publisher policy across installation entry points
 
-Staging validation, sync/async resolution, discovery, activation and pinned recovery SHALL apply catalog publisher policy before returning usable installations or changing selectors. Diagnostic discovery SHALL preserve actionable stable publisher refusal reasons and report healthy siblings. Unsigned integrity-only callers SHALL retain content validation and pin behavior. Signature metadata SHALL NOT replace bundle validation or change manifest-based identity.
+Offline staging validation, sync/async resolution, discovery, activation and pinned recovery SHALL apply catalog publisher policy before returning usable installations or changing selectors. Diagnostic discovery SHALL preserve actionable stable publisher refusal reasons and report healthy siblings. Unsigned integrity-only callers SHALL retain content validation and pin behavior. Signature metadata SHALL NOT replace complete bundle validation or change manifest-based identity.
 
 #### Scenario: Activation refusal
 - **WHEN** required publisher validation fails during activation
@@ -4588,7 +4588,7 @@ A public .NET API SHALL seal an offline built release from its identity, entry p
 
 ### Requirement: Safe deterministic manifest generation
 
-Sealing SHALL apply resolution path, link, inventory and metadata constraints, hash declarations, and produce identical manifest bytes for identical inputs/options regardless of release path. It SHALL atomically replace only the manifest after validation, without deleting files or changing selectors/pins. Missing, dynamic-only or unsupported runtime requirements SHALL yield source-specific diagnostics. Strict runtime hashes SHALL require explicit local runtime inputs.
+Sealing SHALL apply resolution path, link, inventory and metadata constraints, hash declarations, and produce identical manifest bytes for identical inputs/options regardless of release path. It SHALL atomically replace only the manifest after validation, without deleting files or changing selectors/pins. Missing, dynamic-only or unsupported runtime requirements SHALL be rejected with source-specific diagnostics. Strict runtime hashes SHALL require explicit local runtime inputs.
 
 #### Scenario: Repeatable release
 - **WHEN** identical release content and sealing options are supplied in two different directories
@@ -4839,7 +4839,7 @@ Updated SDKs SHALL advertise native cleanup capability revision one and include 
 
 ### Requirement: Concurrent authoring and live stream delivery
 
-All three SDKs SHALL support approved concurrent unary calls with isolated contexts/cleanup, correlated callbacks, atomic frames and cooperative per-call cancellation. Concurrent protocol revisions SHALL be rejected by serial-only hosts. Exclusive streams SHALL flush promptly and permit empty unfinished heartbeat batches. Stream exchange and total deadlines SHALL be configured together, separately from unary deadlines. Callback limits SHALL be configurable, defaulting to eight.
+All three SDKs SHALL support approved concurrent unary calls with isolated contexts/cleanup, correlated callbacks, atomic frames and cooperative per-call cancellation. Concurrent workers SHALL use a revision rejected by serial-only hosts. Exclusive streams SHALL flush promptly and permit empty unfinished heartbeat batches. Stream exchange and total deadlines SHALL be configured together, separately from unary deadlines. Callback limits SHALL be configurable, defaulting to eight.
 
 #### Scenario: Slow stream and bounded callbacks
 - **WHEN** a stream first yields after twelve seconds under a sufficient stream deadline and the same binding has a five-second unary deadline
@@ -5027,7 +5027,7 @@ Define tested tenant boundaries across Docker and cooperative trusted local exec
 
 ### Requirement: Independent tenant execution
 
-Customer-bound Docker workers SHALL isolate state, configuration and writable files between tenants using the same artifact. Trusted local workers SHALL separate cooperative bound contexts without claiming hostile same-user confinement. Approved reuse SHALL follow cooperative cleanup, not claim full heap/filesystem separation. Shared ownership SHALL preserve per-invocation authority while accepting shared memory and process-failure boundaries.
+Customer-bound Docker workers SHALL isolate state, configuration and writable files between tenants using the same artifact version. Trusted local workers SHALL separate cooperative bound contexts without claiming hostile same-user confinement. Approved reuse SHALL follow cooperative cleanup, not claim full heap/filesystem separation. Shared ownership SHALL preserve per-invocation authority while accepting shared memory and process-failure boundaries.
 
 #### Scenario: Failure of tenant A
 - **WHEN** A crashes, exceeds memory, hangs or is deactivated in the customer-bound Docker profile while B calls the same plugin

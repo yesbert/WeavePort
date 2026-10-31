@@ -21,7 +21,7 @@ A public .NET API SHALL seal an offline built release from its identity, entry p
 
 ### Requirement: Safe deterministic manifest generation
 
-Sealing SHALL apply resolution path, link, inventory and metadata constraints, hash declarations, and produce identical manifest bytes for identical inputs/options regardless of release path. It SHALL atomically replace only the manifest after validation, without deleting files or changing selectors/pins. Missing, dynamic-only or unsupported runtime requirements SHALL yield source-specific diagnostics. Strict runtime hashes SHALL require explicit local runtime inputs.
+Sealing SHALL apply resolution path, link, inventory and metadata constraints, hash declarations, and produce identical manifest bytes for identical inputs/options regardless of release path. It SHALL atomically replace only the manifest after validation, without deleting files or changing selectors/pins. Missing, dynamic-only or unsupported runtime requirements SHALL be rejected with source-specific diagnostics. Strict runtime hashes SHALL require explicit local runtime inputs.
 
 #### Scenario: Repeatable release
 - **WHEN** identical release content and sealing options are supplied in two different directories

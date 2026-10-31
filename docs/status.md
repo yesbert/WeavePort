@@ -3,7 +3,7 @@
 ## Release 0.9.1
 
 
-Prepared release version: **0.9.1**, under MIT, with four core packages and optional Composition, Gateway server and Gateway client packages. Windows, Linux and macOS are supported targets for trusted stdio execution. Current release validation covers macOS arm64; Windows and Linux release validation is pending. See [platform support and validation](platform-qualification.md). This pre-1.0 API remains subject to evolution. Python/TypeScript registry publication and a new offline distribution are outside this release. The historical internal distribution remains **0.1.0-internal.2**.
+Release version: **0.9.1**, under MIT, with four core packages and optional Composition, Gateway server and Gateway client packages. Windows, Linux and macOS are supported targets for trusted stdio execution. Current release validation covers macOS arm64; Windows and Linux release validation is pending. See [platform support and validation](platform-qualification.md). This pre-1.0 API remains subject to evolution. Python/TypeScript registry publication and a new offline distribution are outside this release. The historical internal distribution remains **0.1.0-internal.2**.
 
 The previous [0.7.0 release evidence](../reports/release/0.7.0/README.md) records 3,533 reported qualification assertions, the clean static audit and verified downloads for all seven NuGet packages and 16 GitHub artifacts.
 
@@ -17,13 +17,13 @@ Current measurement methodology and results are in [benchmarking](benchmarking.m
 
 ## Release qualification and availability
 
-Version 0.9.1 is in preparation with refreshed packages, a reusable dependency update workflow and author SDKs 0.4.1. Qualification, all SonarQube findings and protected publication must complete before availability is claimed. See the [release record](../reports/release/0.9.1/README.md).
+Version 0.9.1 is published with refreshed packages, a reusable dependency update workflow and author SDKs 0.4.1. Exact-tag qualification, clean SonarQube analysis, protected publication and public download verification are complete. See the [release record](../reports/release/0.9.1/README.md).
 
 Version 0.9.0 adds reflection-free installation JSON and opt-in trusted publisher signatures. See [migration notes](releases.md#090-trusted-publishers-and-reflection-free-installation-json), [publisher trust](publisher-trust.md) and the [release record](../reports/release/0.9.0/README.md). The annotated tag, protected publication and public-download verification are complete.
 
 Release 0.8.0 includes structured failure details, explicit cancellation attribution, primary execution/cleanup cause preservation, safe diagnostic delivery, generated shared protocol definitions and the complete readability audit. Python/TypeScript author SDKs are 0.4.0. See [migration notes](releases.md#080-failure-contracts-and-code-quality), [failure codes](failure-codes.md), [runtime diagnostics](runtime-diagnostics.md) and [source organization](source-organization.md).
 
-Release 0.8.0 is published. The [release record](../reports/release/0.8.0/README.md) retains exact-tag qualification (3,599 reported assertions, 73 stages, 442 frozen artifacts), successful publication and verified downloads for all seven NuGet packages and 16 package/symbol/SDK assets. Current API baselines and examples describe the prepared 0.9.1 family. Historical reports retain their original versions and qualification limits.
+Release 0.8.0 is published. The [release record](../reports/release/0.8.0/README.md) retains exact-tag qualification (3,599 reported assertions, 73 stages, 442 frozen artifacts), successful publication and verified downloads for all seven NuGet packages and 16 package/symbol/SDK assets. Current API baselines and examples describe the published 0.9.1 family. Historical reports retain their original versions and qualification limits.
 
 ## Runtime optimization and soak verification
 
@@ -53,7 +53,7 @@ Version 0.5.0 includes the integrated runtime with optional Composition, Gateway
 
 ## Approved session reuse and fair scheduling
 
-Version 0.4.0 adds a memory-led fair scheduler and opt-in `WorkerReusePolicy.ApprovedSessions`. Customer-bound execution remains the default. The host requires the updated SDK cleanup handshake before sharing compatible reviewed deployments; C#, Python and TypeScript expose registered session resources. See [operator/author guidance](reusable-plugins.md), [candidate verification](../reports/verification/approved-session-reuse-20260920/README.md) and [public release evidence](../reports/release/0.4.0/README.md). Python/TypeScript 0.2.0 artifacts accompany that historical GitHub release; current 0.8.0 uses author SDK 0.4.0; separate registry publication is not claimed.
+Version 0.4.0 adds a memory-led fair scheduler and opt-in `WorkerReusePolicy.ApprovedSessions`. Customer-bound execution remains the default. The host requires the updated SDK cleanup handshake before sharing compatible reviewed deployments; C#, Python and TypeScript expose registered session resources. See [operator/author guidance](reusable-plugins.md), [candidate verification](../reports/verification/approved-session-reuse-20260920/README.md) and [public release evidence](../reports/release/0.4.0/README.md). Python/TypeScript 0.2.0 artifacts accompany that historical GitHub release; current 0.9.1 uses author SDK 0.4.1; separate registry publication is not claimed.
 
 ## Unified host and shared execution
 
