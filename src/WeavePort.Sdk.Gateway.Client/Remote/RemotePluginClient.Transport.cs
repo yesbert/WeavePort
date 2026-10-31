@@ -16,11 +16,8 @@ public sealed partial class RemotePluginClient
 
             return session.ResponseStream.Current;
         }
-        catch (RpcException error) when (token.IsCancellationRequested && HasCancelledStatus(session))
-        {
-            throw new OperationCanceledException("Gateway operation cancelled.", error, token);
-        }
-        catch (ObjectDisposedException error) when (token.IsCancellationRequested)
+        catch (Exception error) when (token.IsCancellationRequested &&
+            (error is ObjectDisposedException || error is RpcException && HasCancelledStatus(session)))
         {
             // Owned cancellation can dispose the gRPC call before its next read starts.
             throw new OperationCanceledException("Gateway operation cancelled.", error, token);
@@ -33,11 +30,8 @@ public sealed partial class RemotePluginClient
         {
             await session.RequestStream.WriteAsync(request, token);
         }
-        catch (RpcException error) when (token.IsCancellationRequested && HasCancelledStatus(session))
-        {
-            throw new OperationCanceledException("Gateway operation cancelled.", error, token);
-        }
-        catch (ObjectDisposedException error) when (token.IsCancellationRequested)
+        catch (Exception error) when (token.IsCancellationRequested &&
+            (error is ObjectDisposedException || error is RpcException && HasCancelledStatus(session)))
         {
             throw new OperationCanceledException("Gateway operation cancelled.", error, token);
         }
