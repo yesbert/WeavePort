@@ -30,7 +30,8 @@ An application SHALL be able to retain an installation identity and require exac
 - **THEN** recovery fails without overwriting the operation's committed state
 
 ### Requirement: Explicit trust boundary
-The resolver SHALL distinguish integrity against trusted metadata from executable isolation and SHALL document the requirement for stable deployment files throughout execution. Portable runtime compatibility SHALL NOT attest runtime integrity, native dependency portability or equivalent behavior across runtime updates. Runtime integrity and dependencies outside the hashed bundle SHALL remain deployment-owned. Explicit strict executable hashing SHALL remain available without claiming verification of the runtime's dependency closure.
+
+The resolver SHALL distinguish trusted-metadata integrity from isolation and document stable deployment files throughout execution. Portable compatibility SHALL NOT attest runtime integrity, native dependency portability or equivalent behavior across updates. Runtime integrity and dependencies outside the hashed bundle SHALL remain deployment-owned. Explicit strict executable hashing SHALL remain available without claiming runtime dependency-closure verification.
 
 #### Scenario: Installed startup mismatch
 - **WHEN** declared installation content launches a worker advertising a different release
@@ -48,7 +49,8 @@ The catalog SHALL list verified selected releases by contract from a multi-plugi
 - **THEN** both can be discovered and bound without manually constructing a launch profile, and unapproved shared ownership is rejected
 
 ### Requirement: Ecosystem runtime requirements
-Portable installations SHALL derive requirements from hashed ecosystem declarations: framework-dependent .NET entry-point runtime configuration, Python project `requires-python`, and Node package `engines.node`. Missing, malformed, conflicting or unsupported declarations SHALL be refused rather than treated as unrestricted. Supported syntax and deployment forms SHALL be documented. Requirements SHALL retain ecosystem-specific semantics instead of treating all ecosystems as a common numeric range.
+
+Portable installations SHALL derive requirements from hashed declarations: framework-dependent .NET entry-point runtime configuration, Python project `requires-python`, and Node `engines.node`. Missing, malformed, conflicting or unsupported declarations SHALL be refused, never unrestricted. Supported syntax and deployment forms SHALL be documented. Requirements SHALL preserve ecosystem semantics rather than use a common numeric range.
 
 #### Scenario: Framework compatibility
 - **WHEN** a .NET plugin requires Microsoft.NETCore.App 10.0.0 with default Minor roll-forward
@@ -101,7 +103,8 @@ The catalog SHALL offer diagnostic enumeration of immediate plugin directories, 
 - **THEN** the directory is reported as refused rather than silently omitted
 
 ### Requirement: Publisher policy across installation entry points
-Offline staging validation, synchronous and asynchronous resolution, discovery, activation and pinned recovery SHALL consistently apply the catalog's configured publisher policy before returning a usable installation or changing a selector. Diagnostic discovery SHALL preserve actionable stable publisher refusal reasons and continue reporting healthy siblings. Existing unsigned callers using integrity-only policy SHALL retain their content validation and pin behavior. Signature metadata SHALL NOT replace complete bundle validation or change the manifest-based installation identity.
+
+Staging validation, sync/async resolution, discovery, activation and pinned recovery SHALL apply catalog publisher policy before returning usable installations or changing selectors. Diagnostic discovery SHALL preserve actionable stable publisher refusal reasons and report healthy siblings. Unsigned integrity-only callers SHALL retain content validation and pin behavior. Signature metadata SHALL NOT replace bundle validation or change manifest-based identity.
 
 #### Scenario: Activation refusal
 - **WHEN** required publisher validation fails during activation

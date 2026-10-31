@@ -4054,7 +4054,8 @@ The unified host SHALL prefer eligible tenants with fewer active invocations and
 - **THEN** the next eligible free slot serves the less-active customer ahead of more work for the saturated customer
 
 ### Requirement: Reconstructible residency
-The host SHALL retain customer-bound state by default. Only explicitly reconstructible customer-bound workers SHALL be destroyed on scheduling pressure or configured idle eviction. Approved clean unary sessions SHALL release binding residency into the compatible reusable pool. A separate pristine reserve SHALL use only recently requested registered profiles and remain bounded independently of customer count. Shared workers SHALL remain resident until instance disposal or failure. An active stream residency lease SHALL prevent eviction during consumer pauses.
+
+The host SHALL retain customer-bound state by default and evict only explicitly reconstructible workers under pressure or configured idle eviction. Approved clean unary sessions SHALL return residency to the compatible pool. A separate pristine reserve SHALL use recently requested registered profiles, bounded independently of customer count. Shared workers SHALL remain resident until disposal or failure. Active stream leases SHALL prevent eviction during consumer pauses.
 
 #### Scenario: Cold customer replaces idle customer
 - **WHEN** capacity is full of explicitly reconstructible customer-bound workers and a customer without a resident worker is selected
@@ -4161,7 +4162,8 @@ An application SHALL be able to retain an installation identity and require exac
 - **THEN** recovery fails without overwriting the operation's committed state
 
 ### Requirement: Explicit trust boundary
-The resolver SHALL distinguish integrity against trusted metadata from executable isolation and SHALL document the requirement for stable deployment files throughout execution. Portable runtime compatibility SHALL NOT attest runtime integrity, native dependency portability or equivalent behavior across runtime updates. Runtime integrity and dependencies outside the hashed bundle SHALL remain deployment-owned. Explicit strict executable hashing SHALL remain available without claiming verification of the runtime's dependency closure.
+
+The resolver SHALL distinguish trusted-metadata integrity from isolation and document stable deployment files throughout execution. Portable compatibility SHALL NOT attest runtime integrity, native dependency portability or equivalent behavior across updates. Runtime integrity and dependencies outside the hashed bundle SHALL remain deployment-owned. Explicit strict executable hashing SHALL remain available without claiming runtime dependency-closure verification.
 
 #### Scenario: Installed startup mismatch
 - **WHEN** declared installation content launches a worker advertising a different release
@@ -4179,7 +4181,8 @@ The catalog SHALL list verified selected releases by contract from a multi-plugi
 - **THEN** both can be discovered and bound without manually constructing a launch profile, and unapproved shared ownership is rejected
 
 ### Requirement: Ecosystem runtime requirements
-Portable installations SHALL derive requirements from hashed ecosystem declarations: framework-dependent .NET entry-point runtime configuration, Python project `requires-python`, and Node package `engines.node`. Missing, malformed, conflicting or unsupported declarations SHALL be refused rather than treated as unrestricted. Supported syntax and deployment forms SHALL be documented. Requirements SHALL retain ecosystem-specific semantics instead of treating all ecosystems as a common numeric range.
+
+Portable installations SHALL derive requirements from hashed declarations: framework-dependent .NET entry-point runtime configuration, Python project `requires-python`, and Node `engines.node`. Missing, malformed, conflicting or unsupported declarations SHALL be refused, never unrestricted. Supported syntax and deployment forms SHALL be documented. Requirements SHALL preserve ecosystem semantics rather than use a common numeric range.
 
 #### Scenario: Framework compatibility
 - **WHEN** a .NET plugin requires Microsoft.NETCore.App 10.0.0 with default Minor roll-forward
@@ -4232,7 +4235,8 @@ The catalog SHALL offer diagnostic enumeration of immediate plugin directories, 
 - **THEN** the directory is reported as refused rather than silently omitted
 
 ### Requirement: Publisher policy across installation entry points
-Offline staging validation, synchronous and asynchronous resolution, discovery, activation and pinned recovery SHALL consistently apply the catalog's configured publisher policy before returning a usable installation or changing a selector. Diagnostic discovery SHALL preserve actionable stable publisher refusal reasons and continue reporting healthy siblings. Existing unsigned callers using integrity-only policy SHALL retain their content validation and pin behavior. Signature metadata SHALL NOT replace complete bundle validation or change the manifest-based installation identity.
+
+Staging validation, sync/async resolution, discovery, activation and pinned recovery SHALL apply catalog publisher policy before returning usable installations or changing selectors. Diagnostic discovery SHALL preserve actionable stable publisher refusal reasons and report healthy siblings. Unsigned integrity-only callers SHALL retain content validation and pin behavior. Signature metadata SHALL NOT replace bundle validation or change manifest-based identity.
 
 #### Scenario: Activation refusal
 - **WHEN** required publisher validation fails during activation
@@ -4583,7 +4587,8 @@ A public .NET API SHALL seal an offline built release from its identity, entry p
 - **THEN** sealing succeeds without enabling reflection, retains the same manifest bytes and identity as the existing format, and the .NET release can be resolved with its original pin by a compatible host with JSON reflection disabled
 
 ### Requirement: Safe deterministic manifest generation
-Sealing SHALL use the same path, link, inventory and metadata constraints as resolution, hash declaration files as bundle content, and produce identical manifest bytes for identical input bytes and options regardless of absolute release path. It SHALL atomically replace only the manifest after validation succeeds, without deleting bundle files, changing selectors or migrating pins. Missing, dynamic-only or unsupported runtime requirements SHALL be rejected with a source-specific diagnostic. Strict runtime hashes SHALL require explicit local runtime inputs.
+
+Sealing SHALL apply resolution path, link, inventory and metadata constraints, hash declarations, and produce identical manifest bytes for identical inputs/options regardless of release path. It SHALL atomically replace only the manifest after validation, without deleting files or changing selectors/pins. Missing, dynamic-only or unsupported runtime requirements SHALL yield source-specific diagnostics. Strict runtime hashes SHALL require explicit local runtime inputs.
 
 #### Scenario: Repeatable release
 - **WHEN** identical release content and sealing options are supplied in two different directories
@@ -4833,7 +4838,8 @@ Updated SDKs SHALL advertise native cleanup capability revision one and include 
 - **THEN** the host retains exclusive binding ownership rather than sharing the worker
 
 ### Requirement: Concurrent authoring and live stream delivery
-All three author SDKs SHALL support approved concurrent unary execution with isolated contexts and cleanup, correlated callbacks, atomic frames and cooperative per-invocation cancellation. Concurrent workers SHALL use a protocol revision rejected by serial-only hosts. Exclusive result streams SHALL flush available items promptly and permit empty unfinished heartbeat batches. Stream exchange and total deadlines SHALL be configured together separately from unary deadlines. Callback count SHALL be configurable with a default of eight.
+
+All three SDKs SHALL support approved concurrent unary calls with isolated contexts/cleanup, correlated callbacks, atomic frames and cooperative per-call cancellation. Concurrent protocol revisions SHALL be rejected by serial-only hosts. Exclusive streams SHALL flush promptly and permit empty unfinished heartbeat batches. Stream exchange and total deadlines SHALL be configured together, separately from unary deadlines. Callback limits SHALL be configurable, defaulting to eight.
 
 #### Scenario: Slow stream and bounded callbacks
 - **WHEN** a stream first yields after twelve seconds under a sufficient stream deadline and the same binding has a five-second unary deadline
@@ -4917,7 +4923,8 @@ The host SHALL expose shared readiness, occupied slots, restart and disabled sta
 - **THEN** its state becomes disabled, pending callers complete boundedly, and default logs contain no raw plugin output
 
 ### Requirement: Stable platform exception codes
-Public .NET plugin-call and artifact-version-mismatch exceptions SHALL expose a stable programmatic error code without requiring message parsing. Existing status values, exception categories and execution-uncertainty metadata SHALL remain available. SDK cleanup exceptions SHALL identify cleanup-error. Platform-generated codes SHALL contain no payload, configuration or version metadata; diagnostic documentation SHALL describe their meaning and recovery limits. Standard argument, cancellation and transport exceptions are outside this code contract.
+
+Public .NET plugin-call and artifact-version-mismatch exceptions SHALL expose stable codes without message parsing. Existing statuses, exception categories and execution uncertainty SHALL remain available. SDK cleanup exceptions SHALL identify cleanup-error. Platform codes SHALL exclude payload, configuration and version metadata; documentation SHALL explain meaning and recovery limits. Standard argument, cancellation and transport exceptions remain outside this contract.
 
 #### Scenario: Failed plugin call
 - **WHEN** a client operation raises a plugin-call exception
@@ -4957,7 +4964,8 @@ Define explicit trusted resident concurrent plugin execution with bounded admiss
 ## Requirements
 
 ### Requirement: Approved resident concurrent execution
-The host SHALL require agreement between installation declaration, operator approval and shared binding selection before starting a resident shared worker. It SHALL retain per-invocation tenant context, enforce a configured degree and bounded fair waiting, and refuse shared streams and unsupported adapters. A failed invocation SHALL NOT terminate unrelated invocations; channel failures SHALL fail all dispatched calls without replay. Cancelled work SHALL retain its slot until terminal acknowledgement or bounded worker retirement. Restart attempts SHALL be bounded and exhaustion SHALL expose disabled state.
+
+Shared workers SHALL require installation, operator and binding agreement; isolate invocation contexts; enforce configured concurrency and bounded fair waiting; and refuse streams and unsupported adapters. Invocation failure SHALL spare other calls; channel failure SHALL fail dispatched calls without replay. Cancellation SHALL hold slots until terminal acknowledgement or bounded retirement. Restarts SHALL be bounded; exhaustion SHALL expose disabled state.
 
 #### Scenario: Sixteen tenants and isolated cancellation
 - **WHEN** sixteen tenants invoke one approved worker and one invocation fails while another is cancelled
@@ -5014,7 +5022,8 @@ Define tested tenant boundaries across Docker and cooperative trusted local exec
 ## Requirements
 
 ### Requirement: Independent tenant execution
-The customer-bound Docker execution profile SHALL isolate worker state, configuration and writable files between tenants using the same artifact version. Trusted local execution SHALL preserve cooperative bound context separation without promising hostile same-user confinement. Explicitly approved session reuse SHALL follow its cooperative cleanup contract rather than claim complete heap or filesystem separation. Explicit Shared ownership SHALL preserve per-invocation authority while accepting shared memory and a shared process-failure boundary.
+
+Customer-bound Docker workers SHALL isolate state, configuration and writable files between tenants using the same artifact. Trusted local workers SHALL separate cooperative bound contexts without claiming hostile same-user confinement. Approved reuse SHALL follow cooperative cleanup, not claim full heap/filesystem separation. Shared ownership SHALL preserve per-invocation authority while accepting shared memory and process-failure boundaries.
 
 #### Scenario: Failure of tenant A
 - **WHEN** A crashes, exceeds memory, hangs or is deactivated in the customer-bound Docker profile while B calls the same plugin

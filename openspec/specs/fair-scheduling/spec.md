@@ -31,7 +31,8 @@ The unified host SHALL prefer eligible tenants with fewer active invocations and
 - **THEN** the next eligible free slot serves the less-active customer ahead of more work for the saturated customer
 
 ### Requirement: Reconstructible residency
-The host SHALL retain customer-bound state by default. Only explicitly reconstructible customer-bound workers SHALL be destroyed on scheduling pressure or configured idle eviction. Approved clean unary sessions SHALL release binding residency into the compatible reusable pool. A separate pristine reserve SHALL use only recently requested registered profiles and remain bounded independently of customer count. Shared workers SHALL remain resident until instance disposal or failure. An active stream residency lease SHALL prevent eviction during consumer pauses.
+
+The host SHALL retain customer-bound state by default and evict only explicitly reconstructible workers under pressure or configured idle eviction. Approved clean unary sessions SHALL return residency to the compatible pool. A separate pristine reserve SHALL use recently requested registered profiles, bounded independently of customer count. Shared workers SHALL remain resident until disposal or failure. Active stream leases SHALL prevent eviction during consumer pauses.
 
 #### Scenario: Cold customer replaces idle customer
 - **WHEN** capacity is full of explicitly reconstructible customer-bound workers and a customer without a resident worker is selected

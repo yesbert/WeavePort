@@ -14,3 +14,5 @@ Reviewed current Microsoft guidance and official upstream documentation before i
 - https://xoofx.github.io/Tomlyn/docs/serialization/
 
 No suppressed vulnerability, analyzer or public API mismatch is implied by this update. Check exact package licenses and downstream closure before accepting baselines. SDK/target/language and qualification identities are recorded in release evidence. Native functional qualification does not establish new containment or performance guarantees.
+
+OpenSpec 1.16.0 promotes overlong requirement summaries to strict-validation failures. Shorten the nine existing summaries while preserving requirements and scenarios; this is editorial compatibility with updated tooling, not a product behavior change.

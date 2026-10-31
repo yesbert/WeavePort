@@ -40,7 +40,8 @@ The host SHALL expose shared readiness, occupied slots, restart and disabled sta
 - **THEN** its state becomes disabled, pending callers complete boundedly, and default logs contain no raw plugin output
 
 ### Requirement: Stable platform exception codes
-Public .NET plugin-call and artifact-version-mismatch exceptions SHALL expose a stable programmatic error code without requiring message parsing. Existing status values, exception categories and execution-uncertainty metadata SHALL remain available. SDK cleanup exceptions SHALL identify cleanup-error. Platform-generated codes SHALL contain no payload, configuration or version metadata; diagnostic documentation SHALL describe their meaning and recovery limits. Standard argument, cancellation and transport exceptions are outside this code contract.
+
+Public .NET plugin-call and artifact-version-mismatch exceptions SHALL expose stable codes without message parsing. Existing statuses, exception categories and execution uncertainty SHALL remain available. SDK cleanup exceptions SHALL identify cleanup-error. Platform codes SHALL exclude payload, configuration and version metadata; documentation SHALL explain meaning and recovery limits. Standard argument, cancellation and transport exceptions remain outside this contract.
 
 #### Scenario: Failed plugin call
 - **WHEN** a client operation raises a plugin-call exception
