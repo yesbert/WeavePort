@@ -10,7 +10,7 @@ from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools/dependencies"))
-from inventory import Dependency, discover_file, maintained
+from inventory import Dependency, discover_file, maintained, workflow_dependencies
 from registry import version_key
 from run import target
 from update import apply, rewrite
@@ -59,6 +59,45 @@ class UpdateTests(unittest.TestCase):
         self.assertEqual(text.replace('Example" Version="1.0.0', 'Example" Version="2.0.0'), rewrite(text, item, "2.0.0"))
         with self.assertRaises(ValueError):
             rewrite(text + text, item, "2.0.0")
+
+    def test_workflow_prerelease_is_not_silently_truncated(self):
+        source = "dotnet tool install example --version 1.2.3-preview.1\nnpm install --global @scope/tool@1.2.3-beta.2"
+        items = workflow_dependencies(".github/workflows/test.yml", source)
+        self.assertEqual(["1.2.3-preview.1", "1.2.3-beta.2"], [item.version for item in items])
+        for item in items:
+            with self.assertRaises(ValueError):
+                target(item, "2.0.0", [])
+
+    def test_portable_checks_follow_sdk_build(self):
+        from run import tests
+        with patch("run.execute") as execute:
+            tests(ROOT)
+        commands = [call.args[1] for call in execute.call_args_list]
+        self.assertLess(commands.index(["npm", "test", "--prefix", "sdks/typescript"]),
+                        commands.index(["./scripts/verify-portable.sh"]))
+
+    def test_fresh_example_resolution_waits_for_sdk_archive(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            for project in ("sdks/typescript", "examples/sdk/typescript"):
+                (root / project).mkdir(parents=True)
+                (root / project / "package.json").write_text('{"version":"0.4.1","devDependencies":{"typescript":"7.0.2"}}')
+            plan = [(Dependency("npm", "typescript", "7.0.2", project + "/package.json", "npm", "devDependencies"), "7.0.2", "latest stable")
+                    for project in ("sdks/typescript", "examples/sdk/typescript")]
+            events = []
+            archive = root / "artifacts/sdk-packages-js/weaveport-sdk-0.4.1.tgz"
+            def simulate(command, cwd, check):
+                events.append(command[:2])
+                if command[:2] == ["npm", "pack"]:
+                    self.assertIn(["npm", "ci"], events)
+                    self.assertIn(["npm", "run"], events)
+                    archive.parent.mkdir(parents=True, exist_ok=True)
+                    archive.write_bytes(b"fresh SDK archive")
+                    return
+                if cwd == root / "examples/sdk/typescript":
+                    self.assertTrue(archive.exists(), "consumer resolved before archive preparation")
+            with patch("update.subprocess.run", side_effect=simulate):
+                apply(root, plan)
 
     def test_dry_run_never_calls_apply_or_verification(self):
         from run import main

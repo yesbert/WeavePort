@@ -74,7 +74,7 @@ def pins(root):
 
 def workflow_dependencies(path, text):
     tools = [Dependency("nuget", name, version, path, "workflow-tool")
-             for name, version in re.findall(r"dotnet tool install ([\w.-]+) --version ([\d.]+)", text)]
+             for name, version in re.findall(r"dotnet tool install ([\w.-]+) --version ([^\s]+)", text)]
     npm = [Dependency("npm", name, version, path, "workflow-npm")
-           for name, version in re.findall(r"npm install --global ([@\w/.-]+)@([\d.]+)", text)]
+           for name, version in re.findall(r"npm install --global ([@\w/.-]+)@([^\s]+)", text)]
     return tools + npm

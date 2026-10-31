@@ -62,8 +62,7 @@ def apply(root, plan):
     try:
         for item, target, _ in plan:
             update_file(root, item, target)
-        for project in sorted(npm_projects):
-            subprocess.run(["npm", "update", "--package-lock-only", "--ignore-scripts", "--no-audit", "--no-fund"], cwd=root / project, check=True)
+        update_npm(root, npm_projects)
     except BaseException:
         restore(root, before)
         raise
@@ -74,3 +73,25 @@ def update_file(root, item, target):
         return
     path = root / item.path
     path.write_text(rewrite(path.read_text(), item, target))
+
+
+def update_npm(root, projects):
+    sdk = "sdks/typescript"
+    ordered = sorted(projects, key=lambda project: (project != sdk, project))
+    for project in ordered:
+        update_npm_project(root, project)
+
+
+def update_npm_project(root, project):
+    if project == "examples/sdk/typescript":
+        prepare_sdk_archive(root)
+    subprocess.run(["npm", "update", "--package-lock-only", "--ignore-scripts", "--no-audit", "--no-fund"], cwd=root / project, check=True)
+
+
+def prepare_sdk_archive(root):
+    project = root / "sdks/typescript"
+    output = root / "artifacts/sdk-packages-js"
+    output.mkdir(parents=True, exist_ok=True)
+    subprocess.run(["npm", "ci", "--ignore-scripts", "--no-audit", "--no-fund"], cwd=project, check=True)
+    subprocess.run(["npm", "run", "build"], cwd=project, check=True)
+    subprocess.run(["npm", "pack", "--ignore-scripts", "--pack-destination", str(output)], cwd=project, check=True)

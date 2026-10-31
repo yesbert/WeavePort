@@ -16,6 +16,7 @@ ROOT = Path(__file__).resolve().parents[2]
 
 
 def target(item, available, holds):
+    version_key(item.version)
     matching = [pin for pin in holds if pin["registry"] == item.registry and pin["package"] == item.package
                 and pin.get("path", item.path) == item.path]
     if len(matching) > 1:
@@ -50,9 +51,9 @@ def build(root):
 
 
 def tests(root):
-    execute(root, ["./scripts/verify-portable.sh"])
     execute(root, ["npm", "ci", "--prefix", "sdks/typescript", "--ignore-scripts"])
     execute(root, ["npm", "test", "--prefix", "sdks/typescript"])
+    execute(root, ["./scripts/verify-portable.sh"])
 
 
 def audit(root, plan):
