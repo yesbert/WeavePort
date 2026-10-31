@@ -420,7 +420,7 @@ Source: https://raw.githubusercontent.com/yesbert/WeavePort/main/website/package
 
 # Packages and support
 
-Install the runtime in your .NET application and the author SDK in each C# plugin project. The published package version is **0.9.1**, licensed under MIT. Review the [migration notes](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/releases.md#090-trusted-publishers-and-reflection-free-installation-json) when upgrading. Use the same exact version across the selected .NET packages. The optional packages can be installed independently of one another.
+Install the runtime in your .NET application and the author SDK in each C# plugin project. The prepared package version is **0.9.1**; the latest published version remains **0.9.0**, licensed under MIT. Review the [migration notes](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/releases.md#090-trusted-publishers-and-reflection-free-installation-json) when upgrading. Use the same exact version across the selected .NET packages. The optional packages can be installed independently of one another.
 
 | Package | Use it for |
 |---|---|
@@ -1039,7 +1039,7 @@ Source: https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/publisher-
 
 # Publisher trust for installed releases
 
-**Availability:** Included in the published 0.9.1 package family; see [release evidence](https://raw.githubusercontent.com/yesbert/WeavePort/main/reports/release/0.9.1/README.md).
+**Availability:** Included in the prepared 0.9.1 package family; see [release evidence](https://raw.githubusercontent.com/yesbert/WeavePort/main/reports/release/0.9.1/README.md).
 
 Installation hashes protect content against a manifest. Publisher signatures authenticate that manifest against a host-owned public key. Require publisher authentication when accepting releases from callers whose installation credentials must not grant authority to introduce arbitrary code.
 
