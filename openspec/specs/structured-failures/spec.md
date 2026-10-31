@@ -29,3 +29,7 @@ The host SHALL distinguish caller cancellation, host shutdown and expiration of 
 #### Scenario: Unrelated cancellation
 - **WHEN** a callback raises cancellation without a requested operation token
 - **THEN** the outcome identifies an internal failure rather than a timeout
+
+#### Scenario: Interrupted gateway I/O after owned cancellation
+- **WHEN** gateway I/O reports a transport error after the call has completed as Cancelled and the operation's own token is requested
+- **THEN** the client preserves owned cancellation and the interrupted I/O cause; an unavailable final status, incomplete call or unrequested token does not become cancellation
