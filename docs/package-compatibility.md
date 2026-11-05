@@ -1,6 +1,6 @@
 # Local package and contract compatibility
 
-**Release availability:** This matrix targets the prepared .NET 0.10.0 and author SDKs 0.5.0, not yet published; 0.9.1 with author SDKs 0.4.1 remains the latest published combination. See [migration notes](releases.md#0100-function-files).
+**Release availability:** This matrix targets published .NET 0.10.0 and author SDKs 0.5.0. See [migration notes](releases.md#0100-function-files).
 
 Keep the host, SDKs and plugin artifacts on a known-compatible combination. This guide defines the exact identities checked during installation and startup.
 

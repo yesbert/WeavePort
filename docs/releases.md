@@ -6,7 +6,7 @@ The GitHub delivery target is [yesbert/WeavePort](https://github.com/yesbert/Wea
 
 The release allowlist in `build/release-packages.json` contains the four core packages plus `WeavePort.Composition`, `WeavePort.Sdk.Gateway.Client` and `WeavePort.Sdk.Gateway`. Testing remains internal. The three optional packages have a separate API baseline and packed-consumer qualification. Python and TypeScript author SDK publication is separate from NuGet delivery.
 
-The prepared release version is `0.10.0`, licensed under [MIT](../LICENSE); it is not yet published, and 0.9.1 remains the latest published release. All seven .NET packages and the exact compatibility matrix use 0.10.0; host API is 2, exclusive native protocol is 1 and concurrent native protocol is 2. Python/TypeScript author SDK versions are 0.5.0. Their qualified wheel and tarball accompany the GitHub release without claiming PyPI/npm registry publication. Tagging, protected delivery and public download verification are pending. See [current release status](status.md#release-0100). Historical evidence retains its original identities. A tag override cannot substitute for updating compatibility inputs.
+The published release version is `0.10.0`, licensed under [MIT](../LICENSE). All seven .NET packages and the exact compatibility matrix use 0.10.0; host API is 2, exclusive native protocol is 1 and concurrent native protocol is 2. Python/TypeScript author SDK versions are 0.5.0. Their qualified wheel and tarball accompany the GitHub release without claiming PyPI/npm registry publication. Protected delivery and public download verification are complete. See [current release status](status.md#release-0100). Historical evidence retains its original identities. A tag override cannot substitute for updating compatibility inputs.
 
 The previous [0.8.0 release report](../reports/release/0.8.0/README.md) records exact-tag qualification, the prepublication cancellation correction and verified public downloads. The previous [0.7.0 release report](../reports/release/0.7.0/README.md) records exact-tag qualification, the completed audit and verified public downloads. The [0.5.0 release report](../reports/release/0.5.0/README.md) records all seven public packages, tag qualification and download verification. The [0.4.0 release report](../reports/release/0.4.0/README.md) retains the exact qualification, artifact hashes and publication verification.
 
@@ -146,7 +146,7 @@ Use the [dependency update workflow](dependency-updates.md) for future refreshes
 
 ## 0.10.0 function files
 
-Version 0.10.0 is prepared and not yet published. It adds [function files](function-files.md): a function call can take named file inputs that the host reads at any offset through its own reader, and hand back named outputs that the host commits through its own writer only when the call succeeds. This works locally, through a host with `SchedulingOptions`, and through the gateway, where readers and writers stay at the remote caller. The [protocol reference](protocol.md#function-files) describes the additive wire extension.
+Version 0.10.0 is published. It adds [function files](function-files.md): a function call can take named file inputs that the host reads at any offset through its own reader, and hand back named outputs that the host commits through its own writer only when the call succeeds. This works locally, through a host with `SchedulingOptions`, and through the gateway, where readers and writers stay at the remote caller. The [protocol reference](protocol.md#function-files) describes the additive wire extension.
 
 Migration:
 
@@ -156,4 +156,4 @@ Migration:
 - New failure codes are `files-unsupported`, `output-limit`, `input-read-limit`, `output-incomplete` and `output-commit-failed`; see [failure codes](failure-codes.md). `input-limit` keeps its meaning for unary requests.
 - Rebuild and reseal installations offline for the exact 0.10.0 matrix, then sign the resulting manifest bytes and deliberately migrate application pins.
 
-All public API changes are additive. No new runtime dependency, platform support qualification or performance guarantee is introduced. Publication requires a reviewed preparation merge, green checks, an annotated tag and approval of the protected release workflow. The [preparation record](../reports/release/0.10.0/README.md) tracks it.
+All public API changes are additive. No new runtime dependency, platform support qualification or performance guarantee is introduced. The [release record](../reports/release/0.10.0/README.md) retains exact-tag qualification and verified publication evidence.

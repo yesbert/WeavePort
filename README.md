@@ -10,11 +10,11 @@ Build document readers, evaluation strategies or customer-specific scheduling ru
 
 [Get started](website/getting-started.md) · [Why WeavePort?](website/introduction.md) · [Write a plugin](docs/plugin-sdk.md) · [NuGet packages](website/packages.md) · [Use MCP tools](docs/mcp-plugins.md)
 
-**MIT · .NET 10 · Windows, Linux & macOS · Preparing 0.10.0**
+**MIT · .NET 10 · Windows, Linux & macOS · Release version 0.10.0**
 
 Built for .NET. Designed for Windows, Linux and macOS. The supported cross-platform execution path uses standard input/output (stdio) for owner-controlled plugins. Current release validation covers macOS arm64; Windows and Linux release validation is pending. See the [platform support and validation matrix](docs/platform-qualification.md). The pre-1.0 API is evolving; native processes are not a sandbox for hostile code.
 
-The prepared 0.10.0 package family adds [function files](docs/function-files.md): host-supplied file inputs and transactional file outputs for plugin function calls, locally and through the gateway. It is not yet published; 0.9.1 remains the latest published release. Review the [migration notes](docs/releases.md#0100-function-files) and [release status](docs/status.md) before upgrading.
+The 0.10.0 package family adds [function files](docs/function-files.md): host-supplied file inputs and transactional file outputs for plugin function calls, locally and through the gateway. Version 0.10.0 is published on NuGet and GitHub. Review the [migration notes](docs/releases.md#0100-function-files) and [release status](docs/status.md) before upgrading.
 
 ## Build with your AI assistant
 
