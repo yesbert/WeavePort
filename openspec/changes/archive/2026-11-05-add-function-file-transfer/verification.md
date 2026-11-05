@@ -1,6 +1,22 @@
 # Function file transfer verification
 
-Interim record while the change is open. The committed-candidate qualification (task 6.4) is not covered yet.
+## Qualified source — 2026-11-05
+
+Commit `eccd6c3b6ec39527145c87d4f25167ab2a4efef1` passed the normal committed-candidate workflow, `./scripts/verify.sh`. The run used a fresh detached checkout and isolated dependency caches. Local retained evidence is `artifacts/candidates/20261105-123422-86da82ef/result.json`, with per-stage logs. Result: **passed, 78 stages, 3,827 assertions, 446 frozen files**. Artifact manifest SHA-256: `668f8613b1d834cbcf95d17564229a3289965ce2b5710fa336396f0422cb0510`.
+
+Environment: macOS 27.2 arm64, .NET SDK 10.0.403, .NET 10.0.14 runtime, Python 3.15.2, Node v26.12.1 and npm 11.20.0. Three permitted consumer lockfile refreshes are recorded in result.json: `examples/mcp`, and the Decision Room host and plugin. Docker was not used.
+
+Commit `eccd6c3` adds four stages to the workflow: `concurrent-sdk-{source,packed}-files` and `concurrent-sdk-{source,packed}-files-gateway`. They run the three-language file and gateway suites against the source-built and the packed SDK fixtures, including the installed Python wheel and npm package. All four passed.
+
+The preceding commit `83aa2d5` passed the workflow without those stages: 74 stages, 3,733 assertions, evidence `artifacts/candidates/20261105-122915-07f67faf`. It is superseded because it did not exercise function files with packed SDKs.
+
+After qualification, only the evidence and task completion, the specification synchronization, archiving and generated documentation changed. The implementation bytes are those of the qualified commit.
+
+## Limits
+
+- Native macOS only; no new Windows or Linux execution claim.
+- The gateway was measured over loopback only; no real-network measurement was made.
+- No packages were published and no versions were changed. Release as 0.10.0 is a separate decision.
 
 ## Local measurements — 2026-11-05
 

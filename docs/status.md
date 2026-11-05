@@ -37,7 +37,7 @@ This qualifies the recorded native macOS arm64 profile. Individual latency reach
 
 The remaining platform change is [qualify-native-capacity-and-platform-comparison](../openspec/changes/qualify-native-capacity-and-platform-comparison/tasks.md): Windows capacity/performance qualification remains outstanding. Native source adapter checks now pass in [Windows/Linux CI](continuous-integration.md), including 38 Windows stdio assertions and 38/39 Linux stdio/socket assertions. Those source checks do not replace current public-package installation qualification. See [platform requirements](platform-qualification.md).
 
-[add-function-file-transfer](../openspec/changes/add-function-file-transfer/tasks.md) is in progress and unreleased: [function files](function-files.md) work locally, through the scheduler and through the gateway in all three SDKs; release qualification remains.
+[Function files](function-files.md) are complete and qualified in current source but unreleased: local, scheduler and gateway calls in all three SDKs. See the [archived change and verification](../openspec/changes/archive/2026-11-05-add-function-file-transfer/verification.md).
 
 HiveWeaver, TreeWeaver and NextPA integration remains separate application work. Application signing/notarization, stronger sandboxing and automatic deployment/migration are separate release decisions, not hidden tasks needed to run the current internal examples.
 
