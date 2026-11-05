@@ -47,6 +47,11 @@ public sealed class ScheduledPlugin : IPluginOperationSession, IPluginFileSessio
     public async Task<InvocationResult> InvokeAsync(string operation, JsonElement payload, PluginFiles files, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(files);
+        if (FileExchange.RefusesOperation(operation))
+        {
+            return ScheduledCall.Rejected(WeavePort.Internal.FailureCodes.FilesUnsupported).Result;
+        }
+
         return (await _owner.Enqueue(this, operation, payload, cancellationToken, files)).Result;
     }
 

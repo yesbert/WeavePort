@@ -33,12 +33,14 @@ Median of five runs after one warm-up call:
 
 | Language | Block | copy ms | MiB/s | Host reads | Output blocks | ms per round trip | zip-summary ms | zip-summary host reads | Worker MiB initial → peak |
 |---|---|---|---|---|---|---|---|---|---|
-| C# | 64 KiB | 208.3 | 43.2 | 145 | 145 | 0.718 | 0.9 | 2 | 102.5 → 158.3 |
-| C# | 256 KiB | 191.9 | 46.9 | 37 | 37 | 2.593 | 2.4 | 2 | 118.8 → 125.8 |
-| Python | 64 KiB | 85.6 | 105.2 | 145 | 145 | 0.295 | 0.5 | 1 | 26.9 → 27.1 |
-| Python | 256 KiB | 74.9 | 120.2 | 37 | 37 | 1.012 | 0.5 | 1 | 29.3 → 29.3 |
-| TypeScript | 64 KiB | 64.4 | 139.8 | 145 | 145 | 0.222 | 0.3 | 1 | 74.6 → 89.1 |
-| TypeScript | 256 KiB | 47.6 | 189.1 | 37 | 37 | 0.643 | 0.2 | 1 | 77.9 → 105.5 |
+| C# | 64 KiB | 37.6 | 239.6 | 145 | 145 | 0.13 | 0.3 | 2 | 58.4 → 66.7 |
+| C# | 256 KiB | 25.8 | 348.8 | 37 | 37 | 0.349 | 0.6 | 2 | 72.5 → 82.6 |
+| Python | 64 KiB | 62.2 | 144.7 | 145 | 145 | 0.215 | 0.5 | 1 | 26.5 → 27.7 |
+| Python | 256 KiB | 45.6 | 197.2 | 37 | 37 | 0.617 | 0.5 | 1 | 29.5 → 29.6 |
+| TypeScript | 64 KiB | 39.9 | 225.8 | 145 | 145 | 0.137 | 0.3 | 1 | 75.2 → 85.9 |
+| TypeScript | 256 KiB | 30.5 | 295.4 | 37 | 37 | 0.412 | 0.2 | 1 | 77.5 → 105.2 |
+
+These figures are after the review fixes, which encode each block once. The first run, before those fixes, measured C# at 208 ms, Python at 86 ms and TypeScript at 64 ms for the 64 KiB copy, with the C# worker growing from 102.5 to 158.3 MiB.
 
 "ms per round trip" is the copy time divided by host reads plus output blocks, so it includes the plugin's own work and base64 handling.
 
@@ -48,17 +50,32 @@ Command: `dotnet run --project tests/WeavePort.ConcurrentSdkTests -c Release -- 
 
 | Block | copy ms | MiB/s | Round trips (reads + writes) | ms per round trip |
 |---|---|---|---|---|
-| 64 KiB | 241.3 | 37.3 | 290 | 0.832 |
-| 256 KiB | 257.9 | 34.9 | 74 | 3.485 |
+| 64 KiB | 80.1 | 112.4 | 290 | 0.276 |
+| 256 KiB | 49.6 | 181.4 | 74 | 0.671 |
 
-Compared with the local path (208 / 192 ms), the gateway adds about 30–65 ms per 9 MB copy over loopback. Larger blocks did not help on loopback, where the per-request cost is small and payload handling dominates. A real network adds its round-trip time to each of the 290 or 74 relayed requests. That is not measured here, and it is where 256 KiB blocks, or later read-ahead, would matter.
+Compared with the local path (38 / 26 ms), the gateway adds about 24–42 ms per 9 MB copy over loopback, and 256 KiB blocks save about a third of the time. Before the review fixes the same run measured 241 / 258 ms. A real network adds its round-trip time to each of the 290 or 74 relayed requests. That is not measured here, and it is where 256 KiB blocks, or later read-ahead, would matter.
 
 ## Observations
 
 - **Read-ahead.** Locally and through a loopback gateway, a round trip costs under a millisecond per 64 KiB block. Nothing here argues for read-ahead. A measurement over a real network is the open input for that decision.
 - **Block cache.** Listing the ZIP needs one or two host reads in every language, although the archive readers touch the end-of-directory record and the directory separately.
-- **Worker memory.** Python stays flat. The TypeScript and C# workers grow by 14–56 MiB during repeated 9 MB copies. That is consistent with managed-heap growth from per-block buffers and base64 strings. No input is held whole: the worker never reaches 9 MB × repetitions. A bounded-allocation pass over the C# path is a candidate follow-up.
-- **C# throughput** is the lowest of the three, at about 2.5× slower than Python per round trip. The C# runtime serializes each block payload twice: once into a `JsonElement` for the callback, then again into the frame. This is the first place to look if the difference matters. At 9 MB the copy still completes in about 0.2 s.
+- **Worker memory.** Python stays flat. The C# worker grows by 8–10 MiB and the TypeScript worker by 11–28 MiB during repeated 9 MB copies, consistent with managed-heap growth from per-block buffers. No input is held whole.
+- **Single encoding.** The review found that the C# SDK and the host each serialized every block twice. After writing payloads straight into the frame, and writing host input blocks from the rented buffer, the C# copy dropped from 208 to 38 ms. Python and TypeScript gained from the host side too.
+
+## Review fixes — 2026-11-05
+
+The high-effort code review of PR #55 found eight issues, all fixed:
+
+- A host timeout during a relayed gateway read reached the caller as `cancelled`. Cancelling a pending gRPC read aborted the call. Relay I/O is now bound to the session's lifetime; the server sends the call's own failure as the terminal reply and then ends the session. The client reads that reply even if its last acknowledgement fails, and never reuses a session after a failed file call.
+- Python name and media-type checks accepted a trailing newline. They now use `fullmatch`.
+- A scheduler-enabled host threw `NotSupportedException` for stream operations with files instead of returning `files-unsupported`.
+- Repeated reads at the end of an input were never charged against the read budget.
+- An unclosed Python synchronous output could try to complete itself from garbage collection.
+- Each block was encoded twice in the C# SDK and on the host.
+- MCP bindings, and bindings whose worker declined files, started a worker just to refuse.
+- Reply validation and the positional fill loop were duplicated.
+
+New checks cover the gateway timeout (stable over five consecutive runs), scheduled stream refusal, empty-read charging, refusal without a worker start, and Python name validation.
 
 ## Functional evidence so far
 

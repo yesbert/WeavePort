@@ -9,8 +9,9 @@ from collections import OrderedDict, namedtuple
 from .protocol import FileErrors, ProtocolLimits, SdkOperations
 
 FileInfo = namedtuple("FileInfo", "name length media_type")
-_NAME = re.compile(r"^[A-Za-z0-9_\-][A-Za-z0-9._\-]{0,127}$")
-_MEDIA_TYPE = re.compile(r"^[!-~]{1,255}$")
+# fullmatch: a trailing newline must not pass as it would with "$".
+_NAME = re.compile(r"[A-Za-z0-9_\-][A-Za-z0-9._\-]{0,127}")
+_MEDIA_TYPE = re.compile(r"[!-~]{1,255}")
 
 
 class PluginFileError(OSError):
@@ -55,9 +56,9 @@ class FileSession:
         raise PluginFileError(FileErrors.InputNotFound)
 
     def reserve_output(self, name, media_type):
-        if not isinstance(name, str) or not _NAME.match(name):
+        if not isinstance(name, str) or not _NAME.fullmatch(name):
             raise ValueError("Invalid output name")
-        if not isinstance(media_type, str) or not _MEDIA_TYPE.match(media_type):
+        if not isinstance(media_type, str) or not _MEDIA_TYPE.fullmatch(media_type):
             raise ValueError("Invalid media type")
         self._check()
         if not self.outputs_permitted:
@@ -253,6 +254,10 @@ class _SyncOutput(io.RawIOBase):
 
     def write(self, data):
         return _run(self._loop, self._target.write(bytes(data)))
+
+    def __del__(self):
+        # Never complete an output from garbage collection; an unclosed output fails the call as output-incomplete.
+        pass
 
     def close(self):
         if not self.closed:

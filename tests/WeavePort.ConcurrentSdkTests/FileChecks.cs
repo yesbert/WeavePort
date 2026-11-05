@@ -89,13 +89,13 @@ internal static class FileChecks
 
     internal static PluginInput Input() => new("sheet", Archive.Length, "application/zip", PluginInputReader.FromStream(new MemoryStream(Archive, writable: false)));
 
-    internal static ProcessProfile Profile(string root, string language, int blockBytes = 65536)
+    internal static ProcessProfile Profile(string root, string language, int blockBytes = 65536, TimeSpan? timeout = null)
     {
         ProcessProfile streams = StreamChecks.Profile(root, language);
         string[] arguments = language == "csharp"
             ? [typeof(FileChecks).Assembly.Location, "--file-worker"]
             : [.. streams.Arguments.Select(argument => argument.Replace(language == "python" ? "streams.py" : "streams.mjs", language == "python" ? "files.py" : "files.mjs", StringComparison.Ordinal))];
-        return new ProcessProfile(streams.Executable, [.. arguments, "--block-bytes", blockBytes.ToString(System.Globalization.CultureInfo.InvariantCulture)], trustedCode: true, reservedMemoryMiB: 64, timeout: TimeSpan.FromSeconds(60));
+        return new ProcessProfile(streams.Executable, [.. arguments, "--block-bytes", blockBytes.ToString(System.Globalization.CultureInfo.InvariantCulture)], trustedCode: true, reservedMemoryMiB: 64, timeout: timeout ?? TimeSpan.FromSeconds(60));
     }
 
     private static byte[] CreateArchive()

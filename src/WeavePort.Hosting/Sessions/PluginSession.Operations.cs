@@ -15,7 +15,7 @@ internal sealed partial class PluginSession
     public Task<InvocationResult> InvokeAsync(string operation, JsonElement payload, PluginFiles files, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(files);
-        if (operation.StartsWith("$sdk.", StringComparison.Ordinal) && operation != SdkOperations.Call)
+        if (FileExchange.RefusesOperation(operation))
         {
             return Task.FromResult(new InvocationResult(FailureCodes.FilesUnsupported, JsonSerializer.SerializeToElement(new
             {

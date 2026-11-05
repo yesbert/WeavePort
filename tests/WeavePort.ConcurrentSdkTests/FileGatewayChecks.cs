@@ -35,6 +35,7 @@ internal static class FileGatewayChecks
             await CommitFailureAsync(gateway);
             await CancellationAsync(gateway);
             await RevocationAsync(gateway);
+            await HostTimeoutAsync(gateway);
         }
 
         foreach (int blockBytes in new[] { 65536, 262144 })
@@ -99,12 +100,23 @@ internal static class FileGatewayChecks
         Check(await RecoversAsync(client), "the binding serves calls once the cancelled file call is cleaned up");
     }
 
+    private static async Task HostTimeoutAsync(Gateway gateway)
+    {
+        await using RemotePluginClient client = gateway.Client(Allowed, TimeSpan.FromSeconds(1));
+        var destination = new FailingDestination();
+        var slow = new PluginInput("sheet", FileChecks.Archive.Length, "application/zip", new SlowReader(PluginInputReader.FromStream(new MemoryStream(FileChecks.Archive, writable: false))));
+        string code = await CodeAsync(() => client.CallWithFilesAsync("copy", Empty, new PluginFiles([slow], destination, new PluginFileLimits(1, 16 << 20))));
+        Check(code == "timeout" && !destination.Events.Contains("commit") && destination.Events.Last() == "dispose", $"a host timeout during a relayed read reaches the caller as timeout ({code})");
+        Check(await RecoversAsync(client), "the client opens a fresh session after the relay ended the old one");
+    }
+
     private static async Task RevocationAsync(Gateway gateway)
     {
         await using RemotePluginClient client = gateway.Client(Allowed);
         var destination = new FailingDestination();
         var slow = new PluginInput("sheet", FileChecks.Archive.Length, "application/zip", new SlowReader(PluginInputReader.FromStream(new MemoryStream(FileChecks.Archive, writable: false))));
-        Task<string> call = CodeAsync(() => client.CallWithFilesAsync("copy", Empty, new PluginFiles([slow], destination, new PluginFileLimits(1, 16 << 20))));
+        // Revocation cancels the server-side invocation; like a plain gateway call, the client reports it as cancellation.
+        Task<string> call = CancelledOrCodeAsync(() => client.CallWithFilesAsync("copy", Empty, new PluginFiles([slow], destination, new PluginFileLimits(1, 16 << 20))));
         await Task.Delay(400);
         await gateway.RevokeLastAsync();
         string code = await call.WaitAsync(TimeSpan.FromSeconds(30));
@@ -168,6 +180,18 @@ internal static class FileGatewayChecks
         return new Gateway(host, app, root, language, blockBytes);
     }
 
+    private static async Task<string> CancelledOrCodeAsync(Func<Task> action)
+    {
+        try
+        {
+            return await CodeAsync(action);
+        }
+        catch (OperationCanceledException)
+        {
+            return "cancelled";
+        }
+    }
+
     private static async Task<string> CodeAsync(Func<Task> action, bool expectExecuted = true)
     {
         try
@@ -199,9 +223,9 @@ internal static class FileGatewayChecks
         internal Task RevokeLastAsync() => _registry.RevokeAsync(_last);
 
         // Each client gets its own binding so registrations with different limits stay independent.
-        internal RemotePluginClient Client(PluginFileLimits? limits)
+        internal RemotePluginClient Client(PluginFileLimits? limits, TimeSpan? hostTimeout = null)
         {
-            IPluginSession session = host.BindAsync(new PluginContext("gateway-" + language, "files", "1", "test", Empty), FileChecks.Profile(root, language, blockBytes), new FileChecks.NoCallbacks(), []).GetAwaiter().GetResult();
+            IPluginSession session = host.BindAsync(new PluginContext("gateway-" + language, "files", "1", "test", Empty), FileChecks.Profile(root, language, blockBytes, hostTimeout), new FileChecks.NoCallbacks(), []).GetAwaiter().GetResult();
             var local = new LocalPluginClient(session);
             string credential = _last = limits is null ? _registry.Register(local) : _registry.Register(local, limits);
             return new RemotePluginClient(new Uri(app.Urls.Single()), credential, TimeSpan.FromSeconds(60));

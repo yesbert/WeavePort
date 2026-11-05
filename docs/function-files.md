@@ -47,9 +47,9 @@ Built-in destinations: `PluginOutputDestination.ToDirectory` writes hidden parti
 | Input bytes delivered by readers | `MaximumInputReadBytes`, or four times the sum of the input lengths | call fails with `input-read-limit` before the reader is called |
 | Block size | 4–256 KiB decoded, 64 KiB by default, chosen by the plugin SDK | protocol error |
 
-Reads served from the SDK's block cache do not count against the read budget. All file transfer happens within the call's deadline, so raise the binding's timeout for large files.
+Reads served from the SDK's block cache do not count against the read budget. A read at or past the end of an input is charged as 4 KiB, so a plugin that keeps reading past the end still runs out of budget. All file transfer happens within the call's deadline, so raise the binding's timeout for large files.
 
-Before the plugin runs, a call with files is refused with `files-unsupported` and `MayHaveExecuted = false` in these cases:
+Before the plugin runs, a call with files is refused with `files-unsupported` and `MayHaveExecuted = false` in these cases. MCP bindings, and bindings whose worker already declined files, are refused without starting a worker:
 
 - the worker did not advertise file support (an SDK older than this change);
 - the binding is shared or MCP;

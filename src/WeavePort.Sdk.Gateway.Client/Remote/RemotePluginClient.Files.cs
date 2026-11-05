@@ -13,18 +13,20 @@ public sealed partial class RemotePluginClient
     public async Task<PluginCallResult<JsonElement>> CallWithFilesAsync(string operation, JsonElement input, PluginFiles files, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(files);
-        Request request = FileRequest(operation, input, files);
+        Request request = FileCallRequest(operation, input, files);
         using var stop = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, _sessions.Lifetime);
         stop.CancelAfter(_callTimeout);
         var session = await _sessions.RentAsync(stop.Token);
         var caller = new CallerFiles(files);
-        bool complete = false;
+        bool reusable = false;
         try
         {
             await WriteAsync(session, request, stop.Token);
             Reply reply = await RelayUntilTerminalAsync(session, caller, stop.Token);
-            complete = true;
-            return Result(reply, caller, stop.Token);
+            PluginCallResult<JsonElement> result = Result(reply, caller, stop.Token);
+            // A failed file call may have ended the server session after its terminal reply; only reuse after success.
+            reusable = true;
+            return result;
         }
         catch (RpcException error)
         {
@@ -33,7 +35,7 @@ public sealed partial class RemotePluginClient
         finally
         {
             await caller.ReleaseAsync(stop.IsCancellationRequested);
-            _sessions.Return(session, complete);
+            _sessions.Return(session, reusable);
         }
     }
 
@@ -48,7 +50,24 @@ public sealed partial class RemotePluginClient
             }
 
             FileRequest fileRequest = reply.FileRequest ?? throw new InvalidDataException("Unexpected gateway reply during a file call.");
-            await WriteAsync(session, new Request { FileAck = await caller.HandleAsync(fileRequest, token) }, token);
+            await AcknowledgeAsync(session, await caller.HandleAsync(fileRequest, token), token);
+        }
+    }
+
+    // The server may already have sent its terminal reply and ended the session (for example after a host timeout
+    // interrupted the relay). A failed acknowledgement then must not hide that reply: the next read returns it if it
+    // arrived, or surfaces the transport failure if it did not.
+    private static async Task AcknowledgeAsync(AsyncDuplexStreamingCall<Request, Reply> session, FileAck ack, CancellationToken token)
+    {
+        try
+        {
+            await WriteAsync(session, new Request { FileAck = ack }, token);
+        }
+        catch (RpcException) when (!token.IsCancellationRequested)
+        {
+        }
+        catch (InvalidOperationException) when (!token.IsCancellationRequested)
+        {
         }
     }
 
@@ -70,23 +89,13 @@ public sealed partial class RemotePluginClient
             };
         }
 
-        if (reply.Json.Length > ProtocolLimits.UnaryBytes)
-        {
-            throw new PluginCallException(FailureCodes.ValueLimit);
-        }
-
-        if (reply.HasElapsedMs && (!double.IsFinite(reply.ElapsedMs) || reply.ElapsedMs < 0))
-        {
-            throw new InvalidDataException("Invalid gateway elapsed timing.");
-        }
-
-        return new(JsonElement.Parse(reply.Json.Span), reply.HasElapsedMs ? reply.ElapsedMs : null)
+        return ParseResult(reply) with
         {
             Outputs = caller.Committed
         };
     }
 
-    private static Request FileRequest(string operation, JsonElement input, PluginFiles files)
+    private static Request FileCallRequest(string operation, JsonElement input, PluginFiles files)
     {
         Request request = Request(operation, input);
         request.Mode = Mode.FileCall;

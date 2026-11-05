@@ -1328,9 +1328,9 @@ Built-in destinations: `PluginOutputDestination.ToDirectory` writes hidden parti
 | Input bytes delivered by readers | `MaximumInputReadBytes`, or four times the sum of the input lengths | call fails with `input-read-limit` before the reader is called |
 | Block size | 4–256 KiB decoded, 64 KiB by default, chosen by the plugin SDK | protocol error |
 
-Reads served from the SDK's block cache do not count against the read budget. All file transfer happens within the call's deadline, so raise the binding's timeout for large files.
+Reads served from the SDK's block cache do not count against the read budget. A read at or past the end of an input is charged as 4 KiB, so a plugin that keeps reading past the end still runs out of budget. All file transfer happens within the call's deadline, so raise the binding's timeout for large files.
 
-Before the plugin runs, a call with files is refused with `files-unsupported` and `MayHaveExecuted = false` in these cases:
+Before the plugin runs, a call with files is refused with `files-unsupported` and `MayHaveExecuted = false` in these cases. MCP bindings, and bindings whose worker already declined files, are refused without starting a worker:
 
 - the worker did not advertise file support (an SDK older than this change);
 - the binding is shared or MCP;
@@ -2412,7 +2412,7 @@ An absent `outputs` object permits no outputs. The plugin uses four reserved ope
 | `$sdk.output.write` | `name`, `data` as base64 (1 B–256 KiB decoded) | `{}` |
 | `$sdk.output.complete` | `name` | `length` |
 
-The host handles them inline, outside callback grants, the callback budget and callback admission. A recoverable refusal is a `callback-result` whose additive `error` field is one of `input-not-found`, `output-not-permitted`, `output-exists`, `output-closed` or `invalid-range`; the invocation continues. Read-budget and output limits, an output left open at a successful result, and a failed commit fail the invocation with `input-read-limit`, `output-limit`, `output-incomplete` or `output-commit-failed` and retire the worker. Names use 1–128 characters from `A–Z a–z 0–9 . _ -` and do not start with `.`. Media types use 1–255 visible ASCII characters.
+The host handles them inline, outside callback grants, the callback budget and callback admission. A recoverable refusal is a `callback-result` whose additive `error` field is one of `input-not-found`, `output-not-permitted`, `output-exists`, `output-closed` or `invalid-range`; the invocation continues. Every read is charged against the read budget, a read at or past the end as 4 KiB. Read-budget and output limits, an output left open at a successful result, and a failed commit fail the invocation with `input-read-limit`, `output-limit`, `output-incomplete` or `output-commit-failed` and retire the worker. Names use 1–128 characters from `A–Z a–z 0–9 . _ -` and do not start with `.`. Media types use 1–255 visible ASCII characters.
 
 ## Execution restrictions
 
@@ -4783,7 +4783,7 @@ For each invocation the host SHALL set the maximum number of outputs and their t
 - **THEN** creation fails with `output-not-permitted` and no destination writer is created
 
 ### Requirement: Input read budget
-The host SHALL count the input bytes its readers deliver per invocation, across all inputs, against a budget. The budget defaults to four times the sum of the declared input lengths, and a host may set it explicitly. A read that would exceed the budget SHALL be refused before the reader is called, failing the call with `input-read-limit`. Reads served from the SDK's block cache SHALL NOT count.
+The host SHALL charge every read of an invocation against one budget across all inputs: the bytes its readers deliver, or 4 KiB for a read at or past the end. The budget defaults to four times the declared input lengths unless the host sets it. A read that would exceed it SHALL be refused before the reader is called, failing the call with `input-read-limit`. Reads served from the SDK's block cache SHALL NOT count.
 
 #### Scenario: Plugin reading in a loop
 - **WHEN** a plugin keeps re-reading a 9 MB input under the default budget

@@ -6,7 +6,7 @@ namespace WeavePort.Sdk;
 // Every operation travels through the runtime's serialized callback exchange.
 internal sealed class FileSession
 {
-    internal delegate Task<(JsonElement Value, string? Error)> Exchange(string operation, JsonElement payload, CancellationToken token);
+    internal delegate Task<(JsonElement Value, string? Error)> Exchange(string operation, object payload, CancellationToken token);
 
     private readonly Exchange _exchange;
     private readonly HashSet<string> _outputs = new(StringComparer.Ordinal);
@@ -65,7 +65,7 @@ internal sealed class FileSession
 
     internal Task CreateAsync(string name, string mediaType, CancellationToken token) => SendAsync(SdkOperations.OutputCreate, new { name, mediaType }, token);
 
-    internal Task WriteAsync(string name, ReadOnlyMemory<byte> data, CancellationToken token) => SendAsync(SdkOperations.OutputWrite, new { name, data = Convert.ToBase64String(data.Span) }, token);
+    internal Task WriteAsync(string name, ReadOnlyMemory<byte> data, CancellationToken token) => SendAsync(SdkOperations.OutputWrite, new { name, data }, token);
 
     internal async Task<long> CompleteAsync(string name, CancellationToken token) => (await SendAsync(SdkOperations.OutputComplete, new { name }, token)).GetProperty(WireFields.Length).GetInt64();
 
@@ -84,7 +84,7 @@ internal sealed class FileSession
             EnsureOpen();
         }
 
-        (JsonElement value, string? error) = await _exchange(operation, JsonSerializer.SerializeToElement(payload), token);
+        (JsonElement value, string? error) = await _exchange(operation, payload, token);
         return error is null ? value : throw new PluginFileException(error);
     }
 

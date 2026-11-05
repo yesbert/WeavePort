@@ -43,7 +43,8 @@ internal sealed partial class Runtime
     }
 
     // Returns the host's value, or its error code without throwing so file operations can map refusals.
-    private async Task<(JsonElement Value, string? Error)> ExchangeCallbackAsync(string operation, JsonElement input, CancellationToken token)
+    // The payload is serialized once, as part of the frame; file operations pass their payload objects directly.
+    private async Task<(JsonElement Value, string? Error)> ExchangeCallbackAsync(string operation, object input, CancellationToken token)
     {
         CallScope scope = _scope.Value ?? throw new InvalidOperationException("No active invocation.");
         await WaitForCallbackExchangeAsync(scope, token);

@@ -48,18 +48,7 @@ internal sealed class CallerFiles(PluginFiles files)
         byte[] buffer = ArrayPool<byte>.Shared.Rent(Math.Max(count, 1));
         try
         {
-            int filled = 0;
-            while (filled < count)
-            {
-                int read = await input.Reader.ReadAsync(request.Offset + filled, buffer.AsMemory(filled, count - filled), token);
-                if (read <= 0 || read > count - filled)
-                {
-                    throw new IOException("Input reader did not honour the declared input length.");
-                }
-
-                filled += read;
-            }
-
+            await PositionalRead.FillAsync(input.Reader, request.Offset, buffer.AsMemory(0, count), token);
             return ByteString.CopyFrom(buffer, 0, count);
         }
         finally

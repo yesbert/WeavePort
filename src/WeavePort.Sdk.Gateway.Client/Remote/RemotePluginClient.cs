@@ -80,17 +80,7 @@ public sealed partial class RemotePluginClient : IBoundPluginClient
             }
 
             CheckError(reply, stop.Token);
-            if (reply.Json.Length > ProtocolLimits.UnaryBytes)
-            {
-                throw new PluginCallException(FailureCodes.ValueLimit);
-            }
-
-            if (reply.HasElapsedMs && (!double.IsFinite(reply.ElapsedMs) || reply.ElapsedMs < 0))
-            {
-                throw new InvalidDataException("Invalid gateway elapsed timing.");
-            }
-
-            return new(JsonElement.Parse(reply.Json.Span), reply.HasElapsedMs ? reply.ElapsedMs : null);
+            return ParseResult(reply);
         }
         catch (RpcException error)
         {
@@ -100,6 +90,22 @@ public sealed partial class RemotePluginClient : IBoundPluginClient
         {
             _sessions.Return(session, complete);
         }
+    }
+
+    // Validates a successful terminal unary reply; shared by plain and file calls.
+    private static PluginCallResult<JsonElement> ParseResult(Reply reply)
+    {
+        if (reply.Json.Length > ProtocolLimits.UnaryBytes)
+        {
+            throw new PluginCallException(FailureCodes.ValueLimit);
+        }
+
+        if (reply.HasElapsedMs && (!double.IsFinite(reply.ElapsedMs) || reply.ElapsedMs < 0))
+        {
+            throw new InvalidDataException("Invalid gateway elapsed timing.");
+        }
+
+        return new(JsonElement.Parse(reply.Json.Span), reply.HasElapsedMs ? reply.ElapsedMs : null);
     }
 
     private static void CheckError(Reply reply, CancellationToken token)

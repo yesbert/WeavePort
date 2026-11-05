@@ -15,14 +15,17 @@ internal sealed partial class FileExchange(PluginFiles files)
     private long _readBudget = files.InputReadBudget;
     internal static FileExchange None() => new(NoFiles);
 
+    // Files go only to function calls; stream and source operations refuse them before dispatch.
+    internal static bool RefusesOperation(string operation) => operation.StartsWith("$sdk.", StringComparison.Ordinal) && operation != SdkOperations.Call;
+
     internal static bool Handles(string operation) => operation is SdkOperations.InputRead or SdkOperations.OutputCreate or SdkOperations.OutputWrite or SdkOperations.OutputComplete;
 
     internal InvokeFiles Descriptor => new(
         [.. files.Inputs.Select(input => new InvokeInput(input.Name, input.Length, input.MediaType))],
         files.Outputs is null ? null : new InvokeOutputs(files.Limits.MaximumOutputs, files.Limits.MaximumOutputBytes));
 
-    // Returns the callback value; FileRefusal becomes a callback-result error, PluginFileException fails the invocation.
-    internal Task<JsonElement> HandleAsync(string operation, JsonElement payload, CancellationToken token)
+    // Returns the callback reply; FileRefusal becomes a callback-result error, PluginFileException fails the invocation.
+    internal async Task<FileReply> HandleAsync(string operation, JsonElement payload, CancellationToken token)
     {
         if (payload.ValueKind != JsonValueKind.Object)
         {
@@ -31,14 +34,16 @@ internal sealed partial class FileExchange(PluginFiles files)
 
         return operation switch
         {
-            SdkOperations.InputRead => ReadAsync(payload, token),
-            SdkOperations.OutputCreate => CreateAsync(payload, token),
-            SdkOperations.OutputWrite => WriteAsync(payload, token),
-            _ => Task.FromResult(Complete(payload))
+            SdkOperations.InputRead => await ReadAsync(payload, token),
+            SdkOperations.OutputCreate => new FileReply(await CreateAsync(payload, token)),
+            SdkOperations.OutputWrite => new FileReply(await WriteAsync(payload, token)),
+            _ => new FileReply(Complete(payload))
         };
     }
 
-    private async Task<JsonElement> ReadAsync(JsonElement payload, CancellationToken token)
+    // Reads into a rented buffer that the caller writes to the worker once and then releases.
+    // Every read is charged at least one minimum block, so repeated reads at or past the end still exhaust the budget.
+    private async Task<FileReply> ReadAsync(JsonElement payload, CancellationToken token)
     {
         string name = RequireString(payload, WireFields.Name);
         long offset = RequireInt64(payload, WireFields.Offset);
@@ -54,7 +59,8 @@ internal sealed partial class FileExchange(PluginFiles files)
         }
 
         int count = (int)Math.Clamp(input.Length - offset, 0, requested);
-        if (count > _readBudget)
+        long charge = count == 0 ? ProtocolLimits.FileBlockMinimumBytes : count;
+        if (charge > _readBudget)
         {
             throw new PluginFileException(FailureCodes.InputReadLimit);
         }
@@ -62,33 +68,39 @@ internal sealed partial class FileExchange(PluginFiles files)
         byte[] buffer = ArrayPool<byte>.Shared.Rent(Math.Max(count, 1));
         try
         {
-            await FillAsync(input.Reader, offset, buffer.AsMemory(0, count), token);
-            _readBudget -= count;
-            return JsonSerializer.SerializeToElement(new FileReadReply(buffer.AsMemory(0, count)), WireJson.Default.FileReadReply);
+            await PositionalRead.FillAsync(input.Reader, offset, buffer.AsMemory(0, count), token);
         }
-        finally
+        catch
         {
-            CryptographicOperations.ZeroMemory(buffer.AsSpan(0, count));
-            ArrayPool<byte>.Shared.Return(buffer);
+            FileReply.Release(buffer, count);
+            throw;
         }
-    }
 
-    private static async Task FillAsync(IPluginInputReader reader, long offset, Memory<byte> destination, CancellationToken token)
-    {
-        int filled = 0;
-        while (filled < destination.Length)
-        {
-            int read = await reader.ReadAsync(offset + filled, destination[filled..], token);
-            if (read <= 0 || read > destination.Length - filled)
-            {
-                throw new IOException("Input reader did not honour the declared input length.");
-            }
-
-            filled += read;
-        }
+        _readBudget -= charge;
+        return new FileReply(default, buffer, count);
     }
 
     private static string RequireString(JsonElement payload, string name) => payload.TryGetProperty(name, out JsonElement value) && value.ValueKind == JsonValueKind.String ? value.GetString()! : throw new InvalidDataException("Missing or invalid file field.");
 
     private static long RequireInt64(JsonElement payload, string name) => payload.TryGetProperty(name, out JsonElement value) && value.ValueKind == JsonValueKind.Number && value.TryGetInt64(out long number) ? number : throw new InvalidDataException("Missing or invalid file field.");
+}
+
+// A file operation's reply: a JSON value, or a rented input block the caller writes once and then releases.
+internal readonly record struct FileReply(JsonElement Value, byte[]? Rented = null, int Count = 0)
+{
+    internal ReadOnlyMemory<byte> Data => Rented.AsMemory(0, Count);
+
+    internal void Release()
+    {
+        if (Rented is not null)
+        {
+            Release(Rented, Count);
+        }
+    }
+
+    internal static void Release(byte[] buffer, int count)
+    {
+        CryptographicOperations.ZeroMemory(buffer.AsSpan(0, count));
+        ArrayPool<byte>.Shared.Return(buffer);
+    }
 }

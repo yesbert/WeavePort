@@ -22,10 +22,17 @@ public sealed partial class GatewayService
         {
             result = await client.CallWithFilesAsync(request.Operation, Decode(request), files, context.CancellationToken);
         }
-        finally
+        catch (Exception error) when (relay.Broken && !context.CancellationToken.IsCancellationRequested)
         {
-            relay.ThrowIfBroken();
+            // An interrupted relay leaves the request stream out of step. Report the call's own outcome
+            // (for example timeout) as the terminal reply, then end the session instead of reusing it.
+            Reply terminal = EncodeFailure(error);
+            terminal.Complete = true;
+            await output.WriteAsync(terminal, context.CancellationToken);
+            throw new FileRelayBrokenException();
         }
+
+        relay.ThrowIfBroken();
 
         Reply reply = Encode(result.Value);
         if (result.ElapsedMs is { } elapsed)

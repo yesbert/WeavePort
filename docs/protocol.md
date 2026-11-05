@@ -85,7 +85,7 @@ An absent `outputs` object permits no outputs. The plugin uses four reserved ope
 | `$sdk.output.write` | `name`, `data` as base64 (1 B–256 KiB decoded) | `{}` |
 | `$sdk.output.complete` | `name` | `length` |
 
-The host handles them inline, outside callback grants, the callback budget and callback admission. A recoverable refusal is a `callback-result` whose additive `error` field is one of `input-not-found`, `output-not-permitted`, `output-exists`, `output-closed` or `invalid-range`; the invocation continues. Read-budget and output limits, an output left open at a successful result, and a failed commit fail the invocation with `input-read-limit`, `output-limit`, `output-incomplete` or `output-commit-failed` and retire the worker. Names use 1–128 characters from `A–Z a–z 0–9 . _ -` and do not start with `.`. Media types use 1–255 visible ASCII characters.
+The host handles them inline, outside callback grants, the callback budget and callback admission. A recoverable refusal is a `callback-result` whose additive `error` field is one of `input-not-found`, `output-not-permitted`, `output-exists`, `output-closed` or `invalid-range`; the invocation continues. Every read is charged against the read budget, a read at or past the end as 4 KiB. Read-budget and output limits, an output left open at a successful result, and a failed commit fail the invocation with `input-read-limit`, `output-limit`, `output-incomplete` or `output-commit-failed` and retire the worker. Names use 1–128 characters from `A–Z a–z 0–9 . _ -` and do not start with `.`. Media types use 1–255 visible ASCII characters.
 
 ## Execution restrictions
 

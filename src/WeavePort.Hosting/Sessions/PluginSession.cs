@@ -76,6 +76,11 @@ internal sealed partial class PluginSession(SessionBinding binding, TenantAdmiss
                 return Result(FailureCodes.Disabled, started, false);
             }
 
+            if (files is not null && !MayAcceptFiles)
+            {
+                return Result(FailureCodes.FilesUnsupported, started, false);
+            }
+
             if (!streamExchange)
             {
                 deadline.CancelAfter(binding.Profile.Timeout ?? InvocationPolicy.DefaultTimeout);
@@ -117,10 +122,14 @@ internal sealed partial class PluginSession(SessionBinding binding, TenantAdmiss
         }
     }
 
+    // MCP bindings never take files; a binding whose worker already declined them is refused without starting another.
+    // The same verified artifact backs every worker of a binding, so the observed capability holds across restarts.
+    private bool MayAcceptFiles => binding.Profile is not ProcessProfile { Protocol: not ProcessProtocol.Native } && _filesSupported != false;
+
     // Runs a started invocation: refuses files a worker cannot take, dispatches, then commits outputs before reuse.
     private async Task<InvocationResult> ExecuteAsync(InvokeFrame frame, FileExchange? files, long started, CancellationToken token)
     {
-        if (files is not null && (!_worker!.SupportsFiles || _worker.Mcp is not null))
+        if (files is not null && _filesSupported != true)
         {
             return Result(FailureCodes.FilesUnsupported, started, false);
         }
@@ -171,6 +180,7 @@ internal sealed partial class PluginSession(SessionBinding binding, TenantAdmiss
 
         await StopAsync();
         _worker = await pool.AcquireAsync(binding.Profile, binding.Context.Version, binding.Context.Tenant, token, _freshNext);
+        _filesSupported = _worker.SupportsFiles && _worker.Mcp is null;
         _freshNext = false;
         LastAcquisitionReused = _worker.AcquiredFromReuse;
         _instance = _worker.Instance;

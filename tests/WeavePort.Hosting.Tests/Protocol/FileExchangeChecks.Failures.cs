@@ -70,6 +70,8 @@ internal static partial class FileExchangeChecks
         var destination = new RecordingDestination();
         InvocationResult result = await session.InvokeAsync("script", Script(Read("sheet", 0, 4096), Create("a", "text/plain"), Write("a", [7]), Complete("a")),
             new PluginFiles([Input("sheet", Source)], destination, new PluginFileLimits(1, 100)));
+        InvocationResult stream = await session.InvokeAsync("$sdk.start", Script(), new PluginFiles([Input("sheet", Source)]));
+        Expect(stream.Status == "files-unsupported" && !stream.MayHaveExecuted, "scheduled bindings refuse files for stream operations like direct bindings");
         Expect(session is ScheduledPlugin && result.Status == "ok" && result.Outputs.Single().Length == 1 && Sha(result.Value.GetProperty("replies")[0]) == Hash(Source[..4096]), "scheduled bindings carry files through the queue");
     }
 

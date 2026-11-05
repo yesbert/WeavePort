@@ -13,6 +13,8 @@ internal sealed class FileRelay(IAsyncStreamReader<Request> input, IServerStream
     private ulong _next;
     private bool _broken;
 
+    internal bool Broken => _broken;
+
     internal void ThrowIfBroken()
     {
         if (_broken)
@@ -21,10 +23,12 @@ internal sealed class FileRelay(IAsyncStreamReader<Request> input, IServerStream
         }
     }
 
+    // Session I/O is bound only to the session's lifetime: cancelling a pending gRPC read would abort the whole call
+    // and lose the invocation's own outcome. The host token only ends the wait; a late acknowledgement is discarded
+    // with the session, which the gateway ends once a relay was interrupted.
     private async Task<FileAck> SendAsync(FileRequest request, CancellationToken token)
     {
-        using var linked = CancellationTokenSource.CreateLinkedTokenSource(token, session);
-        await _gate.WaitAsync(linked.Token);
+        await _gate.WaitAsync(token);
         try
         {
             if (_broken)
@@ -34,8 +38,10 @@ internal sealed class FileRelay(IAsyncStreamReader<Request> input, IServerStream
 
             request.Id = ++_next;
             _broken = true;
-            await output.WriteAsync(new Reply { FileRequest = request }, linked.Token);
-            if (!await input.MoveNext(linked.Token) || input.Current.FileAck is not { } ack || ack.Id != request.Id)
+            await output.WriteAsync(new Reply { FileRequest = request }, session).WaitAsync(token);
+            Task<bool> next = input.MoveNext(session);
+            _ = next.ContinueWith(static task => _ = task.Exception, CancellationToken.None, TaskContinuationOptions.OnlyOnFaulted, TaskScheduler.Default);
+            if (!await next.WaitAsync(token) || input.Current.FileAck is not { } ack || ack.Id != request.Id)
             {
                 throw new InvalidDataException("Caller sent no matching file acknowledgement.");
             }

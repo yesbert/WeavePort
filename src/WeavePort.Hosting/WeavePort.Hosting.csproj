@@ -22,6 +22,7 @@
     <Compile Include="../Shared/Cleanup.cs" Link="Internal/Cleanup.cs" />
     <Compile Include="../Shared/FailureCode.cs" Link="Internal/FailureCode.cs" />
     <Compile Include="../Shared/FileDescriptor.cs" Link="Internal/FileDescriptor.cs" />
+    <Compile Include="../Shared/PositionalRead.cs" Link="Internal/PositionalRead.cs" />
     <Compile Include="../Shared/ProtocolContract.g.cs" Link="Internal/ProtocolContract.g.cs" />
   </ItemGroup>
   <ItemGroup>

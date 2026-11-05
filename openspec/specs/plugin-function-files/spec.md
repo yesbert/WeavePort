@@ -51,7 +51,7 @@ For each invocation the host SHALL set the maximum number of outputs and their t
 - **THEN** creation fails with `output-not-permitted` and no destination writer is created
 
 ### Requirement: Input read budget
-The host SHALL count the input bytes its readers deliver per invocation, across all inputs, against a budget. The budget defaults to four times the sum of the declared input lengths, and a host may set it explicitly. A read that would exceed the budget SHALL be refused before the reader is called, failing the call with `input-read-limit`. Reads served from the SDK's block cache SHALL NOT count.
+The host SHALL charge every read of an invocation against one budget across all inputs: the bytes its readers deliver, or 4 KiB for a read at or past the end. The budget defaults to four times the declared input lengths unless the host sets it. A read that would exceed it SHALL be refused before the reader is called, failing the call with `input-read-limit`. Reads served from the SDK's block cache SHALL NOT count.
 
 #### Scenario: Plugin reading in a loop
 - **WHEN** a plugin keeps re-reading a 9 MB input under the default budget

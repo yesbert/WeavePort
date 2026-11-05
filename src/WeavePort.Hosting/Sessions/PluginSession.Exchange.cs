@@ -7,6 +7,8 @@ namespace WeavePort.Hosting;
 
 internal sealed partial class PluginSession
 {
+    private static readonly JsonElement EmptyObject = JsonDocument.Parse("{}").RootElement.Clone();
+
     private async Task<JsonElement> ExchangeAsync(string id, string trace, CancellationToken token)
     {
         var callbackIds = new HashSet<string>(StringComparer.Ordinal);
@@ -73,21 +75,29 @@ internal sealed partial class PluginSession
             throw new InvalidDataException("Callback identity violation.");
         }
 
-        JsonElement value;
-        string? error = null;
+        FileReply reply;
         try
         {
-            value = await (_files ?? FileExchange.None()).HandleAsync(operation, frame.GetProperty(WireFields.Payload), token);
+            reply = await (_files ?? FileExchange.None()).HandleAsync(operation, frame.GetProperty(WireFields.Payload), token);
         }
         catch (FileRefusal refusal)
         {
-            value = JsonSerializer.SerializeToElement(new
-            {
-            });
-            error = refusal.Code;
+            await Frames.WriteAsync(_worker!.Input, new CallbackResultFrame(FrameKinds.CallbackResult, id, callbackId, EmptyObject, refusal.Code), WireJson.Default.CallbackResultFrame, token);
+            return;
         }
 
-        await Frames.WriteAsync(_worker!.Input, new CallbackResultFrame(FrameKinds.CallbackResult, id, callbackId, value, error), WireJson.Default.CallbackResultFrame, token);
+        try
+        {
+            // Input blocks are encoded once, straight from the rented buffer into the frame.
+            Task write = reply.Rented is null
+                ? Frames.WriteAsync(_worker!.Input, new CallbackResultFrame(FrameKinds.CallbackResult, id, callbackId, reply.Value), WireJson.Default.CallbackResultFrame, token)
+                : Frames.WriteAsync(_worker!.Input, new FileReadResultFrame(FrameKinds.CallbackResult, id, callbackId, new FileReadReply(reply.Data)), WireJson.Default.FileReadResultFrame, token);
+            await write;
+        }
+        finally
+        {
+            reply.Release();
+        }
     }
 
     private async Task<JsonElement> InvokeCallbackAsync(HostCall call, CancellationToken token)

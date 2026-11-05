@@ -48,6 +48,10 @@ internal static partial class FileExchangeChecks
         InvocationResult refused = await legacy.InvokeAsync("script", Script(), files);
         Expect(refused.Status == "files-unsupported" && !refused.MayHaveExecuted, "worker without capability refuses before dispatch");
         Expect((await legacy.InvokeAsync("script", Script())).Status == "ok", "calls without files still work on that worker");
+        await legacy.RestartAsync();
+        int workers = host.Snapshot.Workers;
+        InvocationResult known = await legacy.InvokeAsync("script", Script(), files);
+        Expect(known.Status == "files-unsupported" && host.Snapshot.Workers == workers, "a binding whose worker declined files refuses without starting another worker");
         await using var session = await BindAsync(host, root);
         InvocationResult stream = await session.InvokeAsync("$sdk.start", Script(), files);
         Expect(stream.Status == "files-unsupported" && !stream.MayHaveExecuted, "stream operations refuse files before dispatch");
@@ -104,5 +108,8 @@ internal static partial class FileExchangeChecks
         InvocationResult result = await session.InvokeAsync("script", Script(Read("sheet", 0, 4096), Read("sheet", 4096, 4096), Read("sheet", 8192, 4096)), files);
         Expect(result.Status == "input-read-limit" && result.MayHaveExecuted && result.Failure?.Code == "input-read-limit", "reading beyond the budget fails the call");
         Expect((await session.InvokeAsync("script", Script())).Status == "ok", "the binding recovers after a budget failure");
+        var atEnd = new PluginFiles([Input("sheet", Source[..10_000])], null, new PluginFileLimits(0, 0, 8192));
+        InvocationResult looping = await session.InvokeAsync("script", Script(Read("sheet", 10_000, 4096), Read("sheet", 10_000, 4096), Read("sheet", 10_000, 4096)), atEnd);
+        Expect(looping.Status == "input-read-limit", "repeated reads at the end of an input are charged against the budget");
     }
 }
