@@ -28,6 +28,11 @@ type WeavePort.Composition.ResultLimits : System.Object [Public, Sealed]
   Property Int32 MaximumObjects
   Property Int64 MaximumObjectBytes
   Property Int64 MaximumScopeBytes
+type WeavePort.Composition.ResultOutputs : System.Object [Public, Sealed]
+  implements WeavePort.Abstractions.IPluginOutputDestination
+  Method System.Collections.Generic.IReadOnlyDictionary`2[System.String,WeavePort.Composition.ResultHandle] get_Results() [Public] ()
+  Method System.Threading.Tasks.ValueTask`1[WeavePort.Abstractions.IPluginOutputWriter] CreateAsync(System.String, System.String, System.Threading.CancellationToken) [Public, Final, Virtual] (name, mediaType, cancellationToken)
+  Property System.Collections.Generic.IReadOnlyDictionary`2[System.String,WeavePort.Composition.ResultHandle] Results
 type WeavePort.Composition.ResultScope : System.Object [Public, Sealed]
   implements System.IAsyncDisposable
   Constructor Void .ctor(System.String, System.String, WeavePort.Composition.ResultLimits) [Public] (privateRoot, tenant, limits=null)
@@ -37,6 +42,7 @@ type WeavePort.Composition.ResultScope : System.Object [Public, Sealed]
   Method System.Threading.Tasks.Task`1[WeavePort.Composition.ResultHandle] CreateAsync(System.Func`3[System.IO.Stream,System.Threading.CancellationToken,System.Threading.Tasks.Task], System.Threading.CancellationToken) [Public] (producer, cancellationToken=null)
   Method System.Threading.Tasks.Task`1[WeavePort.Composition.ResultHandle] TransformAsync(WeavePort.Composition.ResultHandle, System.Func`3[System.ReadOnlyMemory`1[System.Byte],System.Threading.CancellationToken,System.Threading.Tasks.ValueTask`1[System.ReadOnlyMemory`1[System.Byte]]], Int32, System.Threading.CancellationToken) [Public] (input, transform, chunkBytes=65536, cancellationToken=null)
   Method System.Threading.Tasks.ValueTask DisposeAsync() [Public, Final, Virtual] ()
+  Method WeavePort.Composition.ResultOutputs AsOutputDestination() [Public] ()
   Property Int64 ReservedBytes
   Property System.String Tenant
 type WeavePort.Sdk.Gateway.GatewayHostingExtensions : System.Object [Public, Abstract, Sealed]

@@ -2,6 +2,7 @@ using System.IO.Compression;
 using System.Security.Cryptography;
 using System.Text.Json;
 using WeavePort.Abstractions;
+using WeavePort.Composition;
 using WeavePort.Hosting;
 using WeavePort.Sdk.Client;
 
@@ -50,10 +51,39 @@ internal static class FileChecks
         await client.CallWithFilesAsync("late-store", Empty, new PluginFiles([Input()]));
         var late = await client.CallWithFilesAsync("late-read", Empty, new PluginFiles([Input()]));
         Check(late.Value.GetProperty("refused").GetBoolean(), language + " refuses reads after the invocation ended");
+        if (language == "csharp")
+        {
+            await ResultScopeAsync(client);
+        }
+
         if (language == "python")
         {
             var loop = await client.CallWithFilesAsync("sync-on-loop", Empty, new PluginFiles([Input()]));
             Check(loop.Value.GetProperty("refused").GetBoolean(), "python refuses synchronous file use on the event loop instead of hanging");
+        }
+    }
+
+    private static async Task ResultScopeAsync(LocalPluginClient client)
+    {
+        string root = Path.Combine(Path.GetTempPath(), "wp-file-results-" + Guid.NewGuid().ToString("N"));
+        try
+        {
+            await using var scope = new ResultScope(root, client.Tenant);
+            ResultOutputs outputs = scope.AsOutputDestination();
+            await client.CallWithFilesAsync("copy", Empty, new PluginFiles([Input()], outputs, new PluginFileLimits(1, 16 << 20)));
+            using var copied = new MemoryStream();
+            await scope.CopyToAsync(outputs.Results["copy.bin"], copied);
+            Check(copied.ToArray().AsSpan().SequenceEqual(Archive) && scope.ReservedBytes == Archive.Length, "result scope receives a committed function output");
+            ResultOutputs failed = scope.AsOutputDestination();
+            string code = await FailureAsync(() => client.CallWithFilesAsync("leave-open", Empty, new PluginFiles([], failed, new PluginFileLimits(1, 100))));
+            Check(code == "output-incomplete" && failed.Results.Count == 0 && scope.ReservedBytes == Archive.Length, "a failed call leaves no result and releases its reservation");
+        }
+        finally
+        {
+            if (Directory.Exists(root))
+            {
+                Directory.Delete(root, true);
+            }
         }
     }
 

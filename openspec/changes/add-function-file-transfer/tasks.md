@@ -30,7 +30,7 @@
 
 ## 5. Composition
 
-- [ ] 5.1 Add `ResultScope.AsOutputDestination()`: quota-enforced, visible only after commit, deleted on abort. Verify that outputs from a failed call never become visible.
+- [x] 5.1 Add `ResultScope.AsOutputDestination()`: quota-enforced, visible only after commit, deleted on abort. Verify that outputs from a failed call never become visible.
 
 ## 6. Evidence and documentation
 
