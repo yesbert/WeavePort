@@ -31,7 +31,7 @@ public sealed partial class ResultScope
     internal sealed class PendingResult : IAsyncDisposable
     {
         private readonly ResultScope _owner;
-        private readonly IDisposable _active;
+        private readonly Operation _active;
         private readonly CancellationTokenSource _linked;
         private readonly string _id = Guid.NewGuid().ToString("N");
         private readonly FileStream? _file;
@@ -41,6 +41,7 @@ public sealed partial class ResultScope
         internal PendingResult(ResultScope owner, CancellationToken cancellationToken)
         {
             _owner = owner;
+            Output = Stream.Null;
             _active = owner.Enter();
             _linked = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, owner._lifetime.Token);
             try
@@ -65,7 +66,7 @@ public sealed partial class ResultScope
             }
         }
 
-        internal Stream Output { get; } = Stream.Null;
+        internal Stream Output { get; }
         internal CancellationToken Token => _linked.Token;
 
         internal async Task<ResultHandle> CommitAsync()

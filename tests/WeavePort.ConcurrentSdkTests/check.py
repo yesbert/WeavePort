@@ -1,6 +1,7 @@
 """Wire-level C# author SDK checks; no host implementation is substituted."""
 
 import base64
+import io
 import json
 import os
 import pathlib
@@ -8,6 +9,7 @@ import queue
 import threading
 import subprocess
 import time
+import zipfile
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 DLL = pathlib.Path(
@@ -22,9 +24,9 @@ DLL = pathlib.Path(
 
 
 class Worker:
-    def __init__(self, shared=False):
+    def __init__(self, shared=False, arguments=()):
         self.process = subprocess.Popen(
-            ["dotnet", str(DLL)] + (["shared"] if shared else []),
+            ["dotnet", str(DLL)] + (["shared"] if shared else []) + list(arguments),
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
@@ -34,6 +36,7 @@ class Worker:
         self.lines = queue.Queue()
         threading.Thread(target=self.receive, daemon=True).start()
         ready = self.read()
+        self.ready = ready
         assert ready["protocol"] == (2 if shared else 1)
         if shared:
             self.send({"type": "configure", "degree": 4})
@@ -282,9 +285,79 @@ def check_streams():
         worker.close()
 
 
+def archive():
+    buffer = io.BytesIO()
+    with zipfile.ZipFile(buffer, "w", zipfile.ZIP_STORED) as target:
+        for name in ("a.xml", "b.xml"):
+            target.writestr(name, bytes(range(256)) * 400)
+    return buffer.getvalue()
+
+
+def file_call(worker, id, operation, data, outputs=True, refuse=None):
+    """Invoke a file function and serve its file callbacks from memory; returns (terminal, written)."""
+    files = dict(inputs=[dict(name="sheet", length=len(data), mediaType="application/zip")])
+    if outputs:
+        files["outputs"] = dict(maximumCount=1, maximumBytes=1 << 24)
+    worker.send(
+        dict(
+            type="invoke",
+            id=id,
+            operation="$sdk.call",
+            payload=dict(operation=operation, input={}),
+            context=dict(tenant="A", configuration={}),
+            files=files,
+        )
+    )
+    written = bytearray()
+    while True:
+        frame = worker.read()
+        if frame["type"] != "callback":
+            return frame, bytes(written)
+        reply = dict(type="callback-result", id=id, callbackId=frame["callbackId"], value={})
+        reply.update(file_reply(frame, data, written, refuse))
+        worker.send(reply)
+
+
+def file_reply(frame, data, written, refuse):
+    operation, payload = frame["operation"], frame["payload"]
+    if operation == refuse:
+        return dict(error="output-not-permitted")
+    if operation == "$sdk.input.read":
+        block = data[payload["offset"] : payload["offset"] + payload["length"]]
+        return dict(value=dict(data=base64.b64encode(block).decode()))
+    if operation == "$sdk.output.write":
+        written += base64.b64decode(payload["data"])
+    if operation == "$sdk.output.complete":
+        return dict(value=dict(length=len(written)))
+    return {}
+
+
+def check_files():
+    worker = Worker(arguments=["--file-worker"])
+    try:
+        assert worker.ready["files"] == 1, "Exclusive C# workers must advertise files"
+        data = archive()
+        summary, _ = file_call(worker, "summary", "zip-summary", data, outputs=False)
+        assert summary["value"]["names"] == ["a.xml", "b.xml"], summary
+        copied, written = file_call(worker, "copy", "copy", data)
+        assert copied["type"] == "result" and written == data
+        cached, _ = file_call(worker, "cached", "cached-reads", data, outputs=False)
+        assert cached["type"] == "result"
+        refusals, _ = file_call(worker, "refusals", "refusals", data, outputs=False)
+        assert refusals["value"]["codes"] == ["input-not-found", "output-not-permitted"]
+        refused, _ = file_call(worker, "refused", "copy", data, refuse="$sdk.output.create")
+        assert refused["type"] == "error" and refused["code"] == "sdk-error"
+        file_call(worker, "store", "late-store", data, outputs=False)
+        late, _ = file_call(worker, "late", "late-read", data, outputs=False)
+        assert late["value"]["refused"] is True
+    finally:
+        worker.close()
+
+
 if __name__ == "__main__":
     check_shared()
     check_streams()
+    check_files()
     print(
-        "C# concurrent SDK, cancellation cleanup, callback routing, live stream and source checks passed"
+        "C# concurrent SDK, cancellation cleanup, callback routing, live stream, source and function file checks passed"
     )

@@ -8,14 +8,17 @@ using WeavePort.Sdk.Client;
 internal static class FileMeasurements
 {
     private const int Repetitions = 5;
+    private static readonly string[] Languages = ["csharp", "python", "typescript"];
+    private static readonly int[] BlockSizes = [65536, 262144];
+    private static readonly JsonSerializerOptions Indented = new() { WriteIndented = true };
     private static readonly JsonElement Empty = JsonSerializer.SerializeToElement(new { });
 
     internal static async Task RunAsync(string[] args)
     {
         string root = Path.GetFullPath(args.ElementAtOrDefault(1) ?? Environment.CurrentDirectory);
         var results = new List<object>();
-        var cases = from language in new[] { "csharp", "python", "typescript" }
-                    from blockBytes in new[] { 65536, 262144 }
+        var cases = from language in Languages
+                    from blockBytes in BlockSizes
                     select (language, blockBytes);
         foreach (var (language, blockBytes) in cases)
         {
@@ -28,7 +31,7 @@ internal static class FileMeasurements
             repetitions = Repetitions,
             machine = Environment.MachineName.Length > 0 ? RuntimeInformationSummary() : "",
             results
-        }, new JsonSerializerOptions { WriteIndented = true });
+        }, Indented);
         string? output = args.FirstOrDefault(argument => argument.StartsWith("--output=", StringComparison.Ordinal))?["--output=".Length..];
         if (output is not null)
         {

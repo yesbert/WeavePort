@@ -23,12 +23,12 @@ internal sealed partial class FileExchange
 
         if (files.Outputs is null)
         {
-            throw new FileRefusal(FileErrors.OutputNotPermitted);
+            throw new FileRefusalException(FileErrors.OutputNotPermitted);
         }
 
         if (Find(name) is not null)
         {
-            throw new FileRefusal(FileErrors.OutputExists);
+            throw new FileRefusalException(FileErrors.OutputExists);
         }
 
         if (_outputs.Count >= files.Limits.MaximumOutputs)
@@ -76,8 +76,8 @@ internal sealed partial class FileExchange
 
     private OutputState Open(string name)
     {
-        OutputState output = Find(name) ?? throw new FileRefusal(FileErrors.OutputNotPermitted);
-        return output.Completed ? throw new FileRefusal(FileErrors.OutputClosed) : output;
+        OutputState output = Find(name) ?? throw new FileRefusalException(FileErrors.OutputNotPermitted);
+        return output.Completed ? throw new FileRefusalException(FileErrors.OutputClosed) : output;
     }
 
     private OutputState? Find(string name) => _outputs.Find(output => output.Name == name);
@@ -123,8 +123,8 @@ internal sealed partial class FileExchange
         using var grace = new CancellationTokenSource(InvocationPolicy.CleanupGrace);
         foreach (OutputState output in _outputs)
         {
-            failed |= !await TryAsync(() => reason is { } abort && !output.Committed ? output.Writer.AbortAsync(abort, grace.Token) : ValueTask.CompletedTask, grace.Token, logger, instance);
-            failed |= !await TryAsync(() => output.Writer.DisposeAsync(), grace.Token, logger, instance);
+            failed |= !await TryAsync(() => reason is { } abort && !output.Committed ? output.Writer.AbortAsync(abort, grace.Token) : ValueTask.CompletedTask, logger, instance, grace.Token);
+            failed |= !await TryAsync(() => output.Writer.DisposeAsync(), logger, instance, grace.Token);
         }
 
         return failed;
@@ -132,7 +132,7 @@ internal sealed partial class FileExchange
 
     // Waits for one writer step at most until the shared grace deadline. A step still running then is left
     // to finish on its own, its eventual fault observed, and reported as a cleanup failure.
-    private static async Task<bool> TryAsync(Func<ValueTask> action, CancellationToken grace, ILogger logger, string instance)
+    private static async Task<bool> TryAsync(Func<ValueTask> action, ILogger logger, string instance, CancellationToken grace)
     {
         Task step;
         try

@@ -5,22 +5,12 @@ namespace WeavePort.Composition;
 public sealed class ResultOutputs : IPluginOutputDestination
 {
     private readonly ResultScope _scope;
-    private readonly object _sync = new();
-    private readonly Dictionary<string, ResultHandle> _results = new(StringComparer.Ordinal);
+    private readonly System.Collections.Concurrent.ConcurrentDictionary<string, ResultHandle> _results = new(StringComparer.Ordinal);
 
     internal ResultOutputs(ResultScope scope) => _scope = scope;
 
     /// <summary>Committed outputs by output name.</summary>
-    public IReadOnlyDictionary<string, ResultHandle> Results
-    {
-        get
-        {
-            lock (_sync)
-            {
-                return new Dictionary<string, ResultHandle>(_results, StringComparer.Ordinal);
-            }
-        }
-    }
+    public IReadOnlyDictionary<string, ResultHandle> Results => _results;
 
     /// <inheritdoc/>
     public ValueTask<IPluginOutputWriter> CreateAsync(string name, string mediaType, CancellationToken cancellationToken) => ValueTask.FromResult<IPluginOutputWriter>(new Writer(this, name, _scope.BeginOutput(cancellationToken)));
@@ -31,11 +21,7 @@ public sealed class ResultOutputs : IPluginOutputDestination
 
         public async ValueTask CommitAsync(CancellationToken cancellationToken)
         {
-            ResultHandle handle = await pending.CommitAsync();
-            lock (owner._sync)
-            {
-                owner._results[name] = handle;
-            }
+            owner._results[name] = await pending.CommitAsync();
         }
 
         public ValueTask AbortAsync(PluginOutputAbort reason, CancellationToken cancellationToken)

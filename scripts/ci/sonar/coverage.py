@@ -11,7 +11,7 @@ import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parents[3]
 OUTPUT = ROOT / "artifacts/analysis"
-CONCURRENT_MODES = ("collect", "streams", "cleanup")
+CONCURRENT_MODES = ("collect", "streams", "cleanup", "files", "files-gateway")
 SUITES = (
     "WeavePort.Hosting.Tests",
     "WeavePort.Gateway.Tests",

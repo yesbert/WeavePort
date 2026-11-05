@@ -89,24 +89,23 @@ public sealed partial class RemotePluginClient
             }
 
             FileRequest fileRequest = reply.FileRequest ?? throw new InvalidDataException("Unexpected gateway reply during a file call.");
-            await AcknowledgeAsync(session, await caller.HandleAsync(fileRequest, token), token);
+            _ = await AcknowledgeAsync(session, await caller.HandleAsync(fileRequest, token), token);
         }
     }
 
     // The server may already have sent its terminal reply and ended the session (for example after a host timeout
     // interrupted the relay). A failed acknowledgement then must not hide that reply: the next read returns it if it
     // arrived, or surfaces the transport failure if it did not.
-    private static async Task AcknowledgeAsync(AsyncDuplexStreamingCall<Request, Reply> session, FileAck ack, CancellationToken token)
+    private static async Task<bool> AcknowledgeAsync(AsyncDuplexStreamingCall<Request, Reply> session, FileAck ack, CancellationToken token)
     {
         try
         {
             await WriteAsync(session, new Request { FileAck = ack }, token);
+            return true;
         }
-        catch (RpcException) when (!token.IsCancellationRequested)
+        catch (Exception error) when (error is RpcException or InvalidOperationException && !token.IsCancellationRequested)
         {
-        }
-        catch (InvalidOperationException) when (!token.IsCancellationRequested)
-        {
+            return false;
         }
     }
 

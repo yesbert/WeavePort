@@ -80,7 +80,7 @@ internal sealed partial class PluginSession
         {
             reply = await (_files ?? FileExchange.None()).HandleAsync(operation, frame.GetProperty(WireFields.Payload), token);
         }
-        catch (FileRefusal refusal)
+        catch (FileRefusalException refusal)
         {
             await Frames.WriteAsync(_worker!.Input, new CallbackResultFrame(FrameKinds.CallbackResult, id, callbackId, EmptyObject, refusal.Code), WireJson.Default.CallbackResultFrame, token);
             return;

@@ -36,7 +36,7 @@ internal sealed partial class PluginSession
 
         try
         {
-            return await InvokeCoreAsync(operation, payload, false, cancellationToken, files);
+            return await InvokeCoreAsync(operation, payload, false, files, cancellationToken);
         }
         finally
         {
@@ -76,7 +76,7 @@ internal sealed partial class PluginSession
 
             using var linked = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, _stop.Token);
             _started = true;
-            var result = await owner.InvokeCoreAsync(operation, payload, true, linked.Token);
+            var result = await owner.InvokeCoreAsync(operation, payload, true, null, linked.Token);
             if (result.Status == FailureCodes.Ok)
             {
                 _complete = operation is SdkOperations.Close or SdkOperations.SourceClose || result.Value.ValueKind == JsonValueKind.Object && result.Value.TryGetProperty(WireFields.Done, out var done) && done.ValueKind == JsonValueKind.True;

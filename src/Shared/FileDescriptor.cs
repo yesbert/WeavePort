@@ -9,15 +9,7 @@ internal static class FileDescriptor
             return false;
         }
 
-        foreach (char character in name)
-        {
-            if (!char.IsAsciiLetterOrDigit(character) && character is not ('.' or '_' or '-'))
-            {
-                return false;
-            }
-        }
-
-        return true;
+        return name.All(character => char.IsAsciiLetterOrDigit(character) || character is '.' or '_' or '-');
     }
 
     internal static bool IsValidMediaType(string? mediaType)
@@ -27,15 +19,7 @@ internal static class FileDescriptor
             return false;
         }
 
-        foreach (char character in mediaType)
-        {
-            if (character is < '!' or > '~')
-            {
-                return false;
-            }
-        }
-
-        return true;
+        return mediaType.All(character => character is >= '!' and <= '~');
     }
 
     internal static string Name(string? name, string parameter) => IsValidName(name) ? name! : throw new ArgumentException("File names use 1-128 characters from A-Z, a-z, 0-9, '.', '_' and '-' and do not start with '.'.", parameter);
