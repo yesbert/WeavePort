@@ -106,6 +106,14 @@ def verify(checkout, env, stage):
             f"concurrent-sdk-{mode}-streams",
             ["dotnet", str(dll), "streams", str(checkout)],
         )
+        stage(
+            f"concurrent-sdk-{mode}-files",
+            ["dotnet", str(dll), "files", str(checkout)],
+        )
+        stage(
+            f"concurrent-sdk-{mode}-files-gateway",
+            ["dotnet", str(dll), "files-gateway", str(checkout)],
+        )
     for key in (
         "WP_SHARED_PYTHON_SDK",
         "WP_SHARED_NODE_SDK",
