@@ -47,6 +47,11 @@ internal static class FailureCode
         FailureCodes.SourceUnsupported => FailureCodes.SourceUnsupported,
         FailureCodes.InvalidMode => FailureCodes.InvalidMode,
         FailureCodes.StreamLimit => FailureCodes.StreamLimit,
+        FailureCodes.FilesUnsupported => FailureCodes.FilesUnsupported,
+        FailureCodes.OutputLimit => FailureCodes.OutputLimit,
+        FailureCodes.InputReadLimit => FailureCodes.InputReadLimit,
+        FailureCodes.OutputIncomplete => FailureCodes.OutputIncomplete,
+        FailureCodes.OutputCommitFailed => FailureCodes.OutputCommitFailed,
         _ => FailureCodes.UnknownError
     };
 }

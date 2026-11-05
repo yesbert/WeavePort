@@ -27,7 +27,8 @@ internal sealed partial class Runtime(PluginApplication application)
             type = FrameKinds.Ready,
             protocol = ProtocolVersions.Exclusive,
             pluginVersion = application.PluginVersion,
-            sessionCleanup = ProtocolVersions.SessionCleanup
+            sessionCleanup = ProtocolVersions.SessionCleanup,
+            files = ProtocolVersions.Files
         }, token);
         try
         {
@@ -105,7 +106,7 @@ internal sealed partial class Runtime(PluginApplication application)
         string name = payload.GetProperty(WireFields.Operation).GetString()!;
         JsonElement input = payload.GetProperty(WireFields.Input);
         _sessionScope = _scope.Value;
-        var context = _context = new PluginCallContext(_request.GetProperty(WireFields.Context), CallbackAsync);
+        var context = _context = new PluginCallContext(_request.GetProperty(WireFields.Context), CallbackAsync, new FileSession(_request, ExchangeCallbackAsync, application.FileBlockBytes));
         if (operation == SdkOperations.Call)
         {
             return await SessionCleanup.ExecuteAsync(async () => await application.Functions[name](input, context, token), CompleteContextAsync);

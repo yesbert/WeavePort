@@ -1,4 +1,6 @@
-import { FailureCodes } from './protocol.js';
+import { FailureCodes, FileErrors } from './protocol.js';
+import { FileSession, InputFile, OutputFile, PluginFileError } from './files.js';
+import type { FileInfo, PluginInput, PluginOutput } from './files.js';
 /** Public cooperative session API. It does not erase arbitrary globals or library state. */
 export interface PluginContext {
     readonly tenant: string;
@@ -8,6 +10,12 @@ export interface PluginContext {
     onClose(action: () => void | Promise<void>): void;
     /** Transfer exclusive cleanup ownership of a closeable resource. */
     own<T extends { close(): void | Promise<void> }>(resource: T): T;
+    /** Inputs the host named for this call; empty for streams, sources and calls without files. */
+    readonly inputs: readonly FileInfo[];
+    /** Open a host-named input; unknown names throw PluginFileError before any host request. */
+    openInput(name: string): PluginInput;
+    /** Create a named output; close it before returning. The host commits it only if the call succeeds. */
+    createOutput(name: string, mediaType: string): Promise<PluginOutput>;
 }
 
 export class SessionCleanupError extends AggregateError {
@@ -22,7 +30,28 @@ export class SessionContext implements PluginContext {
         private owner: string | undefined,
         private config: unknown,
         private callback: (<T>(operation: string, input: unknown) => Promise<T>) | undefined,
+        private files?: FileSession,
     ) {}
+    get inputs(): readonly FileInfo[] {
+        this.check();
+        return this.files?.inputs ?? [];
+    }
+    openInput(name: string): PluginInput {
+        this.check();
+        if (!this.files) {
+            throw new PluginFileError(FileErrors.InputNotFound);
+        }
+        return new InputFile(this.files, this.files.input(name));
+    }
+    async createOutput(name: string, mediaType: string): Promise<PluginOutput> {
+        this.check();
+        if (!this.files) {
+            throw new PluginFileError(FileErrors.OutputNotPermitted);
+        }
+        this.files.reserveOutput(name, mediaType);
+        await this.files.create(name, mediaType);
+        return new OutputFile(this.files, name);
+    }
     private check(): void {
         if (!this.active) {
             throw new Error('Session completed');
@@ -52,6 +81,7 @@ export class SessionContext implements PluginContext {
         return await this.callback!<T>(operation, input);
     }
     async complete(): Promise<void> {
+        this.files?.close();
         this.active = false;
         this.owner = undefined;
         this.config = undefined;

@@ -19,10 +19,31 @@ assert contract["ProtocolLimits"] == dict(
     SourceChunkMaximumBytes=262144,
     SourceChunkDefaultBytes=65536,
     MaximumConcurrentCalls=1024,
+    FileBlockMinimumBytes=4096,
+    FileBlockMaximumBytes=262144,
+    FileBlockDefaultBytes=65536,
+    FileNameMaximumLength=128,
+    FileMediaTypeMaximumLength=255,
+    MaximumFileInputs=64,
+    MaximumFileOutputs=64,
+    FileInputReadBudgetFactor=4,
+    FileBlockCacheBlocks=4,
 )
 assert contract["FailureCodes"]["SdkError"] == "sdk-error"
 assert contract["FailureCodes"]["CleanupError"] == "cleanup-error"
+assert contract["SdkOperations"]["InputRead"] == "$sdk.input.read"
+assert contract["SdkOperations"]["OutputComplete"] == "$sdk.output.complete"
+assert contract["FailureCodes"]["InputLimit"] == "input-limit"
+assert contract["FailureCodes"]["InputReadLimit"] == "input-read-limit"
+assert contract["FileErrors"] == dict(
+    InputNotFound="input-not-found",
+    OutputNotPermitted="output-not-permitted",
+    OutputExists="output-exists",
+    OutputClosed="output-closed",
+    InvalidRange="invalid-range",
+)
+assert contract["ProtocolVersions"]["Files"] == 1
 subprocess.run(
     ["python3", str(root / "scripts/generate-protocol.py"), "--check"], check=True
 )
-print("PASS 5 independent protocol contract assertions and generated drift check")
+print("PASS 11 independent protocol contract assertions and generated drift check")

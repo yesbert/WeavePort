@@ -1,0 +1,158 @@
+using System.Text.Json;
+using Grpc.Core;
+using WeavePort.Abstractions;
+using WeavePort.Internal;
+using WeavePort.Sdk.Client;
+using WeavePort.Sdk.Gateway.Protocol;
+
+namespace WeavePort.Sdk.Gateway;
+
+public sealed partial class RemotePluginClient
+{
+    /// <summary>Invokes a function with named inputs and outputs whose readers and writers stay in this process. The gateway relays each block over the session; its registration caps the limits. Large files need a call timeout that covers the transfer.</summary>
+    public async Task<PluginCallResult<JsonElement>> CallWithFilesAsync(string operation, JsonElement input, PluginFiles files, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(files);
+        Request request = FileCallRequest(operation, input, files);
+        using var stop = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, _sessions.Lifetime);
+        stop.CancelAfter(_callTimeout);
+        var session = await _sessions.RentAsync(stop.Token);
+        var caller = new CallerFiles(files);
+        PluginCallResult<JsonElement>? result = null;
+        Exception? failure = null;
+        try
+        {
+            await WriteAsync(session, request, stop.Token);
+            Reply reply = await RelayUntilTerminalAsync(session, caller, stop.Token);
+            result = Result(reply, caller, stop.Token);
+        }
+        catch (RpcException error)
+        {
+            failure = Translate(error, stop.Token);
+        }
+        catch (Exception error) when (error is not OutOfMemoryException)
+        {
+            failure = error;
+        }
+
+        // The caller's own writers are released before the outcome is reported, so their failures reach the caller.
+        bool cleanupFailed = await caller.ReleaseAsync(stop.IsCancellationRequested);
+        // A failed file call may have ended the server session after its terminal reply; only reuse after success.
+        _sessions.Return(session, failure is null);
+        if (cleanupFailed)
+        {
+            failure = WithCleanupFailure(failure, caller.Committed);
+        }
+
+        if (failure is not null)
+        {
+            System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw(failure);
+        }
+
+        return result!;
+    }
+
+    // Marks a call whose caller-side writer release failed: a failed call keeps its code with CleanupFailed set,
+    // and an otherwise successful call becomes cleanup-error that still lists its committed outputs.
+    private static Exception? WithCleanupFailure(Exception? failure, IReadOnlyList<PluginOutputInfo> committed)
+    {
+        if (failure is null)
+        {
+            return new PluginCallException(FailureCodes.CleanupError)
+            {
+                Failure = new PluginFailure(FailureCodes.CleanupError, FailurePhases.Exchange, "", CleanupFailed: true),
+                Outputs = committed
+            };
+        }
+
+        if (failure is not PluginCallException call)
+        {
+            return failure;
+        }
+
+        return new PluginCallException(call.Status, call.MayHaveExecuted)
+        {
+            Failure = (call.Failure ?? new PluginFailure(call.Status, FailurePhases.Transport, "")) with { CleanupFailed = true },
+            VersionMismatch = call.VersionMismatch,
+            Outputs = call.Outputs
+        };
+    }
+
+    private static async Task<Reply> RelayUntilTerminalAsync(AsyncDuplexStreamingCall<Request, Reply> session, CallerFiles caller, CancellationToken token)
+    {
+        while (true)
+        {
+            Reply reply = await ReadAsync(session, token);
+            if (reply.Complete)
+            {
+                return reply;
+            }
+
+            FileRequest fileRequest = reply.FileRequest ?? throw new InvalidDataException("Unexpected gateway reply during a file call.");
+            await AcknowledgeAsync(session, await caller.HandleAsync(fileRequest, token), token);
+        }
+    }
+
+    // The server may already have sent its terminal reply and ended the session (for example after a host timeout
+    // interrupted the relay). A failed acknowledgement then must not hide that reply: the next read returns it if it
+    // arrived, or surfaces the transport failure if it did not.
+    private static async Task AcknowledgeAsync(AsyncDuplexStreamingCall<Request, Reply> session, FileAck ack, CancellationToken token)
+    {
+        try
+        {
+            await WriteAsync(session, new Request { FileAck = ack }, token);
+        }
+        catch (RpcException) when (!token.IsCancellationRequested)
+        {
+        }
+        catch (InvalidOperationException) when (!token.IsCancellationRequested)
+        {
+        }
+    }
+
+    private static PluginCallResult<JsonElement> Result(Reply reply, CallerFiles caller, CancellationToken token)
+    {
+        try
+        {
+            CheckError(reply, token);
+        }
+        catch (PluginCallException error)
+        {
+            // A gateway older than function files rejects FILE_CALL as an unknown mode before dispatch.
+            // Both the status and the structured code are translated, so Failure?.Code ?? ErrorCode agree.
+            string status = Legacy(error.Status);
+            throw new PluginCallException(status, error.MayHaveExecuted)
+            {
+                Failure = error.Failure is { } failure ? failure with { Code = Legacy(failure.Code) } : null,
+                VersionMismatch = error.VersionMismatch,
+                Outputs = caller.Committed
+            };
+        }
+
+        return ParseResult(reply) with
+        {
+            Outputs = caller.Committed
+        };
+    }
+
+    private static string Legacy(string code) => code == FailureCodes.InvalidMode ? FailureCodes.FilesUnsupported : code;
+
+    private static Request FileCallRequest(string operation, JsonElement input, PluginFiles files)
+    {
+        Request request = Request(operation, input);
+        request.Mode = Mode.FileCall;
+        request.Inputs.Add(files.Inputs.Select(item => new FileInput { Name = item.Name, Length = item.Length, MediaType = item.MediaType }));
+        request.FileLimits = new FileLimits
+        {
+            Outputs = files.Outputs is not null,
+            MaximumOutputs = files.Limits.MaximumOutputs,
+            MaximumOutputBytes = files.Limits.MaximumOutputBytes
+        };
+        if (files.Limits.MaximumInputReadBytes is { } budget)
+        {
+            request.FileLimits.MaximumInputReadBytes = budget;
+        }
+
+        return request;
+    }
+}

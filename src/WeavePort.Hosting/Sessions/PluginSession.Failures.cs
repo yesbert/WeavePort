@@ -40,17 +40,18 @@ internal sealed partial class PluginSession
     private static string ClassifyException(Exception error) => error switch
     {
         WorkerExecutionException execution => execution.Code,
+        PluginFileException file => file.Code,
         PluginVersionMismatchException => FailureCodes.VersionMismatch,
         UnauthorizedAccessException => FailureCodes.Denied,
         InvalidDataException or JsonException => FailureCodes.ProtocolError,
         IOException or System.Net.Http.HttpRequestException or System.Net.Sockets.SocketException => FailureCodes.Failed,
         _ => FailureCodes.InternalError
     };
-    private async Task<InvocationResult> CompleteFailureAsync(Exception primary, string code, string id, long started, Activity? activity)
+    private async Task<InvocationResult> CompleteFailureAsync(Exception primary, string code, string id, long started, Activity? activity, bool filesCleanupFailed = false)
     {
         string phase = _dispatched ? FailurePhases.Exchange : FailurePhases.Prepare;
         Exception details = primary;
-        bool cleanupFailed = primary is WorkerExecutionException { CleanupFailed: true } or WorkerStartupException { CleanupFailed: true };
+        bool cleanupFailed = filesCleanupFailed || primary is WorkerExecutionException { CleanupFailed: true } or WorkerStartupException { CleanupFailed: true };
         try
         {
             await StopAsync();
@@ -74,7 +75,8 @@ internal sealed partial class PluginSession
         return Result(status, started) with
         {
             Failure = failure,
-            VersionMismatch = (primary as PluginVersionMismatchException)?.Mismatch
+            VersionMismatch = (primary as PluginVersionMismatchException)?.Mismatch,
+            Outputs = (primary as CommittedOutputsException)?.Committed ?? []
         };
     }
 }

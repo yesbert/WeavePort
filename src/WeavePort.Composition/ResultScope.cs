@@ -3,7 +3,7 @@ using System.Security.Cryptography;
 
 namespace WeavePort.Composition;
 /// <summary>Private, request-owned immutable file results. The trusted product supplies tenant identity and a private storage root.</summary>
-public sealed class ResultScope : IAsyncDisposable
+public sealed partial class ResultScope : IAsyncDisposable
 {
     private const int CopyBufferBytes = 65536;
     private readonly string _directory;
@@ -106,63 +106,15 @@ public sealed class ResultScope : IAsyncDisposable
     /// <summary>Produces a result atomically. The producer must await its writes and must not retain the supplied stream.</summary>
     public async Task<ResultHandle> CreateAsync(Func<Stream, CancellationToken, Task> producer, CancellationToken cancellationToken = default)
     {
-        using var active = Enter();
-        using var linked = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, _lifetime.Token);
-        lock (_sync)
-        {
-            if (_objects >= _limits.MaximumObjects)
-            {
-                throw new IOException("Result object quota exceeded.");
-            }
-
-            _objects++;
-        }
-
-        string id = Guid.NewGuid().ToString("N");
-        long reserved = 0;
+        await using PendingResult pending = Begin(cancellationToken);
         try
         {
-            await using (FileStream file = CreateResultFile(id))
-            {
-                using var limited = new BoundedOutput(file, count =>
-                {
-                    lock (_sync)
-                    {
-                        if (count > _limits.MaximumObjectBytes - reserved || count > _limits.MaximumScopeBytes - _bytes)
-                        {
-                            throw new IOException("Result byte quota exceeded.");
-                        }
-
-                        reserved += count;
-                        _bytes += count;
-                    }
-                }, linked.Token);
-                await producer(limited, linked.Token);
-                linked.Token.ThrowIfCancellationRequested();
-                await file.FlushAsync(linked.Token);
-                if (file.Length != reserved)
-                {
-                    throw new IOException("Producer writes did not complete consistently.");
-                }
-            }
-
-            var handle = new ResultHandle(id, reserved);
-            lock (_sync)
-            {
-                _results.Add(id, handle);
-            }
-
-            return handle;
+            await producer(pending.Output, pending.Token);
+            return await pending.CommitAsync();
         }
         catch (Exception productionError)
         {
-            RemovePartial(id, productionError);
-            lock (_sync)
-            {
-                _bytes -= reserved;
-                _objects--;
-            }
-
+            pending.Abort(productionError);
             throw;
         }
     }

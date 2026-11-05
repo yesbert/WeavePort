@@ -9,7 +9,23 @@ internal sealed partial class PluginSession
     private readonly SemaphoreSlim _operationGate = new(1);
     public bool SupportsStreaming => true;
 
-    public async Task<InvocationResult> InvokeAsync(string operation, JsonElement payload, CancellationToken cancellationToken = default)
+    public Task<InvocationResult> InvokeAsync(string operation, JsonElement payload, CancellationToken cancellationToken = default) => InvokeGatedAsync(operation, payload, null, cancellationToken);
+
+    /// <summary>Invokes a function with files. Stream and source operations refuse files before dispatch.</summary>
+    public Task<InvocationResult> InvokeAsync(string operation, JsonElement payload, PluginFiles files, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(files);
+        if (FileExchange.RefusesOperation(operation))
+        {
+            return Task.FromResult(new InvocationResult(FailureCodes.FilesUnsupported, JsonSerializer.SerializeToElement(new
+            {
+            }), Instance, 0));
+        }
+
+        return InvokeGatedAsync(operation, payload, new FileExchange(files), cancellationToken);
+    }
+
+    private async Task<InvocationResult> InvokeGatedAsync(string operation, JsonElement payload, FileExchange? files, CancellationToken cancellationToken)
     {
         if (!await _operationGate.WaitAsync(0, cancellationToken))
         {
@@ -20,7 +36,7 @@ internal sealed partial class PluginSession
 
         try
         {
-            return await InvokeCoreAsync(operation, payload, false, cancellationToken);
+            return await InvokeCoreAsync(operation, payload, false, cancellationToken, files);
         }
         finally
         {

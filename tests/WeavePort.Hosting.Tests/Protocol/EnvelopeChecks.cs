@@ -6,7 +6,7 @@ internal static class EnvelopeChecks
     internal static int Run()
     {
         int checks = 0;
-        foreach (string name in new[] { "type", "id", "callbackId", "operation", "payload", "value", "protocol", "pluginVersion", "code" })
+        foreach (string name in new[] { "type", "id", "callbackId", "operation", "payload", "value", "protocol", "pluginVersion", "code", "files" })
         {
             Reject(() => WorkerEnvelope.Validate(JsonElement.Parse($$"""{"{{name}}":1,"{{name}}":2}""")));
         }

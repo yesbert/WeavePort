@@ -4,7 +4,8 @@ import asyncio
 import inspect
 import threading
 
-from .protocol import FailureCodes
+from .files import InputFile, OutputFile, PluginFileError
+from .protocol import FailureCodes, FileErrors
 
 
 class SessionCleanupError(RuntimeError):
@@ -20,7 +21,8 @@ class SessionCleanupError(RuntimeError):
 class PluginContext:
     """Resources belong to one function call or complete result stream."""
 
-    def __init__(self, tenant, configuration, runtime):
+    def __init__(self, tenant, configuration, runtime, files=None):
+        self._files = files
         self._tenant = tenant
         self._configuration = configuration
         self._runtime = runtime
@@ -79,7 +81,31 @@ class PluginContext:
         self._check()
         return await self._runtime.callback(operation, value)
 
+    @property
+    def inputs(self):
+        """Inputs the host named for this call: (name, length, media_type) tuples."""
+        self._check()
+        return self._files.inputs if self._files else ()
+
+    async def open_input(self, name):
+        """Open a host-named input; unknown names raise PluginFileError before any host request."""
+        self._check()
+        if self._files is None:
+            raise PluginFileError(FileErrors.InputNotFound)
+        return InputFile(self._files, self._files.input(name), asyncio.get_running_loop())
+
+    async def create_output(self, name, media_type):
+        """Create a named output; close it before returning. The host commits it only if the call succeeds."""
+        self._check()
+        if self._files is None:
+            raise PluginFileError(FileErrors.OutputNotPermitted)
+        self._files.reserve_output(name, media_type)
+        await self._files.create(name, media_type)
+        return OutputFile(self._files, name, asyncio.get_running_loop())
+
     async def _close(self):
+        if self._files is not None:
+            self._files.close()
         self._active = False
         self._tenant = self._configuration = self._runtime = None
         actions, self._cleanup = self._cleanup, []

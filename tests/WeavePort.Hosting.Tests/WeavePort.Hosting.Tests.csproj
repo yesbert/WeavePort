@@ -15,9 +15,6 @@
     <PackageReference Include="WeavePort.Hosting" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="../../src/Shared/JsonSize.cs" Link="Internal/JsonSize.cs" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="fixtures/*" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>

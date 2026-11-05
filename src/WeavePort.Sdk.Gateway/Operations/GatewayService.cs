@@ -17,9 +17,9 @@ public sealed partial class GatewayService(GatewayRegistry registry) : WorkerGat
             Reply terminal;
             try
             {
-                terminal = await DispatchAsync(requestStream.Current, responseStream, context);
+                terminal = await DispatchAsync(requestStream.Current, requestStream, responseStream, context);
             }
-            catch (Exception error) when (!context.CancellationToken.IsCancellationRequested)
+            catch (Exception error) when (!context.CancellationToken.IsCancellationRequested && error is not FileRelayBrokenException)
             {
                 terminal = EncodeFailure(error);
             }
@@ -30,7 +30,7 @@ public sealed partial class GatewayService(GatewayRegistry registry) : WorkerGat
     }
 
     private async Task<Reply> DispatchAsync(
-        Request request, IServerStreamWriter<Reply> output, ServerCallContext context)
+        Request request, IAsyncStreamReader<Request> input, IServerStreamWriter<Reply> output, ServerCallContext context)
     {
         // Re-authorize every exchange, including on sessions opened before revocation.
         _ = Authorize(context);
@@ -52,6 +52,8 @@ public sealed partial class GatewayService(GatewayRegistry registry) : WorkerGat
                 return new Reply();
             case Mode.Cancel:
                 return await CancelAsync(request, context);
+            case Mode.FileCall:
+                return await FileCallAsync(request, input, output, context);
             default:
                 throw new PluginCallException(FailureCodes.InvalidMode, false);
         }

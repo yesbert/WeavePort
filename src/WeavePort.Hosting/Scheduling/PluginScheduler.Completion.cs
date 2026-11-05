@@ -1,9 +1,22 @@
+using WeavePort.Abstractions;
 using WeavePort.Internal;
 
 namespace WeavePort.Hosting;
 
 internal sealed partial class PluginScheduler
 {
+    private static Task<InvocationResult> InvokeCallAsync(ScheduledCall call, CancellationToken token)
+    {
+        if (call.Files is null)
+        {
+            return call.Plugin.Session.InvokeAsync(call.Operation, call.Payload, token);
+        }
+
+        return call.Plugin.Session is IPluginFileSession files
+            ? files.InvokeAsync(call.Operation, call.Payload, call.Files, token)
+            : Task.FromResult(ScheduledCall.Rejected(FailureCodes.FilesUnsupported).Result);
+    }
+
     private async Task RunAsync(ScheduledCall call, bool cold)
     {
         long started = _clock.GetTimestamp();
@@ -13,7 +26,7 @@ internal sealed partial class PluginScheduler
         try
         {
             using var token = CancellationTokenSource.CreateLinkedTokenSource(call.Token, _lifetime.Token);
-            var result = call.IsLease ? await RunLeaseAsync(call, token.Token) : await call.Plugin.Session.InvokeAsync(call.Operation, call.Payload, token.Token);
+            var result = call.IsLease ? await RunLeaseAsync(call, token.Token) : await InvokeCallAsync(call, token.Token);
             double execution = _clock.GetElapsedTime(started).TotalMilliseconds;
             lock (_sync)
             {

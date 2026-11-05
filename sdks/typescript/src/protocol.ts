@@ -8,6 +8,10 @@ export const SdkOperations = {
     SourceOpen: "$sdk.source.open",
     SourceRead: "$sdk.source.read",
     SourceClose: "$sdk.source.close",
+    InputRead: "$sdk.input.read",
+    OutputCreate: "$sdk.output.create",
+    OutputWrite: "$sdk.output.write",
+    OutputComplete: "$sdk.output.complete",
 } as const;
 export type SdkOperationsValue = (typeof SdkOperations)[keyof typeof SdkOperations];
 
@@ -52,8 +56,22 @@ export const FailureCodes = {
     SourceUnsupported: "source-unsupported",
     InvalidMode: "invalid-mode",
     StreamLimit: "stream-limit",
+    FilesUnsupported: "files-unsupported",
+    OutputLimit: "output-limit",
+    InputReadLimit: "input-read-limit",
+    OutputIncomplete: "output-incomplete",
+    OutputCommitFailed: "output-commit-failed",
 } as const;
 export type FailureCodesValue = (typeof FailureCodes)[keyof typeof FailureCodes];
+
+export const FileErrors = {
+    InputNotFound: "input-not-found",
+    OutputNotPermitted: "output-not-permitted",
+    OutputExists: "output-exists",
+    OutputClosed: "output-closed",
+    InvalidRange: "invalid-range",
+} as const;
+export type FileErrorsValue = (typeof FileErrors)[keyof typeof FileErrors];
 
 export const ProtocolLimits = {
     FrameBytes: 1048576,
@@ -66,6 +84,15 @@ export const ProtocolLimits = {
     SourceChunkMaximumBytes: 262144,
     SourceChunkDefaultBytes: 65536,
     MaximumConcurrentCalls: 1024,
+    FileBlockMinimumBytes: 4096,
+    FileBlockMaximumBytes: 262144,
+    FileBlockDefaultBytes: 65536,
+    FileNameMaximumLength: 128,
+    FileMediaTypeMaximumLength: 255,
+    MaximumFileInputs: 64,
+    MaximumFileOutputs: 64,
+    FileInputReadBudgetFactor: 4,
+    FileBlockCacheBlocks: 4,
 } as const;
 export type ProtocolLimitsValue = (typeof ProtocolLimits)[keyof typeof ProtocolLimits];
 
@@ -74,6 +101,7 @@ export const ProtocolVersions = {
     Concurrent: 2,
     SessionCleanup: 1,
     ConcurrentCalls: 1,
+    Files: 1,
 } as const;
 export type ProtocolVersionsValue = (typeof ProtocolVersions)[keyof typeof ProtocolVersions];
 
@@ -105,6 +133,15 @@ export const WireFields = {
     Items: "items",
     Done: "done",
     Data: "data",
+    Files: "files",
+    Inputs: "inputs",
+    Outputs: "outputs",
+    Name: "name",
+    MediaType: "mediaType",
+    Length: "length",
+    Offset: "offset",
+    MaximumCount: "maximumCount",
+    MaximumBytes: "maximumBytes",
 } as const;
 export type WireFieldsValue = (typeof WireFields)[keyof typeof WireFields];
 

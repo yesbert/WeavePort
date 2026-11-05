@@ -13,6 +13,7 @@
   <ItemGroup>
     <Compile Include="../Shared/JsonSize.cs" Link="Internal/JsonSize.cs" />
     <Compile Include="../Shared/FailureCode.cs" Link="Internal/FailureCode.cs" />
+    <Compile Include="../Shared/FileDescriptor.cs" Link="Internal/FileDescriptor.cs" />
     <Compile Include="../Shared/ProtocolContract.g.cs" Link="Internal/ProtocolContract.g.cs" />
   </ItemGroup>
 </Project>

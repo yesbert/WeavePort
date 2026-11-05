@@ -18,6 +18,7 @@ from .protocol import (
 
 from .cleanup import cleanup_all, execute_with_cleanup
 from .context import PluginContext, SessionCleanupError
+from .files import FileSession
 from .source import SourceSession
 from .stream import LiveStream
 
@@ -73,6 +74,13 @@ class Runtime:
         self.writer.flush()
 
     async def callback(self, operation, value):
+        result, error = await self.exchange_callback(operation, value)
+        if error is not None:
+            raise RuntimeError("Host callback failed")
+        return result
+
+    async def exchange_callback(self, operation, value):
+        """Return (value, error code) so file operations can map host refusals."""
         scope = _SCOPE.get()
         if scope is self.stream_scope:
             await self.wait_for_stream_exchange()
@@ -99,9 +107,12 @@ class Runtime:
                 or reply.get("callbackId") != callback_id
             ):
                 raise ValueError("Callback identity")
-            if reply.get("error") is not None or reply.get("success") is False:
-                raise RuntimeError("Host callback failed")
-            return reply["value"]
+            if reply.get("error") is not None:
+                error = reply["error"]
+                return None, error if isinstance(error, str) else FailureCodes.UnknownError
+            if reply.get("success") is False:
+                return None, FailureCodes.UnknownError
+            return reply["value"], None
 
     async def close(self):
         iterator, self.iterator = self.iterator, None
@@ -131,7 +142,10 @@ class Runtime:
         if self.iterator is not None or self.source.identity is not None:
             raise RuntimeError("Session already active")
         context = self.context = PluginContext(
-            request["context"]["tenant"], request["context"]["configuration"], self
+            request["context"]["tenant"],
+            request["context"]["configuration"],
+            self,
+            FileSession(request, self, self.app._file_block_bytes),
         )
         if operation == SdkOperations.SourceOpen:
             return await self.source.open(
@@ -165,6 +179,8 @@ class Runtime:
             pluginVersion=self.app._plugin_version,
             sessionCleanup=ProtocolVersions.SessionCleanup,
         )
+        if not self.app._concurrent_calls:
+            ready["files"] = ProtocolVersions.Files
         if self.app._concurrent_calls:
             ready["concurrentCalls"] = ProtocolVersions.ConcurrentCalls
         await self.send(ready)

@@ -13,6 +13,7 @@ export type Invocation = {
     operation: string;
     payload: SdkPayload;
     context: { tenant: string; configuration: unknown };
+    files?: unknown;
 };
 export type CallbackReply = {
     type: typeof FrameKinds.CallbackResult;
@@ -71,6 +72,7 @@ function decodeInvocation(frame: Record<string, unknown>): Invocation {
         operation: requireString(frame.operation),
         payload: payload as SdkPayload,
         context: { tenant: requireString(context.tenant), configuration: context.configuration },
+        ...(frame.files !== undefined ? { files: requireObject(frame.files) } : {}),
     };
 }
 export function decodeFrame(value: unknown): InboundFrame {

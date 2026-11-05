@@ -11,8 +11,10 @@ public sealed class PluginCallContext
     private string? _tenant;
     private JsonElement _configuration;
     private bool _active = true;
-    internal PluginCallContext(JsonElement context, Func<string, JsonElement, CancellationToken, Task<JsonElement>> callback)
+    private readonly FileSession? _files;
+    internal PluginCallContext(JsonElement context, Func<string, JsonElement, CancellationToken, Task<JsonElement>> callback, FileSession? files = null)
     {
+        _files = files;
         _tenant = context.GetProperty(WireFields.Tenant).GetString()!;
         _configuration = context.GetProperty(WireFields.Configuration);
         _callback = callback;
@@ -87,6 +89,45 @@ public sealed class PluginCallContext
         }
     }
 
+    /// <summary>Inputs the host named for this invocation; empty for streams, sources and calls without files.</summary>
+    public IReadOnlyList<PluginFileInfo> Inputs
+    {
+        get
+        {
+            lock (_sync)
+            {
+                EnsureActive();
+                return _files?.Inputs ?? [];
+            }
+        }
+    }
+
+    /// <summary>Opens a host-named input as a read-only seekable stream. Unknown names throw <see cref = "PluginFileException"/> with input-not-found before any host request.</summary>
+    public Stream OpenInput(string name)
+    {
+        lock (_sync)
+        {
+            EnsureActive();
+            FileSession files = _files ?? throw new PluginFileException(WeavePort.Internal.FileErrors.InputNotFound);
+            return new InputStream(files, files.Input(name));
+        }
+    }
+
+    /// <summary>Creates a named output. Write to it and dispose or complete it before the function returns; the host commits it only if the invocation succeeds.</summary>
+    public async Task<PluginOutputStream> CreateOutputAsync(string name, string mediaType, CancellationToken cancellationToken = default)
+    {
+        FileSession files;
+        lock (_sync)
+        {
+            EnsureActive();
+            files = _files ?? throw new PluginFileException(WeavePort.Internal.FileErrors.OutputNotPermitted);
+        }
+
+        files.ReserveOutput(name, mediaType);
+        await files.CreateAsync(name, mediaType, cancellationToken);
+        return new PluginOutputStream(files, name);
+    }
+
     private void EnsureActive()
     {
         if (!_active)
@@ -101,6 +142,7 @@ public sealed class PluginCallContext
         lock (_sync)
         {
             _active = false;
+            _files?.Close();
             _callback = null;
             _tenant = null;
             _configuration = default;

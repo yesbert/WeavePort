@@ -10,7 +10,7 @@ internal static partial class WorkerEnvelope
         WireFields.Type, WireFields.Id, WireFields.CallbackId, WireFields.Operation,
         WireFields.Payload, WireFields.Value, WireFields.Protocol, WireFields.PluginVersion,
         WireFields.Code, WireFields.SessionCleanup, WireFields.Reusable, WireFields.ConcurrentCalls,
-        WireFields.Degree, WireFields.PrimaryCode, WireFields.CleanupFailed
+        WireFields.Degree, WireFields.PrimaryCode, WireFields.CleanupFailed, WireFields.Files
     ];
     internal static void Validate(JsonElement frame)
     {
@@ -46,6 +46,7 @@ internal static partial class WorkerEnvelope
         return 0;
     }
 
+    internal static bool AdvertisesFiles(JsonElement ready) => ready.TryGetProperty(WireFields.Files, out JsonElement files) && files.ValueKind == JsonValueKind.Number && files.TryGetInt32(out int revision) && revision == ProtocolVersions.Files;
     internal static void ValidateReady(JsonElement frame, string version, WorkerReusePolicy reusePolicy = WorkerReusePolicy.CustomerBound)
     {
         Validate(frame);

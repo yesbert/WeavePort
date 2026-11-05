@@ -57,7 +57,9 @@ internal sealed class ProcessWorker(ProcessProfile profile, string version, Time
         Reader = new Frames(_socket?.Stream ?? _process.StandardOutput.BaseStream);
         if (Mcp is null)
         {
-            WorkerEnvelope.ValidateReady(await Reader.ReadAsync(token), Version, Profile.ReusePolicy);
+            JsonElement ready = await Reader.ReadAsync(token);
+            WorkerEnvelope.ValidateReady(ready, Version, Profile.ReusePolicy);
+            SupportsFiles = WorkerEnvelope.AdvertisesFiles(ready);
         }
         else
         {

@@ -33,6 +33,11 @@ Use `Failure.Code` for structured failure identity when present, and the existin
 | `not-found` | Remote transport could not find the requested resource. |
 | `unimplemented` | Remote transport does not implement the requested operation. |
 | `unknown-error` | Unknown external failure category; descriptions are never parsed as codes. |
+| `files-unsupported` | A call carrying files was refused before dispatch: the worker or client lacks file support, or the binding or operation kind does not permit files. |
+| `output-limit` | A function output exceeded the invocation's output count or total size. |
+| `input-read-limit` | Host readers would deliver more input bytes than the invocation's read budget. Distinct from `input-limit`. |
+| `output-incomplete` | A function returned while an output it created was not completed. |
+| `output-commit-failed` | Committing a function output failed; earlier outputs may already be committed. |
 
 `CleanupFailed` records an additional cleanup failure without overwriting the primary code. Phase is `prepare`, `exchange` or `transport`; correlation is an opaque invocation identifier. Old peers may supply neither phase nor correlation. Raw plugin exception details are not sent across the protocol. See [diagnostics](runtime-diagnostics.md) for local opt-in exception delivery.
 

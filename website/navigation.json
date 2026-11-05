@@ -79,6 +79,10 @@
     [
       "docs/bulk-composition.md",
       "Bulk composition"
+    ],
+    [
+      "docs/function-files.md",
+      "Function files"
     ]
   ],
   "Operate": [

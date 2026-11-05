@@ -7,6 +7,8 @@ namespace WeavePort.Hosting;
 
 internal sealed partial class PluginSession
 {
+    private static readonly JsonElement EmptyObject = JsonDocument.Parse("{}").RootElement.Clone();
+
     private async Task<JsonElement> ExchangeAsync(string id, string trace, CancellationToken token)
     {
         var callbackIds = new HashSet<string>(StringComparer.Ordinal);
@@ -44,6 +46,12 @@ internal sealed partial class PluginSession
     {
         string operation = frame.GetProperty(WireFields.Operation).GetString() ?? "";
         string callbackId = frame.GetProperty(WireFields.CallbackId).GetString() ?? "";
+        if (FileExchange.Handles(operation))
+        {
+            await RespondToFileAsync(frame, id, operation, callbackId, callbackIds, token);
+            return;
+        }
+
         if (!binding.Grants.Contains(operation) || !(InvocationScope.Current.Value?.Allows(operation) ?? false))
         {
             throw new UnauthorizedAccessException();
@@ -57,6 +65,39 @@ internal sealed partial class PluginSession
         var call = new HostCall(binding.Context, id, operation, frame.GetProperty(WireFields.Payload), trace);
         JsonElement value = await InvokeCallbackAsync(call, token);
         await Frames.WriteAsync(_worker!.Input, new CallbackResultFrame(FrameKinds.CallbackResult, id, callbackId, value), WireJson.Default.CallbackResultFrame, token);
+    }
+
+    // Reserved file operations bypass grants, the callback budget and callback admission by design.
+    private async Task RespondToFileAsync(JsonElement frame, string id, string operation, string callbackId, HashSet<string> callbackIds, CancellationToken token)
+    {
+        if (!callbackIds.Add(callbackId))
+        {
+            throw new InvalidDataException("Callback identity violation.");
+        }
+
+        FileReply reply;
+        try
+        {
+            reply = await (_files ?? FileExchange.None()).HandleAsync(operation, frame.GetProperty(WireFields.Payload), token);
+        }
+        catch (FileRefusal refusal)
+        {
+            await Frames.WriteAsync(_worker!.Input, new CallbackResultFrame(FrameKinds.CallbackResult, id, callbackId, EmptyObject, refusal.Code), WireJson.Default.CallbackResultFrame, token);
+            return;
+        }
+
+        try
+        {
+            // Input blocks are encoded once, straight from the rented buffer into the frame.
+            Task write = reply.Rented is null
+                ? Frames.WriteAsync(_worker!.Input, new CallbackResultFrame(FrameKinds.CallbackResult, id, callbackId, reply.Value), WireJson.Default.CallbackResultFrame, token)
+                : Frames.WriteAsync(_worker!.Input, new FileReadResultFrame(FrameKinds.CallbackResult, id, callbackId, new FileReadReply(reply.Data)), WireJson.Default.FileReadResultFrame, token);
+            await write;
+        }
+        finally
+        {
+            reply.Release();
+        }
     }
 
     private async Task<JsonElement> InvokeCallbackAsync(HostCall call, CancellationToken token)

@@ -147,6 +147,10 @@ Set C# `PluginApplication.ConcurrentCalls = true`, Python `PluginApplication(con
 
 For plugin-originated files, C# `Source<TInput>` returns a readable `Stream`; Python `@app.source` returns a readable binary file; TypeScript `plugin.source` returns a `BinarySource` with `read(maxBytes)` and `close()` methods. The runtime owns source cleanup. `IBoundPluginClient.SourceAsync` reads bounded 4–256 KiB blocks under one exclusive lease; `Composition.CollectAsync` commits them into a quota-enforced result scope. JSON streams keep their existing 64 MiB limit. See [bulk composition](bulk-composition.md).
 
+## Function files
+
+Current source after 0.9.1 lets a function read host-named inputs at any offset and write named outputs that the host commits only when the call succeeds: C# `context.OpenInput` and `context.CreateOutputAsync`, Python `context.open_input` and `context.create_output`, TypeScript `context.openInput` and `context.createOutput`. Only exclusive workers support files. See [function files](function-files.md).
+
 ## Failure handling in current source
 
 These details are included since 0.8.0; review the [migration notes](releases.md#080-failure-contracts-and-code-quality). Client failures expose `PluginCallException.Failure` when available. Prefer `error.Failure?.Code ?? error.ErrorCode`, retain `MayHaveExecuted`, and treat unknown codes conservatively. Low-level sessions expose the same optional details through `InvocationResult.Failure`. Normal argument exceptions and `OperationCanceledException` keep their standard categories; exception messages are human diagnostics, not machine contracts.

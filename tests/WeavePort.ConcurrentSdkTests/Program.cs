@@ -8,6 +8,30 @@ if (args.Contains("gateway-cancellation"))
     return;
 }
 
+if (args.Contains("--file-worker"))
+{
+    await FileFixture.RunAsync(args);
+    return;
+}
+
+if (args.Contains("files-gateway"))
+{
+    await FileGatewayChecks.RunAsync(args);
+    return;
+}
+
+if (args.Contains("files-measure"))
+{
+    await FileMeasurements.RunAsync(args);
+    return;
+}
+
+if (args.Contains("files"))
+{
+    await FileChecks.RunAsync(args);
+    return;
+}
+
 if (args.Contains("cleanup"))
 {
     await CleanupChecks.RunAsync();

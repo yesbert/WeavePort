@@ -103,7 +103,7 @@ internal sealed partial class PluginScheduler : IAsyncDisposable
         }
     }
 
-    internal Task<ScheduledInvocationResult> Enqueue(ScheduledPlugin plugin, string operation, JsonElement payload, CancellationToken token)
+    internal Task<ScheduledInvocationResult> Enqueue(ScheduledPlugin plugin, string operation, JsonElement payload, CancellationToken token, PluginFiles? files = null)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(operation);
         if (operation is SdkOperations.Start or SdkOperations.Next or SdkOperations.Close)
@@ -127,7 +127,10 @@ internal sealed partial class PluginScheduler : IAsyncDisposable
                 throw new InvalidDataException("Queued payload exceeds the configured byte limit.");
             }
 
-            var call = new ScheduledCall(plugin, operation, payload.Clone(), _clock.GetTimestamp(), token);
+            var call = new ScheduledCall(plugin, operation, payload.Clone(), _clock.GetTimestamp(), token)
+            {
+                Files = files
+            };
             if (_options.QueueTimeout == TimeSpan.Zero)
             {
                 return AdmitImmediately(call, plugin);

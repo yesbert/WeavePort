@@ -52,6 +52,10 @@ SDK workers register a `bulk-map` function with an object containing base64 `dat
 
 If partial-file removal fails, producer and cleanup errors are aggregated and the quota reservation is retained conservatively until scope cleanup. Disposal attempts cancellation, drains active operations and attempts storage cleanup even if a cancellation callback fails. Repeated disposal observes the same completion or failure. A deletion failure is observable; no successful deletion or secure erasure is claimed. Applications own recovery of failed storage and process-crash remnants.
 
+## Function outputs into a result scope
+
+In current source after 0.9.1, `scope.AsOutputDestination()` returns `ResultOutputs`, an output destination for [function files](function-files.md). Outputs count against the scope's object and scope quotas while their blocks arrive. A committed output appears in `ResultOutputs.Results` by output name as an ordinary `ResultHandle`. An aborted one is deleted and its reservation released. If deleting a partial file fails, its reservation is retained until scope cleanup, as for `CreateAsync`.
+
 ## Collect a plugin-originated source
 
 Use `CollectAsync` when the plugin produces the bytes, such as a connector reading a remote file. The client must be bound to the result scope's authenticated tenant.

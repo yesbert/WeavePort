@@ -33,7 +33,7 @@ public sealed class GatewayRegistry : IAsyncDisposable
 
     private const int CredentialEntropyBytes = 32;
     private readonly object _sync = new();
-    private sealed record Binding(IPluginClient Client, string Tenant);
+    private sealed record Binding(IPluginClient Client, string Tenant, WeavePort.Abstractions.PluginFileLimits? Files);
     private readonly Dictionary<string, Binding> _bindings = new(StringComparer.Ordinal);
     private readonly Dictionary<string, ActiveStream> _streams = new(StringComparer.Ordinal);
     private readonly List<Task> _revocations = [];
@@ -95,8 +95,19 @@ public sealed class GatewayRegistry : IAsyncDisposable
         return Register(client, client.Tenant);
     }
 
+    /// <summary>Registers a preconfigured host client that may take function files within the given maximum limits.</summary>
+    public string Register(LocalPluginClient client, WeavePort.Abstractions.PluginFileLimits fileLimits)
+    {
+        ArgumentNullException.ThrowIfNull(client);
+        ArgumentNullException.ThrowIfNull(fileLimits);
+        return Register(client, client.Tenant, fileLimits);
+    }
+
     /// <summary>Registers a custom trusted client with immutable host-supplied tenant identity; ownership transfers to this registry.</summary>
-    public string Register(IPluginClient client, string tenant)
+    public string Register(IPluginClient client, string tenant) => Register(client, tenant, null);
+
+    /// <summary>Registers a custom trusted client that may take function files within the given maximum limits; null permits none.</summary>
+    public string Register(IPluginClient client, string tenant, WeavePort.Abstractions.PluginFileLimits? fileLimits)
     {
         ArgumentNullException.ThrowIfNull(client);
         ArgumentException.ThrowIfNullOrWhiteSpace(tenant);
@@ -109,7 +120,7 @@ public sealed class GatewayRegistry : IAsyncDisposable
         lock (_sync)
         {
             ObjectDisposedException.ThrowIf(_disposed, this);
-            _bindings.Add(token, new Binding(client, tenant));
+            _bindings.Add(token, new Binding(client, tenant, fileLimits));
         }
 
         return token;
@@ -118,6 +129,8 @@ public sealed class GatewayRegistry : IAsyncDisposable
     internal IPluginClient Get(string? token) => GetBinding(token).Client;
 
     internal string GetTenant(string? token) => GetBinding(token).Tenant;
+
+    internal WeavePort.Abstractions.PluginFileLimits? GetFileLimits(string? token) => GetBinding(token).Files;
 
     private Binding GetBinding(string? token)
     {
