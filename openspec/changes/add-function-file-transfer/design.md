@@ -212,7 +212,7 @@ Task 6.1 measures the plugin's time per block and the round-trip time, locally a
 
 HiveWeaver reviewed commit `43c53be` on 2026-11-05 and confirmed the design without asking for changes.
 
-- **Positional reads.** HiveWeaver moves its storage to a chunked format with independently authenticated blocks. Today it uses Stratara's `ISecureBlobEncryptor`, which is one AES-GCM block per payload. Its reader then serves `ReadAsync(offset, ...)` with ranged reads from object storage. WeavePort keeps not copying inputs to disk.
+- **Positional reads.** HiveWeaver moves its storage to a chunked format with independently authenticated blocks. Today it uses Stratara's `ISecureBlobEncryptor`, which is one AES-GCM block per payload. Corrected the same day: HiveWeaver keeps files on disk first and moves to object storage only if expansion requires it. Its reader serves `ReadAsync(offset, ...)` with a positional read of the needed blocks from a file. Nothing in this change depends on the storage behind the reader. WeavePort keeps not copying inputs to disk.
 - **Two-phase outputs** are sufficient. HiveWeaver's `CommitAsync` records a file as unused, and the file becomes visible only through the call's completion. A partial commit leaves unused files that expire on their own. Aborting completed outputs and listing committed ones is what HiveWeaver needs.
 - **Gateway.** HiveWeaver calls through the local `PluginHost` today, so the gateway path is not exercised by this consumer yet. It stays in scope because the original request asked for it.
 
