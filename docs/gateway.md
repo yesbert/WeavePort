@@ -39,7 +39,7 @@ The automated TLS topology runs on one machine with separate plugin worker proce
 
 Bound remote clients also expose `SourceAsync`. The gateway reads the existing authorized local client source and carries bounded binary blocks over gRPC. `Composition.CollectAsync` checks the authenticated binding tenant before committing a scoped result. Shared client views retain unary-only behavior through the gateway.
 
-[Function files](function-files.md) are not carried by the gateway yet. `RemotePluginClient.CallWithFilesAsync` refuses with `files-unsupported` before contacting the server.
+In current source after 0.9.1, `RemotePluginClient.CallWithFilesAsync` carries [function files](function-files.md). The caller's readers and writers stay in the calling process; the server relays each block over the session and persists no file bytes. Register a binding with `registry.Register(localClient, new PluginFileLimits(...))` to permit files. The limits are maximums for every call through that credential; the default `Register(localClient)` permits none. A gateway older than this change is reported as `files-unsupported`. Raise the client's call timeout for large files, because the whole transfer runs within one call.
 
 ## Post-release structured failures
 

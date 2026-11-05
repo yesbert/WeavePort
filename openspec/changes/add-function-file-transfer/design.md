@@ -142,18 +142,18 @@ The gateway needs a protocol revision because the reader and writer live at the 
 
 **Server-side relay.** The server builds a `PluginFiles` whose readers and writers relay over the same duplex stream:
 
-- Each read becomes a `Reply` with `file_request {kind: READ, name, offset, length}`, answered by a `Request` with `file_data`.
-- Output create, write, commit and abort become `Reply` file requests. Write requests carry `data`. Each is answered by an acknowledgement `Request`.
+- Each read becomes a `Reply` with `file_request {operation: FILE_READ, name, offset, length}`, answered by a `Request` with a `file_ack` carrying the bytes.
+- Output create, write, commit and abort become `Reply` file requests with `FILE_CREATE`, `FILE_WRITE`, `FILE_COMMIT` and `FILE_ABORT`. Write requests carry `data`. Each is answered by exactly one `file_ack` with the same `id`; an `error` in it means the caller's storage failed and fails the call as `failed`.
 
-The exchange still ends with the normal final `Reply`.
+The exchange still ends with the normal final `Reply`, which also lists committed outputs. The client checks every file request against its own declared inputs and limits and treats a request outside them as a protocol violation. It reports committed outputs from its own record, not from the server's list. A reply stream that no longer lines up with the exchange ends the session on the server.
 
 **Limits and failures.**
 
-- `GatewayRegistry.Register` gets a `PluginFileLimits` maximum per registration, defaulting to no files. A request above the operator maximum is refused with `files-unsupported` or `output-limit` before dispatch, so a credential holder cannot raise limits.
+- `GatewayRegistry.Register` gets a `PluginFileLimits` maximum per registration, defaulting to no files. Before dispatch, a file call to a registration without limits is refused with `files-unsupported`, outputs above the maximum with `output-limit`, and an explicit read budget above the maximum with `input-read-limit`, so a credential holder cannot raise limits. A call without an explicit read budget runs under the registration's budget, or the default of four times the input lengths.
 - Remote readers and writers see the same lifecycle. A transport failure during the exchange aborts all outputs at the client and reports `MayHaveExecuted` according to the existing rules.
 - All protobuf fields are additive. An old server answers `FILE_CALL` as an unknown mode, and the client maps that to `files-unsupported`.
 
-The default remote block size is 256 KiB, to reduce round trips. A 9 MB input takes about 36 read round trips.
+The block size is the plugin's choice, because the plugin does not know whether it is called locally or remotely. 256 KiB halves round trips compared with the 64 KiB default; over loopback it did not matter (see verification.md).
 
 **Alternative.** A short-lived download URL for the plugin was rejected by the requester. It would be a second channel with a leakable token.
 

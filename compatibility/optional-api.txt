@@ -52,12 +52,217 @@ type WeavePort.Sdk.Gateway.GatewayRegistry : System.Object [Public, Sealed]
   implements System.IAsyncDisposable
   Constructor Void .ctor() [Public] ()
   Method System.String Register(WeavePort.Sdk.Client.IPluginClient, System.String) [Public] (client, tenant)
+  Method System.String Register(WeavePort.Sdk.Client.IPluginClient, System.String, WeavePort.Abstractions.PluginFileLimits) [Public] (client, tenant, fileLimits)
   Method System.String Register(WeavePort.Sdk.Client.LocalPluginClient) [Public] (client)
+  Method System.String Register(WeavePort.Sdk.Client.LocalPluginClient, WeavePort.Abstractions.PluginFileLimits) [Public] (client, fileLimits)
   Method System.Threading.Tasks.Task RevokeAsync(System.String) [Public] (token)
   Method System.Threading.Tasks.ValueTask DisposeAsync() [Public, Final, Virtual] ()
 type WeavePort.Sdk.Gateway.GatewayService : WeavePort.Sdk.Gateway.Protocol.WorkerGateway+WorkerGatewayBase [Public, Sealed]
   Constructor Void .ctor(WeavePort.Sdk.Gateway.GatewayRegistry) [Public] (registry)
   Method System.Threading.Tasks.Task Session(Grpc.Core.IAsyncStreamReader`1[WeavePort.Sdk.Gateway.Protocol.Request], Grpc.Core.IServerStreamWriter`1[WeavePort.Sdk.Gateway.Protocol.Reply], Grpc.Core.ServerCallContext) [Public, Virtual] (requestStream, responseStream, context)
+type WeavePort.Sdk.Gateway.Protocol.FileAck : System.Object [Public, Sealed]
+  implements Google.Protobuf.IBufferMessage
+  implements Google.Protobuf.IDeepCloneable`1[WeavePort.Sdk.Gateway.Protocol.FileAck]
+  implements Google.Protobuf.IMessage
+  implements Google.Protobuf.IMessage`1[WeavePort.Sdk.Gateway.Protocol.FileAck]
+  implements System.IEquatable`1[WeavePort.Sdk.Gateway.Protocol.FileAck]
+  Constructor Void .ctor() [Public] ()
+  Constructor Void .ctor(WeavePort.Sdk.Gateway.Protocol.FileAck) [Public] (other)
+  Field Int32 DataFieldNumber=2
+  Field Int32 ErrorFieldNumber=3
+  Field Int32 IdFieldNumber=1
+  Method Boolean Equals(System.Object) [Public, Virtual] (other)
+  Method Boolean Equals(WeavePort.Sdk.Gateway.Protocol.FileAck) [Public, Final, Virtual] (other)
+  Method Google.Protobuf.ByteString get_Data() [Public] ()
+  Method Google.Protobuf.MessageParser`1[WeavePort.Sdk.Gateway.Protocol.FileAck] get_Parser() [Public, Static] ()
+  Method Google.Protobuf.Reflection.MessageDescriptor get_Descriptor() [Public, Static] ()
+  Method Int32 CalculateSize() [Public, Final, Virtual] ()
+  Method Int32 GetHashCode() [Public, Virtual] ()
+  Method System.String ToString() [Public, Virtual] ()
+  Method System.String get_Error() [Public] ()
+  Method UInt64 get_Id() [Public] ()
+  Method Void MergeFrom(Google.Protobuf.CodedInputStream) [Public, Final, Virtual] (input)
+  Method Void MergeFrom(WeavePort.Sdk.Gateway.Protocol.FileAck) [Public, Final, Virtual] (other)
+  Method Void WriteTo(Google.Protobuf.CodedOutputStream) [Public, Final, Virtual] (output)
+  Method Void set_Data(Google.Protobuf.ByteString) [Public] (value)
+  Method Void set_Error(System.String) [Public] (value)
+  Method Void set_Id(UInt64) [Public] (value)
+  Method WeavePort.Sdk.Gateway.Protocol.FileAck Clone() [Public, Final, Virtual] ()
+  Property Google.Protobuf.ByteString Data
+  Property Google.Protobuf.MessageParser`1[WeavePort.Sdk.Gateway.Protocol.FileAck] Parser
+  Property Google.Protobuf.Reflection.MessageDescriptor Descriptor
+  Property System.String Error
+  Property UInt64 Id
+type WeavePort.Sdk.Gateway.Protocol.FileInput : System.Object [Public, Sealed]
+  implements Google.Protobuf.IBufferMessage
+  implements Google.Protobuf.IDeepCloneable`1[WeavePort.Sdk.Gateway.Protocol.FileInput]
+  implements Google.Protobuf.IMessage
+  implements Google.Protobuf.IMessage`1[WeavePort.Sdk.Gateway.Protocol.FileInput]
+  implements System.IEquatable`1[WeavePort.Sdk.Gateway.Protocol.FileInput]
+  Constructor Void .ctor() [Public] ()
+  Constructor Void .ctor(WeavePort.Sdk.Gateway.Protocol.FileInput) [Public] (other)
+  Field Int32 LengthFieldNumber=2
+  Field Int32 MediaTypeFieldNumber=3
+  Field Int32 NameFieldNumber=1
+  Method Boolean Equals(System.Object) [Public, Virtual] (other)
+  Method Boolean Equals(WeavePort.Sdk.Gateway.Protocol.FileInput) [Public, Final, Virtual] (other)
+  Method Google.Protobuf.MessageParser`1[WeavePort.Sdk.Gateway.Protocol.FileInput] get_Parser() [Public, Static] ()
+  Method Google.Protobuf.Reflection.MessageDescriptor get_Descriptor() [Public, Static] ()
+  Method Int32 CalculateSize() [Public, Final, Virtual] ()
+  Method Int32 GetHashCode() [Public, Virtual] ()
+  Method Int64 get_Length() [Public] ()
+  Method System.String ToString() [Public, Virtual] ()
+  Method System.String get_MediaType() [Public] ()
+  Method System.String get_Name() [Public] ()
+  Method Void MergeFrom(Google.Protobuf.CodedInputStream) [Public, Final, Virtual] (input)
+  Method Void MergeFrom(WeavePort.Sdk.Gateway.Protocol.FileInput) [Public, Final, Virtual] (other)
+  Method Void WriteTo(Google.Protobuf.CodedOutputStream) [Public, Final, Virtual] (output)
+  Method Void set_Length(Int64) [Public] (value)
+  Method Void set_MediaType(System.String) [Public] (value)
+  Method Void set_Name(System.String) [Public] (value)
+  Method WeavePort.Sdk.Gateway.Protocol.FileInput Clone() [Public, Final, Virtual] ()
+  Property Google.Protobuf.MessageParser`1[WeavePort.Sdk.Gateway.Protocol.FileInput] Parser
+  Property Google.Protobuf.Reflection.MessageDescriptor Descriptor
+  Property Int64 Length
+  Property System.String MediaType
+  Property System.String Name
+type WeavePort.Sdk.Gateway.Protocol.FileLimits : System.Object [Public, Sealed]
+  implements Google.Protobuf.IBufferMessage
+  implements Google.Protobuf.IDeepCloneable`1[WeavePort.Sdk.Gateway.Protocol.FileLimits]
+  implements Google.Protobuf.IMessage
+  implements Google.Protobuf.IMessage`1[WeavePort.Sdk.Gateway.Protocol.FileLimits]
+  implements System.IEquatable`1[WeavePort.Sdk.Gateway.Protocol.FileLimits]
+  Constructor Void .ctor() [Public] ()
+  Constructor Void .ctor(WeavePort.Sdk.Gateway.Protocol.FileLimits) [Public] (other)
+  Field Int32 MaximumInputReadBytesFieldNumber=4
+  Field Int32 MaximumOutputBytesFieldNumber=3
+  Field Int32 MaximumOutputsFieldNumber=2
+  Field Int32 OutputsFieldNumber=1
+  Method Boolean Equals(System.Object) [Public, Virtual] (other)
+  Method Boolean Equals(WeavePort.Sdk.Gateway.Protocol.FileLimits) [Public, Final, Virtual] (other)
+  Method Boolean get_HasMaximumInputReadBytes() [Public] ()
+  Method Boolean get_Outputs() [Public] ()
+  Method Google.Protobuf.MessageParser`1[WeavePort.Sdk.Gateway.Protocol.FileLimits] get_Parser() [Public, Static] ()
+  Method Google.Protobuf.Reflection.MessageDescriptor get_Descriptor() [Public, Static] ()
+  Method Int32 CalculateSize() [Public, Final, Virtual] ()
+  Method Int32 GetHashCode() [Public, Virtual] ()
+  Method Int32 get_MaximumOutputs() [Public] ()
+  Method Int64 get_MaximumInputReadBytes() [Public] ()
+  Method Int64 get_MaximumOutputBytes() [Public] ()
+  Method System.String ToString() [Public, Virtual] ()
+  Method Void ClearMaximumInputReadBytes() [Public] ()
+  Method Void MergeFrom(Google.Protobuf.CodedInputStream) [Public, Final, Virtual] (input)
+  Method Void MergeFrom(WeavePort.Sdk.Gateway.Protocol.FileLimits) [Public, Final, Virtual] (other)
+  Method Void WriteTo(Google.Protobuf.CodedOutputStream) [Public, Final, Virtual] (output)
+  Method Void set_MaximumInputReadBytes(Int64) [Public] (value)
+  Method Void set_MaximumOutputBytes(Int64) [Public] (value)
+  Method Void set_MaximumOutputs(Int32) [Public] (value)
+  Method Void set_Outputs(Boolean) [Public] (value)
+  Method WeavePort.Sdk.Gateway.Protocol.FileLimits Clone() [Public, Final, Virtual] ()
+  Property Boolean HasMaximumInputReadBytes
+  Property Boolean Outputs
+  Property Google.Protobuf.MessageParser`1[WeavePort.Sdk.Gateway.Protocol.FileLimits] Parser
+  Property Google.Protobuf.Reflection.MessageDescriptor Descriptor
+  Property Int32 MaximumOutputs
+  Property Int64 MaximumInputReadBytes
+  Property Int64 MaximumOutputBytes
+type WeavePort.Sdk.Gateway.Protocol.FileOperation : System.Enum [Public, Sealed]
+  implements System.IComparable
+  implements System.IConvertible
+  implements System.IFormattable
+  implements System.ISpanFormattable
+  Field Int32 value__
+  Field WeavePort.Sdk.Gateway.Protocol.FileOperation FileAbort=4
+  Field WeavePort.Sdk.Gateway.Protocol.FileOperation FileCommit=3
+  Field WeavePort.Sdk.Gateway.Protocol.FileOperation FileCreate=1
+  Field WeavePort.Sdk.Gateway.Protocol.FileOperation FileRead=0
+  Field WeavePort.Sdk.Gateway.Protocol.FileOperation FileWrite=2
+type WeavePort.Sdk.Gateway.Protocol.FileOutput : System.Object [Public, Sealed]
+  implements Google.Protobuf.IBufferMessage
+  implements Google.Protobuf.IDeepCloneable`1[WeavePort.Sdk.Gateway.Protocol.FileOutput]
+  implements Google.Protobuf.IMessage
+  implements Google.Protobuf.IMessage`1[WeavePort.Sdk.Gateway.Protocol.FileOutput]
+  implements System.IEquatable`1[WeavePort.Sdk.Gateway.Protocol.FileOutput]
+  Constructor Void .ctor() [Public] ()
+  Constructor Void .ctor(WeavePort.Sdk.Gateway.Protocol.FileOutput) [Public] (other)
+  Field Int32 LengthFieldNumber=3
+  Field Int32 MediaTypeFieldNumber=2
+  Field Int32 NameFieldNumber=1
+  Method Boolean Equals(System.Object) [Public, Virtual] (other)
+  Method Boolean Equals(WeavePort.Sdk.Gateway.Protocol.FileOutput) [Public, Final, Virtual] (other)
+  Method Google.Protobuf.MessageParser`1[WeavePort.Sdk.Gateway.Protocol.FileOutput] get_Parser() [Public, Static] ()
+  Method Google.Protobuf.Reflection.MessageDescriptor get_Descriptor() [Public, Static] ()
+  Method Int32 CalculateSize() [Public, Final, Virtual] ()
+  Method Int32 GetHashCode() [Public, Virtual] ()
+  Method Int64 get_Length() [Public] ()
+  Method System.String ToString() [Public, Virtual] ()
+  Method System.String get_MediaType() [Public] ()
+  Method System.String get_Name() [Public] ()
+  Method Void MergeFrom(Google.Protobuf.CodedInputStream) [Public, Final, Virtual] (input)
+  Method Void MergeFrom(WeavePort.Sdk.Gateway.Protocol.FileOutput) [Public, Final, Virtual] (other)
+  Method Void WriteTo(Google.Protobuf.CodedOutputStream) [Public, Final, Virtual] (output)
+  Method Void set_Length(Int64) [Public] (value)
+  Method Void set_MediaType(System.String) [Public] (value)
+  Method Void set_Name(System.String) [Public] (value)
+  Method WeavePort.Sdk.Gateway.Protocol.FileOutput Clone() [Public, Final, Virtual] ()
+  Property Google.Protobuf.MessageParser`1[WeavePort.Sdk.Gateway.Protocol.FileOutput] Parser
+  Property Google.Protobuf.Reflection.MessageDescriptor Descriptor
+  Property Int64 Length
+  Property System.String MediaType
+  Property System.String Name
+type WeavePort.Sdk.Gateway.Protocol.FileRequest : System.Object [Public, Sealed]
+  implements Google.Protobuf.IBufferMessage
+  implements Google.Protobuf.IDeepCloneable`1[WeavePort.Sdk.Gateway.Protocol.FileRequest]
+  implements Google.Protobuf.IMessage
+  implements Google.Protobuf.IMessage`1[WeavePort.Sdk.Gateway.Protocol.FileRequest]
+  implements System.IEquatable`1[WeavePort.Sdk.Gateway.Protocol.FileRequest]
+  Constructor Void .ctor() [Public] ()
+  Constructor Void .ctor(WeavePort.Sdk.Gateway.Protocol.FileRequest) [Public] (other)
+  Field Int32 AbortReasonFieldNumber=8
+  Field Int32 DataFieldNumber=6
+  Field Int32 IdFieldNumber=1
+  Field Int32 LengthFieldNumber=5
+  Field Int32 MediaTypeFieldNumber=7
+  Field Int32 NameFieldNumber=3
+  Field Int32 OffsetFieldNumber=4
+  Field Int32 OperationFieldNumber=2
+  Method Boolean Equals(System.Object) [Public, Virtual] (other)
+  Method Boolean Equals(WeavePort.Sdk.Gateway.Protocol.FileRequest) [Public, Final, Virtual] (other)
+  Method Google.Protobuf.ByteString get_Data() [Public] ()
+  Method Google.Protobuf.MessageParser`1[WeavePort.Sdk.Gateway.Protocol.FileRequest] get_Parser() [Public, Static] ()
+  Method Google.Protobuf.Reflection.MessageDescriptor get_Descriptor() [Public, Static] ()
+  Method Int32 CalculateSize() [Public, Final, Virtual] ()
+  Method Int32 GetHashCode() [Public, Virtual] ()
+  Method Int32 get_Length() [Public] ()
+  Method Int64 get_Offset() [Public] ()
+  Method System.String ToString() [Public, Virtual] ()
+  Method System.String get_AbortReason() [Public] ()
+  Method System.String get_MediaType() [Public] ()
+  Method System.String get_Name() [Public] ()
+  Method UInt64 get_Id() [Public] ()
+  Method Void MergeFrom(Google.Protobuf.CodedInputStream) [Public, Final, Virtual] (input)
+  Method Void MergeFrom(WeavePort.Sdk.Gateway.Protocol.FileRequest) [Public, Final, Virtual] (other)
+  Method Void WriteTo(Google.Protobuf.CodedOutputStream) [Public, Final, Virtual] (output)
+  Method Void set_AbortReason(System.String) [Public] (value)
+  Method Void set_Data(Google.Protobuf.ByteString) [Public] (value)
+  Method Void set_Id(UInt64) [Public] (value)
+  Method Void set_Length(Int32) [Public] (value)
+  Method Void set_MediaType(System.String) [Public] (value)
+  Method Void set_Name(System.String) [Public] (value)
+  Method Void set_Offset(Int64) [Public] (value)
+  Method Void set_Operation(WeavePort.Sdk.Gateway.Protocol.FileOperation) [Public] (value)
+  Method WeavePort.Sdk.Gateway.Protocol.FileOperation get_Operation() [Public] ()
+  Method WeavePort.Sdk.Gateway.Protocol.FileRequest Clone() [Public, Final, Virtual] ()
+  Property Google.Protobuf.ByteString Data
+  Property Google.Protobuf.MessageParser`1[WeavePort.Sdk.Gateway.Protocol.FileRequest] Parser
+  Property Google.Protobuf.Reflection.MessageDescriptor Descriptor
+  Property Int32 Length
+  Property Int64 Offset
+  Property System.String AbortReason
+  Property System.String MediaType
+  Property System.String Name
+  Property UInt64 Id
+  Property WeavePort.Sdk.Gateway.Protocol.FileOperation Operation
 type WeavePort.Sdk.Gateway.Protocol.GatewayReflection : System.Object [Public, Abstract, Sealed]
   Method Google.Protobuf.Reflection.FileDescriptor get_Descriptor() [Public, Static] ()
   Property Google.Protobuf.Reflection.FileDescriptor Descriptor
@@ -70,6 +275,7 @@ type WeavePort.Sdk.Gateway.Protocol.Mode : System.Enum [Public, Sealed]
   Field WeavePort.Sdk.Gateway.Protocol.Mode Call=0
   Field WeavePort.Sdk.Gateway.Protocol.Mode Cancel=2
   Field WeavePort.Sdk.Gateway.Protocol.Mode Describe=3
+  Field WeavePort.Sdk.Gateway.Protocol.Mode FileCall=5
   Field WeavePort.Sdk.Gateway.Protocol.Mode Source=4
   Field WeavePort.Sdk.Gateway.Protocol.Mode Stream=1
 type WeavePort.Sdk.Gateway.Protocol.Reply : System.Object [Public, Sealed]
@@ -91,8 +297,10 @@ type WeavePort.Sdk.Gateway.Protocol.Reply : System.Object [Public, Sealed]
   Field Int32 ExpectedVersionFieldNumber=8
   Field Int32 FailureCodeFieldNumber=10
   Field Int32 FailurePhaseFieldNumber=11
+  Field Int32 FileRequestFieldNumber=14
   Field Int32 JsonFieldNumber=1
   Field Int32 MayHaveExecutedFieldNumber=4
+  Field Int32 OutputsFieldNumber=15
   Method Boolean Equals(System.Object) [Public, Virtual] (other)
   Method Boolean Equals(WeavePort.Sdk.Gateway.Protocol.Reply) [Public, Final, Virtual] (other)
   Method Boolean get_Cancelled() [Public] ()
@@ -105,6 +313,7 @@ type WeavePort.Sdk.Gateway.Protocol.Reply : System.Object [Public, Sealed]
   Method Double get_ElapsedMs() [Public] ()
   Method Google.Protobuf.ByteString get_Data() [Public] ()
   Method Google.Protobuf.ByteString get_Json() [Public] ()
+  Method Google.Protobuf.Collections.RepeatedField`1[WeavePort.Sdk.Gateway.Protocol.FileOutput] get_Outputs() [Public] ()
   Method Google.Protobuf.MessageParser`1[WeavePort.Sdk.Gateway.Protocol.Reply] get_Parser() [Public, Static] ()
   Method Google.Protobuf.Reflection.MessageDescriptor get_Descriptor() [Public, Static] ()
   Method Int32 CalculateSize() [Public, Final, Virtual] ()
@@ -133,8 +342,10 @@ type WeavePort.Sdk.Gateway.Protocol.Reply : System.Object [Public, Sealed]
   Method Void set_ExpectedVersion(System.String) [Public] (value)
   Method Void set_FailureCode(System.String) [Public] (value)
   Method Void set_FailurePhase(System.String) [Public] (value)
+  Method Void set_FileRequest(WeavePort.Sdk.Gateway.Protocol.FileRequest) [Public] (value)
   Method Void set_Json(Google.Protobuf.ByteString) [Public] (value)
   Method Void set_MayHaveExecuted(Boolean) [Public] (value)
+  Method WeavePort.Sdk.Gateway.Protocol.FileRequest get_FileRequest() [Public] ()
   Method WeavePort.Sdk.Gateway.Protocol.Reply Clone() [Public, Final, Virtual] ()
   Property Boolean Cancelled
   Property Boolean CleanupFailed
@@ -146,6 +357,7 @@ type WeavePort.Sdk.Gateway.Protocol.Reply : System.Object [Public, Sealed]
   Property Double ElapsedMs
   Property Google.Protobuf.ByteString Data
   Property Google.Protobuf.ByteString Json
+  Property Google.Protobuf.Collections.RepeatedField`1[WeavePort.Sdk.Gateway.Protocol.FileOutput] Outputs
   Property Google.Protobuf.MessageParser`1[WeavePort.Sdk.Gateway.Protocol.Reply] Parser
   Property Google.Protobuf.Reflection.MessageDescriptor Descriptor
   Property System.String AdvertisedVersion
@@ -154,6 +366,7 @@ type WeavePort.Sdk.Gateway.Protocol.Reply : System.Object [Public, Sealed]
   Property System.String ExpectedVersion
   Property System.String FailureCode
   Property System.String FailurePhase
+  Property WeavePort.Sdk.Gateway.Protocol.FileRequest FileRequest
 type WeavePort.Sdk.Gateway.Protocol.Request : System.Object [Public, Sealed]
   implements Google.Protobuf.IBufferMessage
   implements Google.Protobuf.IDeepCloneable`1[WeavePort.Sdk.Gateway.Protocol.Request]
@@ -163,13 +376,17 @@ type WeavePort.Sdk.Gateway.Protocol.Request : System.Object [Public, Sealed]
   Constructor Void .ctor() [Public] ()
   Constructor Void .ctor(WeavePort.Sdk.Gateway.Protocol.Request) [Public] (other)
   Field Int32 ChunkBytesFieldNumber=5
+  Field Int32 FileAckFieldNumber=8
+  Field Int32 FileLimitsFieldNumber=7
   Field Int32 InputFieldNumber=2
+  Field Int32 InputsFieldNumber=6
   Field Int32 ModeFieldNumber=4
   Field Int32 OperationFieldNumber=1
   Field Int32 StreamIdFieldNumber=3
   Method Boolean Equals(System.Object) [Public, Virtual] (other)
   Method Boolean Equals(WeavePort.Sdk.Gateway.Protocol.Request) [Public, Final, Virtual] (other)
   Method Google.Protobuf.ByteString get_Input() [Public] ()
+  Method Google.Protobuf.Collections.RepeatedField`1[WeavePort.Sdk.Gateway.Protocol.FileInput] get_Inputs() [Public] ()
   Method Google.Protobuf.MessageParser`1[WeavePort.Sdk.Gateway.Protocol.Request] get_Parser() [Public, Static] ()
   Method Google.Protobuf.Reflection.MessageDescriptor get_Descriptor() [Public, Static] ()
   Method Int32 CalculateSize() [Public, Final, Virtual] ()
@@ -182,18 +399,25 @@ type WeavePort.Sdk.Gateway.Protocol.Request : System.Object [Public, Sealed]
   Method Void MergeFrom(WeavePort.Sdk.Gateway.Protocol.Request) [Public, Final, Virtual] (other)
   Method Void WriteTo(Google.Protobuf.CodedOutputStream) [Public, Final, Virtual] (output)
   Method Void set_ChunkBytes(Int32) [Public] (value)
+  Method Void set_FileAck(WeavePort.Sdk.Gateway.Protocol.FileAck) [Public] (value)
+  Method Void set_FileLimits(WeavePort.Sdk.Gateway.Protocol.FileLimits) [Public] (value)
   Method Void set_Input(Google.Protobuf.ByteString) [Public] (value)
   Method Void set_Mode(WeavePort.Sdk.Gateway.Protocol.Mode) [Public] (value)
   Method Void set_Operation(System.String) [Public] (value)
   Method Void set_StreamId(System.String) [Public] (value)
+  Method WeavePort.Sdk.Gateway.Protocol.FileAck get_FileAck() [Public] ()
+  Method WeavePort.Sdk.Gateway.Protocol.FileLimits get_FileLimits() [Public] ()
   Method WeavePort.Sdk.Gateway.Protocol.Mode get_Mode() [Public] ()
   Method WeavePort.Sdk.Gateway.Protocol.Request Clone() [Public, Final, Virtual] ()
   Property Google.Protobuf.ByteString Input
+  Property Google.Protobuf.Collections.RepeatedField`1[WeavePort.Sdk.Gateway.Protocol.FileInput] Inputs
   Property Google.Protobuf.MessageParser`1[WeavePort.Sdk.Gateway.Protocol.Request] Parser
   Property Google.Protobuf.Reflection.MessageDescriptor Descriptor
   Property Int32 ChunkBytes
   Property System.String Operation
   Property System.String StreamId
+  Property WeavePort.Sdk.Gateway.Protocol.FileAck FileAck
+  Property WeavePort.Sdk.Gateway.Protocol.FileLimits FileLimits
   Property WeavePort.Sdk.Gateway.Protocol.Mode Mode
 type WeavePort.Sdk.Gateway.Protocol.WorkerGateway : System.Object [Public, Abstract, Sealed]
   Method Google.Protobuf.Reflection.ServiceDescriptor get_Descriptor() [Public, Static] ()
@@ -223,5 +447,6 @@ type WeavePort.Sdk.Gateway.RemotePluginClient : System.Object [Public, Sealed]
   Method System.Collections.Generic.IAsyncEnumerable`1[System.Text.Json.JsonElement] StreamAsync(System.String, System.Text.Json.JsonElement, System.Threading.CancellationToken) [Public, Final, Virtual] (operation, input, cancellationToken=null)
   Method System.Threading.Tasks.Task`1[System.String] GetTenantAsync(System.Threading.CancellationToken) [Public, Final, Virtual] (cancellationToken=null)
   Method System.Threading.Tasks.Task`1[System.Text.Json.JsonElement] CallAsync(System.String, System.Text.Json.JsonElement, System.Threading.CancellationToken) [Public, Final, Virtual] (operation, input, cancellationToken=null)
+  Method System.Threading.Tasks.Task`1[WeavePort.Sdk.Client.PluginCallResult`1[System.Text.Json.JsonElement]] CallWithFilesAsync(System.String, System.Text.Json.JsonElement, WeavePort.Abstractions.PluginFiles, System.Threading.CancellationToken) [Public, Final, Virtual] (operation, input, files, cancellationToken=null)
   Method System.Threading.Tasks.Task`1[WeavePort.Sdk.Client.PluginCallResult`1[System.Text.Json.JsonElement]] CallWithMetadataAsync(System.String, System.Text.Json.JsonElement, System.Threading.CancellationToken) [Public, Final, Virtual] (operation, input, cancellationToken=null)
   Method System.Threading.Tasks.ValueTask DisposeAsync() [Public, Final, Virtual] ()

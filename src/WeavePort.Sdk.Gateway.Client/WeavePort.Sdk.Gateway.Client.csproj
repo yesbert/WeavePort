@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="../Shared/FailureCode.cs" Link="Internal/FailureCode.cs" />
+    <Compile Include="../Shared/FileDescriptor.cs" Link="Internal/FileDescriptor.cs" />
     <Compile Include="../Shared/ProtocolContract.g.cs" Link="Internal/ProtocolContract.g.cs" />
   </ItemGroup>
 </Project>

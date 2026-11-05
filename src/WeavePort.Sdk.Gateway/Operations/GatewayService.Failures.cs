@@ -24,6 +24,11 @@ public sealed partial class GatewayService
             Cancelled = mapped.StatusCode == StatusCode.Cancelled
         };
         IncludeVersionMismatch(terminal, error);
+        if (error is PluginCallException { Outputs.Count: > 0 } committed)
+        {
+            terminal.Outputs.Add(committed.Outputs.Select(output => new FileOutput { Name = output.Name, MediaType = output.MediaType, Length = output.Length }));
+        }
+
         return terminal;
     }
 

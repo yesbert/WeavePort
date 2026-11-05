@@ -14,6 +14,12 @@ if (args.Contains("--file-worker"))
     return;
 }
 
+if (args.Contains("files-gateway"))
+{
+    await FileGatewayChecks.RunAsync(args);
+    return;
+}
+
 if (args.Contains("files-measure"))
 {
     await FileMeasurements.RunAsync(args);

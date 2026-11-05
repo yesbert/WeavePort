@@ -1,6 +1,6 @@
 # Function files
 
-**Availability:** current source after 0.9.1, not yet released. Local calls and the scheduler path are implemented. Calls through the gateway are not available yet; remote clients refuse them with `files-unsupported`.
+**Availability:** current source after 0.9.1, not yet released. Local calls, the scheduler path and the [gateway](gateway.md) are implemented.
 
 A function call can take named file inputs from the host and hand named file outputs back, beside its bounded JSON input and result. The bytes pass only through readers and writers the host application supplies. The plugin never gets a storage location, a credential or a key. Typical use: a spreadsheet a person uploaded goes in, and a generated workbook comes out.
 
@@ -22,7 +22,9 @@ foreach (PluginOutputInfo output in result.Outputs)
 }
 ```
 
-`CallWithFilesAsync` exists on `LocalPluginClient`. A host configured with `SchedulingOptions` carries files through its queue. Lower-level code can use `IPluginFileSession.InvokeAsync(operation, payload, files)`.
+`CallWithFilesAsync` exists on `LocalPluginClient` and `RemotePluginClient`. A host configured with `SchedulingOptions` carries files through its queue. Lower-level code can use `IPluginFileSession.InvokeAsync(operation, payload, files)`.
+
+Through the gateway, readers and writers stay at the remote caller and every block crosses the session. The server's registration caps the limits a credential may request. A registration without file limits refuses file calls, and requests above its maximum are refused before dispatch. The client checks each relayed request against its own declared inputs and limits.
 
 **Readers** are positional. WeavePort calls `ReadAsync(offset, buffer)` at any offset and in any order, never concurrently within one call, and never beyond the declared length. A reader returns fewer bytes than requested only at the end of the input. Storage that can only be decrypted forward must either support block-wise random access, for example with independently authenticated chunks, or be buffered by the application. WeavePort does not copy inputs to disk. Built-in readers: `PluginInputReader.FromStream` for a readable, seekable stream, and `PluginInputReader.FromFile` for an open `SafeFileHandle`. The caller keeps ownership of both.
 

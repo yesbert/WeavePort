@@ -1,6 +1,6 @@
 # Function file transfer verification
 
-Interim record while the change is open. The committed-candidate qualification (task 6.4) and the gateway path (block 4) are not covered yet.
+Interim record while the change is open. The committed-candidate qualification (task 6.4) is not covered yet.
 
 ## Local measurements — 2026-11-05
 
@@ -26,9 +26,20 @@ Median of five runs after one warm-up call:
 
 "ms per round trip" is the copy time divided by host reads plus output blocks, so it includes the plugin's own work and base64 handling.
 
+## Gateway over loopback — 2026-11-05
+
+Command: `dotnet run --project tests/WeavePort.ConcurrentSdkTests -c Release -- files-gateway "$PWD"`. Same machine and workload; C# worker. The gateway runs in-process on Kestrel HTTP/2 over loopback; the caller's reader and in-memory destination run in the client. Median of five copies after one warm-up:
+
+| Block | copy ms | MiB/s | Round trips (reads + writes) | ms per round trip |
+|---|---|---|---|---|
+| 64 KiB | 241.3 | 37.3 | 290 | 0.832 |
+| 256 KiB | 257.9 | 34.9 | 74 | 3.485 |
+
+Compared with the local path (208 / 192 ms), the gateway adds about 30–65 ms per 9 MB copy over loopback. Larger blocks did not help on loopback, where the per-request cost is small and payload handling dominates. A real network adds its round-trip time to each of the 290 or 74 relayed requests. That is not measured here, and it is where 256 KiB blocks, or later read-ahead, would matter.
+
 ## Observations
 
-- **Read-ahead.** Locally, a round trip costs well under a millisecond per 64 KiB block. Quadrupling the block size saves 8–26 % of copy time. Nothing here argues for read-ahead. The gateway path still has to be measured before that decision is closed.
+- **Read-ahead.** Locally and through a loopback gateway, a round trip costs under a millisecond per 64 KiB block. Nothing here argues for read-ahead. A measurement over a real network is the open input for that decision.
 - **Block cache.** Listing the ZIP needs one or two host reads in every language, although the archive readers touch the end-of-directory record and the directory separately.
 - **Worker memory.** Python stays flat. The TypeScript and C# workers grow by 14–56 MiB during repeated 9 MB copies. That is consistent with managed-heap growth from per-block buffers and base64 strings. No input is held whole: the worker never reaches 9 MB × repetitions. A bounded-allocation pass over the C# path is a candidate follow-up.
 - **C# throughput** is the lowest of the three, at about 2.5× slower than Python per round trip. The C# runtime serializes each block payload twice: once into a `JsonElement` for the callback, then again into the frame. This is the first place to look if the difference matters. At 9 MB the copy still completes in about 0.2 s.
@@ -46,4 +57,10 @@ Median of five runs after one warm-up call:
   - an output left open, local refusals, and a host without file descriptors;
   - late reads, cache hits, and Python's refusal of synchronous use on the event loop;
   - a `ResultScope` destination, including a failed call that leaves no result.
-- **Regressions run green:** full host suite, scheduler suite, C# SDK wire checks, cleanup checks, three-language stream qualification, local and remote collection up to 200 MiB, and the Python and TypeScript unit tests.
+- **Gateway** (`tests/WeavePort.ConcurrentSdkTests files-gateway`) covers:
+  - all three languages listing the ZIP directory, a byte-exact 9 MB output into the caller's destination, `output-incomplete`, and session reuse;
+  - refusals before dispatch for a registration without file limits, outputs above the maximum, and an explicit read budget above the maximum;
+  - the registration's budget enforced during a call without an explicit one;
+  - a failed commit at the caller, aborted with `CommitFailed` and reported as `output-commit-failed`;
+  - caller cancellation, which aborts the caller's outputs and leaves the binding usable after cleanup.
+- **Regressions run green:** full host suite, scheduler suite, C# SDK wire checks, cleanup checks, three-language stream qualification, local and remote collection up to 200 MiB, the Python and TypeScript unit tests, and after the gateway change the gateway suite and the local and remote collection suite again.

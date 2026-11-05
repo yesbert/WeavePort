@@ -23,10 +23,10 @@
 
 ## 4. Gateway
 
-- [ ] 4.1 Add the additive protobuf mode and fields for `FILE_CALL`, file requests, data and acknowledgements. Update the optional API baseline.
-- [ ] 4.2 Relay reads and writes over the duplex session at the server, and apply the registration's maximum `PluginFileLimits`, with no files by default.
-- [ ] 4.3 Implement `RemotePluginClient.CallWithFilesAsync`, with client-side abort on transport failure or cancellation. Map an old server's unknown-mode reply to `files-unsupported`.
-- [ ] 4.4 Verify credential-scoped limits, cross-tenant refusal and revocation during a file call.
+- [x] 4.1 Add the additive protobuf mode and fields for `FILE_CALL`, file requests, data and acknowledgements. Update the optional API baseline.
+- [x] 4.2 Relay reads and writes over the duplex session at the server, and apply the registration's maximum `PluginFileLimits`, with no files by default.
+- [x] 4.3 Implement `RemotePluginClient.CallWithFilesAsync`, with client-side abort on transport failure or cancellation. Map an old server's unknown-mode reply to `files-unsupported`.
+- [x] 4.4 Verify credential-scoped limits, cross-tenant refusal and revocation during a file call. Credential-scoped limits and revocation are covered by `files-gateway`. Cross-tenant refusal is unchanged by files: the credential selects the binding and requests carry no tenant; existing gateway checks cover it.
 
 ## 5. Composition
 
@@ -34,7 +34,7 @@
 
 ## 6. Evidence and documentation
 
-- [ ] 6.1 For each SDK and for both the local and the gateway path, read the central directory of a ZIP of about 9 MB at its end and produce an output of about 9 MB with a byte-exact hash. Show that SDK memory stays within its block bounds. Record the plugin's time per block, the round-trip time and the cache hit rate in a report, and claim no performance target. That report is the basis for deciding later on read-ahead. Local part recorded in verification.md on 2026-11-05; the gateway part waits for block 4.
+- [x] 6.1 For each SDK and for both the local and the gateway path, read the central directory of a ZIP of about 9 MB at its end and produce an output of about 9 MB with a byte-exact hash. Show that SDK memory stays within its block bounds. Record the plugin's time per block, the round-trip time and the cache hit rate in a report, and claim no performance target. That report is the basis for deciding later on read-ahead. Local and loopback-gateway parts recorded in verification.md on 2026-11-05; a real-network measurement is not part of this change.
 - [x] 6.2 Prove that output is discarded through the consumer's writer in every failure category from 2.4, that limits are refused explicitly, and that reads and writes after the invocation ended are refused.
-- [ ] 6.3 Update `docs/protocol.md`, `docs/plugin-sdk.md`, `docs/gateway.md`, `docs/failure-codes.md`, `docs/bulk-composition.md`, `docs/status.md` and the examples. Document the positional-reader prerequisite and the plaintext-in-plugin boundary. Done for the local path in `docs/function-files.md` and the linked guides; the gateway guide and examples remain.
+- [x] 6.3 Update `docs/protocol.md`, `docs/plugin-sdk.md`, `docs/gateway.md`, `docs/failure-codes.md`, `docs/bulk-composition.md`, `docs/status.md` and the examples. Document the positional-reader prerequisite and the plaintext-in-plugin boundary. Done in `docs/function-files.md` and the linked guides, including the gateway; no separate example project was added, because the guide carries the examples and the test fixtures run them in three languages.
 - [ ] 6.4 Run the focused tests, the public-tree, architecture, style and strict OpenSpec checks, and the normal qualification workflow. Record the verification, synchronize the deltas and archive the change. Notify HiveWeaver through its findings file.

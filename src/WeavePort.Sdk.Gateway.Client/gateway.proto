@@ -14,6 +14,11 @@ message Request {
   string stream_id = 3;
   Mode mode = 4;
   int32 chunk_bytes = 5;
+  // FILE_CALL: host-side descriptors of the caller's inputs and the limits it requests.
+  repeated FileInput inputs = 6;
+  FileLimits file_limits = 7;
+  // Answer to the server's pending FileRequest within a FILE_CALL exchange.
+  FileAck file_ack = 8;
 }
 
 enum Mode {
@@ -22,6 +27,52 @@ enum Mode {
   CANCEL = 2;
   DESCRIBE = 3;
   SOURCE = 4;
+  FILE_CALL = 5;
+}
+
+message FileInput {
+  string name = 1;
+  int64 length = 2;
+  string media_type = 3;
+}
+
+message FileLimits {
+  bool outputs = 1;
+  int32 maximum_outputs = 2;
+  int64 maximum_output_bytes = 3;
+  optional int64 maximum_input_read_bytes = 4;
+}
+
+enum FileOperation {
+  FILE_READ = 0;
+  FILE_CREATE = 1;
+  FILE_WRITE = 2;
+  FILE_COMMIT = 3;
+  FILE_ABORT = 4;
+}
+
+// The server asks the caller's reader or writer to act; exactly one FileAck answers each request.
+message FileRequest {
+  uint64 id = 1;
+  FileOperation operation = 2;
+  string name = 3;
+  int64 offset = 4;
+  int32 length = 5;
+  bytes data = 6;
+  string media_type = 7;
+  string abort_reason = 8;
+}
+
+message FileAck {
+  uint64 id = 1;
+  bytes data = 2;
+  string error = 3;
+}
+
+message FileOutput {
+  string name = 1;
+  string media_type = 2;
+  int64 length = 3;
 }
 
 message Reply {
@@ -38,4 +89,6 @@ message Reply {
   string failure_phase = 11;
   string correlation_id = 12;
   bool cleanup_failed = 13;
+  FileRequest file_request = 14;
+  repeated FileOutput outputs = 15;
 }
