@@ -79,9 +79,7 @@ internal static class FileFixture
             for (int pass = 0; pass < input.GetProperty("passes").GetInt32(); pass++)
             {
                 sheet.Position = 0;
-                while (await sheet.ReadAsync(buffer, token) > 0)
-                {
-                }
+                await DrainAsync(sheet, buffer, token);
             }
 
             return new
@@ -100,6 +98,13 @@ internal static class FileFixture
             });
         })
         .Function<JsonElement, object>("late-read", async (_, _, token) => new { refused = await CodeAsync(async () => await _retained!.ReadAsync(new byte[16], token)) != "" });
+
+    private static async Task DrainAsync(Stream source, byte[] buffer, CancellationToken token)
+    {
+        while (await source.ReadAsync(buffer, token) > 0)
+        {
+        }
+    }
 
     private static async Task<string> CodeAsync<T>(Func<Task<T>> action)
     {
