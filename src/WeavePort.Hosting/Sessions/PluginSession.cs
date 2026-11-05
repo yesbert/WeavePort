@@ -22,7 +22,7 @@ internal sealed partial class PluginSession(SessionBinding binding, TenantAdmiss
     public string Instance => _instance;
     public string Tenant => binding.Context.Tenant;
 
-    internal async Task<InvocationResult> InvokeCoreAsync(string operation, JsonElement payload, bool streamExchange, CancellationToken cancellationToken = default, FileExchange? files = null)
+    internal async Task<InvocationResult> InvokeCoreAsync(string operation, JsonElement payload, bool streamExchange, FileExchange? files, CancellationToken cancellationToken)
     {
         long started = Stopwatch.GetTimestamp();
         if (_disposed)
@@ -45,7 +45,7 @@ internal sealed partial class PluginSession(SessionBinding binding, TenantAdmiss
 
         try
         {
-            return await InvokeAdmittedAsync(operation, payload, started, streamExchange, cancellationToken, files);
+            return await InvokeAdmittedAsync(operation, payload, started, streamExchange, files, cancellationToken);
         }
         finally
         {
@@ -60,7 +60,7 @@ internal sealed partial class PluginSession(SessionBinding binding, TenantAdmiss
         }
     }
 
-    private async Task<InvocationResult> InvokeAdmittedAsync(string operation, JsonElement payload, long started, bool streamExchange, CancellationToken cancellationToken, FileExchange? files)
+    private async Task<InvocationResult> InvokeAdmittedAsync(string operation, JsonElement payload, long started, bool streamExchange, FileExchange? files, CancellationToken cancellationToken)
     {
         _dispatched = false;
         _clean = false;

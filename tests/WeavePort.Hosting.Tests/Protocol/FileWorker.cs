@@ -86,25 +86,25 @@ internal static class FileWorker
         return Summarize(reply.RootElement);
     }
 
-    private static object? Summarize(JsonElement reply)
+    private static JsonElement Summarize(JsonElement reply)
     {
         if (reply.TryGetProperty("error", out JsonElement error))
         {
-            return new
+            return JsonSerializer.SerializeToElement(new
             {
                 error = error.GetString()
-            };
+            });
         }
 
         JsonElement value = reply.GetProperty("value");
         if (value.TryGetProperty("data", out JsonElement data))
         {
             byte[] bytes = data.GetBytesFromBase64();
-            return new
+            return JsonSerializer.SerializeToElement(new
             {
                 sha = Convert.ToHexString(SHA256.HashData(bytes)),
                 length = bytes.Length
-            };
+            });
         }
 
         return value.Clone();

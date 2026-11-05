@@ -106,7 +106,8 @@ internal static partial class FileExchangeChecks
         var input = new PluginInput("sheet", Source.Length, "application/octet-stream", PluginInputReader.FromFile(handle));
         var files = new PluginFiles([input], PluginOutputDestination.ToDirectory(outputs), new PluginFileLimits(2, 1 << 20));
         await using var client = new LocalPluginClient(await BindAsync(host, root));
-        var result = await client.CallWithFilesAsync("script", Script(Read("sheet", 100_000, 65536), Create("copy.bin", "application/octet-stream"), Write("copy.bin", Source[100_000..165_536]), Complete("copy.bin")), files);
+        // The typed overload serializes the input and deserializes the result with web JSON conventions.
+        var result = await client.CallWithFilesAsync<JsonElement, JsonElement>("script", Script(Read("sheet", 100_000, 65536), Create("copy.bin", "application/octet-stream"), Write("copy.bin", Source[100_000..165_536]), Complete("copy.bin")), files);
         Expect(Sha(result.Value.GetProperty("replies")[0]) == Hash(Source[100_000..165_536]) && result.Outputs.Single().Length == 65536, "local client reads a file handle and reports outputs");
         Expect((await File.ReadAllBytesAsync(Path.Combine(outputs, "copy.bin"))).AsSpan().SequenceEqual(Source.AsSpan(100_000, 65536)), "directory destination commits the exact bytes");
         try

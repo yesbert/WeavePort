@@ -118,9 +118,10 @@ internal sealed class CallerFiles(PluginFiles files)
     {
         using var grace = new CancellationTokenSource(TimeSpan.FromSeconds(10));
         bool failed = false;
+        PluginOutputAbort reason = cancelled ? PluginOutputAbort.Cancelled : PluginOutputAbort.Failed;
         foreach (Output output in _outputs)
         {
-            failed |= !await TryAsync(() => output.Committed || output.Aborted ? ValueTask.CompletedTask : output.Writer.AbortAsync(cancelled ? PluginOutputAbort.Cancelled : PluginOutputAbort.Failed, grace.Token), grace.Token);
+            failed |= !await TryAsync(() => output.Committed || output.Aborted ? ValueTask.CompletedTask : output.Writer.AbortAsync(reason, grace.Token), grace.Token);
             failed |= !await TryAsync(() => output.Writer.DisposeAsync(), grace.Token);
         }
 

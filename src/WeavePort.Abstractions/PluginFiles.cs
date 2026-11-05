@@ -16,12 +16,9 @@ public sealed class PluginFiles
         }
 
         var names = new HashSet<string>(StringComparer.Ordinal);
-        foreach (PluginInput input in copied)
+        if (copied.Any(input => input is null || !names.Add(input.Name)))
         {
-            if (input is null || !names.Add(input.Name))
-            {
-                throw new ArgumentException("Inputs must be non-null with unique names.", nameof(inputs));
-            }
+            throw new ArgumentException("Inputs must be non-null with unique names.", nameof(inputs));
         }
 
         Limits = limits ?? PluginFileLimits.InputsOnly;
@@ -54,14 +51,14 @@ public sealed class PluginFiles
             }
 
             long total = 0;
-            foreach (PluginInput input in Inputs)
+            foreach (long length in Inputs.Select(input => input.Length))
             {
-                if (input.Length > (long.MaxValue - total) / WeavePort.Internal.ProtocolLimits.FileInputReadBudgetFactor)
+                if (length > (long.MaxValue - total) / WeavePort.Internal.ProtocolLimits.FileInputReadBudgetFactor)
                 {
                     return long.MaxValue;
                 }
 
-                total += input.Length * WeavePort.Internal.ProtocolLimits.FileInputReadBudgetFactor;
+                total += length * WeavePort.Internal.ProtocolLimits.FileInputReadBudgetFactor;
             }
 
             return total;

@@ -5,8 +5,8 @@ using WeavePort.Abstractions;
 using WeavePort.Internal;
 
 namespace WeavePort.Hosting;
-// Per-invocation file state. File operations run inline in the exchange loop under the invocation token;
-// they never reach application callbacks, grants or the callback budget.
+// Per-invocation file state. File operations run inline in the exchange loop under the invocation token,
+// and they never reach application callbacks, grants or the callback budget.
 internal sealed partial class FileExchange(PluginFiles files)
 {
     private static readonly PluginFiles NoFiles = new([]);
@@ -24,7 +24,7 @@ internal sealed partial class FileExchange(PluginFiles files)
         [.. files.Inputs.Select(input => new InvokeInput(input.Name, input.Length, input.MediaType))],
         files.Outputs is null ? null : new InvokeOutputs(files.Limits.MaximumOutputs, files.Limits.MaximumOutputBytes));
 
-    // Returns the callback reply; FileRefusal becomes a callback-result error, PluginFileException fails the invocation.
+    // Returns the callback reply; FileRefusalException becomes a callback-result error, PluginFileException fails the invocation.
     internal async Task<FileReply> HandleAsync(string operation, JsonElement payload, CancellationToken token)
     {
         if (payload.ValueKind != JsonValueKind.Object)
@@ -50,12 +50,12 @@ internal sealed partial class FileExchange(PluginFiles files)
         long requested = RequireInt64(payload, WireFields.Length);
         if (!_inputs.TryGetValue(name, out PluginInput? input))
         {
-            throw new FileRefusal(FileErrors.InputNotFound);
+            throw new FileRefusalException(FileErrors.InputNotFound);
         }
 
         if (offset < 0 || requested is < ProtocolLimits.FileBlockMinimumBytes or > ProtocolLimits.FileBlockMaximumBytes)
         {
-            throw new FileRefusal(FileErrors.InvalidRange);
+            throw new FileRefusalException(FileErrors.InvalidRange);
         }
 
         int count = (int)Math.Clamp(input.Length - offset, 0, requested);
