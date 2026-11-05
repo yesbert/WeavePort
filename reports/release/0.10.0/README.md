@@ -1,13 +1,17 @@
-# WeavePort 0.10.0 preparation
+# Release 0.10.0
 
-Status: prepared version allocation. Not tagged or published. The latest published release remains [0.9.1](../0.9.1/README.md).
+Published on 2026-11-05: [GitHub release](https://github.com/yesbert/WeavePort/releases/tag/v0.10.0), from annotated tag `v0.10.0` at `c22e7abafb21a46872241b8fb5466d739ed65017`. [Release workflow 42040274242](https://github.com/yesbert/WeavePort/actions/runs/42040274242) qualified the tagged source and published the original artifacts through the protected NuGet environment after maintainer approval.
 
-This release includes function files, merged in [PR #55](https://github.com/yesbert/WeavePort/pull/55). All seven .NET packages use 0.10.0, and the Python and TypeScript author SDKs use 0.5.0. Host API 2 and native protocols 1/2 remain unchanged; the file capability is an additive ready field and invoke extension.
+All seven .NET packages use 0.10.0. Python and TypeScript author SDKs use 0.5.0 and accompany the GitHub release as a wheel and a tarball; separate PyPI/npm publication is not claimed. The release adds [function files](../../../docs/function-files.md): host-supplied file inputs and transactional file outputs for plugin function calls, locally, through the scheduler and through the gateway. Host API 2 and native protocols 1/2 remain unchanged. Upgrade selected packages together, rebuild/reseal installations offline, re-sign changed manifests and deliberately migrate application pins; see the [migration notes](../../../docs/releases.md#0100-function-files).
 
-The feature change was qualified on its own branch: 78 stages, recorded in [its verification notes](../../../openspec/changes/archive/2026-11-05-add-function-file-transfer/verification.md). This preparation re-qualifies the committed version allocation in a fresh checkout before tagging.
+## Exact-tag qualification
 
-The first SonarQube analysis after the merge failed its quality gate with 22 maintainability issues and 76.3 % coverage on new code. [PR #57](https://github.com/yesbert/WeavePort/pull/57) resolved the issues and added the file suites to the coverage run. The analysis of `e1fc503` passes the gate with 0 issues, 0 hotspots and 83.7 % coverage on new code.
+The tagged source passed all 78 stages with 3,851 reported assertion executions and 446 frozen artifact files, on the workflow's macOS 15.8.2 arm64 runner with .NET SDK 10.0.403, Python 3.13.17 and Node v24.21.0. This includes the three-language file and gateway suites against source-built and packed SDKs. [qualification.json](qualification.json) retains the environment, source identity and stage outcomes; three permitted consumer lockfile refreshes are recorded there.
 
-See [release and migration notes](../../../docs/releases.md#0100-function-files) for upgrade steps, gateway registration limits and the new failure codes. No new dependency, sandboxing, platform qualification or performance promise is included.
+The frozen artifact inventory SHA-256 is `de85142598be1b920fafff922d090ba66c67883067a35c6b795b184fc508d65b`. [release-manifest.json](release-manifest.json) identifies all original package, symbol and author SDK hashes. No rebuilt artifact was substituted after qualification.
 
-Publication follows the [release procedure](../../../docs/releases.md#release-procedure): after review and merge, an annotated `v0.10.0` tag starts the protected workflow, which repeats clean qualification; NuGet publication then waits for approval of the `nuget-org` environment. Exact-tag qualification and public downloads are verified before availability is announced.
+## Publication verification
+
+All 16 public GitHub package, symbol and SDK downloads match the qualified bytes exactly; see the [GitHub verification](github-publication-check.json). All seven public NuGet package payloads match the qualified contents, allowing only NuGet's added repository signature; see the [NuGet verification](publication-check.json). The protected workflow also published the matching symbols.
+
+The complete [SonarQube report](sonar/summary.md) for the tagged commit records a successful quality gate with zero open issues, zero unreviewed hotspots and 83.7 % coverage on new code. The [audit](audit.md) records the review rounds and their fixes. This release introduces no new sandboxing, capacity or performance guarantee.
