@@ -15,6 +15,7 @@ internal static class FileFixture
         };
         RegisterReads(app);
         RegisterOutputs(app);
+        RegisterLifecycle(app);
         return app.RunAsync();
     }
 
@@ -56,7 +57,9 @@ internal static class FileFixture
         .Function<JsonElement, object>("refusals", async (_, context, token) => new
         {
             codes = new[] { await CodeAsync(() => Task.FromResult(context.OpenInput("nope"))), await CodeAsync(() => context.CreateOutputAsync("x.bin", "text/plain", token)) }
-        })
+        });
+
+    private static void RegisterLifecycle(PluginApplication app) => app
         .Function<JsonElement, object>("cached-reads", async (_, context, token) =>
         {
             await using Stream sheet = context.OpenInput("sheet");
