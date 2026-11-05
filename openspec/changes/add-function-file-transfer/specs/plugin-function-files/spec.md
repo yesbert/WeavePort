@@ -39,7 +39,7 @@ A plugin SHALL be able to create named outputs with a media type and write each 
 - **THEN** the call fails with `output-commit-failed` and `MayHaveExecuted = true`, the uncommitted writer is aborted, and the already committed output is reported as committed
 
 ### Requirement: Host-owned file limits
-For each invocation the host SHALL set the maximum number of outputs and their total size. Exceeding either limit SHALL fail the call explicitly with `output-limit` before the excess bytes reach a writer. Blocks SHALL carry 4–256 KiB of decoded bytes. File operations SHALL NOT consume the application callback budget, and SHALL remain bounded by the invocation deadline.
+For each invocation the host SHALL set the maximum number of outputs and their total size. Exceeding either limit SHALL fail the call with `output-limit` before the excess reaches a writer. Blocks SHALL carry 4–256 KiB of decoded bytes. File operations SHALL NOT consume the application callback budget, and SHALL remain bounded by the invocation deadline.
 
 #### Scenario: Output size exceeded
 - **WHEN** a plugin writes beyond the invocation's total output size
@@ -48,6 +48,17 @@ For each invocation the host SHALL set the maximum number of outputs and their t
 #### Scenario: Outputs not permitted
 - **WHEN** a call permits no outputs and the plugin creates one
 - **THEN** creation fails with `output-not-permitted` and no destination writer is created
+
+### Requirement: Input read budget
+The host SHALL count the input bytes its readers deliver per invocation, across all inputs, against a budget. The budget defaults to four times the sum of the declared input lengths, and a host may set it explicitly. A read that would exceed the budget SHALL be refused before the reader is called, failing the call with `input-limit`. Reads served from the SDK's block cache SHALL NOT count.
+
+#### Scenario: Plugin reading in a loop
+- **WHEN** a plugin keeps re-reading a 9 MB input under the default budget
+- **THEN** the call fails with `input-limit` once the host readers would deliver more than 36 MB, without waiting for the deadline
+
+#### Scenario: Cached re-reads
+- **WHEN** a plugin repeatedly reads a range that is still in the SDK's block cache
+- **THEN** no further bytes are counted against the budget and the host reader is not called
 
 ### Requirement: Explicit file capability
 A worker SHALL advertise file support in its ready envelope. A host SHALL refuse a call carrying files before dispatch, with `files-unsupported` and `MayHaveExecuted = false`, in these cases: the worker lacks the capability, the binding is shared or MCP, or the operation is a stream or source. Calls without files SHALL behave exactly as before for old and new workers alike.

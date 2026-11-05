@@ -72,7 +72,7 @@ The new types live in `WeavePort.Abstractions`:
 - `PluginInput(string Name, long Length, string MediaType, IPluginInputReader Reader)` describes one input.
 - `IPluginInputReader.ReadAsync(long offset, Memory<byte> buffer, CancellationToken)` is a positional read in the style of `RandomAccess.ReadAsync`. It may return fewer bytes than requested only at the end. The host may call it with any offset in any order, but never concurrently within one invocation.
 - `IPluginOutputDestination.CreateAsync(name, mediaType, ct)` returns an `IPluginOutputWriter`. The writer has `WriteAsync(ReadOnlyMemory<byte>, ct)`, `CommitAsync(ct)`, `AbortAsync(PluginOutputAbort reason, ct)` and `DisposeAsync`.
-- `PluginFileLimits(int MaximumOutputs, long MaximumOutputBytes)`.
+- `PluginFileLimits(int MaximumOutputs, long MaximumOutputBytes, long? MaximumInputReadBytes = null)`. Null means four times the sum of the declared input lengths.
 - `PluginFiles(IReadOnlyList<PluginInput> Inputs, IPluginOutputDestination? Outputs, PluginFileLimits Limits)`.
 
 A new optional interface, `IPluginFileSession : IPluginSession`, adds `InvokeAsync(operation, payload, PluginFiles, ct)`. `IPluginSession` does not change, which avoids breaking existing implementations. `InvocationResult` gets an additive `Outputs` property: a list of `PluginOutputInfo(Name, MediaType, Length)` that is empty unless the call succeeded.
@@ -114,7 +114,7 @@ Abort and dispose run bounded by a cleanup grace period, even after the invocati
 
 ### SDK surfaces
 
-**C#.** `context.Inputs` lists the descriptors. `context.OpenInput(name)` returns a read-only seekable `Stream` with `Length` and one cached block. `context.CreateOutput(name, mediaType)` returns a write-only, non-seekable `Stream`. Disposing it completes the output, and `CompleteAsync` reports errors explicitly. An output that was never completed fails the call at return.
+**C#.** `context.Inputs` lists the descriptors. `context.OpenInput(name)` returns a read-only seekable `Stream` with `Length`, backed by the shared block cache below. `context.CreateOutput(name, mediaType)` returns a write-only, non-seekable `Stream`. Disposing it completes the output, and `CompleteAsync` reports errors explicitly. An output that was never completed fails the call at return.
 
 **Python.** `context.inputs` lists the descriptors. `await context.open_input(name)` returns an `InputFile` with:
 
@@ -125,7 +125,9 @@ Abort and dispose run bounded by a cleanup grace period, even after the invocati
 
 **TypeScript.** `context.inputs` lists the descriptors. `context.openInput(name)` returns `{ size, read(position, length): Promise<Uint8Array> }`. `context.createOutput(name, mediaType)` returns `{ write(chunk): Promise<void>, close(): Promise<void> }` plus a `toWritableStream()` adapter.
 
-**All languages.** Block size is chosen by the SDK: 64 KiB by default, configurable within 4–256 KiB. Reads and writes are serialized through the existing callback gate. A read or write after the invocation ended raises the same expired-invocation error as a late callback. Registered cleanup closes any open files.
+**All languages.** Block size is chosen by the SDK: 64 KiB by default, configurable within 4–256 KiB.
+
+Each open input keeps a small cache of recently read, block-aligned blocks: four by default, least recently used evicted, so at most 1 MiB per input at 256 KiB blocks. ZIP readers revisit the central directory, local headers and data. Those revisits are then served without another round trip. The cache needs no concurrency, no protocol support and no new failure cases. Reads and writes are serialized through the existing callback gate. A read or write after the invocation ended raises the same expired-invocation error as a late callback. Registered cleanup closes any open files.
 
 ### Gateway
 
@@ -158,21 +160,40 @@ New failure codes, added to `contracts/protocol.json` and the failure catalogue:
 |---|---|---|
 | `files-unsupported` | Refused before dispatch | false |
 | `output-limit` | An output limit was exceeded | true |
+| `input-limit` | The input read budget was exceeded | true |
 | `output-incomplete` | An output was created but not completed | true |
 | `output-commit-failed` | Committing an output failed | true |
 
 Codes inside `callback-result` errors for the plugin: `input-not-found`, `output-not-permitted`, `output-exists`, `output-closed`, `invalid-range`.
 
-There is no separate input read budget. Reads are bounded by block size, the declared length and the invocation deadline, which already includes callbacks. Consumers moving large files should raise the unary call timeout (default 30 s on the gateway client).
+**Input read budget (decided 2026-11-05).** The host counts the bytes its readers deliver per invocation, across all inputs. Reads served from the SDK's block cache never reach the host and are not counted. A read that would exceed `MaximumInputReadBytes` is refused before the reader is called, and the call fails with `input-limit`. The default is four times the sum of the declared input lengths. That leaves room for ZIP libraries that revisit ranges, while stopping a plugin that loops over the same file until its deadline. It guards against a faulty plugin, not a hostile one, in line with the trusted native boundary.
+
+Through the gateway the registration caps the budget like the output limits.
+
+Reads are further bounded by block size, the declared length and the invocation deadline, which already includes callbacks. Consumers moving large files should raise the unary call timeout (default 30 s on the gateway client).
 
 ## Risks / Trade-offs
 
 - **Base64 in JSON costs about a third more bytes and parsing work.** The feature matches the cost of `Source` and callbacks. Performance is recorded, not promised, in the evidence report.
-- **Round trips per block.** Reads are sequential within an invocation. Latency grows with the block count, especially through the gateway. Mitigations are larger blocks and the SDK's one-block read cache. Read-ahead is a possible later addition.
+- **Round trips per block.** Reads are sequential within an invocation. Latency grows with the block count, especially through the gateway. Mitigations are larger blocks (256 KiB by default through the gateway) and the SDK's block cache.
 - **Positional reads require a random-access consumer format.** This is documented as a prerequisite.
 - **Partial commit across destinations cannot be undone by WeavePort.** It is reported explicitly, with the committed names listed.
 - **Plaintext in the plugin process.** The plugin necessarily sees plaintext, and a trusted native plugin could write it to disk itself. This is documented under the existing trusted-plugin boundary, not prevented.
 - **Python sync file used on the loop thread would deadlock.** It is refused with a clear error rather than allowed to hang.
+
+### No read-ahead in this change
+
+Decided on 2026-11-05. The SDKs do not read ahead, and the host API gets no prefetch hint.
+
+Reads within an invocation stay sequential through the callback gate. Read-ahead could therefore only overlap the transfer of the next block with the plugin's processing of the current one. That saves at most one round trip per block, and only when reading forward. Locally that is negligible. Through the gateway, at an assumed 10 ms round trip, it is about 0.36 s for a 9 MB input.
+
+In return, read-ahead would need the following in all three SDKs:
+
+- an unrequested read in flight, which has to be drained or discarded before any result, error, output write or application callback;
+- new cancellation and cleanup cases, where a failed unused block must not fail the call;
+- wasted storage fetches and decryption at the consumer for the jump-heavy access patterns of ZIP files.
+
+Task 6.1 measures the plugin's time per block and the round-trip time, locally and through the gateway. If the measurements show that gateway round trips dominate, SDK-internal read-ahead becomes a separate change. It needs no public API change. A host-side `PrefetchAsync` hint was rejected: a consumer can optimize its own storage access inside its reader.
 
 ## Migration Plan
 
@@ -180,6 +201,17 @@ Additive. Hosts upgrade first. Plugins gain the capability by rebuilding against
 
 ## Open Questions
 
-- Should `IPluginInputReader` offer an optional read-ahead hint (`PrefetchAsync`), or should that wait for measurements?
-- Is a total read byte budget per invocation needed for operators, or is the deadline enough? Proposed: deadline only, revisit with evidence.
-- Should outputs be allowed for source or stream operations later? Out of scope here; the envelope is shaped so that it would not block that.
+None open. The three questions from the first draft were decided on 2026-11-05: no read-ahead (see that section), an input read budget (see Limits and codes), and files only for functions (see below).
+
+## Follow-up candidates
+
+- **Files for result streams (`$sdk.start`).** The likely case is an input read and delivered as JSON records, for example a CSV import with progress.
+- **Files for sources.** This one has little value of its own: a function with an output already covers a file-to-file transformation.
+
+Both need further decisions:
+
+- how long an input remains readable across many exchanges and consumer pauses;
+- when outputs are committed if the consumer exits early;
+- how the read budget and the stream's total deadline interact.
+
+**Design rule for this change.** The `files` envelope object, the reserved `$sdk.input.*` and `$sdk.output.*` operations and the host types must not depend on `$sdk.call`. They are validated and handled per invocation, so that a later change can admit `$sdk.start` without a new wire format. The refusal of streams and sources with `files-unsupported` is a policy check in front of that shared path.
