@@ -1,6 +1,6 @@
 # Large results and external composition
 
-Combine bounded plugin results under your application’s ordering and merge rules. `WeavePort.Composition` is an optional .NET package in the 0.9.1 release, depending on Sdk.Client and Abstractions. The product owns domain contracts, authentication, selected sessions, order and merge semantics. Plugins do not get peer addresses, result paths or authority to resolve arbitrary result handles. Existing invocation messages remain limited to 1 MiB; a logical result can span many bounded invocations.
+Combine bounded plugin results under your application’s ordering and merge rules. `WeavePort.Composition` is an optional .NET package in the 0.10.0 release, depending on Sdk.Client and Abstractions. The product owns domain contracts, authentication, selected sessions, order and merge semantics. Plugins do not get peer addresses, result paths or authority to resolve arbitrary result handles. Existing invocation messages remain limited to 1 MiB; a logical result can span many bounded invocations.
 
 ## Request-owned results
 
@@ -54,7 +54,7 @@ If partial-file removal fails, producer and cleanup errors are aggregated and th
 
 ## Function outputs into a result scope
 
-In current source after 0.9.1, `scope.AsOutputDestination()` returns `ResultOutputs`, an output destination for [function files](function-files.md). Outputs count against the scope's object and scope quotas while their blocks arrive. A committed output appears in `ResultOutputs.Results` by output name as an ordinary `ResultHandle`. An aborted one is deleted and its reservation released. If deleting a partial file fails, its reservation is retained until scope cleanup, as for `CreateAsync`.
+Since 0.10.0, `scope.AsOutputDestination()` returns `ResultOutputs`, an output destination for [function files](function-files.md). Outputs count against the scope's object and scope quotas while their blocks arrive. A committed output appears in `ResultOutputs.Results` by output name as an ordinary `ResultHandle`. An aborted one is deleted and its reservation released. If deleting a partial file fails, its reservation is retained until scope cleanup, as for `CreateAsync`.
 
 ## Collect a plugin-originated source
 

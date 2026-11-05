@@ -13,12 +13,12 @@
     <PackageVersion Include="Grpc.Tools" Version="2.85.0" />
     <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.14" />
     <PackageVersion Include="Tomlyn" Version="2.10.1" />
-    <PackageVersion Include="WeavePort.Abstractions" Version="0.9.1" />
-    <PackageVersion Include="WeavePort.Composition" Version="0.9.1" />
-    <PackageVersion Include="WeavePort.Hosting" Version="0.9.1" />
-    <PackageVersion Include="WeavePort.Sdk" Version="0.9.1" />
-    <PackageVersion Include="WeavePort.Sdk.Client" Version="0.9.1" />
-    <PackageVersion Include="WeavePort.Sdk.Gateway" Version="0.9.1" />
-    <PackageVersion Include="WeavePort.Testing" Version="0.9.1" />
+    <PackageVersion Include="WeavePort.Abstractions" Version="0.10.0" />
+    <PackageVersion Include="WeavePort.Composition" Version="0.10.0" />
+    <PackageVersion Include="WeavePort.Hosting" Version="0.10.0" />
+    <PackageVersion Include="WeavePort.Sdk" Version="0.10.0" />
+    <PackageVersion Include="WeavePort.Sdk.Client" Version="0.10.0" />
+    <PackageVersion Include="WeavePort.Sdk.Gateway" Version="0.10.0" />
+    <PackageVersion Include="WeavePort.Testing" Version="0.10.0" />
   </ItemGroup>
 </Project>

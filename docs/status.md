@@ -1,9 +1,9 @@
 # Product status
 
-## Release 0.9.1
+## Release 0.10.0
 
 
-Release version: **0.9.1**, under MIT, with four core packages and optional Composition, Gateway server and Gateway client packages. Windows, Linux and macOS are supported targets for trusted stdio execution. Current release validation covers macOS arm64; Windows and Linux release validation is pending. See [platform support and validation](platform-qualification.md). This pre-1.0 API remains subject to evolution. Python/TypeScript registry publication and a new offline distribution are outside this release. The historical internal distribution remains **0.1.0-internal.2**.
+Prepared release version: **0.10.0** (not yet published; 0.9.1 remains the latest published release), under MIT, with four core packages and optional Composition, Gateway server and Gateway client packages. Windows, Linux and macOS are supported targets for trusted stdio execution. Current release validation covers macOS arm64; Windows and Linux release validation is pending. See [platform support and validation](platform-qualification.md). This pre-1.0 API remains subject to evolution. Python/TypeScript registry publication and a new offline distribution are outside this release. The historical internal distribution remains **0.1.0-internal.2**.
 
 The previous [0.7.0 release evidence](../reports/release/0.7.0/README.md) records 3,533 reported qualification assertions, the clean static audit and verified downloads for all seven NuGet packages and 16 GitHub artifacts.
 
@@ -16,6 +16,8 @@ Implemented and checked: immutable installed-artifact selection, exact compatibi
 Current measurement methodology and results are in [benchmarking](benchmarking.md). The full historical comparison collection is described in [historical evidence](history.md), not a competing current status summary.
 
 ## Release qualification and availability
+
+Version 0.10.0 adds [function files](function-files.md) and author SDKs 0.5.0. See [migration notes](releases.md#0100-function-files) and the [preparation record](../reports/release/0.10.0/README.md). Tagging, publication and public-download verification remain pending.
 
 Version 0.9.1 is published with refreshed packages, a reusable dependency update workflow and author SDKs 0.4.1. Exact-tag qualification, clean SonarQube analysis, protected publication and public download verification are complete. See the [release record](../reports/release/0.9.1/README.md).
 
@@ -37,7 +39,7 @@ This qualifies the recorded native macOS arm64 profile. Individual latency reach
 
 The remaining platform change is [qualify-native-capacity-and-platform-comparison](../openspec/changes/qualify-native-capacity-and-platform-comparison/tasks.md): Windows capacity/performance qualification remains outstanding. Native source adapter checks now pass in [Windows/Linux CI](continuous-integration.md), including 38 Windows stdio assertions and 38/39 Linux stdio/socket assertions. Those source checks do not replace current public-package installation qualification. See [platform requirements](platform-qualification.md).
 
-[Function files](function-files.md) are complete and qualified in current source but unreleased: local, scheduler and gateway calls in all three SDKs. See the [archived change and verification](../openspec/changes/archive/2026-11-05-add-function-file-transfer/verification.md).
+[Function files](function-files.md) are complete and qualified, and prepared for release 0.10.0: local, scheduler and gateway calls in all three SDKs. See the [archived change and verification](../openspec/changes/archive/2026-11-05-add-function-file-transfer/verification.md).
 
 HiveWeaver, TreeWeaver and NextPA integration remains separate application work. Application signing/notarization, stronger sandboxing and automatic deployment/migration are separate release decisions, not hidden tasks needed to run the current internal examples.
 

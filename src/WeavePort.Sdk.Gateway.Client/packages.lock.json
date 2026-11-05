@@ -48,7 +48,7 @@
       "weaveport.sdk.client": {
         "type": "Project",
         "dependencies": {
-          "WeavePort.Abstractions": "[0.9.1, )"
+          "WeavePort.Abstractions": "[0.10.0, )"
         }
       },
       "Microsoft.Extensions.Logging.Abstractions": {
