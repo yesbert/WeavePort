@@ -2,7 +2,14 @@ import { Channel } from './channel.js';
 import { encodeJson } from './messages.js';
 import type { InboundFrame, Invocation, SdkPayload } from './messages.js';
 import { cleanupAll, executeWithCleanup } from './cleanup.js';
-import { FailureCodes, FrameKinds, ProtocolVersions, SdkOperations } from '../protocol.js';
+import {
+    FailureCodes,
+    FrameKinds,
+    ProtocolLimits,
+    ProtocolVersions,
+    SdkOperations,
+} from '../protocol.js';
+import { FileSession } from '../files.js';
 import { StreamBuffer } from './stream-buffer.js';
 import { SourceSession } from '../source.js';
 import type { SourceHandler } from '../source.js';
@@ -37,8 +44,20 @@ export class Runtime {
         private sources: Map<string, SourceHandler>,
         private pluginVersion: string,
         private concurrentCalls: boolean,
+        private fileBlockBytes: number = ProtocolLimits.FileBlockDefaultBytes,
     ) {}
     private async callback<T>(operation: string, payload: unknown): Promise<T> {
+        const reply = await this.exchangeCallback(operation, payload);
+        if (reply.error !== undefined) {
+            throw new Error('Host callback failed');
+        }
+        return reply.value as T;
+    }
+    /** Returns the host value or its error code so file operations can map refusals. */
+    private async exchangeCallback(
+        operation: string,
+        payload: unknown,
+    ): Promise<{ value?: unknown; error?: string }> {
         const scope = scopes.getStore();
         const streamCallback = scope === this.streamScope;
         if (streamCallback && (!this.exchangeActive || this.bufferedStreamItems)) {
@@ -72,10 +91,15 @@ export class Runtime {
             ) {
                 throw new Error('Callback identity');
             }
-            if (reply.error != null || reply.success === false) {
-                throw new Error('Host callback failed');
+            if (reply.error != null) {
+                return {
+                    error: typeof reply.error === 'string' ? reply.error : FailureCodes.UnknownError,
+                };
             }
-            return reply.value as T;
+            if (reply.success === false) {
+                return { error: FailureCodes.UnknownError };
+            }
+            return { value: reply.value };
         } finally {
             release();
         }
@@ -131,6 +155,11 @@ export class Runtime {
             request.context.tenant,
             request.context.configuration,
             <T>(name: string, input: unknown) => this.callback<T>(name, input),
+            new FileSession(
+                request.files,
+                (name, input) => this.exchangeCallback(name, input),
+                this.fileBlockBytes,
+            ),
         ));
         const abort = new AbortController();
         if (operation === SdkOperations.SourceOpen) {
@@ -183,7 +212,9 @@ export class Runtime {
                 : ProtocolVersions.Exclusive,
             pluginVersion: this.pluginVersion,
             sessionCleanup: ProtocolVersions.SessionCleanup,
-            ...(this.concurrentCalls ? { concurrentCalls: ProtocolVersions.ConcurrentCalls } : {}),
+            ...(this.concurrentCalls
+                ? { concurrentCalls: ProtocolVersions.ConcurrentCalls }
+                : { files: ProtocolVersions.Files }),
         });
         if (this.concurrentCalls) {
             try {

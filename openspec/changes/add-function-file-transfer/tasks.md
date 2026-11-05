@@ -15,11 +15,11 @@
 
 ## 3. SDKs
 
-- [ ] 3.1 C#: `context.Inputs`, `OpenInput` (a seekable `Stream` over the block cache), `CreateOutput` (complete on dispose, fail on return if not completed), late-access refusal and cleanup registration. Advertise `files: 1`.
-- [ ] 3.2 Python: `context.inputs`, `open_input` with `read_at` and an off-loop sync `as_file()`, `create_output` with async and sync writers, and the loop-thread refusal. Advertise `files: 1`.
-- [ ] 3.3 TypeScript: `context.inputs`, `openInput(...).read(position, length)`, `createOutput` with a `WritableStream` adapter, and AbortSignal integration. Advertise `files: 1`.
-- [ ] 3.4 In each language, implement the block cache for inputs (four blocks by default, least recently used evicted) and verify that repeated reads of cached ranges send no frames.
-- [ ] 3.5 In each language, verify against an old host that has no `files` object: a local refusal and no frames sent.
+- [x] 3.1 C#: `context.Inputs`, `OpenInput` (a seekable `Stream` over the block cache), `CreateOutputAsync` (complete on dispose; an output left open fails the call through the host with `output-incomplete`), late-access refusal. Advertise `files: 1`.
+- [x] 3.2 Python: `context.inputs`, `open_input` with `read_at` and an off-loop sync `as_file()`, `create_output` with async and sync writers, and the loop-thread refusal. Advertise `files: 1`.
+- [x] 3.3 TypeScript: `context.inputs`, `openInput(...).read(position, length)`, `createOutput` with a `WritableStream` adapter, and AbortSignal integration. Advertise `files: 1`.
+- [x] 3.4 In each language, implement the block cache for inputs (four blocks by default, least recently used evicted) and verify that repeated reads of cached ranges send no frames.
+- [x] 3.5 In each language, verify against an old host that has no `files` object: a local refusal and no frames sent.
 
 ## 4. Gateway
 

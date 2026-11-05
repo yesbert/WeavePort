@@ -1,4 +1,6 @@
 import { Runtime } from './runtime/runtime.js';
+import { validateBlockBytes } from './files.js';
+import { ProtocolLimits } from './protocol.js';
 import type { Handler, Generator } from './runtime/handlers.js';
 import type { SourceHandler, BinarySource } from './source.js';
 import type { PluginContext } from './session.js';
@@ -8,11 +10,12 @@ export class PluginApplication {
     /** Author-declared artifact version, verified against the host binding at startup. */
     constructor(
         private readonly pluginVersion: string = '1',
-        private readonly options: { concurrentCalls?: boolean } = {},
+        private readonly options: { concurrentCalls?: boolean; fileBlockBytes?: number } = {},
     ) {
         if (typeof pluginVersion !== 'string' || !pluginVersion.trim()) {
             throw new Error('Invalid plugin version');
         }
+        validateBlockBytes(options.fileBlockBytes ?? ProtocolLimits.FileBlockDefaultBytes);
     }
     private functions = new Map<string, Handler>();
     private streams = new Map<string, Generator>();
@@ -63,6 +66,7 @@ export class PluginApplication {
             this.sources,
             this.pluginVersion,
             this.options.concurrentCalls === true,
+            this.options.fileBlockBytes ?? ProtocolLimits.FileBlockDefaultBytes,
         ).run();
     }
 }

@@ -2,13 +2,22 @@
 
 import asyncio
 
+from .files import validate_block_bytes
+from .protocol import ProtocolLimits
 from .runtime import Runtime
 
 
 class PluginApplication:
-    def __init__(self, plugin_version="1", *, concurrent_calls=False):
+    def __init__(
+        self,
+        plugin_version="1",
+        *,
+        concurrent_calls=False,
+        file_block_bytes=ProtocolLimits.FileBlockDefaultBytes,
+    ):
         if not isinstance(plugin_version, str) or not plugin_version.strip():
             raise ValueError("Invalid plugin version")
+        self._file_block_bytes = validate_block_bytes(file_block_bytes)
         self._concurrent_calls = concurrent_calls
         self._plugin_version = plugin_version
         self._functions = {}

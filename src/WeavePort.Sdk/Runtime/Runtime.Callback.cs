@@ -38,6 +38,13 @@ internal sealed partial class Runtime
 
     private async Task<JsonElement> CallbackAsync(string operation, JsonElement input, CancellationToken token)
     {
+        (JsonElement value, string? error) = await ExchangeCallbackAsync(operation, input, token);
+        return error is null ? value : throw new InvalidOperationException("Host callback failed: " + error);
+    }
+
+    // Returns the host's value, or its error code without throwing so file operations can map refusals.
+    private async Task<(JsonElement Value, string? Error)> ExchangeCallbackAsync(string operation, JsonElement input, CancellationToken token)
+    {
         CallScope scope = _scope.Value ?? throw new InvalidOperationException("No active invocation.");
         await WaitForCallbackExchangeAsync(scope, token);
         try
@@ -70,10 +77,10 @@ internal sealed partial class Runtime
 
             if (reply.TryGetProperty(WireFields.Error, out var error) && error.ValueKind != JsonValueKind.Null)
             {
-                throw new InvalidOperationException("Host callback failed: " + error.GetString());
+                return (default, error.ValueKind == JsonValueKind.String ? error.GetString()! : FailureCodes.UnknownError);
             }
 
-            return reply.GetProperty(WireFields.Value);
+            return (reply.GetProperty(WireFields.Value), null);
         }
         finally
         {

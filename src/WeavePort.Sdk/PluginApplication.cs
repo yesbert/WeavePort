@@ -10,6 +10,14 @@ public sealed class PluginApplication
     internal readonly Dictionary<string, Func<JsonElement, PluginCallContext, CancellationToken, IAsyncEnumerable<JsonElement>>> Streams = [];
     internal readonly Dictionary<string, Func<JsonElement, PluginCallContext, CancellationToken, ValueTask<System.IO.Stream>>> Sources = [];
     private readonly JsonSerializerOptions _json;
+    private int _fileBlockBytes = WeavePort.Internal.ProtocolLimits.FileBlockDefaultBytes;
+    /// <summary>Block size for function inputs and outputs, 4096-262144 bytes; 65536 by default. Larger blocks mean fewer host round trips.</summary>
+    public int FileBlockBytes
+    {
+        get => _fileBlockBytes;
+        init => _fileBlockBytes = value is >= WeavePort.Internal.ProtocolLimits.FileBlockMinimumBytes and <= WeavePort.Internal.ProtocolLimits.FileBlockMaximumBytes ? value : throw new ArgumentOutOfRangeException(nameof(value));
+    }
+
     /// <summary>Opts into protocol 2 and concurrent unary invocations. Shared mutable state must be thread-safe.</summary>
     public bool ConcurrentCalls { get; init; }
 

@@ -1035,25 +1035,82 @@ type WeavePort.Hosting.WorkerReusePolicy : System.Enum [Public, Sealed]
 type WeavePort.Sdk.PluginApplication : System.Object [Public, Sealed]
   Constructor Void .ctor(System.Text.Json.JsonSerializerOptions) [Public] (json=null)
   Method Boolean get_ConcurrentCalls() [Public] ()
+  Method Int32 get_FileBlockBytes() [Public] ()
   Method System.String VersionFromAssembly(System.Reflection.Assembly, Boolean) [Public, Static] (assembly=null, includeBuildMetadata=False)
   Method System.String get_PluginVersion() [Public] ()
   Method System.Threading.Tasks.Task RunAsync(System.Threading.CancellationToken) [Public] (cancellationToken=null)
   Method Void set_ConcurrentCalls(Boolean) [Public] (value)
+  Method Void set_FileBlockBytes(Int32) [Public] (value)
   Method Void set_PluginVersion(System.String) [Public] (value)
   Method WeavePort.Sdk.PluginApplication Function[TInput,TOutput](System.String, System.Func`4[TInput,WeavePort.Sdk.PluginCallContext,System.Threading.CancellationToken,System.Threading.Tasks.ValueTask`1[TOutput]]) [Public] (name, handler)
   Method WeavePort.Sdk.PluginApplication Source[TInput](System.String, System.Func`4[TInput,WeavePort.Sdk.PluginCallContext,System.Threading.CancellationToken,System.Threading.Tasks.ValueTask`1[System.IO.Stream]]) [Public] (name, handler)
   Method WeavePort.Sdk.PluginApplication Stream[TInput,TItem](System.String, System.Func`4[TInput,WeavePort.Sdk.PluginCallContext,System.Threading.CancellationToken,System.Collections.Generic.IAsyncEnumerable`1[TItem]]) [Public] (name, handler)
   Property Boolean ConcurrentCalls
+  Property Int32 FileBlockBytes
   Property System.String PluginVersion
 type WeavePort.Sdk.PluginCallContext : System.Object [Public, Sealed]
+  Method System.Collections.Generic.IReadOnlyList`1[WeavePort.Sdk.PluginFileInfo] get_Inputs() [Public] ()
+  Method System.IO.Stream OpenInput(System.String) [Public] (name)
   Method System.String get_Tenant() [Public] ()
   Method System.Text.Json.JsonElement get_Configuration() [Public] ()
   Method System.Threading.Tasks.Task`1[System.Text.Json.JsonElement] CallHostAsync(System.String, System.Text.Json.JsonElement, System.Threading.CancellationToken) [Public] (operation, input, cancellationToken=null)
+  Method System.Threading.Tasks.Task`1[WeavePort.Sdk.PluginOutputStream] CreateOutputAsync(System.String, System.String, System.Threading.CancellationToken) [Public] (name, mediaType, cancellationToken=null)
   Method T OwnAsync[T](T) [Public] (resource)
   Method T Own[T](T) [Public] (resource)
   Method Void OnClose(System.Func`1[System.Threading.Tasks.ValueTask]) [Public] (cleanup)
+  Property System.Collections.Generic.IReadOnlyList`1[WeavePort.Sdk.PluginFileInfo] Inputs
   Property System.String Tenant
   Property System.Text.Json.JsonElement Configuration
+type WeavePort.Sdk.PluginFileException : System.IO.IOException [Public, Sealed]
+  implements System.Runtime.Serialization.ISerializable
+  Method System.String get_Code() [Public] ()
+  Property System.String Code
+type WeavePort.Sdk.PluginFileInfo : System.Object [Public, Sealed]
+  implements System.IEquatable`1[WeavePort.Sdk.PluginFileInfo]
+  Constructor Void .ctor(System.String, Int64, System.String) [Public] (Name, Length, MediaType)
+  Method Boolean Equals(System.Object) [Public, Virtual] (obj)
+  Method Boolean Equals(WeavePort.Sdk.PluginFileInfo) [Public, Final, Virtual] (other)
+  Method Boolean op_Equality(WeavePort.Sdk.PluginFileInfo, WeavePort.Sdk.PluginFileInfo) [Public, Static] (left, right)
+  Method Boolean op_Inequality(WeavePort.Sdk.PluginFileInfo, WeavePort.Sdk.PluginFileInfo) [Public, Static] (left, right)
+  Method Int32 GetHashCode() [Public, Virtual] ()
+  Method Int64 get_Length() [Public] ()
+  Method System.String ToString() [Public, Virtual] ()
+  Method System.String get_MediaType() [Public] ()
+  Method System.String get_Name() [Public] ()
+  Method Void Deconstruct(System.String ByRef, Int64 ByRef, System.String ByRef) [Public] (Name, Length, MediaType)
+  Method Void set_Length(Int64) [Public] (value)
+  Method Void set_MediaType(System.String) [Public] (value)
+  Method Void set_Name(System.String) [Public] (value)
+  Method WeavePort.Sdk.PluginFileInfo <Clone>$() [Public] ()
+  Property Int64 Length
+  Property System.String MediaType
+  Property System.String Name
+type WeavePort.Sdk.PluginOutputStream : System.IO.Stream [Public, Sealed]
+  implements System.IAsyncDisposable
+  implements System.IDisposable
+  Method Boolean get_CanRead() [Public, Virtual] ()
+  Method Boolean get_CanSeek() [Public, Virtual] ()
+  Method Boolean get_CanWrite() [Public, Virtual] ()
+  Method Int32 Read(Byte[], Int32, Int32) [Public, Virtual] (buffer, offset, count)
+  Method Int64 Seek(Int64, System.IO.SeekOrigin) [Public, Virtual] (offset, origin)
+  Method Int64 get_Length() [Public, Virtual] ()
+  Method Int64 get_Position() [Public, Virtual] ()
+  Method System.String get_Name() [Public] ()
+  Method System.Threading.Tasks.Task CompleteAsync(System.Threading.CancellationToken) [Public] (cancellationToken=null)
+  Method System.Threading.Tasks.Task WriteAsync(Byte[], Int32, Int32, System.Threading.CancellationToken) [Public, Virtual] (buffer, offset, count, cancellationToken)
+  Method System.Threading.Tasks.ValueTask DisposeAsync() [Public, Virtual] ()
+  Method System.Threading.Tasks.ValueTask WriteAsync(System.ReadOnlyMemory`1[System.Byte], System.Threading.CancellationToken) [Public, Virtual] (buffer, cancellationToken=null)
+  Method Void Dispose(Boolean) [Family, Virtual] (disposing)
+  Method Void Flush() [Public, Virtual] ()
+  Method Void SetLength(Int64) [Public, Virtual] (value)
+  Method Void Write(Byte[], Int32, Int32) [Public, Virtual] (buffer, offset, count)
+  Method Void set_Position(Int64) [Public, Virtual] (value)
+  Property Boolean CanRead
+  Property Boolean CanSeek
+  Property Boolean CanWrite
+  Property Int64 Length
+  Property Int64 Position
+  Property System.String Name
 type WeavePort.Sdk.Client.IBoundPluginClient :  [Public, ClassSemanticsMask, Abstract]
   implements System.IAsyncDisposable
   implements WeavePort.Sdk.Client.IPluginClient

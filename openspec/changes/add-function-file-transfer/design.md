@@ -117,18 +117,20 @@ Abort and dispose run bounded by a cleanup grace period, even after the invocati
 
 ### SDK surfaces
 
-**C#.** `context.Inputs` lists the descriptors. `context.OpenInput(name)` returns a read-only seekable `Stream` with `Length`, backed by the shared block cache below. `context.CreateOutput(name, mediaType)` returns a write-only, non-seekable `Stream`. Disposing it completes the output, and `CompleteAsync` reports errors explicitly. An output that was never completed fails the call at return.
+**C#.** `context.Inputs` lists the descriptors as `PluginFileInfo`. `context.OpenInput(name)` returns a read-only seekable `Stream` with `Length`, backed by the shared block cache below. Synchronous `Read` is supported for libraries without async APIs; the SDK runtime has no synchronization context to deadlock on. `await context.CreateOutputAsync(name, mediaType)` sends the create request at once, so a refusal surfaces there, and returns a write-only, non-seekable `PluginOutputStream`. Disposing it completes the output, and `CompleteAsync` reports errors explicitly. Refusals throw `PluginFileException` with `Code`. The block size is `PluginApplication.FileBlockBytes`.
 
 **Python.** `context.inputs` lists the descriptors. `await context.open_input(name)` returns an `InputFile` with:
 
 - `async read_at(offset, length)`;
 - `as_file()`, a synchronous `io.RawIOBase` that is seekable and buffered by `io.BufferedReader`, for libraries such as `zipfile` and `openpyxl`. It must be used off the event-loop thread (for example with `asyncio.to_thread`); on the loop thread it raises. This follows the existing `call_host_sync` pattern.
 
-`await context.create_output(name, media_type)` returns an `OutputFile` with `async write` and `async close`, a sync `as_file()`, and `async with` support.
+`await context.create_output(name, media_type)` returns an `OutputFile` with `async write` and `async close`, a sync `as_file()`, `written` and `async with` support. Refusals raise `PluginFileError` with `code`. The block size is `PluginApplication(file_block_bytes=...)`.
 
-**TypeScript.** `context.inputs` lists the descriptors. `context.openInput(name)` returns `{ size, read(position, length): Promise<Uint8Array> }`. `context.createOutput(name, mediaType)` returns `{ write(chunk): Promise<void>, close(): Promise<void> }` plus a `toWritableStream()` adapter.
+**TypeScript.** `context.inputs` lists the descriptors. `context.openInput(name)` returns a `PluginInput` with `size` and `read(position, length): Promise<Uint8Array>`. `await context.createOutput(name, mediaType)` returns a `PluginOutput` with `write(chunk)`, `close()`, `written` and a `toWritableStream()` adapter. Refusals throw `PluginFileError` with `code`. The block size is the `fileBlockBytes` option of `PluginApplication`.
 
-**All languages.** Block size is chosen by the SDK: 64 KiB by default, configurable within 4–256 KiB.
+**All languages.** Opening an unknown input and creating an output the call does not permit are refused locally, before any frame is sent; under a host that sends no `files` object this is the only behaviour. An output left open when the function returns is not completed by the SDK; the host then fails the call with `output-incomplete`. Only exclusive (protocol 1) workers advertise `files: 1`; concurrent workers do not.
+
+Block size is chosen by the SDK: 64 KiB by default, configurable within 4–256 KiB.
 
 Each open input keeps a small cache of recently read, block-aligned blocks: four by default, least recently used evicted, so at most 1 MiB per input at 256 KiB blocks. ZIP readers revisit the central directory, local headers and data. Those revisits are then served without another round trip. The cache needs no concurrency, no protocol support and no new failure cases. Reads and writes are serialized through the existing callback gate. A read or write after the invocation ended raises the same expired-invocation error as a late callback. Registered cleanup closes any open files.
 
