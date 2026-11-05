@@ -144,7 +144,9 @@ class InputFile:
 
     def as_file(self):
         """A synchronous seekable binary file for libraries such as zipfile; use it off the event-loop thread."""
-        return io.BufferedReader(_SyncInput(self, self._loop), self._files.block_bytes)
+        # Unbuffered on purpose: every read reaches read_at and its lifetime and event-loop checks;
+        # the input's own block cache keeps small reads from causing host round trips.
+        return _SyncInput(self, self._loop)
 
     async def _block(self, index):
         if index in self._cache:

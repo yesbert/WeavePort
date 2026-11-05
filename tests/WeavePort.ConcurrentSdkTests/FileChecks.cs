@@ -60,6 +60,9 @@ internal static class FileChecks
         {
             var loop = await client.CallWithFilesAsync("sync-on-loop", Empty, new PluginFiles([Input()]));
             Check(loop.Value.GetProperty("refused").GetBoolean(), "python refuses synchronous file use on the event loop instead of hanging");
+            await client.CallWithFilesAsync("late-sync-store", Empty, new PluginFiles([Input()]));
+            var lateSync = await client.CallWithFilesAsync("late-sync-read", Empty, new PluginFiles([Input()]));
+            Check(lateSync.Value.GetProperty("refused").GetBoolean(), "python refuses reads through a retained synchronous file after the call ended");
         }
     }
 

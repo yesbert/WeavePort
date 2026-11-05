@@ -95,6 +95,13 @@ Copilot's review of PR #55 raised thirteen threads, all fixed:
 
 Copilot's third review also noted a missed issue: an older gateway's `invalid-mode` was translated to `files-unsupported` only in the status, not in `Failure.Code`. Both are translated now, and a check against a gateway that does not know `FILE_CALL` covers it.
 
+Copilot's fourth review, of `b545c47`, found two more issues:
+
+- Python's `as_file()` wrapped the input in a `BufferedReader` whose buffer bypassed the lifetime and event-loop checks. It now returns the unbuffered adapter.
+- Without an explicit read budget, the gateway used a registration cap larger than the caller's default, so the client failed with a protocol violation instead of the host's `input-read-limit`. The gateway now takes the smaller of the two.
+
+Both have checks.
+
 New checks cover a result over the unary limit, release failure after commit, a stalled release, late reads from a warm cache in all three SDKs, and caller-side release failure through the gateway.
 
 ## Functional evidence so far

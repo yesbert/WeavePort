@@ -72,6 +72,23 @@ internal static class FileFixture
                 done = true
             };
         })
+        .Function<JsonElement, object>("reread", async (input, context, token) =>
+        {
+            await using Stream sheet = context.OpenInput("sheet");
+            byte[] buffer = new byte[1 << 20];
+            for (int pass = 0; pass < input.GetProperty("passes").GetInt32(); pass++)
+            {
+                sheet.Position = 0;
+                while (await sheet.ReadAsync(buffer, token) > 0)
+                {
+                }
+            }
+
+            return new
+            {
+                done = true
+            };
+        })
         .Function<JsonElement, object>("late-store", (_, context, _) =>
         {
             _retained = context.OpenInput("sheet");

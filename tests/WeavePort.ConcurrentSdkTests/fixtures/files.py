@@ -107,6 +107,23 @@ async def late_read(value, context):
         return dict(refused=True)
 
 
+@app.function("late-sync-store")
+async def late_sync_store(value, context):
+    source = await context.open_input("sheet")
+    retained["file"] = source.as_file()
+    await asyncio.to_thread(retained["file"].read, 1)
+    return dict(stored=True)
+
+
+@app.function("late-sync-read")
+async def late_sync_read(value, context):
+    try:
+        await asyncio.to_thread(retained["file"].read, 1)
+        return dict(refused=False)
+    except (PluginFileError, RuntimeError):
+        return dict(refused=True)
+
+
 @app.function("sync-on-loop")
 async def sync_on_loop(value, context):
     source = await context.open_input("sheet")

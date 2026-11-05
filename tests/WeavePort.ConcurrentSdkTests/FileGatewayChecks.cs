@@ -73,6 +73,8 @@ internal static class FileGatewayChecks
         await using RemotePluginClient reads = gateway.Client(new PluginFileLimits(1, 1 << 20, 4096));
         Check(await CodeAsync(() => reads.CallWithFilesAsync("zip-summary", Empty, new PluginFiles([FileChecks.Input()], null, new PluginFileLimits(0, 0, 1 << 20))), expectExecuted: false) == "input-read-limit", "a read budget above the registration is refused before dispatch");
         Check(await CodeAsync(() => reads.CallWithFilesAsync("copy", Empty, new PluginFiles([FileChecks.Input()], new FileChecks.MemoryDestination(), new PluginFileLimits(1, 1 << 20)))) == "input-read-limit", "without an explicit budget the registration's budget applies during the call");
+        await using RemotePluginClient generous = gateway.Client(new PluginFileLimits(1, 16 << 20, 1L << 30));
+        Check(await CodeAsync(() => generous.CallWithFilesAsync("reread", JsonSerializer.SerializeToElement(new { passes = 6 }), new PluginFiles([FileChecks.Input()]))) == "input-read-limit", "without an explicit budget a larger registration cap does not exceed the caller's default");
     }
 
     private static async Task CommitFailureAsync(Gateway gateway)

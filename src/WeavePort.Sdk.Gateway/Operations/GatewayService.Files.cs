@@ -68,10 +68,12 @@ public sealed partial class GatewayService
             throw new PluginCallException(FailureCodes.OutputLimit, false);
         }
 
-        long? budget = requested.HasMaximumInputReadBytes ? requested.MaximumInputReadBytes : allowed.MaximumInputReadBytes;
+        // Without an explicit request the caller enforces its default budget, so the host must not exceed it either.
+        long callerDefault = TryFiles(inputs, null, PluginFileLimits.InputsOnly).InputReadBudget;
+        long? budget = requested.HasMaximumInputReadBytes ? requested.MaximumInputReadBytes : Math.Min(callerDefault, allowed.MaximumInputReadBytes ?? callerDefault);
         var limits = new PluginFileLimits(outputs ? requested.MaximumOutputs : 0, outputs ? requested.MaximumOutputBytes : 0, budget is < 0 ? throw new PluginCallException(FailureCodes.InvalidArgument, false) : budget);
         PluginFiles files = TryFiles(inputs, outputs ? new FileRelay.Destination(relay) : null, limits);
-        long ceiling = allowed.MaximumInputReadBytes is { } fixedCeiling ? fixedCeiling : new PluginFiles(inputs).InputReadBudget;
+        long ceiling = allowed.MaximumInputReadBytes ?? callerDefault;
         return files.InputReadBudget > ceiling ? throw new PluginCallException(FailureCodes.InputReadLimit, false) : files;
     }
 
