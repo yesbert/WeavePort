@@ -2,7 +2,8 @@ using System.Collections.Concurrent;
 using WeavePort.Abstractions;
 
 // Records every writer event so checks can assert commit, abort and disposal exactly.
-internal sealed class RecordingDestination(string? failCommitFor = null) : IPluginOutputDestination
+// disposal: null disposes normally, "throw" fails, "hang" never completes.
+internal sealed class RecordingDestination(string? failCommitFor = null, string? disposal = null) : IPluginOutputDestination
 {
     internal ConcurrentQueue<string> Events { get; } = new();
     internal ConcurrentDictionary<string, MemoryStream> Data { get; } = new();
@@ -12,10 +13,10 @@ internal sealed class RecordingDestination(string? failCommitFor = null) : IPlug
         Events.Enqueue($"create:{name}:{mediaType}");
         var data = new MemoryStream();
         Data[name] = data;
-        return ValueTask.FromResult<IPluginOutputWriter>(new Writer(this, name, data, name == failCommitFor));
+        return ValueTask.FromResult<IPluginOutputWriter>(new Writer(this, name, data, name == failCommitFor, disposal));
     }
 
-    private sealed class Writer(RecordingDestination owner, string name, MemoryStream data, bool failCommit) : IPluginOutputWriter
+    private sealed class Writer(RecordingDestination owner, string name, MemoryStream data, bool failCommit, string? disposal) : IPluginOutputWriter
     {
         public ValueTask WriteAsync(ReadOnlyMemory<byte> block, CancellationToken cancellationToken)
         {
@@ -38,7 +39,12 @@ internal sealed class RecordingDestination(string? failCommitFor = null) : IPlug
         public ValueTask DisposeAsync()
         {
             owner.Events.Enqueue("dispose:" + name);
-            return ValueTask.CompletedTask;
+            return disposal switch
+            {
+                "throw" => ValueTask.FromException(new IOException("dispose failed")),
+                "hang" => new ValueTask(Task.Delay(Timeout.Infinite)),
+                _ => ValueTask.CompletedTask
+            };
         }
     }
 }

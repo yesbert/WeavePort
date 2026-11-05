@@ -80,6 +80,7 @@ app.function('cached-reads', async (value, context) => {
 });
 app.function('late-store', async (value, context) => {
     retained.sheet = context.openInput('sheet');
+    await retained.sheet.read(0, 16); // warm the cache so the late read is a cache hit
     return { stored: true };
 });
 app.function('late-read', async () => {

@@ -69,6 +69,14 @@ internal sealed class FileSession
 
     internal async Task<long> CompleteAsync(string name, CancellationToken token) => (await SendAsync(SdkOperations.OutputComplete, new { name }, token)).GetProperty(WireFields.Length).GetInt64();
 
+    internal void ThrowIfClosed()
+    {
+        lock (_sync)
+        {
+            EnsureOpen();
+        }
+    }
+
     internal void Close()
     {
         lock (_sync)

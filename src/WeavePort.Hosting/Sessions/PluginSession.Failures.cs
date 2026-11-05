@@ -76,7 +76,7 @@ internal sealed partial class PluginSession
         {
             Failure = failure,
             VersionMismatch = (primary as PluginVersionMismatchException)?.Mismatch,
-            Outputs = (primary as OutputCommitException)?.Committed ?? []
+            Outputs = (primary as CommittedOutputsException)?.Committed ?? []
         };
     }
 }

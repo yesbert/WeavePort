@@ -26,9 +26,13 @@ public sealed partial class GatewayService
         {
             // An interrupted relay leaves the request stream out of step. Report the call's own outcome
             // (for example timeout) as the terminal reply, then end the session instead of reusing it.
-            Reply terminal = EncodeFailure(error);
-            terminal.Complete = true;
-            await output.WriteAsync(terminal, context.CancellationToken);
+            if (await relay.SettleAsync(TimeSpan.FromSeconds(5)))
+            {
+                Reply terminal = EncodeFailure(error);
+                terminal.Complete = true;
+                await output.WriteAsync(terminal, context.CancellationToken);
+            }
+
             throw new FileRelayBrokenException();
         }
 

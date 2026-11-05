@@ -12,8 +12,25 @@ internal sealed class FileRelay(IAsyncStreamReader<Request> input, IServerStream
     private readonly SemaphoreSlim _gate = new(1);
     private ulong _next;
     private bool _broken;
+    private Task _pendingWrite = Task.CompletedTask;
 
     internal bool Broken => _broken;
+
+    // gRPC allows one pending write per stream. Waits briefly for an interrupted relay write to finish
+    // before the terminal reply is written; false means the transport is stuck and must end without it.
+    internal async Task<bool> SettleAsync(TimeSpan limit)
+    {
+        try
+        {
+            await _pendingWrite.WaitAsync(limit, session);
+            return true;
+        }
+        catch (Exception error) when (error is not OutOfMemoryException)
+        {
+            _ = _pendingWrite.ContinueWith(static task => _ = task.Exception, CancellationToken.None, TaskContinuationOptions.OnlyOnFaulted, TaskScheduler.Default);
+            return false;
+        }
+    }
 
     internal void ThrowIfBroken()
     {
@@ -38,7 +55,8 @@ internal sealed class FileRelay(IAsyncStreamReader<Request> input, IServerStream
 
             request.Id = ++_next;
             _broken = true;
-            await output.WriteAsync(new Reply { FileRequest = request }, session).WaitAsync(token);
+            _pendingWrite = output.WriteAsync(new Reply { FileRequest = request }, session);
+            await _pendingWrite.WaitAsync(token);
             Task<bool> next = input.MoveNext(session);
             _ = next.ContinueWith(static task => _ = task.Exception, CancellationToken.None, TaskContinuationOptions.OnlyOnFaulted, TaskScheduler.Default);
             if (!await next.WaitAsync(token) || input.Current.FileAck is not { } ack || ack.Id != request.Id)

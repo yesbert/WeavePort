@@ -14,7 +14,13 @@ internal class PluginFileException(string code, Exception? inner = null) : Excep
     internal string Code { get; } = code;
 }
 
-internal sealed class OutputCommitException(IReadOnlyList<PluginOutputInfo> committed, Exception inner) : PluginFileException(FailureCodes.OutputCommitFailed, inner)
+// A file failure after some outputs were already committed; the committed ones are reported with the failure.
+internal class CommittedOutputsException(string code, IReadOnlyList<PluginOutputInfo> committed, Exception? inner = null) : PluginFileException(code, inner)
 {
     internal IReadOnlyList<PluginOutputInfo> Committed { get; } = committed;
 }
+
+internal sealed class OutputCommitException(IReadOnlyList<PluginOutputInfo> committed, Exception inner) : CommittedOutputsException(FailureCodes.OutputCommitFailed, committed, inner);
+
+// Every output committed, but releasing a writer failed or exceeded the grace period.
+internal sealed class OutputCleanupException(IReadOnlyList<PluginOutputInfo> committed) : CommittedOutputsException(FailureCodes.CleanupError, committed);

@@ -49,7 +49,8 @@ internal static class FileWorker
             value = new
             {
                 files,
-                replies
+                replies,
+                pad = new string('x', script.TryGetProperty("pad", out JsonElement pad) ? pad.GetInt32() : 0)
             }
         });
     }

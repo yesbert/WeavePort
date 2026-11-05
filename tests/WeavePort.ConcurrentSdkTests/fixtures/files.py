@@ -94,6 +94,7 @@ async def cached_reads(value, context):
 @app.function("late-store")
 async def late_store(value, context):
     retained["sheet"] = await context.open_input("sheet")
+    await retained["sheet"].read_at(0, 16)  # warm the cache so the late read is a cache hit
     return dict(stored=True)
 
 

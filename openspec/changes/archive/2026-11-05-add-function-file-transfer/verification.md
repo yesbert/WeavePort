@@ -80,6 +80,21 @@ The high-effort code review of PR #55 found eight issues, all fixed:
 
 New checks cover the gateway timeout (stable over five consecutive runs), scheduled stream refusal, empty-read charging, refusal without a worker start, and Python name validation.
 
+## Copilot review fixes — 2026-11-05
+
+Copilot's review of PR #55 raised thirteen threads, all fixed:
+
+- Writer abort and disposal are bounded by the cleanup grace period, on the host and in the gateway client. A step still running is left to finish, its fault observed, and reported as a cleanup failure.
+- A writer release that fails after every output committed fails the call with `cleanup-error` and lists the committed outputs, on the host and at the gateway caller.
+- The host checks the function's JSON result against the unary limit before committing outputs.
+- Retained inputs refuse reads after their invocation, including cache hits, in all three SDKs.
+- Python output writes buffer at most one block instead of copying the whole write.
+- The gateway caller enforces its own read budget.
+- The gateway writes its terminal reply only after any interrupted relay write has finished, because gRPC allows one pending write.
+- The writer lifecycle documentation states that a failed commit is followed by `AbortAsync(CommitFailed)`.
+
+New checks cover a result over the unary limit, release failure after commit, a stalled release, late reads from a warm cache in all three SDKs, and caller-side release failure through the gateway.
+
 ## Functional evidence so far
 
 - **Host** (`tests/WeavePort.Hosting.Tests`, 27 file exchange and 36 contract assertions) covers:

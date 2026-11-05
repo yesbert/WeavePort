@@ -44,6 +44,28 @@ internal static partial class FileExchangeChecks
         Expect(destination.Events.Contains("abort:b:CommitFailed") && !destination.Events.Any(item => item.StartsWith("abort:a", StringComparison.Ordinal)), "only uncommitted outputs are aborted");
     }
 
+    private static async Task WriterReleaseAsync(PluginHost host, string root)
+    {
+        await using var session = await BindAsync(host, root);
+        var oversized = new RecordingDestination();
+        InvocationResult big = await session.InvokeAsync("script", JsonSerializer.SerializeToElement(new
+        {
+            steps = new[] { Create("a", "text/plain"), Complete("a") },
+            pad = 600_000
+        }), new PluginFiles([], oversized, new PluginFileLimits(1, 100)));
+        Expect(big.Status == "value-limit" && !oversized.Events.Contains("commit:a") && oversized.Events.Contains("abort:a:Failed"), "a result over the unary limit aborts outputs before any commit");
+        var failing = new RecordingDestination(disposal: "throw");
+        InvocationResult disposed = await session.InvokeAsync("script", Script(Create("a", "text/plain"), Complete("a")), new PluginFiles([], failing, new PluginFileLimits(1, 100)));
+        Expect(disposed.Status == "cleanup-error" && disposed.Failure?.CleanupFailed == true && disposed.Outputs.Single().Name == "a", "a writer release failure after commit is reported with the committed outputs");
+        var stalled = new RecordingDestination(disposal: "hang");
+        long started = System.Diagnostics.Stopwatch.GetTimestamp();
+        InvocationResult hung = await session.InvokeAsync("script", Script(Create("a", "text/plain"), new
+        {
+            op = "fail"
+        }), new PluginFiles([], stalled, new PluginFileLimits(1, 100)));
+        Expect(hung.Status == "failed" && hung.Failure?.CleanupFailed == true && System.Diagnostics.Stopwatch.GetElapsedTime(started) < TimeSpan.FromSeconds(20), "a stalled writer release is bounded by the cleanup grace period");
+    }
+
     private static async Task CancellationAsync(PluginHost host, string root)
     {
         await using var session = await BindAsync(host, root);

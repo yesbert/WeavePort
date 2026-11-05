@@ -27,6 +27,7 @@ internal static partial class FileExchangeChecks
             await FailuresAsync(host, root);
             await CommitFailureAsync(host, root);
             await CancellationAsync(host, root);
+            await WriterReleaseAsync(host, root);
             await ClientAndBuiltInsAsync(host, root);
             await ScheduledAsync(root);
             return _checks;

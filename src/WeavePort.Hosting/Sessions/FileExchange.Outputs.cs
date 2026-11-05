@@ -123,22 +123,36 @@ internal sealed partial class FileExchange
         using var grace = new CancellationTokenSource(InvocationPolicy.CleanupGrace);
         foreach (OutputState output in _outputs)
         {
-            failed |= !await TryAsync(() => reason is { } abort && !output.Committed ? output.Writer.AbortAsync(abort, grace.Token) : ValueTask.CompletedTask, logger, instance);
-            failed |= !await TryAsync(() => output.Writer.DisposeAsync(), logger, instance);
+            failed |= !await TryAsync(() => reason is { } abort && !output.Committed ? output.Writer.AbortAsync(abort, grace.Token) : ValueTask.CompletedTask, grace.Token, logger, instance);
+            failed |= !await TryAsync(() => output.Writer.DisposeAsync(), grace.Token, logger, instance);
         }
 
         return failed;
     }
 
-    private static async Task<bool> TryAsync(Func<ValueTask> action, ILogger logger, string instance)
+    // Waits for one writer step at most until the shared grace deadline. A step still running then is left
+    // to finish on its own, its eventual fault observed, and reported as a cleanup failure.
+    private static async Task<bool> TryAsync(Func<ValueTask> action, CancellationToken grace, ILogger logger, string instance)
     {
+        Task step;
         try
         {
-            await action();
+            step = action().AsTask();
+        }
+        catch (Exception error) when (error is not OutOfMemoryException)
+        {
+            RuntimeLog.CleanupFailed(logger, instance, error.GetType().Name);
+            return false;
+        }
+
+        try
+        {
+            await step.WaitAsync(grace);
             return true;
         }
         catch (Exception error) when (error is not OutOfMemoryException)
         {
+            _ = step.ContinueWith(static task => _ = task.Exception, CancellationToken.None, TaskContinuationOptions.OnlyOnFaulted, TaskScheduler.Default);
             RuntimeLog.CleanupFailed(logger, instance, error.GetType().Name);
             return false;
         }

@@ -75,6 +75,8 @@ internal static class FileFixture
         .Function<JsonElement, object>("late-store", (_, context, _) =>
         {
             _retained = context.OpenInput("sheet");
+            _retained.ReadExactly(new byte[16]);
+            _retained.Position = 0;
             return ValueTask.FromResult<object>(new
             {
                 stored = true

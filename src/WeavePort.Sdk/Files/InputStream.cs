@@ -29,6 +29,8 @@ internal sealed class InputStream(FileSession files, PluginFileInfo info) : Stre
 
     public override async ValueTask<int> ReadAsync(Memory<byte> buffer, CancellationToken cancellationToken = default)
     {
+        // Checked on every read, including cache hits, so a retained stream cannot outlive its invocation.
+        files.ThrowIfClosed();
         int total = 0;
         while (buffer.Length > 0 && _position < info.Length)
         {

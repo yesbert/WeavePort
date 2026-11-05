@@ -18,25 +18,64 @@ public sealed partial class RemotePluginClient
         stop.CancelAfter(_callTimeout);
         var session = await _sessions.RentAsync(stop.Token);
         var caller = new CallerFiles(files);
-        bool reusable = false;
+        PluginCallResult<JsonElement>? result = null;
+        Exception? failure = null;
         try
         {
             await WriteAsync(session, request, stop.Token);
             Reply reply = await RelayUntilTerminalAsync(session, caller, stop.Token);
-            PluginCallResult<JsonElement> result = Result(reply, caller, stop.Token);
-            // A failed file call may have ended the server session after its terminal reply; only reuse after success.
-            reusable = true;
-            return result;
+            result = Result(reply, caller, stop.Token);
         }
         catch (RpcException error)
         {
-            throw Translate(error, stop.Token);
+            failure = Translate(error, stop.Token);
         }
-        finally
+        catch (Exception error) when (error is not OutOfMemoryException)
         {
-            await caller.ReleaseAsync(stop.IsCancellationRequested);
-            _sessions.Return(session, reusable);
+            failure = error;
         }
+
+        // The caller's own writers are released before the outcome is reported, so their failures reach the caller.
+        bool cleanupFailed = await caller.ReleaseAsync(stop.IsCancellationRequested);
+        // A failed file call may have ended the server session after its terminal reply; only reuse after success.
+        _sessions.Return(session, failure is null);
+        if (cleanupFailed)
+        {
+            failure = WithCleanupFailure(failure, caller.Committed);
+        }
+
+        if (failure is not null)
+        {
+            System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw(failure);
+        }
+
+        return result!;
+    }
+
+    // Marks a call whose caller-side writer release failed: a failed call keeps its code with CleanupFailed set,
+    // and an otherwise successful call becomes cleanup-error that still lists its committed outputs.
+    private static Exception? WithCleanupFailure(Exception? failure, IReadOnlyList<PluginOutputInfo> committed)
+    {
+        if (failure is null)
+        {
+            return new PluginCallException(FailureCodes.CleanupError)
+            {
+                Failure = new PluginFailure(FailureCodes.CleanupError, FailurePhases.Exchange, "", CleanupFailed: true),
+                Outputs = committed
+            };
+        }
+
+        if (failure is not PluginCallException call)
+        {
+            return failure;
+        }
+
+        return new PluginCallException(call.Status, call.MayHaveExecuted)
+        {
+            Failure = (call.Failure ?? new PluginFailure(call.Status, FailurePhases.Transport, "")) with { CleanupFailed = true },
+            VersionMismatch = call.VersionMismatch,
+            Outputs = call.Outputs
+        };
     }
 
     private static async Task<Reply> RelayUntilTerminalAsync(AsyncDuplexStreamingCall<Request, Reply> session, CallerFiles caller, CancellationToken token)

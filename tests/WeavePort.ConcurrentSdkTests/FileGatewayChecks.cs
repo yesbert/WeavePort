@@ -36,6 +36,7 @@ internal static class FileGatewayChecks
             await CancellationAsync(gateway);
             await RevocationAsync(gateway);
             await HostTimeoutAsync(gateway);
+            await CallerCleanupAsync(gateway);
         }
 
         foreach (int blockBytes in new[] { 65536, 262144 })
@@ -98,6 +99,23 @@ internal static class FileGatewayChecks
 
         Check(cancelled && !destination.Events.Contains("commit") && destination.Events.Contains("abort:Cancelled") && destination.Events.Last() == "dispose", "caller cancellation aborts the caller's outputs");
         Check(await RecoversAsync(client), "the binding serves calls once the cancelled file call is cleaned up");
+    }
+
+    private static async Task CallerCleanupAsync(Gateway gateway)
+    {
+        await using RemotePluginClient client = gateway.Client(Allowed);
+        var destination = new DisposalFailingDestination();
+        PluginCallException? error = null;
+        try
+        {
+            await client.CallWithFilesAsync("copy", Empty, new PluginFiles([FileChecks.Input()], destination, new PluginFileLimits(1, 16 << 20)));
+        }
+        catch (PluginCallException failure)
+        {
+            error = failure;
+        }
+
+        Check(error is { ErrorCode: "cleanup-error", Failure.CleanupFailed: true } && error.Outputs.Single().Length == FileChecks.Archive.Length, "a caller-side writer release failure is reported with the committed output");
     }
 
     private static async Task HostTimeoutAsync(Gateway gateway)
@@ -245,6 +263,19 @@ internal static class FileGatewayChecks
         {
             await Task.Delay(50, cancellationToken);
             return await inner.ReadAsync(offset, buffer, cancellationToken);
+        }
+    }
+
+    private sealed class DisposalFailingDestination : IPluginOutputDestination
+    {
+        public ValueTask<IPluginOutputWriter> CreateAsync(string name, string mediaType, CancellationToken cancellationToken) => ValueTask.FromResult<IPluginOutputWriter>(new Writer());
+
+        private sealed class Writer : IPluginOutputWriter
+        {
+            public ValueTask WriteAsync(ReadOnlyMemory<byte> block, CancellationToken cancellationToken) => ValueTask.CompletedTask;
+            public ValueTask CommitAsync(CancellationToken cancellationToken) => ValueTask.CompletedTask;
+            public ValueTask AbortAsync(PluginOutputAbort reason, CancellationToken cancellationToken) => ValueTask.CompletedTask;
+            public ValueTask DisposeAsync() => ValueTask.FromException(new IOException("dispose failed"));
         }
     }
 

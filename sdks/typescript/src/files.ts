@@ -113,6 +113,9 @@ export class FileSession {
         this.closed = true;
         this.exchange = undefined;
     }
+    ensureOpen(): void {
+        this.check();
+    }
     private check(): void {
         if (this.closed) {
             throw new Error('Session completed');
@@ -147,6 +150,8 @@ export class InputFile implements PluginInput {
         if (!Number.isSafeInteger(position) || !Number.isSafeInteger(length) || position < 0 || length < 0) {
             throw new RangeError('Invalid range');
         }
+        // Checked on every read, including cache hits, so a retained input cannot outlive its call.
+        this.files.ensureOpen();
         const end = Math.min(position + length, this.size);
         const result = new Uint8Array(Math.max(end - position, 0));
         let offset = position;

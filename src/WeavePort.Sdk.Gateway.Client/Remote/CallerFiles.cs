@@ -12,6 +12,7 @@ internal sealed class CallerFiles(PluginFiles files)
     private readonly Dictionary<string, PluginInput> _inputs = files.Inputs.ToDictionary(input => input.Name, StringComparer.Ordinal);
     private readonly List<Output> _outputs = [];
     private long _outputBytes;
+    private long _readBudget = files.InputReadBudget;
 
     internal IReadOnlyList<PluginOutputInfo> Committed => [.. _outputs.Where(output => output.Committed).Select(output => new PluginOutputInfo(output.Name, output.MediaType, output.Length))];
 
@@ -45,6 +46,14 @@ internal sealed class CallerFiles(PluginFiles files)
         }
 
         int count = (int)Math.Clamp(input.Length - request.Offset, 0, request.Length);
+        // The caller enforces its own budget with the host's rule, so a misbehaving gateway cannot read more.
+        long charge = count == 0 ? ProtocolLimits.FileBlockMinimumBytes : count;
+        if (charge > _readBudget)
+        {
+            throw new InvalidDataException("Gateway read beyond the caller's input budget.");
+        }
+
+        _readBudget -= charge;
         byte[] buffer = ArrayPool<byte>.Shared.Rent(Math.Max(count, 1));
         try
         {
@@ -103,26 +112,43 @@ internal sealed class CallerFiles(PluginFiles files)
 
     private Output Open(string name) => _outputs.Find(output => output.Name == name && !output.Committed && !output.Aborted) ?? throw new InvalidDataException("Gateway used an unknown or finished output.");
 
-    // Aborts outputs the exchange left open (transport failure, cancellation) and disposes every writer once; never throws.
-    internal async Task ReleaseAsync(bool cancelled)
+    // Aborts outputs the exchange left open (transport failure, cancellation) and disposes every writer once,
+    // bounded by one grace period. Returns whether any step failed or was still running; never throws.
+    internal async Task<bool> ReleaseAsync(bool cancelled)
     {
         using var grace = new CancellationTokenSource(TimeSpan.FromSeconds(10));
+        bool failed = false;
         foreach (Output output in _outputs)
         {
-            await TryAsync(() => output.Committed || output.Aborted ? ValueTask.CompletedTask : output.Writer.AbortAsync(cancelled ? PluginOutputAbort.Cancelled : PluginOutputAbort.Failed, grace.Token));
-            await TryAsync(() => output.Writer.DisposeAsync());
+            failed |= !await TryAsync(() => output.Committed || output.Aborted ? ValueTask.CompletedTask : output.Writer.AbortAsync(cancelled ? PluginOutputAbort.Cancelled : PluginOutputAbort.Failed, grace.Token), grace.Token);
+            failed |= !await TryAsync(() => output.Writer.DisposeAsync(), grace.Token);
         }
+
+        return failed;
     }
 
-    private static async Task TryAsync(Func<ValueTask> action)
+    private static async Task<bool> TryAsync(Func<ValueTask> action, CancellationToken grace)
     {
+        Task step;
         try
         {
-            await action();
+            step = action().AsTask();
         }
         catch (Exception error) when (error is not OutOfMemoryException)
         {
-            // Release must not hide the call's own outcome; the destination owns its cleanup diagnostics.
+            return false;
+        }
+
+        try
+        {
+            await step.WaitAsync(grace);
+            return true;
+        }
+        catch (Exception error) when (error is not OutOfMemoryException)
+        {
+            // A step still running after the grace period finishes on its own; its eventual fault is observed.
+            _ = step.ContinueWith(static task => _ = task.Exception, CancellationToken.None, TaskContinuationOptions.OnlyOnFaulted, TaskScheduler.Default);
+            return false;
         }
     }
 

@@ -104,7 +104,7 @@ internal sealed partial class PluginSession(SessionBinding binding, TenantAdmiss
         catch (Exception error) when (error is not OutOfMemoryException)
         {
             string code = ClassifyFailure(error, cancellationToken, deadline.Token);
-            bool filesCleanupFailed = files is not null && await files.ReleaseAsync(FileExchange.AbortReason(code), logger, Instance);
+            bool filesCleanupFailed = error is OutputCleanupException || files is not null && await files.ReleaseAsync(FileExchange.AbortReason(code), logger, Instance);
             return await CompleteFailureAsync(error, code, id, started, activity, filesCleanupFailed);
         }
         finally
@@ -137,12 +137,25 @@ internal sealed partial class PluginSession(SessionBinding binding, TenantAdmiss
         _files = files;
         JsonElement value = await DispatchAsync(frame, token);
         token.ThrowIfCancellationRequested();
-        IReadOnlyList<PluginOutputInfo> outputs = files is null ? [] : await files.CommitAsync(token);
+        IReadOnlyList<PluginOutputInfo> outputs = files is null ? [] : await CommitFilesAsync(files, value, token);
         await ReturnCleanWorkerAsync();
         return new InvocationResult(FailureCodes.Ok, value, Instance, Stopwatch.GetElapsedTime(started).TotalMilliseconds, true)
         {
             Outputs = outputs
         };
+    }
+
+    // A result the caller cannot accept must not leave committed outputs behind, so the unary bound is checked first.
+    // Writers are released before success is reported, so a failed release reaches the caller as cleanup-error.
+    private async Task<IReadOnlyList<PluginOutputInfo>> CommitFilesAsync(FileExchange files, JsonElement value, CancellationToken token)
+    {
+        if (JsonSize.Measure(value) > ProtocolLimits.UnaryBytes)
+        {
+            throw new PluginFileException(FailureCodes.ValueLimit);
+        }
+
+        IReadOnlyList<PluginOutputInfo> outputs = await files.CommitAsync(token);
+        return await files.ReleaseAsync(null, logger, Instance) ? throw new OutputCleanupException(outputs) : outputs;
     }
 
     private async Task<JsonElement> DispatchAsync(InvokeFrame frame, CancellationToken token)

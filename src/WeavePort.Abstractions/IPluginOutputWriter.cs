@@ -1,5 +1,5 @@
 namespace WeavePort.Abstractions;
-/// <summary>Receives one function output. Writes are sequential and never concurrent. WeavePort calls exactly one of <see cref = "CommitAsync"/> or <see cref = "AbortAsync"/>, then <see cref = "IAsyncDisposable.DisposeAsync"/>.</summary>
+/// <summary>Receives one function output. Writes are sequential and never concurrent. WeavePort calls <see cref = "CommitAsync"/> or <see cref = "AbortAsync"/>, then <see cref = "IAsyncDisposable.DisposeAsync"/>. Exception: when <see cref = "CommitAsync"/> fails, the same writer next receives <see cref = "AbortAsync"/> with <see cref = "PluginOutputAbort.CommitFailed"/>, so it can remove a partially committed output. Abort and disposal are bounded by a cleanup grace period; a step still running after it is reported as a cleanup failure.</summary>
 public interface IPluginOutputWriter : IAsyncDisposable
 {
     /// <summary>Appends the next block. The memory is valid only until the returned task completes.</summary>

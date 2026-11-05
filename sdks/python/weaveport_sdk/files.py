@@ -128,6 +128,8 @@ class InputFile:
         """Return up to length bytes from offset; fewer only at the end of the input."""
         if offset < 0 or length < 0:
             raise ValueError("Invalid range")
+        # Checked on every read, including cache hits, so a retained input cannot outlive its call.
+        self._files._check()
         end = min(offset + length, self.size)
         parts = []
         while offset < end:
@@ -171,15 +173,25 @@ class OutputFile:
         return self._written
 
     async def write(self, data):
+        """Buffer at most one block; large writes are sent block by block without copying them whole."""
         if self._completed:
             raise PluginFileError(FileErrors.OutputClosed)
-        self._buffer += data
-        self._written += len(data)
-        while len(self._buffer) >= self._files.block_bytes:
-            block = bytes(self._buffer[: self._files.block_bytes])
-            del self._buffer[: self._files.block_bytes]
-            await self._files.write(self.name, block)
-        return len(data)
+        view = memoryview(data).cast("B")
+        total = len(view)
+        self._written += total
+        while view:
+            take = min(self._files.block_bytes - len(self._buffer), len(view))
+            self._buffer += view[:take]
+            view = view[take:]
+            await self._send_full_block()
+        return total
+
+    async def _send_full_block(self):
+        if len(self._buffer) < self._files.block_bytes:
+            return
+        block = bytes(self._buffer)
+        self._buffer.clear()
+        await self._files.write(self.name, block)
 
     async def close(self):
         """Send the remaining bytes and complete the output; repeated calls do nothing."""
