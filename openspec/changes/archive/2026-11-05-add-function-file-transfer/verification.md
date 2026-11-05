@@ -2,15 +2,18 @@
 
 ## Qualified source — 2026-11-05
 
-Commit `eccd6c3b6ec39527145c87d4f25167ab2a4efef1` passed the normal committed-candidate workflow, `./scripts/verify.sh`. The run used a fresh detached checkout and isolated dependency caches. Local retained evidence is `artifacts/candidates/20261105-123422-86da82ef/result.json`, with per-stage logs. Result: **passed, 78 stages, 3,827 assertions, 446 frozen files**. Artifact manifest SHA-256: `668f8613b1d834cbcf95d17564229a3289965ce2b5710fa336396f0422cb0510`.
+Commit `7cdea705228b2793cd7d9ee3025dd1cab39b0093` passed the normal committed-candidate workflow, `./scripts/verify.sh`. The run used a fresh detached checkout and isolated dependency caches. Local retained evidence is `artifacts/candidates/20261105-130859-96182c42/result.json`, with per-stage logs. Result: **passed, 78 stages, 3,837 assertions, 446 frozen files**. Artifact manifest SHA-256: `432a073463c660c28d57057e9b3be1b4d86b93dd815e196c61576e2b573e9ca3`.
 
 Environment: macOS 27.2 arm64, .NET SDK 10.0.403, .NET 10.0.14 runtime, Python 3.15.2, Node v26.12.1 and npm 11.20.0. Three permitted consumer lockfile refreshes are recorded in result.json: `examples/mcp`, and the Decision Room host and plugin. Docker was not used.
 
-Commit `eccd6c3` adds four stages to the workflow: `concurrent-sdk-{source,packed}-files` and `concurrent-sdk-{source,packed}-files-gateway`. They run the three-language file and gateway suites against the source-built and the packed SDK fixtures, including the installed Python wheel and npm package. All four passed.
+The workflow includes the four file stages: `concurrent-sdk-{source,packed}-files` and `concurrent-sdk-{source,packed}-files-gateway`. They run the three-language file and gateway suites against the source-built and the packed SDK fixtures, including the installed Python wheel and npm package. All four passed.
 
-The preceding commit `83aa2d5` passed the workflow without those stages: 74 stages, 3,733 assertions, evidence `artifacts/candidates/20261105-122915-07f67faf`. It is superseded because it did not exercise function files with packed SDKs.
+Earlier runs are superseded:
 
-After qualification, only the evidence and task completion, the specification synchronization, archiving and generated documentation changed. The implementation bytes are those of the qualified commit.
+- `eccd6c3`: 78 stages, 3,827 assertions, evidence `artifacts/candidates/20261105-123422-86da82ef`. Superseded by the code review fixes.
+- `83aa2d5`: 74 stages, 3,733 assertions, evidence `artifacts/candidates/20261105-122915-07f67faf`. It did not yet run the file stages.
+
+After qualification, only these verification notes changed. The implementation bytes are those of the qualified commit.
 
 ## Limits
 
