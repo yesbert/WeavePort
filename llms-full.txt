@@ -519,6 +519,8 @@ This qualifies the recorded native macOS arm64 profile. Individual latency reach
 
 The remaining platform change is [qualify-native-capacity-and-platform-comparison](https://raw.githubusercontent.com/yesbert/WeavePort/main/openspec/changes/qualify-native-capacity-and-platform-comparison/tasks.md): Windows capacity/performance qualification remains outstanding. Native source adapter checks now pass in [Windows/Linux CI](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/continuous-integration.md), including 38 Windows stdio assertions and 38/39 Linux stdio/socket assertions. Those source checks do not replace current public-package installation qualification. See [platform requirements](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/platform-qualification.md).
 
+[add-function-file-transfer](https://raw.githubusercontent.com/yesbert/WeavePort/main/openspec/changes/add-function-file-transfer/tasks.md) is in progress and unreleased: [function files](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/function-files.md) work locally and through the scheduler in all three SDKs; the gateway path and release qualification remain.
+
 HiveWeaver, TreeWeaver and NextPA integration remains separate application work. Application signing/notarization, stronger sandboxing and automatic deployment/migration are separate release decisions, not hidden tasks needed to run the current internal examples.
 
 The [repository cleanup qualification](https://raw.githubusercontent.com/yesbert/WeavePort/main/reports/verification/current/README.md) adds a maintained-link check (399 assertion executions), moved adapter checks and a packaging regression. It does not replace the exact current release evidence above.
@@ -786,6 +788,8 @@ The automated TLS topology runs on one machine with separate plugin worker proce
 
 Bound remote clients also expose `SourceAsync`. The gateway reads the existing authorized local client source and carries bounded binary blocks over gRPC. `Composition.CollectAsync` checks the authenticated binding tenant before committing a scoped result. Shared client views retain unary-only behavior through the gateway.
 
+[Function files](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/function-files.md) are not carried by the gateway yet. `RemotePluginClient.CallWithFilesAsync` refuses with `files-unsupported` before contacting the server.
+
 ## Post-release structured failures
 
 Current qualified source adds optional protobuf Reply fields `failure_code` (10), `failure_phase` (11), `correlation_id` (12) and `cleanup_failed` (13), preserving fields 1–9 and existing status/possible-execution semantics. These fields are included since 0.8.0; see [migration notes](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/releases.md#080-failure-contracts-and-code-quality). Older peers can omit them.
@@ -851,6 +855,10 @@ Pass a `LocalPluginClient` or `RemotePluginClient` to the SDK overload of `Compo
 SDK workers register a `bulk-map` function with an object containing base64 `data` as both input and output. Malformed/missing/non-base64 or oversized output fails without committing a result. This is separate from the legacy native direct-operation overload.
 
 If partial-file removal fails, producer and cleanup errors are aggregated and the quota reservation is retained conservatively until scope cleanup. Disposal attempts cancellation, drains active operations and attempts storage cleanup even if a cancellation callback fails. Repeated disposal observes the same completion or failure. A deletion failure is observable; no successful deletion or secure erasure is claimed. Applications own recovery of failed storage and process-crash remnants.
+
+## Function outputs into a result scope
+
+In current source after 0.9.1, `scope.AsOutputDestination()` returns `ResultOutputs`, an output destination for [function files](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/function-files.md). Outputs count against the scope's object and scope quotas while their blocks arrive. A committed output appears in `ResultOutputs.Results` by output name as an ordinary `ResultHandle`. An aborted one is deleted and its reservation released. If deleting a partial file fails, its reservation is retained until scope cleanup, as for `CreateAsync`.
 
 ## Collect a plugin-originated source
 
@@ -1255,11 +1263,133 @@ Set C# `PluginApplication.ConcurrentCalls = true`, Python `PluginApplication(con
 
 For plugin-originated files, C# `Source<TInput>` returns a readable `Stream`; Python `@app.source` returns a readable binary file; TypeScript `plugin.source` returns a `BinarySource` with `read(maxBytes)` and `close()` methods. The runtime owns source cleanup. `IBoundPluginClient.SourceAsync` reads bounded 4–256 KiB blocks under one exclusive lease; `Composition.CollectAsync` commits them into a quota-enforced result scope. JSON streams keep their existing 64 MiB limit. See [bulk composition](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/bulk-composition.md).
 
+## Function files
+
+Current source after 0.9.1 lets a function read host-named inputs at any offset and write named outputs that the host commits only when the call succeeds: C# `context.OpenInput` and `context.CreateOutputAsync`, Python `context.open_input` and `context.create_output`, TypeScript `context.openInput` and `context.createOutput`. Only exclusive workers support files. See [function files](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/function-files.md).
+
 ## Failure handling in current source
 
 These details are included since 0.8.0; review the [migration notes](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/releases.md#080-failure-contracts-and-code-quality). Client failures expose `PluginCallException.Failure` when available. Prefer `error.Failure?.Code ?? error.ErrorCode`, retain `MayHaveExecuted`, and treat unknown codes conservatively. Low-level sessions expose the same optional details through `InvocationResult.Failure`. Normal argument exceptions and `OperationCanceledException` keep their standard categories; exception messages are human diagnostics, not machine contracts.
 
 If a handler and its registered resource cleanup both fail, the SDK attempts every cleanup in reverse order and retains the primary cause with the cleanup causes locally. Python's `SessionCleanupError.errors` is an immutable tuple and its `code` is `cleanup-error`; TypeScript's cleanup error retains `AggregateError` causes. Only bounded code/cleanup metadata crosses the worker boundary. Forced process termination can prevent cleanup; this is not a universal guarantee for arbitrary consumer iterator/finally failures. See [failure codes](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/failure-codes.md) and [logging ownership](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/runtime-diagnostics.md).
+
+---
+
+## Function files
+
+Source: https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/function-files.md
+
+# Function files
+
+**Availability:** current source after 0.9.1, not yet released. Local calls and the scheduler path are implemented. Calls through the gateway are not available yet; remote clients refuse them with `files-unsupported`.
+
+A function call can take named file inputs from the host and hand named file outputs back, beside its bounded JSON input and result. The bytes pass only through readers and writers the host application supplies. The plugin never gets a storage location, a credential or a key. Typical use: a spreadsheet a person uploaded goes in, and a generated workbook comes out.
+
+## Host side
+
+The trusted application decides which files a call may use. For each call it supplies:
+
+- **inputs**: a name, an exact length, a media type and an `IPluginInputReader`;
+- **an output destination**, optionally: an `IPluginOutputDestination` that creates one `IPluginOutputWriter` per output the plugin creates;
+- **limits** for this call.
+
+```csharp
+var sheet = new PluginInput("sheet", length, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", reader);
+var files = new PluginFiles([sheet], destination, new PluginFileLimits(maximumOutputs: 2, maximumOutputBytes: 64L << 20));
+PluginCallResult<ImportSummary> result = await client.CallWithFilesAsync<ImportRequest, ImportSummary>("sheet.extract", request, files, cancellationToken);
+foreach (PluginOutputInfo output in result.Outputs)
+{
+    // name, media type and exact committed length
+}
+```
+
+`CallWithFilesAsync` exists on `LocalPluginClient`. A host configured with `SchedulingOptions` carries files through its queue. Lower-level code can use `IPluginFileSession.InvokeAsync(operation, payload, files)`.
+
+**Readers** are positional. WeavePort calls `ReadAsync(offset, buffer)` at any offset and in any order, never concurrently within one call, and never beyond the declared length. A reader returns fewer bytes than requested only at the end of the input. Storage that can only be decrypted forward must either support block-wise random access, for example with independently authenticated chunks, or be buffered by the application. WeavePort does not copy inputs to disk. Built-in readers: `PluginInputReader.FromStream` for a readable, seekable stream, and `PluginInputReader.FromFile` for an open `SafeFileHandle`. The caller keeps ownership of both.
+
+**Writers** receive blocks in order. WeavePort calls exactly one of the following, and then `DisposeAsync`:
+
+- `CommitAsync`, when the call succeeded and the plugin completed every output it created. Outputs are committed in creation order.
+- `AbortAsync(reason)` otherwise, including for outputs the plugin had already completed. The reasons are `Failed`, `Cancelled`, `Limit` and `CommitFailed`.
+
+Abort and disposal run under a bounded grace period even after cancellation. Their failures are reported as `PluginFailure.CleanupFailed` and do not replace the primary code. If committing a later output fails, the call fails with `output-commit-failed`, and `Outputs` lists the outputs that were already committed. WeavePort cannot undo a commit, so a destination that needs all-or-nothing across outputs makes them visible in a transaction of its own.
+
+Built-in destinations: `PluginOutputDestination.ToDirectory` writes hidden partial files and moves each one to its output name on commit, never replacing an existing file; it is meant for tools and tests. `ResultScope.AsOutputDestination()` from `WeavePort.Composition` makes committed outputs scope results. See [bulk composition](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/bulk-composition.md).
+
+## Limits and failures
+
+| Limit | Default | Exceeded |
+|---|---|---|
+| Inputs per call | at most 64 | refused when `PluginFiles` is constructed |
+| Outputs per call | `PluginFileLimits.MaximumOutputs`, at most 64; 0 permits none | call fails with `output-limit` |
+| Total output bytes | `PluginFileLimits.MaximumOutputBytes` | call fails with `output-limit` before the excess reaches a writer |
+| Input bytes delivered by readers | `MaximumInputReadBytes`, or four times the sum of the input lengths | call fails with `input-read-limit` before the reader is called |
+| Block size | 4–256 KiB decoded, 64 KiB by default, chosen by the plugin SDK | protocol error |
+
+Reads served from the SDK's block cache do not count against the read budget. All file transfer happens within the call's deadline, so raise the binding's timeout for large files.
+
+Before the plugin runs, a call with files is refused with `files-unsupported` and `MayHaveExecuted = false` in these cases:
+
+- the worker did not advertise file support (an SDK older than this change);
+- the binding is shared or MCP;
+- the operation is a stream or a source.
+
+A call that returns while an output it created is still open fails with `output-incomplete`. Failures after dispatch keep `MayHaveExecuted = true`. A file failure retires the worker, like other failures inside an invocation.
+
+These codes are distinct from the existing `input-limit`, which bounds the unary JSON request. See [failure codes](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/failure-codes.md).
+
+## Plugin side
+
+Only exclusive SDK workers support files; concurrent (shared) workers do not advertise the capability. Opening an unknown input, or creating an output the call does not permit, is refused locally before any request reaches the host. A read or write after the call ended is refused like a late callback. Each open input caches its four most recently read blocks, so archive readers that revisit their directory and headers cause no extra round trips.
+
+**C#**
+
+```csharp
+plugin.Function<ImportRequest, ImportSummary>("sheet.extract", async (request, context, token) =>
+{
+    await using Stream sheet = context.OpenInput("sheet");            // seekable; synchronous Read also works
+    using var archive = new ZipArchive(sheet, ZipArchiveMode.Read);
+    await using PluginOutputStream result = await context.CreateOutputAsync("result.xlsx", MediaTypes.Xlsx, token);
+    await WriteWorkbookAsync(archive, result, token);
+    await result.CompleteAsync(token);                                // or rely on disposal
+    return summary;
+});
+```
+
+`context.Inputs` lists the descriptors. Refusals throw `PluginFileException` with `Code`. Set `PluginApplication.FileBlockBytes` to change the block size.
+
+**Python**
+
+```python
+@app.function("sheet.extract")
+async def extract(request, context):
+    sheet = await context.open_input("sheet")
+    rows = await asyncio.to_thread(read_rows, sheet.as_file())   # sync file for zipfile/openpyxl, off the event loop
+    async with await context.create_output("result.xlsx", XLSX) as result:
+        await result.write(render(rows))
+    return dict(rows=len(rows))
+```
+
+`await sheet.read_at(offset, length)` reads asynchronously. `as_file()` raises on the event-loop thread instead of hanging. Refusals raise `PluginFileError` with `code`. Use `PluginApplication(file_block_bytes=...)` to change the block size.
+
+**TypeScript**
+
+```typescript
+plugin.function('sheet.extract', async (request, context) => {
+    const sheet = context.openInput('sheet');
+    const tail = await sheet.read(sheet.size - 22, 22);
+    const result = await context.createOutput('result.xlsx', XLSX);
+    await result.write(render(tail));
+    await result.close();
+    return { bytes: result.written };
+});
+```
+
+`createOutput` also offers `toWritableStream()`. Refusals throw `PluginFileError` with `code`. Use `new PluginApplication('1', { fileBlockBytes })` to change the block size.
+
+## Boundaries
+
+The plugin process necessarily sees plaintext, and a trusted native plugin could write it anywhere it can reach. WeavePort's guarantees are grants, limits, cleanup and cancellation at the protocol boundary, not containment of hostile code. See [security boundaries](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/security-architecture.md). Bytes travel as base64 JSON blocks, with the same cost as sources and callbacks. Local measurements are recorded in the change's [verification notes](https://raw.githubusercontent.com/yesbert/WeavePort/main/openspec/changes/add-function-file-transfer/verification.md). The wire format is described in the [protocol reference](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/protocol.md#function-files).
 
 ---
 
@@ -2177,6 +2307,11 @@ Use `Failure.Code` for structured failure identity when present, and the existin
 | `not-found` | Remote transport could not find the requested resource. |
 | `unimplemented` | Remote transport does not implement the requested operation. |
 | `unknown-error` | Unknown external failure category; descriptions are never parsed as codes. |
+| `files-unsupported` | A call carrying files was refused before dispatch: the worker or client lacks file support, or the binding or operation kind does not permit files. |
+| `output-limit` | A function output exceeded the invocation's output count or total size. |
+| `input-read-limit` | Host readers would deliver more input bytes than the invocation's read budget. Distinct from `input-limit`. |
+| `output-incomplete` | A function returned while an output it created was not completed. |
+| `output-commit-failed` | Committing a function output failed; earlier outputs may already be committed. |
 
 `CleanupFailed` records an additional cleanup failure without overwriting the primary code. Phase is `prepare`, `exchange` or `transport`; correlation is an opaque invocation identifier. Old peers may supply neither phase nor correlation. Raw plugin exception details are not sent across the protocol. See [diagnostics](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/runtime-diagnostics.md) for local opt-in exception delivery.
 
@@ -2214,7 +2349,7 @@ The worker replies with `{"type":"result","id":"host-generated-id","value":{}}` 
 
 A callback uses `{"type":"callback","id":"host-generated-id","callbackId":"unique-within-call","operation":"documents.read","payload":{}}`. The host returns a matching `callback-result` with `value`, or a denied/error outcome. Each callback reply is correlated to its invocation. Unknown invocation IDs, duplicate callback IDs and malformed or oversized frames fail the exchange; shared malformed traffic can retire the whole channel.
 
-Native worker envelope validation rejects duplicate reserved fields, including escaped spellings: `type`, `id`, `callbackId`, `operation`, `payload`, `value`, `protocol`, `pluginVersion`, `code`, `sessionCleanup`, `reusable`, `concurrentCalls`, `degree`, `primaryCode`, `cleanupFailed`. Required fields and their types are validated at the owning boundary. Nested application payloads retain their domain semantics. Ready protocol revisions must be supported integers.
+Native worker envelope validation rejects duplicate reserved fields, including escaped spellings: `type`, `id`, `callbackId`, `operation`, `payload`, `value`, `protocol`, `pluginVersion`, `code`, `sessionCleanup`, `reusable`, `concurrentCalls`, `degree`, `primaryCode`, `cleanupFailed`, `files`. Required fields and their types are validated at the owning boundary. Nested application payloads retain their domain semantics. Ready protocol revisions must be supported integers.
 
 ## Authority and outcomes
 
@@ -2255,6 +2390,27 @@ Shared cancellation sends a per-invocation `cancel`, revokes callback authority 
 The SDK maps public function calls to `$sdk.call`; JSON result streams use `$sdk.start`, `$sdk.next` and `$sdk.close`. Binary sources use `$sdk.source.open`, `$sdk.source.read` and `$sdk.source.close`. Application operation names travel inside the SDK request. These reserved operations belong to the SDK, not the application's domain model.
 
 Unary input/output is limited to 512 KiB, stream items to 128 KiB, batches to 16 items and 256 KiB, and total JSON stream data to 64 MiB. Empty unfinished batches are valid heartbeats; the producer retains one pending iterator advancement. Binary sources transfer 4–256 KiB decoded blocks as bounded base64 JSON, defaulting to 64 KiB. An exclusive client keeps one operation lease across reads, consumer pauses and cleanup. Independent result-scope quotas bound large source collection.
+
+## Function files
+
+**Availability:** current source after 0.9.1. See the [function files guide](https://raw.githubusercontent.com/yesbert/WeavePort/main/docs/function-files.md).
+
+An exclusive SDK worker that supports files adds `"files":1` to its ready envelope. A host refuses a call with files before dispatch (`files-unsupported`) when the worker lacks it, the binding is shared or MCP, or the operation is a stream or source. For a call with files, the invoke envelope carries host-owned descriptors beside `context`:
+
+```json
+"files":{"inputs":[{"name":"sheet","length":9437184,"mediaType":"application/zip"}],"outputs":{"maximumCount":2,"maximumBytes":67108864}}
+```
+
+An absent `outputs` object permits no outputs. The plugin uses four reserved operations, sent as ordinary `callback` frames of the invocation:
+
+| Operation | Payload | Reply value |
+|---|---|---|
+| `$sdk.input.read` | `name`, `offset`, `length` (4–256 KiB) | `data` as base64; shorter only at the end, empty at or past it |
+| `$sdk.output.create` | `name`, `mediaType` | `{}` |
+| `$sdk.output.write` | `name`, `data` as base64 (1 B–256 KiB decoded) | `{}` |
+| `$sdk.output.complete` | `name` | `length` |
+
+The host handles them inline, outside callback grants, the callback budget and callback admission. A recoverable refusal is a `callback-result` whose additive `error` field is one of `input-not-found`, `output-not-permitted`, `output-exists`, `output-closed` or `invalid-range`; the invocation continues. Read-budget and output limits, an output left open at a successful result, and a failed commit fail the invocation with `input-read-limit`, `output-limit`, `output-incomplete` or `output-commit-failed` and retire the worker. Names use 1–128 characters from `A–Z a–z 0–9 . _ -` and do not start with `.`. Media types use 1–255 visible ASCII characters.
 
 ## Execution restrictions
 
@@ -5254,12 +5410,25 @@ type WeavePort.Abstractions.HostCall : System.Object [Public, Sealed]
   Property WeavePort.Abstractions.PluginContext Context
 type WeavePort.Abstractions.IHostCallbacks :  [Public, ClassSemanticsMask, Abstract]
   Method System.Threading.Tasks.ValueTask`1[System.Text.Json.JsonElement] InvokeAsync(WeavePort.Abstractions.HostCall, System.Threading.CancellationToken) [Public, Virtual, Abstract] (call, cancellationToken)
+type WeavePort.Abstractions.IPluginFileSession :  [Public, ClassSemanticsMask, Abstract]
+  implements System.IAsyncDisposable
+  implements WeavePort.Abstractions.IPluginSession
+  Method System.Threading.Tasks.Task`1[WeavePort.Abstractions.InvocationResult] InvokeAsync(System.String, System.Text.Json.JsonElement, WeavePort.Abstractions.PluginFiles, System.Threading.CancellationToken) [Public, Virtual, Abstract] (operation, payload, files, cancellationToken=null)
+type WeavePort.Abstractions.IPluginInputReader :  [Public, ClassSemanticsMask, Abstract]
+  Method System.Threading.Tasks.ValueTask`1[System.Int32] ReadAsync(Int64, System.Memory`1[System.Byte], System.Threading.CancellationToken) [Public, Virtual, Abstract] (offset, buffer, cancellationToken)
 type WeavePort.Abstractions.IPluginOperationSession :  [Public, ClassSemanticsMask, Abstract]
   implements System.IAsyncDisposable
   implements WeavePort.Abstractions.IPluginSession
   Method Boolean get_SupportsStreaming() [Public, Virtual, Abstract] ()
   Method System.Threading.Tasks.ValueTask`1[WeavePort.Abstractions.IPluginSession] AcquireOperationAsync(System.Threading.CancellationToken) [Public, Virtual, Abstract] (cancellationToken=null)
   Property Boolean SupportsStreaming
+type WeavePort.Abstractions.IPluginOutputDestination :  [Public, ClassSemanticsMask, Abstract]
+  Method System.Threading.Tasks.ValueTask`1[WeavePort.Abstractions.IPluginOutputWriter] CreateAsync(System.String, System.String, System.Threading.CancellationToken) [Public, Virtual, Abstract] (name, mediaType, cancellationToken)
+type WeavePort.Abstractions.IPluginOutputWriter :  [Public, ClassSemanticsMask, Abstract]
+  implements System.IAsyncDisposable
+  Method System.Threading.Tasks.ValueTask AbortAsync(WeavePort.Abstractions.PluginOutputAbort, System.Threading.CancellationToken) [Public, Virtual, Abstract] (reason, cancellationToken)
+  Method System.Threading.Tasks.ValueTask CommitAsync(System.Threading.CancellationToken) [Public, Virtual, Abstract] (cancellationToken)
+  Method System.Threading.Tasks.ValueTask WriteAsync(System.ReadOnlyMemory`1[System.Byte], System.Threading.CancellationToken) [Public, Virtual, Abstract] (block, cancellationToken)
 type WeavePort.Abstractions.IPluginSession :  [Public, ClassSemanticsMask, Abstract]
   implements System.IAsyncDisposable
   Method System.String get_Instance() [Public, Virtual, Abstract] ()
@@ -5278,6 +5447,7 @@ type WeavePort.Abstractions.InvocationResult : System.Object [Public, Sealed]
   Method Boolean op_Inequality(WeavePort.Abstractions.InvocationResult, WeavePort.Abstractions.InvocationResult) [Public, Static] (left, right)
   Method Double get_ElapsedMs() [Public] ()
   Method Int32 GetHashCode() [Public, Virtual] ()
+  Method System.Collections.Generic.IReadOnlyList`1[WeavePort.Abstractions.PluginOutputInfo] get_Outputs() [Public] ()
   Method System.String ToString() [Public, Virtual] ()
   Method System.String get_Instance() [Public] ()
   Method System.String get_Status() [Public] ()
@@ -5287,6 +5457,7 @@ type WeavePort.Abstractions.InvocationResult : System.Object [Public, Sealed]
   Method Void set_Failure(WeavePort.Abstractions.PluginFailure) [Public] (value)
   Method Void set_Instance(System.String) [Public] (value)
   Method Void set_MayHaveExecuted(Boolean) [Public] (value)
+  Method Void set_Outputs(System.Collections.Generic.IReadOnlyList`1[WeavePort.Abstractions.PluginOutputInfo]) [Public] (value)
   Method Void set_Status(System.String) [Public] (value)
   Method Void set_Value(System.Text.Json.JsonElement) [Public] (value)
   Method Void set_VersionMismatch(WeavePort.Abstractions.PluginVersionMismatch) [Public] (value)
@@ -5295,6 +5466,7 @@ type WeavePort.Abstractions.InvocationResult : System.Object [Public, Sealed]
   Method WeavePort.Abstractions.PluginVersionMismatch get_VersionMismatch() [Public] ()
   Property Boolean MayHaveExecuted
   Property Double ElapsedMs
+  Property System.Collections.Generic.IReadOnlyList`1[WeavePort.Abstractions.PluginOutputInfo] Outputs
   Property System.String Instance
   Property System.String Status
   Property System.Text.Json.JsonElement Value
@@ -5349,6 +5521,87 @@ type WeavePort.Abstractions.PluginFailure : System.Object [Public, Sealed]
   Property System.String Code
   Property System.String CorrelationId
   Property System.String Phase
+type WeavePort.Abstractions.PluginFileLimits : System.Object [Public, Sealed]
+  implements System.IEquatable`1[WeavePort.Abstractions.PluginFileLimits]
+  Constructor Void .ctor(Int32, Int64, System.Nullable`1[System.Int64]) [Public] (maximumOutputs, maximumOutputBytes, maximumInputReadBytes=null)
+  Method Boolean Equals(System.Object) [Public, Virtual] (obj)
+  Method Boolean Equals(WeavePort.Abstractions.PluginFileLimits) [Public, Final, Virtual] (other)
+  Method Boolean op_Equality(WeavePort.Abstractions.PluginFileLimits, WeavePort.Abstractions.PluginFileLimits) [Public, Static] (left, right)
+  Method Boolean op_Inequality(WeavePort.Abstractions.PluginFileLimits, WeavePort.Abstractions.PluginFileLimits) [Public, Static] (left, right)
+  Method Int32 GetHashCode() [Public, Virtual] ()
+  Method Int32 get_MaximumOutputs() [Public] ()
+  Method Int64 get_MaximumOutputBytes() [Public] ()
+  Method System.Nullable`1[System.Int64] get_MaximumInputReadBytes() [Public] ()
+  Method System.String ToString() [Public, Virtual] ()
+  Method WeavePort.Abstractions.PluginFileLimits <Clone>$() [Public] ()
+  Method WeavePort.Abstractions.PluginFileLimits get_InputsOnly() [Public, Static] ()
+  Property Int32 MaximumOutputs
+  Property Int64 MaximumOutputBytes
+  Property System.Nullable`1[System.Int64] MaximumInputReadBytes
+  Property WeavePort.Abstractions.PluginFileLimits InputsOnly
+type WeavePort.Abstractions.PluginFiles : System.Object [Public, Sealed]
+  Constructor Void .ctor(System.Collections.Generic.IEnumerable`1[WeavePort.Abstractions.PluginInput], WeavePort.Abstractions.IPluginOutputDestination, WeavePort.Abstractions.PluginFileLimits) [Public] (inputs, outputs=null, limits=null)
+  Method Int64 get_InputReadBudget() [Public] ()
+  Method System.Collections.Generic.IReadOnlyList`1[WeavePort.Abstractions.PluginInput] get_Inputs() [Public] ()
+  Method WeavePort.Abstractions.IPluginOutputDestination get_Outputs() [Public] ()
+  Method WeavePort.Abstractions.PluginFileLimits get_Limits() [Public] ()
+  Property Int64 InputReadBudget
+  Property System.Collections.Generic.IReadOnlyList`1[WeavePort.Abstractions.PluginInput] Inputs
+  Property WeavePort.Abstractions.IPluginOutputDestination Outputs
+  Property WeavePort.Abstractions.PluginFileLimits Limits
+type WeavePort.Abstractions.PluginInput : System.Object [Public, Sealed]
+  implements System.IEquatable`1[WeavePort.Abstractions.PluginInput]
+  Constructor Void .ctor(System.String, Int64, System.String, WeavePort.Abstractions.IPluginInputReader) [Public] (name, length, mediaType, reader)
+  Method Boolean Equals(System.Object) [Public, Virtual] (obj)
+  Method Boolean Equals(WeavePort.Abstractions.PluginInput) [Public, Final, Virtual] (other)
+  Method Boolean op_Equality(WeavePort.Abstractions.PluginInput, WeavePort.Abstractions.PluginInput) [Public, Static] (left, right)
+  Method Boolean op_Inequality(WeavePort.Abstractions.PluginInput, WeavePort.Abstractions.PluginInput) [Public, Static] (left, right)
+  Method Int32 GetHashCode() [Public, Virtual] ()
+  Method Int64 get_Length() [Public] ()
+  Method System.String ToString() [Public, Virtual] ()
+  Method System.String get_MediaType() [Public] ()
+  Method System.String get_Name() [Public] ()
+  Method WeavePort.Abstractions.IPluginInputReader get_Reader() [Public] ()
+  Method WeavePort.Abstractions.PluginInput <Clone>$() [Public] ()
+  Property Int64 Length
+  Property System.String MediaType
+  Property System.String Name
+  Property WeavePort.Abstractions.IPluginInputReader Reader
+type WeavePort.Abstractions.PluginInputReader : System.Object [Public, Abstract, Sealed]
+  Method WeavePort.Abstractions.IPluginInputReader FromFile(Microsoft.Win32.SafeHandles.SafeFileHandle) [Public, Static] (handle)
+  Method WeavePort.Abstractions.IPluginInputReader FromStream(System.IO.Stream) [Public, Static] (stream)
+type WeavePort.Abstractions.PluginOutputAbort : System.Enum [Public, Sealed]
+  implements System.IComparable
+  implements System.IConvertible
+  implements System.IFormattable
+  implements System.ISpanFormattable
+  Field Int32 value__
+  Field WeavePort.Abstractions.PluginOutputAbort Cancelled=1
+  Field WeavePort.Abstractions.PluginOutputAbort CommitFailed=3
+  Field WeavePort.Abstractions.PluginOutputAbort Failed=0
+  Field WeavePort.Abstractions.PluginOutputAbort Limit=2
+type WeavePort.Abstractions.PluginOutputDestination : System.Object [Public, Abstract, Sealed]
+  Method WeavePort.Abstractions.IPluginOutputDestination ToDirectory(System.String) [Public, Static] (directory)
+type WeavePort.Abstractions.PluginOutputInfo : System.Object [Public, Sealed]
+  implements System.IEquatable`1[WeavePort.Abstractions.PluginOutputInfo]
+  Constructor Void .ctor(System.String, System.String, Int64) [Public] (Name, MediaType, Length)
+  Method Boolean Equals(System.Object) [Public, Virtual] (obj)
+  Method Boolean Equals(WeavePort.Abstractions.PluginOutputInfo) [Public, Final, Virtual] (other)
+  Method Boolean op_Equality(WeavePort.Abstractions.PluginOutputInfo, WeavePort.Abstractions.PluginOutputInfo) [Public, Static] (left, right)
+  Method Boolean op_Inequality(WeavePort.Abstractions.PluginOutputInfo, WeavePort.Abstractions.PluginOutputInfo) [Public, Static] (left, right)
+  Method Int32 GetHashCode() [Public, Virtual] ()
+  Method Int64 get_Length() [Public] ()
+  Method System.String ToString() [Public, Virtual] ()
+  Method System.String get_MediaType() [Public] ()
+  Method System.String get_Name() [Public] ()
+  Method Void Deconstruct(System.String ByRef, System.String ByRef, Int64 ByRef) [Public] (Name, MediaType, Length)
+  Method Void set_Length(Int64) [Public] (value)
+  Method Void set_MediaType(System.String) [Public] (value)
+  Method Void set_Name(System.String) [Public] (value)
+  Method WeavePort.Abstractions.PluginOutputInfo <Clone>$() [Public] ()
+  Property Int64 Length
+  Property System.String MediaType
+  Property System.String Name
 type WeavePort.Abstractions.PluginVersionMismatch : System.Object [Public, Sealed]
   implements System.IEquatable`1[WeavePort.Abstractions.PluginVersionMismatch]
   Constructor Void .ctor(System.String, System.String) [Public] (Expected, Advertised)
@@ -5810,6 +6063,7 @@ type WeavePort.Hosting.ScheduledInvocationResult : System.Object [Public, Sealed
   Property WeavePort.Abstractions.InvocationResult Result
 type WeavePort.Hosting.ScheduledPlugin : System.Object [Public, Sealed]
   implements System.IAsyncDisposable
+  implements WeavePort.Abstractions.IPluginFileSession
   implements WeavePort.Abstractions.IPluginOperationSession
   implements WeavePort.Abstractions.IPluginSession
   Method Boolean get_SupportsStreaming() [Public, Final, Virtual] ()
@@ -5817,6 +6071,7 @@ type WeavePort.Hosting.ScheduledPlugin : System.Object [Public, Sealed]
   Method System.String get_Tenant() [Public, Final, Virtual] ()
   Method System.Threading.Tasks.Task RestartAsync(System.Threading.CancellationToken) [Public, Final, Virtual] (cancellationToken=null)
   Method System.Threading.Tasks.Task`1[WeavePort.Abstractions.InvocationResult] InvokeAsync(System.String, System.Text.Json.JsonElement, System.Threading.CancellationToken) [Public, Final, Virtual] (operation, payload, cancellationToken=null)
+  Method System.Threading.Tasks.Task`1[WeavePort.Abstractions.InvocationResult] InvokeAsync(System.String, System.Text.Json.JsonElement, WeavePort.Abstractions.PluginFiles, System.Threading.CancellationToken) [Public, Final, Virtual] (operation, payload, files, cancellationToken=null)
   Method System.Threading.Tasks.Task`1[WeavePort.Hosting.ScheduledInvocationResult] InvokeMeasuredAsync(System.String, System.Text.Json.JsonElement, System.Threading.CancellationToken) [Public] (operation, payload, cancellationToken=null)
   Method System.Threading.Tasks.ValueTask DisposeAsync() [Public, Final, Virtual] ()
   Method System.Threading.Tasks.ValueTask`1[WeavePort.Abstractions.IPluginSession] AcquireOperationAsync(System.Threading.CancellationToken) [Public, Final, Virtual] (cancellationToken=null)
@@ -6163,25 +6418,82 @@ type WeavePort.Hosting.WorkerReusePolicy : System.Enum [Public, Sealed]
 type WeavePort.Sdk.PluginApplication : System.Object [Public, Sealed]
   Constructor Void .ctor(System.Text.Json.JsonSerializerOptions) [Public] (json=null)
   Method Boolean get_ConcurrentCalls() [Public] ()
+  Method Int32 get_FileBlockBytes() [Public] ()
   Method System.String VersionFromAssembly(System.Reflection.Assembly, Boolean) [Public, Static] (assembly=null, includeBuildMetadata=False)
   Method System.String get_PluginVersion() [Public] ()
   Method System.Threading.Tasks.Task RunAsync(System.Threading.CancellationToken) [Public] (cancellationToken=null)
   Method Void set_ConcurrentCalls(Boolean) [Public] (value)
+  Method Void set_FileBlockBytes(Int32) [Public] (value)
   Method Void set_PluginVersion(System.String) [Public] (value)
   Method WeavePort.Sdk.PluginApplication Function[TInput,TOutput](System.String, System.Func`4[TInput,WeavePort.Sdk.PluginCallContext,System.Threading.CancellationToken,System.Threading.Tasks.ValueTask`1[TOutput]]) [Public] (name, handler)
   Method WeavePort.Sdk.PluginApplication Source[TInput](System.String, System.Func`4[TInput,WeavePort.Sdk.PluginCallContext,System.Threading.CancellationToken,System.Threading.Tasks.ValueTask`1[System.IO.Stream]]) [Public] (name, handler)
   Method WeavePort.Sdk.PluginApplication Stream[TInput,TItem](System.String, System.Func`4[TInput,WeavePort.Sdk.PluginCallContext,System.Threading.CancellationToken,System.Collections.Generic.IAsyncEnumerable`1[TItem]]) [Public] (name, handler)
   Property Boolean ConcurrentCalls
+  Property Int32 FileBlockBytes
   Property System.String PluginVersion
 type WeavePort.Sdk.PluginCallContext : System.Object [Public, Sealed]
+  Method System.Collections.Generic.IReadOnlyList`1[WeavePort.Sdk.PluginFileInfo] get_Inputs() [Public] ()
+  Method System.IO.Stream OpenInput(System.String) [Public] (name)
   Method System.String get_Tenant() [Public] ()
   Method System.Text.Json.JsonElement get_Configuration() [Public] ()
   Method System.Threading.Tasks.Task`1[System.Text.Json.JsonElement] CallHostAsync(System.String, System.Text.Json.JsonElement, System.Threading.CancellationToken) [Public] (operation, input, cancellationToken=null)
+  Method System.Threading.Tasks.Task`1[WeavePort.Sdk.PluginOutputStream] CreateOutputAsync(System.String, System.String, System.Threading.CancellationToken) [Public] (name, mediaType, cancellationToken=null)
   Method T OwnAsync[T](T) [Public] (resource)
   Method T Own[T](T) [Public] (resource)
   Method Void OnClose(System.Func`1[System.Threading.Tasks.ValueTask]) [Public] (cleanup)
+  Property System.Collections.Generic.IReadOnlyList`1[WeavePort.Sdk.PluginFileInfo] Inputs
   Property System.String Tenant
   Property System.Text.Json.JsonElement Configuration
+type WeavePort.Sdk.PluginFileException : System.IO.IOException [Public, Sealed]
+  implements System.Runtime.Serialization.ISerializable
+  Method System.String get_Code() [Public] ()
+  Property System.String Code
+type WeavePort.Sdk.PluginFileInfo : System.Object [Public, Sealed]
+  implements System.IEquatable`1[WeavePort.Sdk.PluginFileInfo]
+  Constructor Void .ctor(System.String, Int64, System.String) [Public] (Name, Length, MediaType)
+  Method Boolean Equals(System.Object) [Public, Virtual] (obj)
+  Method Boolean Equals(WeavePort.Sdk.PluginFileInfo) [Public, Final, Virtual] (other)
+  Method Boolean op_Equality(WeavePort.Sdk.PluginFileInfo, WeavePort.Sdk.PluginFileInfo) [Public, Static] (left, right)
+  Method Boolean op_Inequality(WeavePort.Sdk.PluginFileInfo, WeavePort.Sdk.PluginFileInfo) [Public, Static] (left, right)
+  Method Int32 GetHashCode() [Public, Virtual] ()
+  Method Int64 get_Length() [Public] ()
+  Method System.String ToString() [Public, Virtual] ()
+  Method System.String get_MediaType() [Public] ()
+  Method System.String get_Name() [Public] ()
+  Method Void Deconstruct(System.String ByRef, Int64 ByRef, System.String ByRef) [Public] (Name, Length, MediaType)
+  Method Void set_Length(Int64) [Public] (value)
+  Method Void set_MediaType(System.String) [Public] (value)
+  Method Void set_Name(System.String) [Public] (value)
+  Method WeavePort.Sdk.PluginFileInfo <Clone>$() [Public] ()
+  Property Int64 Length
+  Property System.String MediaType
+  Property System.String Name
+type WeavePort.Sdk.PluginOutputStream : System.IO.Stream [Public, Sealed]
+  implements System.IAsyncDisposable
+  implements System.IDisposable
+  Method Boolean get_CanRead() [Public, Virtual] ()
+  Method Boolean get_CanSeek() [Public, Virtual] ()
+  Method Boolean get_CanWrite() [Public, Virtual] ()
+  Method Int32 Read(Byte[], Int32, Int32) [Public, Virtual] (buffer, offset, count)
+  Method Int64 Seek(Int64, System.IO.SeekOrigin) [Public, Virtual] (offset, origin)
+  Method Int64 get_Length() [Public, Virtual] ()
+  Method Int64 get_Position() [Public, Virtual] ()
+  Method System.String get_Name() [Public] ()
+  Method System.Threading.Tasks.Task CompleteAsync(System.Threading.CancellationToken) [Public] (cancellationToken=null)
+  Method System.Threading.Tasks.Task WriteAsync(Byte[], Int32, Int32, System.Threading.CancellationToken) [Public, Virtual] (buffer, offset, count, cancellationToken)
+  Method System.Threading.Tasks.ValueTask DisposeAsync() [Public, Virtual] ()
+  Method System.Threading.Tasks.ValueTask WriteAsync(System.ReadOnlyMemory`1[System.Byte], System.Threading.CancellationToken) [Public, Virtual] (buffer, cancellationToken=null)
+  Method Void Dispose(Boolean) [Family, Virtual] (disposing)
+  Method Void Flush() [Public, Virtual] ()
+  Method Void SetLength(Int64) [Public, Virtual] (value)
+  Method Void Write(Byte[], Int32, Int32) [Public, Virtual] (buffer, offset, count)
+  Method Void set_Position(Int64) [Public, Virtual] (value)
+  Property Boolean CanRead
+  Property Boolean CanSeek
+  Property Boolean CanWrite
+  Property Int64 Length
+  Property Int64 Position
+  Property System.String Name
 type WeavePort.Sdk.Client.IBoundPluginClient :  [Public, ClassSemanticsMask, Abstract]
   implements System.IAsyncDisposable
   implements WeavePort.Sdk.Client.IPluginClient
@@ -6191,6 +6503,7 @@ type WeavePort.Sdk.Client.IPluginClient :  [Public, ClassSemanticsMask, Abstract
   implements System.IAsyncDisposable
   Method System.Collections.Generic.IAsyncEnumerable`1[System.Text.Json.JsonElement] StreamAsync(System.String, System.Text.Json.JsonElement, System.Threading.CancellationToken) [Public, Virtual, Abstract] (operation, input, cancellationToken=null)
   Method System.Threading.Tasks.Task`1[System.Text.Json.JsonElement] CallAsync(System.String, System.Text.Json.JsonElement, System.Threading.CancellationToken) [Public, Virtual, Abstract] (operation, input, cancellationToken=null)
+  Method System.Threading.Tasks.Task`1[WeavePort.Sdk.Client.PluginCallResult`1[System.Text.Json.JsonElement]] CallWithFilesAsync(System.String, System.Text.Json.JsonElement, WeavePort.Abstractions.PluginFiles, System.Threading.CancellationToken) [Public, Virtual] (operation, input, files, cancellationToken=null)
   Method System.Threading.Tasks.Task`1[WeavePort.Sdk.Client.PluginCallResult`1[System.Text.Json.JsonElement]] CallWithMetadataAsync(System.String, System.Text.Json.JsonElement, System.Threading.CancellationToken) [Public, Virtual] (operation, input, cancellationToken=null)
 type WeavePort.Sdk.Client.LocalPluginClient : System.Object [Public, Sealed]
   implements System.IAsyncDisposable
@@ -6203,6 +6516,7 @@ type WeavePort.Sdk.Client.LocalPluginClient : System.Object [Public, Sealed]
   Method System.String get_Tenant() [Public] ()
   Method System.Threading.Tasks.Task`1[System.String] GetTenantAsync(System.Threading.CancellationToken) [Public, Final, Virtual] (cancellationToken=null)
   Method System.Threading.Tasks.Task`1[System.Text.Json.JsonElement] CallAsync(System.String, System.Text.Json.JsonElement, System.Threading.CancellationToken) [Public, Final, Virtual] (operation, input, cancellationToken=null)
+  Method System.Threading.Tasks.Task`1[WeavePort.Sdk.Client.PluginCallResult`1[System.Text.Json.JsonElement]] CallWithFilesAsync(System.String, System.Text.Json.JsonElement, WeavePort.Abstractions.PluginFiles, System.Threading.CancellationToken) [Public, Final, Virtual] (operation, input, files, cancellationToken=null)
   Method System.Threading.Tasks.Task`1[WeavePort.Sdk.Client.PluginCallResult`1[System.Text.Json.JsonElement]] CallWithMetadataAsync(System.String, System.Text.Json.JsonElement, System.Threading.CancellationToken) [Public, Final, Virtual] (operation, input, cancellationToken=null)
   Method System.Threading.Tasks.ValueTask DisposeAsync() [Public, Final, Virtual] ()
   Property System.String Instance
@@ -6211,13 +6525,16 @@ type WeavePort.Sdk.Client.PluginCallException : System.IO.IOException [Public, S
   implements System.Runtime.Serialization.ISerializable
   Constructor Void .ctor(System.String, Boolean) [Public] (status, mayHaveExecuted=True)
   Method Boolean get_MayHaveExecuted() [Public] ()
+  Method System.Collections.Generic.IReadOnlyList`1[WeavePort.Abstractions.PluginOutputInfo] get_Outputs() [Public] ()
   Method System.String get_ErrorCode() [Public] ()
   Method System.String get_Status() [Public] ()
   Method Void set_Failure(WeavePort.Abstractions.PluginFailure) [Public] (value)
+  Method Void set_Outputs(System.Collections.Generic.IReadOnlyList`1[WeavePort.Abstractions.PluginOutputInfo]) [Public] (value)
   Method Void set_VersionMismatch(WeavePort.Abstractions.PluginVersionMismatch) [Public] (value)
   Method WeavePort.Abstractions.PluginFailure get_Failure() [Public] ()
   Method WeavePort.Abstractions.PluginVersionMismatch get_VersionMismatch() [Public] ()
   Property Boolean MayHaveExecuted
+  Property System.Collections.Generic.IReadOnlyList`1[WeavePort.Abstractions.PluginOutputInfo] Outputs
   Property System.String ErrorCode
   Property System.String Status
   Property WeavePort.Abstractions.PluginFailure Failure
@@ -6230,18 +6547,22 @@ type WeavePort.Sdk.Client.PluginCallResult`1 : System.Object [Public, Sealed]
   Method Boolean op_Equality(WeavePort.Sdk.Client.PluginCallResult`1[T], WeavePort.Sdk.Client.PluginCallResult`1[T]) [Public, Static] (left, right)
   Method Boolean op_Inequality(WeavePort.Sdk.Client.PluginCallResult`1[T], WeavePort.Sdk.Client.PluginCallResult`1[T]) [Public, Static] (left, right)
   Method Int32 GetHashCode() [Public, Virtual] ()
+  Method System.Collections.Generic.IReadOnlyList`1[WeavePort.Abstractions.PluginOutputInfo] get_Outputs() [Public] ()
   Method System.Nullable`1[System.Double] get_ElapsedMs() [Public] ()
   Method System.String ToString() [Public, Virtual] ()
   Method T get_Value() [Public] ()
   Method Void Deconstruct(T ByRef, System.Nullable`1[System.Double] ByRef) [Public] (Value, ElapsedMs)
   Method Void set_ElapsedMs(System.Nullable`1[System.Double]) [Public] (value)
+  Method Void set_Outputs(System.Collections.Generic.IReadOnlyList`1[WeavePort.Abstractions.PluginOutputInfo]) [Public] (value)
   Method Void set_Value(T) [Public] (value)
   Method WeavePort.Sdk.Client.PluginCallResult`1[T] <Clone>$() [Public] ()
+  Property System.Collections.Generic.IReadOnlyList`1[WeavePort.Abstractions.PluginOutputInfo] Outputs
   Property System.Nullable`1[System.Double] ElapsedMs
   Property T Value
 type WeavePort.Sdk.Client.PluginClientExtensions : System.Object [Public, Abstract, Sealed]
   Method System.Collections.Generic.IAsyncEnumerable`1[TItem] StreamAsync[TInput,TItem](WeavePort.Sdk.Client.IPluginClient, System.String, TInput, System.Threading.CancellationToken) [Public, Static] (client, operation, input, cancellationToken=null)
   Method System.Threading.Tasks.Task`1[TOutput] CallAsync[TInput,TOutput](WeavePort.Sdk.Client.IPluginClient, System.String, TInput, System.Threading.CancellationToken) [Public, Static] (client, operation, input, cancellationToken=null)
+  Method System.Threading.Tasks.Task`1[WeavePort.Sdk.Client.PluginCallResult`1[TOutput]] CallWithFilesAsync[TInput,TOutput](WeavePort.Sdk.Client.IPluginClient, System.String, TInput, WeavePort.Abstractions.PluginFiles, System.Threading.CancellationToken) [Public, Static] (client, operation, input, files, cancellationToken=null)
   Method System.Threading.Tasks.Task`1[WeavePort.Sdk.Client.PluginCallResult`1[TOutput]] CallWithMetadataAsync[TInput,TOutput](WeavePort.Sdk.Client.IPluginClient, System.String, TInput, System.Threading.CancellationToken) [Public, Static] (client, operation, input, cancellationToken=null)
 type WeavePort.Sdk.Client.PluginStreamOptions : System.Object [Public, Sealed]
   implements System.IEquatable`1[WeavePort.Sdk.Client.PluginStreamOptions]
@@ -6298,6 +6619,11 @@ type WeavePort.Composition.ResultLimits : System.Object [Public, Sealed]
   Property Int32 MaximumObjects
   Property Int64 MaximumObjectBytes
   Property Int64 MaximumScopeBytes
+type WeavePort.Composition.ResultOutputs : System.Object [Public, Sealed]
+  implements WeavePort.Abstractions.IPluginOutputDestination
+  Method System.Collections.Generic.IReadOnlyDictionary`2[System.String,WeavePort.Composition.ResultHandle] get_Results() [Public] ()
+  Method System.Threading.Tasks.ValueTask`1[WeavePort.Abstractions.IPluginOutputWriter] CreateAsync(System.String, System.String, System.Threading.CancellationToken) [Public, Final, Virtual] (name, mediaType, cancellationToken)
+  Property System.Collections.Generic.IReadOnlyDictionary`2[System.String,WeavePort.Composition.ResultHandle] Results
 type WeavePort.Composition.ResultScope : System.Object [Public, Sealed]
   implements System.IAsyncDisposable
   Constructor Void .ctor(System.String, System.String, WeavePort.Composition.ResultLimits) [Public] (privateRoot, tenant, limits=null)
@@ -6307,6 +6633,7 @@ type WeavePort.Composition.ResultScope : System.Object [Public, Sealed]
   Method System.Threading.Tasks.Task`1[WeavePort.Composition.ResultHandle] CreateAsync(System.Func`3[System.IO.Stream,System.Threading.CancellationToken,System.Threading.Tasks.Task], System.Threading.CancellationToken) [Public] (producer, cancellationToken=null)
   Method System.Threading.Tasks.Task`1[WeavePort.Composition.ResultHandle] TransformAsync(WeavePort.Composition.ResultHandle, System.Func`3[System.ReadOnlyMemory`1[System.Byte],System.Threading.CancellationToken,System.Threading.Tasks.ValueTask`1[System.ReadOnlyMemory`1[System.Byte]]], Int32, System.Threading.CancellationToken) [Public] (input, transform, chunkBytes=65536, cancellationToken=null)
   Method System.Threading.Tasks.ValueTask DisposeAsync() [Public, Final, Virtual] ()
+  Method WeavePort.Composition.ResultOutputs AsOutputDestination() [Public] ()
   Property Int64 ReservedBytes
   Property System.String Tenant
 type WeavePort.Sdk.Gateway.GatewayHostingExtensions : System.Object [Public, Abstract, Sealed]

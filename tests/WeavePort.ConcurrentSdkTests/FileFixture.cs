@@ -7,7 +7,19 @@ internal static class FileFixture
 {
     private static Stream? _retained;
 
-    internal static Task RunAsync() => new PluginApplication()
+    internal static Task RunAsync(string[] args)
+    {
+        var app = new PluginApplication
+        {
+            FileBlockBytes = args.Contains("--block-bytes") ? int.Parse(args[Array.IndexOf(args, "--block-bytes") + 1], System.Globalization.CultureInfo.InvariantCulture) : 65536
+        };
+        RegisterReads(app);
+        RegisterOutputs(app);
+        return app.RunAsync();
+    }
+
+    private static void RegisterReads(PluginApplication app) => app
+        .Function<JsonElement, object>("stats", (_, _, _) => ValueTask.FromResult<object>(new { pid = Environment.ProcessId }))
         .Function<JsonElement, object>("zip-summary", (_, context, _) =>
         {
             using Stream sheet = context.OpenInput("sheet");
@@ -18,6 +30,9 @@ internal static class FileFixture
                 inputs = context.Inputs.Select(input => new { name = input.Name, length = input.Length, mediaType = input.MediaType }).ToArray()
             });
         })
+;
+
+    private static void RegisterOutputs(PluginApplication app) => app
         .Function<JsonElement, object>("copy", async (_, context, token) =>
         {
             await using Stream source = context.OpenInput("sheet");
@@ -65,8 +80,7 @@ internal static class FileFixture
                 stored = true
             });
         })
-        .Function<JsonElement, object>("late-read", async (_, _, token) => new { refused = await CodeAsync(async () => await _retained!.ReadAsync(new byte[16], token)) != "" })
-        .RunAsync();
+        .Function<JsonElement, object>("late-read", async (_, _, token) => new { refused = await CodeAsync(async () => await _retained!.ReadAsync(new byte[16], token)) != "" });
 
     private static async Task<string> CodeAsync<T>(Func<Task<T>> action)
     {

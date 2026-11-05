@@ -39,6 +39,8 @@ The automated TLS topology runs on one machine with separate plugin worker proce
 
 Bound remote clients also expose `SourceAsync`. The gateway reads the existing authorized local client source and carries bounded binary blocks over gRPC. `Composition.CollectAsync` checks the authenticated binding tenant before committing a scoped result. Shared client views retain unary-only behavior through the gateway.
 
+[Function files](function-files.md) are not carried by the gateway yet. `RemotePluginClient.CallWithFilesAsync` refuses with `files-unsupported` before contacting the server.
+
 ## Post-release structured failures
 
 Current qualified source adds optional protobuf Reply fields `failure_code` (10), `failure_phase` (11), `correlation_id` (12) and `cleanup_failed` (13), preserving fields 1–9 and existing status/possible-execution semantics. These fields are included since 0.8.0; see [migration notes](releases.md#080-failure-contracts-and-code-quality). Older peers can omit them.

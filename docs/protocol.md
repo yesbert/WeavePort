@@ -66,6 +66,27 @@ The SDK maps public function calls to `$sdk.call`; JSON result streams use `$sdk
 
 Unary input/output is limited to 512 KiB, stream items to 128 KiB, batches to 16 items and 256 KiB, and total JSON stream data to 64 MiB. Empty unfinished batches are valid heartbeats; the producer retains one pending iterator advancement. Binary sources transfer 4–256 KiB decoded blocks as bounded base64 JSON, defaulting to 64 KiB. An exclusive client keeps one operation lease across reads, consumer pauses and cleanup. Independent result-scope quotas bound large source collection.
 
+## Function files
+
+**Availability:** current source after 0.9.1. See the [function files guide](function-files.md).
+
+An exclusive SDK worker that supports files adds `"files":1` to its ready envelope. A host refuses a call with files before dispatch (`files-unsupported`) when the worker lacks it, the binding is shared or MCP, or the operation is a stream or source. For a call with files, the invoke envelope carries host-owned descriptors beside `context`:
+
+```json
+"files":{"inputs":[{"name":"sheet","length":9437184,"mediaType":"application/zip"}],"outputs":{"maximumCount":2,"maximumBytes":67108864}}
+```
+
+An absent `outputs` object permits no outputs. The plugin uses four reserved operations, sent as ordinary `callback` frames of the invocation:
+
+| Operation | Payload | Reply value |
+|---|---|---|
+| `$sdk.input.read` | `name`, `offset`, `length` (4–256 KiB) | `data` as base64; shorter only at the end, empty at or past it |
+| `$sdk.output.create` | `name`, `mediaType` | `{}` |
+| `$sdk.output.write` | `name`, `data` as base64 (1 B–256 KiB decoded) | `{}` |
+| `$sdk.output.complete` | `name` | `length` |
+
+The host handles them inline, outside callback grants, the callback budget and callback admission. A recoverable refusal is a `callback-result` whose additive `error` field is one of `input-not-found`, `output-not-permitted`, `output-exists`, `output-closed` or `invalid-range`; the invocation continues. Read-budget and output limits, an output left open at a successful result, and a failed commit fail the invocation with `input-read-limit`, `output-limit`, `output-incomplete` or `output-commit-failed` and retire the worker. Names use 1–128 characters from `A–Z a–z 0–9 . _ -` and do not start with `.`. Media types use 1–255 visible ASCII characters.
+
 ## Execution restrictions
 
 Native profiles are trusted same-user processes with cooperative private workspaces and admission memory reservations; they do not enforce filesystem/network isolation or hard resource ceilings. Docker's default profile requests 256 MiB memory, no extra swap, 0.5 CPU, 64 PIDs, a read-only root, private 16 MiB tmpfs, uid/gid 65532, no capabilities, no-new-privileges and no network. Effective Docker protection depends on the deployment. The default stdio adapter requires no host mount; the socket fixture mounts only its endpoint directory, never a Docker control socket.

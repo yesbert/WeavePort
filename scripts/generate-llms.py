@@ -64,6 +64,7 @@ GUIDES = [
     ),
     ("docs/publisher-trust.md", "Publisher trust", "Signed releases, key rotation and host trust policy"),
     ("docs/plugin-sdk.md", "Author SDKs", "C#, Python and TypeScript plugins"),
+    ("docs/function-files.md", "Function files", "Host-supplied file inputs and transactional outputs"),
     (
         "docs/reusable-plugins.md",
         "Reusable plugins",

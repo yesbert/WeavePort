@@ -5,7 +5,11 @@ const { PluginApplication, PluginFileError } = await import(
         ? pathToFileURL(process.argv[sdkIndex + 1]).href
         : '../../../sdks/typescript/dist/index.js'
 );
-const app = new PluginApplication('1');
+const blockIndex = process.argv.indexOf('--block-bytes');
+const app = new PluginApplication('1', {
+    fileBlockBytes: blockIndex >= 0 ? Number(process.argv[blockIndex + 1]) : 65536,
+});
+app.function('stats', async () => ({ pid: process.pid }));
 const retained = {};
 
 // Reads the ZIP end-of-central-directory record, then the directory, using positional reads only.

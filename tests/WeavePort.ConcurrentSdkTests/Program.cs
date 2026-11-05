@@ -10,7 +10,13 @@ if (args.Contains("gateway-cancellation"))
 
 if (args.Contains("--file-worker"))
 {
-    await FileFixture.RunAsync();
+    await FileFixture.RunAsync(args);
+    return;
+}
+
+if (args.Contains("files-measure"))
+{
+    await FileMeasurements.RunAsync(args);
     return;
 }
 

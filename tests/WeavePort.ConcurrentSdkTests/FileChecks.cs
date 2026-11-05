@@ -10,7 +10,7 @@ using WeavePort.Sdk.Client;
 internal static class FileChecks
 {
     private static readonly string[] EntryNames = ["xl/workbook.xml", "xl/worksheets/sheet1.xml", "xl/media/blob.bin"];
-    private static readonly byte[] Archive = CreateArchive();
+    internal static readonly byte[] Archive = CreateArchive();
     private static readonly JsonElement Empty = JsonSerializer.SerializeToElement(new { });
 
     internal static async Task RunAsync(string[] args)
@@ -87,15 +87,15 @@ internal static class FileChecks
         }
     }
 
-    private static PluginInput Input() => new("sheet", Archive.Length, "application/zip", PluginInputReader.FromStream(new MemoryStream(Archive, writable: false)));
+    internal static PluginInput Input() => new("sheet", Archive.Length, "application/zip", PluginInputReader.FromStream(new MemoryStream(Archive, writable: false)));
 
-    private static ProcessProfile Profile(string root, string language)
+    internal static ProcessProfile Profile(string root, string language, int blockBytes = 65536)
     {
         ProcessProfile streams = StreamChecks.Profile(root, language);
         string[] arguments = language == "csharp"
             ? [typeof(FileChecks).Assembly.Location, "--file-worker"]
             : [.. streams.Arguments.Select(argument => argument.Replace(language == "python" ? "streams.py" : "streams.mjs", language == "python" ? "files.py" : "files.mjs", StringComparison.Ordinal))];
-        return new ProcessProfile(streams.Executable, arguments, trustedCode: true, reservedMemoryMiB: 64, timeout: TimeSpan.FromSeconds(60));
+        return new ProcessProfile(streams.Executable, [.. arguments, "--block-bytes", blockBytes.ToString(System.Globalization.CultureInfo.InvariantCulture)], trustedCode: true, reservedMemoryMiB: 64, timeout: TimeSpan.FromSeconds(60));
     }
 
     private static byte[] CreateArchive()
@@ -136,7 +136,7 @@ internal static class FileChecks
         Console.WriteLine("PASS: " + message);
     }
 
-    private sealed class MemoryDestination : IPluginOutputDestination
+    internal sealed class MemoryDestination : IPluginOutputDestination
     {
         internal Dictionary<string, byte[]> Committed { get; } = [];
 
@@ -163,7 +163,7 @@ internal static class FileChecks
         }
     }
 
-    private sealed class CountingReader(IPluginInputReader inner) : IPluginInputReader
+    internal sealed class CountingReader(IPluginInputReader inner) : IPluginInputReader
     {
         internal int Reads;
 
@@ -174,7 +174,7 @@ internal static class FileChecks
         }
     }
 
-    private sealed class NoCallbacks : IHostCallbacks
+    internal sealed class NoCallbacks : IHostCallbacks
     {
         public ValueTask<JsonElement> InvokeAsync(HostCall call, CancellationToken cancellationToken) => throw new UnauthorizedAccessException();
     }

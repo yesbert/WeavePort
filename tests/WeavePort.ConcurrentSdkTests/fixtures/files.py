@@ -11,7 +11,22 @@ sdk = (
 sys.path.insert(0, sdk)
 from weaveport_sdk import PluginApplication, PluginFileError
 
-app = PluginApplication("1")
+import os
+
+app = PluginApplication(
+    "1",
+    file_block_bytes=(
+        int(sys.argv[sys.argv.index("--block-bytes") + 1])
+        if "--block-bytes" in sys.argv
+        else 65536
+    ),
+)
+
+
+@app.function("stats")
+async def stats(value, context):
+    return dict(pid=os.getpid())
+
 retained = {}
 
 
