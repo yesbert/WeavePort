@@ -5,7 +5,7 @@ description: Add C#, Python and TypeScript plugins to your .NET product. WeavePo
 ---
 
 <section class="wp-hero">
-<a class="wp-release" href="packages.md"><span class="wp-dot" aria-hidden="true"></span> Meet WeavePort 0.9.1 <span aria-hidden="true">↗</span></a>
+<a class="wp-release" href="packages.md"><span class="wp-dot" aria-hidden="true"></span> Meet WeavePort 0.10.0 <span aria-hidden="true">↗</span></a>
 <h1>Turn your .NET app<br> <em>into a platform.</em></h1>
 <p class="wp-lead">Add document readers, scoring strategies and customer-specific rules in <strong>C#, Python or TypeScript.</strong> Reuse local MCP tools too. WeavePort manages the workers. Your application keeps control of data and permissions.</p>
 <div class="wp-actions"><a class="btn btn-primary" href="getting-started.md">Run your first example <span aria-hidden="true">→</span></a><a class="wp-text-link" href="introduction.md">Discover WeavePort <span aria-hidden="true">↗</span></a></div>
@@ -69,7 +69,7 @@ await app.run();
 </div>
 <div class="wp-contract"><p class="wp-eyebrow">YOUR .NET APPLICATION</p><h3>The same call.<br> Whichever language you choose.</h3><div class="wp-contract-row"><span>Function</span><code>echo</code></div><div class="wp-contract-row"><span>Input</span><code>{ "message": "hello" }</code></div><div class="wp-contract-row"><span>Result</span><code>{ "message": "hello" }</code></div><p class="wp-caption">Illustrative contract. Your host selects the artifact and authorizes the binding before calling it.</p><a href="getting-started.md">Run the complete integration <span aria-hidden="true">→</span></a></div>
 </div>
-<p class="wp-support-line">Windows, Linux and macOS. Trusted plugins over standard input/output. Release validation: macOS arm64; Windows and Linux validation pending. The 0.9.1 API is evolving; native execution is not a hostile-code sandbox. <a href="packages.md">See support details.</a></p>
+<p class="wp-support-line">Windows, Linux and macOS. Trusted plugins over standard input/output. Release validation: macOS arm64; Windows and Linux validation pending. The 0.10.0 API is evolving; native execution is not a hostile-code sandbox. <a href="packages.md">See support details.</a></p>
 </section>
 
 <section class="wp-section" aria-labelledby="benefits-heading">

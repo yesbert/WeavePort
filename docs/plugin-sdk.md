@@ -149,7 +149,7 @@ For plugin-originated files, C# `Source<TInput>` returns a readable `Stream`; Py
 
 ## Function files
 
-Current source after 0.9.1 lets a function read host-named inputs at any offset and write named outputs that the host commits only when the call succeeds: C# `context.OpenInput` and `context.CreateOutputAsync`, Python `context.open_input` and `context.create_output`, TypeScript `context.openInput` and `context.createOutput`. Only exclusive workers support files. See [function files](function-files.md).
+Since 0.10.0, a function can read host-named inputs at any offset and write named outputs that the host commits only when the call succeeds: C# `context.OpenInput` and `context.CreateOutputAsync`, Python `context.open_input` and `context.create_output`, TypeScript `context.openInput` and `context.createOutput`. Only exclusive workers support files. See [function files](function-files.md).
 
 ## Failure handling in current source
 

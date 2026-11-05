@@ -2,18 +2,13 @@
 
 ## Qualified source — 2026-11-05
 
-Commit `7cdea705228b2793cd7d9ee3025dd1cab39b0093` passed the normal committed-candidate workflow, `./scripts/verify.sh`. The run used a fresh detached checkout and isolated dependency caches. Local retained evidence is `artifacts/candidates/20261105-130859-96182c42/result.json`, with per-stage logs. Result: **passed, 78 stages, 3,837 assertions, 446 frozen files**. Artifact manifest SHA-256: `432a073463c660c28d57057e9b3be1b4d86b93dd815e196c61576e2b573e9ca3`.
+Commit `8c3664bccc3269f9669c6db5c359d483889dde4a` passed the normal committed-candidate workflow, `./scripts/verify.sh`. The run used a fresh detached checkout and isolated dependency caches. Local retained evidence is `artifacts/candidates/20261105-134421-7248734f/result.json`, with per-stage logs. Result: **passed, 78 stages, 3,851 assertions, 446 frozen files**. Artifact manifest SHA-256: `d8464e85074387adbe8e8702ea4ba37eba06aee44d711feb1761f13b2ad244c9`. PR #55 merged it as `83b30c3` with green CI and no unresolved review threads.
 
 Environment: macOS 27.2 arm64, .NET SDK 10.0.403, .NET 10.0.14 runtime, Python 3.15.2, Node v26.12.1 and npm 11.20.0. Three permitted consumer lockfile refreshes are recorded in result.json: `examples/mcp`, and the Decision Room host and plugin. Docker was not used.
 
 The workflow includes the four file stages: `concurrent-sdk-{source,packed}-files` and `concurrent-sdk-{source,packed}-files-gateway`. They run the three-language file and gateway suites against the source-built and the packed SDK fixtures, including the installed Python wheel and npm package. All four passed.
 
-Earlier runs are superseded:
-
-- `eccd6c3`: 78 stages, 3,827 assertions, evidence `artifacts/candidates/20261105-123422-86da82ef`. Superseded by the code review fixes.
-- `83aa2d5`: 74 stages, 3,733 assertions, evidence `artifacts/candidates/20261105-122915-07f67faf`. It did not yet run the file stages.
-
-After qualification, only these verification notes changed. The implementation bytes are those of the qualified commit.
+Earlier runs are superseded by review fixes: `eb0f05a` (3,847 assertions), `7cdea70` (3,837), `eccd6c3` (3,827), and `83aa2d5` (3,733, before the file stages existed).
 
 ## Limits
 

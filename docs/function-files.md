@@ -1,6 +1,6 @@
 # Function files
 
-**Availability:** current source after 0.9.1, not yet released. Local calls, the scheduler path and the [gateway](gateway.md) are implemented.
+**Availability:** since 0.10.0: local calls, the scheduler path and the [gateway](gateway.md). Author SDKs 0.5.0 advertise the capability.
 
 A function call can take named file inputs from the host and hand named file outputs back, beside its bounded JSON input and result. The bytes pass only through readers and writers the host application supplies. The plugin never gets a storage location, a credential or a key. Typical use: a spreadsheet a person uploaded goes in, and a generated workbook comes out.
 

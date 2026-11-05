@@ -68,7 +68,7 @@ Unary input/output is limited to 512 KiB, stream items to 128 KiB, batches to 16
 
 ## Function files
 
-**Availability:** current source after 0.9.1. See the [function files guide](function-files.md).
+**Availability:** since 0.10.0. See the [function files guide](function-files.md).
 
 An exclusive SDK worker that supports files adds `"files":1` to its ready envelope. A host refuses a call with files before dispatch (`files-unsupported`) when the worker lacks it, the binding is shared or MCP, or the operation is a stream or source. For a call with files, the invoke envelope carries host-owned descriptors beside `context`:
 
