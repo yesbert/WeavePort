@@ -39,6 +39,7 @@ internal static class FileGatewayChecks
             await CallerCleanupAsync(gateway);
         }
 
+        await OlderGatewayAsync();
         foreach (int blockBytes in new[] { 65536, 262144 })
         {
             await using var gateway = await GatewayAsync(root, "csharp", blockBytes);
@@ -99,6 +100,42 @@ internal static class FileGatewayChecks
 
         Check(cancelled && !destination.Events.Contains("commit") && destination.Events.Contains("abort:Cancelled") && destination.Events.Last() == "dispose", "caller cancellation aborts the caller's outputs");
         Check(await RecoversAsync(client), "the binding serves calls once the cancelled file call is cleaned up");
+    }
+
+    // A gateway without function files answers FILE_CALL as an unknown mode, like the 0.9.1 server's default branch.
+    private static async Task OlderGatewayAsync()
+    {
+        var builder = WebApplication.CreateSlimBuilder();
+        builder.Logging.ClearProviders();
+        builder.WebHost.ConfigureKestrel(options => options.Listen(IPAddress.Loopback, 0, listen => listen.Protocols = HttpProtocols.Http2));
+        builder.Services.AddGrpc();
+        await using WebApplication app = builder.Build();
+        app.MapGrpcService<OlderGateway>();
+        await app.StartAsync();
+        await using var client = new RemotePluginClient(new Uri(app.Urls.Single()), "credential");
+        PluginCallException? error = null;
+        try
+        {
+            await client.CallWithFilesAsync("copy", Empty, new PluginFiles([FileChecks.Input()]));
+        }
+        catch (PluginCallException failure)
+        {
+            error = failure;
+        }
+
+        Check(error is { ErrorCode: "files-unsupported", MayHaveExecuted: false } && error.Failure?.Code == "files-unsupported", "an older gateway is reported as files-unsupported in status and structured code");
+        await app.StopAsync();
+    }
+
+    private sealed class OlderGateway : WeavePort.Sdk.Gateway.Protocol.WorkerGateway.WorkerGatewayBase
+    {
+        public override async Task Session(Grpc.Core.IAsyncStreamReader<WeavePort.Sdk.Gateway.Protocol.Request> requestStream, Grpc.Core.IServerStreamWriter<WeavePort.Sdk.Gateway.Protocol.Reply> responseStream, Grpc.Core.ServerCallContext context)
+        {
+            while (await requestStream.MoveNext(context.CancellationToken))
+            {
+                await responseStream.WriteAsync(new WeavePort.Sdk.Gateway.Protocol.Reply { Complete = true, Error = "invalid-mode", FailureCode = "invalid-mode", FailurePhase = "transport", MayHaveExecuted = false }, context.CancellationToken);
+            }
+        }
     }
 
     private static async Task CallerCleanupAsync(Gateway gateway)

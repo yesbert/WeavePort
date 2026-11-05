@@ -93,6 +93,8 @@ Copilot's review of PR #55 raised thirteen threads, all fixed:
 - The gateway writes its terminal reply only after any interrupted relay write has finished, because gRPC allows one pending write.
 - The writer lifecycle documentation states that a failed commit is followed by `AbortAsync(CommitFailed)`.
 
+Copilot's third review also noted a missed issue: an older gateway's `invalid-mode` was translated to `files-unsupported` only in the status, not in `Failure.Code`. Both are translated now, and a check against a gateway that does not know `FILE_CALL` covers it.
+
 New checks cover a result over the unary limit, release failure after commit, a stalled release, late reads from a warm cache in all three SDKs, and caller-side release failure through the gateway.
 
 ## Functional evidence so far

@@ -119,10 +119,11 @@ public sealed partial class RemotePluginClient
         catch (PluginCallException error)
         {
             // A gateway older than function files rejects FILE_CALL as an unknown mode before dispatch.
-            string status = error.Status == FailureCodes.InvalidMode ? FailureCodes.FilesUnsupported : error.Status;
+            // Both the status and the structured code are translated, so Failure?.Code ?? ErrorCode agree.
+            string status = Legacy(error.Status);
             throw new PluginCallException(status, error.MayHaveExecuted)
             {
-                Failure = error.Failure,
+                Failure = error.Failure is { } failure ? failure with { Code = Legacy(failure.Code) } : null,
                 VersionMismatch = error.VersionMismatch,
                 Outputs = caller.Committed
             };
@@ -133,6 +134,8 @@ public sealed partial class RemotePluginClient
             Outputs = caller.Committed
         };
     }
+
+    private static string Legacy(string code) => code == FailureCodes.InvalidMode ? FailureCodes.FilesUnsupported : code;
 
     private static Request FileCallRequest(string operation, JsonElement input, PluginFiles files)
     {
