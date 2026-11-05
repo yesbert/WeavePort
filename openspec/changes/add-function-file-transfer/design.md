@@ -195,6 +195,14 @@ In return, read-ahead would need the following in all three SDKs:
 
 Task 6.1 measures the plugin's time per block and the round-trip time, locally and through the gateway. If the measurements show that gateway round trips dominate, SDK-internal read-ahead becomes a separate change. It needs no public API change. A host-side `PrefetchAsync` hint was rejected: a consumer can optimize its own storage access inside its reader.
 
+## Consumer confirmation
+
+HiveWeaver reviewed commit `43c53be` on 2026-11-05 and confirmed the design without asking for changes.
+
+- **Positional reads.** HiveWeaver moves its storage to a chunked format with independently authenticated blocks. Today it uses Stratara's `ISecureBlobEncryptor`, which is one AES-GCM block per payload. Its reader then serves `ReadAsync(offset, ...)` with ranged reads from object storage. WeavePort keeps not copying inputs to disk.
+- **Two-phase outputs** are sufficient. HiveWeaver's `CommitAsync` records a file as unused, and the file becomes visible only through the call's completion. A partial commit leaves unused files that expire on their own. Aborting completed outputs and listing committed ones is what HiveWeaver needs.
+- **Gateway.** HiveWeaver calls through the local `PluginHost` today, so the gateway path is not exercised by this consumer yet. It stays in scope because the original request asked for it.
+
 ## Migration Plan
 
 Additive. Hosts upgrade first. Plugins gain the capability by rebuilding against the new SDK, and existing installations stay valid without the capability. Consumers adopt the feature by implementing a reader and a destination and calling `CallWithFilesAsync`. Gateway servers and clients must be upgraded together before `FILE_CALL` is used. No reseal is required by the protocol itself, but the release's compatibility matrix changes as usual.
