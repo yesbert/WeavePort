@@ -13,4 +13,6 @@ public sealed record InvocationResult(string Status, JsonElement Value, string I
     public WeavePort.Abstractions.PluginFailure? Failure { get; init; }
     /// <summary>Expected and advertised artifact versions when startup rejected a mismatched worker.</summary>
     public PluginVersionMismatch? VersionMismatch { get; init; }
+    /// <summary>Committed function outputs: all of them after success, those committed before the failure after output-commit-failed, otherwise empty.</summary>
+    public IReadOnlyList<PluginOutputInfo> Outputs { get; init; } = [];
 }

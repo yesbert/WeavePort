@@ -27,12 +27,25 @@ type WeavePort.Abstractions.HostCall : System.Object [Public, Sealed]
   Property WeavePort.Abstractions.PluginContext Context
 type WeavePort.Abstractions.IHostCallbacks :  [Public, ClassSemanticsMask, Abstract]
   Method System.Threading.Tasks.ValueTask`1[System.Text.Json.JsonElement] InvokeAsync(WeavePort.Abstractions.HostCall, System.Threading.CancellationToken) [Public, Virtual, Abstract] (call, cancellationToken)
+type WeavePort.Abstractions.IPluginFileSession :  [Public, ClassSemanticsMask, Abstract]
+  implements System.IAsyncDisposable
+  implements WeavePort.Abstractions.IPluginSession
+  Method System.Threading.Tasks.Task`1[WeavePort.Abstractions.InvocationResult] InvokeAsync(System.String, System.Text.Json.JsonElement, WeavePort.Abstractions.PluginFiles, System.Threading.CancellationToken) [Public, Virtual, Abstract] (operation, payload, files, cancellationToken=null)
+type WeavePort.Abstractions.IPluginInputReader :  [Public, ClassSemanticsMask, Abstract]
+  Method System.Threading.Tasks.ValueTask`1[System.Int32] ReadAsync(Int64, System.Memory`1[System.Byte], System.Threading.CancellationToken) [Public, Virtual, Abstract] (offset, buffer, cancellationToken)
 type WeavePort.Abstractions.IPluginOperationSession :  [Public, ClassSemanticsMask, Abstract]
   implements System.IAsyncDisposable
   implements WeavePort.Abstractions.IPluginSession
   Method Boolean get_SupportsStreaming() [Public, Virtual, Abstract] ()
   Method System.Threading.Tasks.ValueTask`1[WeavePort.Abstractions.IPluginSession] AcquireOperationAsync(System.Threading.CancellationToken) [Public, Virtual, Abstract] (cancellationToken=null)
   Property Boolean SupportsStreaming
+type WeavePort.Abstractions.IPluginOutputDestination :  [Public, ClassSemanticsMask, Abstract]
+  Method System.Threading.Tasks.ValueTask`1[WeavePort.Abstractions.IPluginOutputWriter] CreateAsync(System.String, System.String, System.Threading.CancellationToken) [Public, Virtual, Abstract] (name, mediaType, cancellationToken)
+type WeavePort.Abstractions.IPluginOutputWriter :  [Public, ClassSemanticsMask, Abstract]
+  implements System.IAsyncDisposable
+  Method System.Threading.Tasks.ValueTask AbortAsync(WeavePort.Abstractions.PluginOutputAbort, System.Threading.CancellationToken) [Public, Virtual, Abstract] (reason, cancellationToken)
+  Method System.Threading.Tasks.ValueTask CommitAsync(System.Threading.CancellationToken) [Public, Virtual, Abstract] (cancellationToken)
+  Method System.Threading.Tasks.ValueTask WriteAsync(System.ReadOnlyMemory`1[System.Byte], System.Threading.CancellationToken) [Public, Virtual, Abstract] (block, cancellationToken)
 type WeavePort.Abstractions.IPluginSession :  [Public, ClassSemanticsMask, Abstract]
   implements System.IAsyncDisposable
   Method System.String get_Instance() [Public, Virtual, Abstract] ()
@@ -51,6 +64,7 @@ type WeavePort.Abstractions.InvocationResult : System.Object [Public, Sealed]
   Method Boolean op_Inequality(WeavePort.Abstractions.InvocationResult, WeavePort.Abstractions.InvocationResult) [Public, Static] (left, right)
   Method Double get_ElapsedMs() [Public] ()
   Method Int32 GetHashCode() [Public, Virtual] ()
+  Method System.Collections.Generic.IReadOnlyList`1[WeavePort.Abstractions.PluginOutputInfo] get_Outputs() [Public] ()
   Method System.String ToString() [Public, Virtual] ()
   Method System.String get_Instance() [Public] ()
   Method System.String get_Status() [Public] ()
@@ -60,6 +74,7 @@ type WeavePort.Abstractions.InvocationResult : System.Object [Public, Sealed]
   Method Void set_Failure(WeavePort.Abstractions.PluginFailure) [Public] (value)
   Method Void set_Instance(System.String) [Public] (value)
   Method Void set_MayHaveExecuted(Boolean) [Public] (value)
+  Method Void set_Outputs(System.Collections.Generic.IReadOnlyList`1[WeavePort.Abstractions.PluginOutputInfo]) [Public] (value)
   Method Void set_Status(System.String) [Public] (value)
   Method Void set_Value(System.Text.Json.JsonElement) [Public] (value)
   Method Void set_VersionMismatch(WeavePort.Abstractions.PluginVersionMismatch) [Public] (value)
@@ -68,6 +83,7 @@ type WeavePort.Abstractions.InvocationResult : System.Object [Public, Sealed]
   Method WeavePort.Abstractions.PluginVersionMismatch get_VersionMismatch() [Public] ()
   Property Boolean MayHaveExecuted
   Property Double ElapsedMs
+  Property System.Collections.Generic.IReadOnlyList`1[WeavePort.Abstractions.PluginOutputInfo] Outputs
   Property System.String Instance
   Property System.String Status
   Property System.Text.Json.JsonElement Value
@@ -122,6 +138,82 @@ type WeavePort.Abstractions.PluginFailure : System.Object [Public, Sealed]
   Property System.String Code
   Property System.String CorrelationId
   Property System.String Phase
+type WeavePort.Abstractions.PluginFileLimits : System.Object [Public, Sealed]
+  implements System.IEquatable`1[WeavePort.Abstractions.PluginFileLimits]
+  Constructor Void .ctor(Int32, Int64, System.Nullable`1[System.Int64]) [Public] (maximumOutputs, maximumOutputBytes, maximumInputReadBytes=null)
+  Method Boolean Equals(System.Object) [Public, Virtual] (obj)
+  Method Boolean Equals(WeavePort.Abstractions.PluginFileLimits) [Public, Final, Virtual] (other)
+  Method Boolean op_Equality(WeavePort.Abstractions.PluginFileLimits, WeavePort.Abstractions.PluginFileLimits) [Public, Static] (left, right)
+  Method Boolean op_Inequality(WeavePort.Abstractions.PluginFileLimits, WeavePort.Abstractions.PluginFileLimits) [Public, Static] (left, right)
+  Method Int32 GetHashCode() [Public, Virtual] ()
+  Method Int32 get_MaximumOutputs() [Public] ()
+  Method Int64 get_MaximumOutputBytes() [Public] ()
+  Method System.Nullable`1[System.Int64] get_MaximumInputReadBytes() [Public] ()
+  Method System.String ToString() [Public, Virtual] ()
+  Method WeavePort.Abstractions.PluginFileLimits <Clone>$() [Public] ()
+  Method WeavePort.Abstractions.PluginFileLimits get_InputsOnly() [Public, Static] ()
+  Property Int32 MaximumOutputs
+  Property Int64 MaximumOutputBytes
+  Property System.Nullable`1[System.Int64] MaximumInputReadBytes
+  Property WeavePort.Abstractions.PluginFileLimits InputsOnly
+type WeavePort.Abstractions.PluginFiles : System.Object [Public, Sealed]
+  Constructor Void .ctor(System.Collections.Generic.IEnumerable`1[WeavePort.Abstractions.PluginInput], WeavePort.Abstractions.IPluginOutputDestination, WeavePort.Abstractions.PluginFileLimits) [Public] (inputs, outputs=null, limits=null)
+  Method Int64 get_InputReadBudget() [Public] ()
+  Method System.Collections.Generic.IReadOnlyList`1[WeavePort.Abstractions.PluginInput] get_Inputs() [Public] ()
+  Method WeavePort.Abstractions.IPluginOutputDestination get_Outputs() [Public] ()
+  Method WeavePort.Abstractions.PluginFileLimits get_Limits() [Public] ()
+  Property Int64 InputReadBudget
+  Property System.Collections.Generic.IReadOnlyList`1[WeavePort.Abstractions.PluginInput] Inputs
+  Property WeavePort.Abstractions.IPluginOutputDestination Outputs
+  Property WeavePort.Abstractions.PluginFileLimits Limits
+type WeavePort.Abstractions.PluginInput : System.Object [Public, Sealed]
+  implements System.IEquatable`1[WeavePort.Abstractions.PluginInput]
+  Constructor Void .ctor(System.String, Int64, System.String, WeavePort.Abstractions.IPluginInputReader) [Public] (name, length, mediaType, reader)
+  Method Boolean Equals(System.Object) [Public, Virtual] (obj)
+  Method Boolean Equals(WeavePort.Abstractions.PluginInput) [Public, Final, Virtual] (other)
+  Method Boolean op_Equality(WeavePort.Abstractions.PluginInput, WeavePort.Abstractions.PluginInput) [Public, Static] (left, right)
+  Method Boolean op_Inequality(WeavePort.Abstractions.PluginInput, WeavePort.Abstractions.PluginInput) [Public, Static] (left, right)
+  Method Int32 GetHashCode() [Public, Virtual] ()
+  Method Int64 get_Length() [Public] ()
+  Method System.String ToString() [Public, Virtual] ()
+  Method System.String get_MediaType() [Public] ()
+  Method System.String get_Name() [Public] ()
+  Method WeavePort.Abstractions.IPluginInputReader get_Reader() [Public] ()
+  Method WeavePort.Abstractions.PluginInput <Clone>$() [Public] ()
+  Property Int64 Length
+  Property System.String MediaType
+  Property System.String Name
+  Property WeavePort.Abstractions.IPluginInputReader Reader
+type WeavePort.Abstractions.PluginOutputAbort : System.Enum [Public, Sealed]
+  implements System.IComparable
+  implements System.IConvertible
+  implements System.IFormattable
+  implements System.ISpanFormattable
+  Field Int32 value__
+  Field WeavePort.Abstractions.PluginOutputAbort Cancelled=1
+  Field WeavePort.Abstractions.PluginOutputAbort CommitFailed=3
+  Field WeavePort.Abstractions.PluginOutputAbort Failed=0
+  Field WeavePort.Abstractions.PluginOutputAbort Limit=2
+type WeavePort.Abstractions.PluginOutputInfo : System.Object [Public, Sealed]
+  implements System.IEquatable`1[WeavePort.Abstractions.PluginOutputInfo]
+  Constructor Void .ctor(System.String, System.String, Int64) [Public] (Name, MediaType, Length)
+  Method Boolean Equals(System.Object) [Public, Virtual] (obj)
+  Method Boolean Equals(WeavePort.Abstractions.PluginOutputInfo) [Public, Final, Virtual] (other)
+  Method Boolean op_Equality(WeavePort.Abstractions.PluginOutputInfo, WeavePort.Abstractions.PluginOutputInfo) [Public, Static] (left, right)
+  Method Boolean op_Inequality(WeavePort.Abstractions.PluginOutputInfo, WeavePort.Abstractions.PluginOutputInfo) [Public, Static] (left, right)
+  Method Int32 GetHashCode() [Public, Virtual] ()
+  Method Int64 get_Length() [Public] ()
+  Method System.String ToString() [Public, Virtual] ()
+  Method System.String get_MediaType() [Public] ()
+  Method System.String get_Name() [Public] ()
+  Method Void Deconstruct(System.String ByRef, System.String ByRef, Int64 ByRef) [Public] (Name, MediaType, Length)
+  Method Void set_Length(Int64) [Public] (value)
+  Method Void set_MediaType(System.String) [Public] (value)
+  Method Void set_Name(System.String) [Public] (value)
+  Method WeavePort.Abstractions.PluginOutputInfo <Clone>$() [Public] ()
+  Property Int64 Length
+  Property System.String MediaType
+  Property System.String Name
 type WeavePort.Abstractions.PluginVersionMismatch : System.Object [Public, Sealed]
   implements System.IEquatable`1[WeavePort.Abstractions.PluginVersionMismatch]
   Constructor Void .ctor(System.String, System.String) [Public] (Expected, Advertised)
@@ -964,6 +1056,7 @@ type WeavePort.Sdk.Client.IPluginClient :  [Public, ClassSemanticsMask, Abstract
   implements System.IAsyncDisposable
   Method System.Collections.Generic.IAsyncEnumerable`1[System.Text.Json.JsonElement] StreamAsync(System.String, System.Text.Json.JsonElement, System.Threading.CancellationToken) [Public, Virtual, Abstract] (operation, input, cancellationToken=null)
   Method System.Threading.Tasks.Task`1[System.Text.Json.JsonElement] CallAsync(System.String, System.Text.Json.JsonElement, System.Threading.CancellationToken) [Public, Virtual, Abstract] (operation, input, cancellationToken=null)
+  Method System.Threading.Tasks.Task`1[WeavePort.Sdk.Client.PluginCallResult`1[System.Text.Json.JsonElement]] CallWithFilesAsync(System.String, System.Text.Json.JsonElement, WeavePort.Abstractions.PluginFiles, System.Threading.CancellationToken) [Public, Virtual] (operation, input, files, cancellationToken=null)
   Method System.Threading.Tasks.Task`1[WeavePort.Sdk.Client.PluginCallResult`1[System.Text.Json.JsonElement]] CallWithMetadataAsync(System.String, System.Text.Json.JsonElement, System.Threading.CancellationToken) [Public, Virtual] (operation, input, cancellationToken=null)
 type WeavePort.Sdk.Client.LocalPluginClient : System.Object [Public, Sealed]
   implements System.IAsyncDisposable
@@ -1003,18 +1096,22 @@ type WeavePort.Sdk.Client.PluginCallResult`1 : System.Object [Public, Sealed]
   Method Boolean op_Equality(WeavePort.Sdk.Client.PluginCallResult`1[T], WeavePort.Sdk.Client.PluginCallResult`1[T]) [Public, Static] (left, right)
   Method Boolean op_Inequality(WeavePort.Sdk.Client.PluginCallResult`1[T], WeavePort.Sdk.Client.PluginCallResult`1[T]) [Public, Static] (left, right)
   Method Int32 GetHashCode() [Public, Virtual] ()
+  Method System.Collections.Generic.IReadOnlyList`1[WeavePort.Abstractions.PluginOutputInfo] get_Outputs() [Public] ()
   Method System.Nullable`1[System.Double] get_ElapsedMs() [Public] ()
   Method System.String ToString() [Public, Virtual] ()
   Method T get_Value() [Public] ()
   Method Void Deconstruct(T ByRef, System.Nullable`1[System.Double] ByRef) [Public] (Value, ElapsedMs)
   Method Void set_ElapsedMs(System.Nullable`1[System.Double]) [Public] (value)
+  Method Void set_Outputs(System.Collections.Generic.IReadOnlyList`1[WeavePort.Abstractions.PluginOutputInfo]) [Public] (value)
   Method Void set_Value(T) [Public] (value)
   Method WeavePort.Sdk.Client.PluginCallResult`1[T] <Clone>$() [Public] ()
+  Property System.Collections.Generic.IReadOnlyList`1[WeavePort.Abstractions.PluginOutputInfo] Outputs
   Property System.Nullable`1[System.Double] ElapsedMs
   Property T Value
 type WeavePort.Sdk.Client.PluginClientExtensions : System.Object [Public, Abstract, Sealed]
   Method System.Collections.Generic.IAsyncEnumerable`1[TItem] StreamAsync[TInput,TItem](WeavePort.Sdk.Client.IPluginClient, System.String, TInput, System.Threading.CancellationToken) [Public, Static] (client, operation, input, cancellationToken=null)
   Method System.Threading.Tasks.Task`1[TOutput] CallAsync[TInput,TOutput](WeavePort.Sdk.Client.IPluginClient, System.String, TInput, System.Threading.CancellationToken) [Public, Static] (client, operation, input, cancellationToken=null)
+  Method System.Threading.Tasks.Task`1[WeavePort.Sdk.Client.PluginCallResult`1[TOutput]] CallWithFilesAsync[TInput,TOutput](WeavePort.Sdk.Client.IPluginClient, System.String, TInput, WeavePort.Abstractions.PluginFiles, System.Threading.CancellationToken) [Public, Static] (client, operation, input, files, cancellationToken=null)
   Method System.Threading.Tasks.Task`1[WeavePort.Sdk.Client.PluginCallResult`1[TOutput]] CallWithMetadataAsync[TInput,TOutput](WeavePort.Sdk.Client.IPluginClient, System.String, TInput, System.Threading.CancellationToken) [Public, Static] (client, operation, input, cancellationToken=null)
 type WeavePort.Sdk.Client.PluginStreamOptions : System.Object [Public, Sealed]
   implements System.IEquatable`1[WeavePort.Sdk.Client.PluginStreamOptions]

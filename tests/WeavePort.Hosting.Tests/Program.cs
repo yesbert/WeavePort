@@ -39,6 +39,7 @@ if (args.Contains("--portable"))
     return;
 }
 DiagnosticCodeChecks.Run();
+Console.WriteLine($"PASS {await FileContractChecks.RunAsync()} function file contract assertions");
 await ConsumerFindingChecks.RunAsync();
 await PortableInstallationChecks.RunAsync();
 Console.WriteLine($"PASS {await McpChecks.RunAsync()} MCP protocol, authority and lifecycle assertions");

@@ -10,7 +10,7 @@ internal static partial class WorkerEnvelope
         WireFields.Type, WireFields.Id, WireFields.CallbackId, WireFields.Operation,
         WireFields.Payload, WireFields.Value, WireFields.Protocol, WireFields.PluginVersion,
         WireFields.Code, WireFields.SessionCleanup, WireFields.Reusable, WireFields.ConcurrentCalls,
-        WireFields.Degree, WireFields.PrimaryCode, WireFields.CleanupFailed
+        WireFields.Degree, WireFields.PrimaryCode, WireFields.CleanupFailed, WireFields.Files
     ];
     internal static void Validate(JsonElement frame)
     {

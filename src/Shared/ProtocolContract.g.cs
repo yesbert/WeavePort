@@ -9,6 +9,10 @@ internal static class SdkOperations
     internal const string SourceOpen = "$sdk.source.open";
     internal const string SourceRead = "$sdk.source.read";
     internal const string SourceClose = "$sdk.source.close";
+    internal const string InputRead = "$sdk.input.read";
+    internal const string OutputCreate = "$sdk.output.create";
+    internal const string OutputWrite = "$sdk.output.write";
+    internal const string OutputComplete = "$sdk.output.complete";
 }
 
 internal static class FrameKinds
@@ -53,6 +57,20 @@ internal static class FailureCodes
     internal const string SourceUnsupported = "source-unsupported";
     internal const string InvalidMode = "invalid-mode";
     internal const string StreamLimit = "stream-limit";
+    internal const string FilesUnsupported = "files-unsupported";
+    internal const string OutputLimit = "output-limit";
+    internal const string InputReadLimit = "input-read-limit";
+    internal const string OutputIncomplete = "output-incomplete";
+    internal const string OutputCommitFailed = "output-commit-failed";
+}
+
+internal static class FileErrors
+{
+    internal const string InputNotFound = "input-not-found";
+    internal const string OutputNotPermitted = "output-not-permitted";
+    internal const string OutputExists = "output-exists";
+    internal const string OutputClosed = "output-closed";
+    internal const string InvalidRange = "invalid-range";
 }
 
 internal static class ProtocolLimits
@@ -67,6 +85,15 @@ internal static class ProtocolLimits
     internal const int SourceChunkMaximumBytes = 262144;
     internal const int SourceChunkDefaultBytes = 65536;
     internal const int MaximumConcurrentCalls = 1024;
+    internal const int FileBlockMinimumBytes = 4096;
+    internal const int FileBlockMaximumBytes = 262144;
+    internal const int FileBlockDefaultBytes = 65536;
+    internal const int FileNameMaximumLength = 128;
+    internal const int FileMediaTypeMaximumLength = 255;
+    internal const int MaximumFileInputs = 64;
+    internal const int MaximumFileOutputs = 64;
+    internal const int FileInputReadBudgetFactor = 4;
+    internal const int FileBlockCacheBlocks = 4;
 }
 
 internal static class ProtocolVersions
@@ -75,6 +102,7 @@ internal static class ProtocolVersions
     internal const int Concurrent = 2;
     internal const int SessionCleanup = 1;
     internal const int ConcurrentCalls = 1;
+    internal const int Files = 1;
 }
 
 internal static class WireFields
@@ -106,6 +134,15 @@ internal static class WireFields
     internal const string Items = "items";
     internal const string Done = "done";
     internal const string Data = "data";
+    internal const string Files = "files";
+    internal const string Inputs = "inputs";
+    internal const string Outputs = "outputs";
+    internal const string Name = "name";
+    internal const string MediaType = "mediaType";
+    internal const string Length = "length";
+    internal const string Offset = "offset";
+    internal const string MaximumCount = "maximumCount";
+    internal const string MaximumBytes = "maximumBytes";
 }
 
 internal static class FailurePhases

@@ -48,6 +48,7 @@ Names follow these rules:
 
 - 1–128 characters from `[A-Za-z0-9._-]`, not starting with `.`.
 - Unique per invocation within inputs and within outputs. An input and an output may share a name.
+- At most 64 inputs and 64 outputs per invocation (`MaximumFileInputs`, `MaximumFileOutputs`), which keeps the descriptors well inside one frame.
 - Never interpreted as paths.
 
 `length` is mandatory and fixed for the invocation. The plugin cannot read past it. Media types are opaque, bounded strings (≤ 255) that the host passes through. New reserved envelope fields go into the duplicate-field check.
@@ -72,8 +73,10 @@ The new types live in `WeavePort.Abstractions`:
 - `PluginInput(string Name, long Length, string MediaType, IPluginInputReader Reader)` describes one input.
 - `IPluginInputReader.ReadAsync(long offset, Memory<byte> buffer, CancellationToken)` is a positional read in the style of `RandomAccess.ReadAsync`. It may return fewer bytes than requested only at the end. The host may call it with any offset in any order, but never concurrently within one invocation.
 - `IPluginOutputDestination.CreateAsync(name, mediaType, ct)` returns an `IPluginOutputWriter`. The writer has `WriteAsync(ReadOnlyMemory<byte>, ct)`, `CommitAsync(ct)`, `AbortAsync(PluginOutputAbort reason, ct)` and `DisposeAsync`.
-- `PluginFileLimits(int MaximumOutputs, long MaximumOutputBytes, long? MaximumInputReadBytes = null)`. Null means four times the sum of the declared input lengths.
-- `PluginFiles(IReadOnlyList<PluginInput> Inputs, IPluginOutputDestination? Outputs, PluginFileLimits Limits)`.
+- `PluginFileLimits(int maximumOutputs, long maximumOutputBytes, long? maximumInputReadBytes = null)`. Null means four times the sum of the declared input lengths. `PluginFileLimits.InputsOnly` permits no outputs.
+- `PluginFiles(IEnumerable<PluginInput> inputs, IPluginOutputDestination? outputs = null, PluginFileLimits? limits = null)` copies the inputs, rejects duplicate names and more than 64 inputs, and requires limits permitting at least one output when a destination is given. `InputReadBudget` is the effective budget, saturating at `long.MaxValue`.
+
+The constructors of `PluginInput`, `PluginFileLimits` and `PluginFiles` validate names, media types, lengths and limits, so an invalid descriptor never reaches the wire.
 
 A new optional interface, `IPluginFileSession : IPluginSession`, adds `InvokeAsync(operation, payload, PluginFiles, ct)`. `IPluginSession` does not change, which avoids breaking existing implementations. `InvocationResult` gets an additive `Outputs` property: a list of `PluginOutputInfo(Name, MediaType, Length)` that is empty unless the call succeeded.
 
@@ -160,13 +163,13 @@ New failure codes, added to `contracts/protocol.json` and the failure catalogue:
 |---|---|---|
 | `files-unsupported` | Refused before dispatch | false |
 | `output-limit` | An output limit was exceeded | true |
-| `input-limit` | The input read budget was exceeded | true |
+| `input-read-limit` | The input read budget was exceeded | true |
 | `output-incomplete` | An output was created but not completed | true |
 | `output-commit-failed` | Committing an output failed | true |
 
-Codes inside `callback-result` errors for the plugin: `input-not-found`, `output-not-permitted`, `output-exists`, `output-closed`, `invalid-range`.
+`input-read-limit` is distinct from the existing `input-limit`, which bounds the unary request size. Codes inside `callback-result` errors for the plugin: `input-not-found`, `output-not-permitted`, `output-exists`, `output-closed`, `invalid-range`.
 
-**Input read budget (decided 2026-11-05).** The host counts the bytes its readers deliver per invocation, across all inputs. Reads served from the SDK's block cache never reach the host and are not counted. A read that would exceed `MaximumInputReadBytes` is refused before the reader is called, and the call fails with `input-limit`. The default is four times the sum of the declared input lengths. That leaves room for ZIP libraries that revisit ranges, while stopping a plugin that loops over the same file until its deadline. It guards against a faulty plugin, not a hostile one, in line with the trusted native boundary.
+**Input read budget (decided 2026-11-05).** The host counts the bytes its readers deliver per invocation, across all inputs. Reads served from the SDK's block cache never reach the host and are not counted. A read that would exceed `MaximumInputReadBytes` is refused before the reader is called, and the call fails with `input-read-limit`. The default is four times the sum of the declared input lengths. That leaves room for ZIP libraries that revisit ranges, while stopping a plugin that loops over the same file until its deadline. It guards against a faulty plugin, not a hostile one, in line with the trusted native boundary.
 
 Through the gateway the registration caps the budget like the output limits.
 

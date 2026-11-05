@@ -1,13 +1,13 @@
 ## 1. Contracts
 
-- [ ] 1.1 Add reserved operations, wire fields (`files`, `inputs`, `outputs`, `name`, `mediaType`, `length`, `offset`, `maximumCount`, `maximumBytes`), the ready capability `files`, failure codes and limits to `contracts/protocol.json`. Regenerate the constants in all three SDKs and extend the independent wire fixtures.
-- [ ] 1.2 Define the public .NET types (`PluginInput`, `IPluginInputReader`, `IPluginOutputDestination`, `IPluginOutputWriter`, `PluginOutputAbort`, `PluginFileLimits`, `PluginFiles`, `PluginOutputInfo`, `IPluginFileSession`, the `InvocationResult.Outputs` property and `CallWithFilesAsync`). Update the API baselines without changing existing members.
-- [ ] 1.3 Specify name, media type and length validation, and the duplicate reserved-field checks for the new envelope fields.
+- [x] 1.1 Add reserved operations, wire fields (`files`, `inputs`, `outputs`, `name`, `mediaType`, `length`, `offset`, `maximumCount`, `maximumBytes`), the ready capability `files`, failure codes and limits to `contracts/protocol.json`. Regenerate the constants in all three SDKs and extend the independent wire fixtures.
+- [x] 1.2 Define the public .NET types (`PluginInput`, `IPluginInputReader`, `IPluginOutputDestination`, `IPluginOutputWriter`, `PluginOutputAbort`, `PluginFileLimits`, `PluginFiles`, `PluginOutputInfo`, `IPluginFileSession`, the `InvocationResult.Outputs` property and `CallWithFilesAsync`). Update the API baselines without changing existing members.
+- [x] 1.3 Specify name, media type and length validation, and the duplicate reserved-field checks for the new envelope fields.
 
 ## 2. Host exchange
 
 - [ ] 2.1 Recognize reserved `$sdk.` callback operations before grant lookup. Exclude them from the callback budget and callback admission, and run them inline under the invocation token and deadline.
-- [ ] 2.2 Implement positional input reads with range and length checks, and the per-invocation read budget (`input-limit`, default four times the declared lengths).
+- [ ] 2.2 Implement positional input reads with range and length checks, and the per-invocation read budget (`input-read-limit`, default four times the declared lengths).
 - [ ] 2.3 Implement output create, write and complete with count and total-byte limits.
 - [ ] 2.4 Implement the two-phase commit and abort lifecycle across success, plugin error, cancellation, timeout, worker loss, protocol failure, limit breach, an incomplete output and commit failure. Aggregate cleanup failures under a bounded grace period.
 - [ ] 2.5 Refuse file calls before dispatch with `files-unsupported` when the worker lacks the capability, or the binding is shared or MCP, or the operation is a stream or source. Verify `MayHaveExecuted = false`. Keep the stream and source refusal a policy check in front of an invocation-generic file path; it must not depend on `$sdk.call`.

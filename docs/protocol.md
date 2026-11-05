@@ -24,7 +24,7 @@ The worker replies with `{"type":"result","id":"host-generated-id","value":{}}` 
 
 A callback uses `{"type":"callback","id":"host-generated-id","callbackId":"unique-within-call","operation":"documents.read","payload":{}}`. The host returns a matching `callback-result` with `value`, or a denied/error outcome. Each callback reply is correlated to its invocation. Unknown invocation IDs, duplicate callback IDs and malformed or oversized frames fail the exchange; shared malformed traffic can retire the whole channel.
 
-Native worker envelope validation rejects duplicate reserved fields, including escaped spellings: `type`, `id`, `callbackId`, `operation`, `payload`, `value`, `protocol`, `pluginVersion`, `code`, `sessionCleanup`, `reusable`, `concurrentCalls`, `degree`, `primaryCode`, `cleanupFailed`. Required fields and their types are validated at the owning boundary. Nested application payloads retain their domain semantics. Ready protocol revisions must be supported integers.
+Native worker envelope validation rejects duplicate reserved fields, including escaped spellings: `type`, `id`, `callbackId`, `operation`, `payload`, `value`, `protocol`, `pluginVersion`, `code`, `sessionCleanup`, `reusable`, `concurrentCalls`, `degree`, `primaryCode`, `cleanupFailed`, `files`. Required fields and their types are validated at the owning boundary. Nested application payloads retain their domain semantics. Ready protocol revisions must be supported integers.
 
 ## Authority and outcomes
 

@@ -15,6 +15,16 @@ public static class PluginClientExtensions
         return new(result.Value.Deserialize<TOutput>(Json)!, result.ElapsedMs);
     }
 
+    /// <summary>Invokes a typed function with named inputs and outputs; committed outputs are reported with the result.</summary>
+    public static async Task<PluginCallResult<TOutput>> CallWithFilesAsync<TInput, TOutput>(this IPluginClient client, string operation, TInput input, WeavePort.Abstractions.PluginFiles files, CancellationToken cancellationToken = default)
+    {
+        var result = await client.CallWithFilesAsync(operation, JsonSerializer.SerializeToElement(input, Json), files, cancellationToken);
+        return new(result.Value.Deserialize<TOutput>(Json)!, result.ElapsedMs)
+        {
+            Outputs = result.Outputs
+        };
+    }
+
     /// <summary>Enumerates typed records without collecting the whole result.</summary>
     public static async IAsyncEnumerable<TItem> StreamAsync<TInput, TItem>(this IPluginClient client, string operation, TInput input, [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {

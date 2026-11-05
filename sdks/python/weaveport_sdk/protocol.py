@@ -8,6 +8,10 @@ class SdkOperations:
     SourceOpen = "$sdk.source.open"
     SourceRead = "$sdk.source.read"
     SourceClose = "$sdk.source.close"
+    InputRead = "$sdk.input.read"
+    OutputCreate = "$sdk.output.create"
+    OutputWrite = "$sdk.output.write"
+    OutputComplete = "$sdk.output.complete"
 
 
 class FrameKinds:
@@ -50,6 +54,19 @@ class FailureCodes:
     SourceUnsupported = "source-unsupported"
     InvalidMode = "invalid-mode"
     StreamLimit = "stream-limit"
+    FilesUnsupported = "files-unsupported"
+    OutputLimit = "output-limit"
+    InputReadLimit = "input-read-limit"
+    OutputIncomplete = "output-incomplete"
+    OutputCommitFailed = "output-commit-failed"
+
+
+class FileErrors:
+    InputNotFound = "input-not-found"
+    OutputNotPermitted = "output-not-permitted"
+    OutputExists = "output-exists"
+    OutputClosed = "output-closed"
+    InvalidRange = "invalid-range"
 
 
 class ProtocolLimits:
@@ -63,6 +80,15 @@ class ProtocolLimits:
     SourceChunkMaximumBytes = 262144
     SourceChunkDefaultBytes = 65536
     MaximumConcurrentCalls = 1024
+    FileBlockMinimumBytes = 4096
+    FileBlockMaximumBytes = 262144
+    FileBlockDefaultBytes = 65536
+    FileNameMaximumLength = 128
+    FileMediaTypeMaximumLength = 255
+    MaximumFileInputs = 64
+    MaximumFileOutputs = 64
+    FileInputReadBudgetFactor = 4
+    FileBlockCacheBlocks = 4
 
 
 class ProtocolVersions:
@@ -70,6 +96,7 @@ class ProtocolVersions:
     Concurrent = 2
     SessionCleanup = 1
     ConcurrentCalls = 1
+    Files = 1
 
 
 class WireFields:
@@ -100,6 +127,15 @@ class WireFields:
     Items = "items"
     Done = "done"
     Data = "data"
+    Files = "files"
+    Inputs = "inputs"
+    Outputs = "outputs"
+    Name = "name"
+    MediaType = "mediaType"
+    Length = "length"
+    Offset = "offset"
+    MaximumCount = "maximumCount"
+    MaximumBytes = "maximumBytes"
 
 
 class FailurePhases:
