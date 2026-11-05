@@ -6,12 +6,12 @@
 
 ## 2. Host exchange
 
-- [ ] 2.1 Recognize reserved `$sdk.` callback operations before grant lookup. Exclude them from the callback budget and callback admission, and run them inline under the invocation token and deadline.
-- [ ] 2.2 Implement positional input reads with range and length checks, and the per-invocation read budget (`input-read-limit`, default four times the declared lengths).
-- [ ] 2.3 Implement output create, write and complete with count and total-byte limits.
-- [ ] 2.4 Implement the two-phase commit and abort lifecycle across success, plugin error, cancellation, timeout, worker loss, protocol failure, limit breach, an incomplete output and commit failure. Aggregate cleanup failures under a bounded grace period.
-- [ ] 2.5 Refuse file calls before dispatch with `files-unsupported` when the worker lacks the capability, or the binding is shared or MCP, or the operation is a stream or source. Verify `MayHaveExecuted = false`. Keep the stream and source refusal a policy check in front of an invocation-generic file path; it must not depend on `$sdk.call`.
-- [ ] 2.6 Provide the built-in readers and writers (`FromStream`, `FromFile`, `ToDirectory`) and `LocalPluginClient.CallWithFilesAsync`.
+- [x] 2.1 Recognize reserved `$sdk.` callback operations before grant lookup. Exclude them from the callback budget and callback admission, and run them inline under the invocation token and deadline.
+- [x] 2.2 Implement positional input reads with range and length checks, and the per-invocation read budget (`input-read-limit`, default four times the declared lengths).
+- [x] 2.3 Implement output create, write and complete with count and total-byte limits.
+- [x] 2.4 Implement the two-phase commit and abort lifecycle across success, plugin error, cancellation, timeout, worker loss, protocol failure, limit breach, an incomplete output and commit failure. Aggregate cleanup failures under a bounded grace period.
+- [x] 2.5 Refuse file calls before dispatch with `files-unsupported` when the worker lacks the capability, or the binding is shared or MCP, or the operation is a stream or source. Verify `MayHaveExecuted = false`. Keep the stream and source refusal a policy check in front of an invocation-generic file path; it must not depend on `$sdk.call`.
+- [x] 2.6 Provide the built-in readers and writers (`FromStream`, `FromFile`, `ToDirectory`) and `LocalPluginClient.CallWithFilesAsync`.
 
 ## 3. SDKs
 

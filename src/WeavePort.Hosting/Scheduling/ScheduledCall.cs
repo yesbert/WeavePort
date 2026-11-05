@@ -8,6 +8,7 @@ internal sealed class ScheduledCall(ScheduledPlugin plugin, string operation, Js
     private static readonly JsonElement Empty = JsonSerializer.SerializeToElement(new { });
     internal OperationSession? Lease { get; set; }
     internal bool IsLease { get; init; }
+    internal PluginFiles? Files { get; init; }
     internal TaskCompletionSource Released { get; } = new(TaskCreationOptions.RunContinuationsAsynchronously);
     internal ScheduledPlugin Plugin { get; } = plugin;
     internal string Operation { get; } = operation;

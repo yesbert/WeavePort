@@ -46,6 +46,7 @@ internal static partial class WorkerEnvelope
         return 0;
     }
 
+    internal static bool AdvertisesFiles(JsonElement ready) => ready.TryGetProperty(WireFields.Files, out JsonElement files) && files.ValueKind == JsonValueKind.Number && files.TryGetInt32(out int revision) && revision == ProtocolVersions.Files;
     internal static void ValidateReady(JsonElement frame, string version, WorkerReusePolicy reusePolicy = WorkerReusePolicy.CustomerBound)
     {
         Validate(frame);

@@ -3,7 +3,7 @@ using WeavePort.Abstractions;
 
 namespace WeavePort.Hosting;
 /// <summary>Immutable customer-plugin registration. Queues concurrent calls onto one exclusive worker.</summary>
-public sealed class ScheduledPlugin : IPluginOperationSession
+public sealed class ScheduledPlugin : IPluginOperationSession, IPluginFileSession
 {
     private readonly PluginScheduler _owner;
     internal IPluginSession Session { get; }
@@ -43,6 +43,13 @@ public sealed class ScheduledPlugin : IPluginOperationSession
 
     /// <summary>Queues a complete operation. Payload is frozen; elapsed time includes admission waiting.</summary>
     public async Task<InvocationResult> InvokeAsync(string operation, JsonElement payload, CancellationToken cancellationToken = default) => (await InvokeMeasuredAsync(operation, payload, cancellationToken)).Result;
+    /// <summary>Queues a function call with files. Readers and the destination stay owned by the caller until the call completes.</summary>
+    public async Task<InvocationResult> InvokeAsync(string operation, JsonElement payload, PluginFiles files, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(files);
+        return (await _owner.Enqueue(this, operation, payload, cancellationToken, files)).Result;
+    }
+
     /// <summary>Returns admission and execution timing separately for capacity measurement.</summary>
     public Task<ScheduledInvocationResult> InvokeMeasuredAsync(string operation, JsonElement payload, CancellationToken cancellationToken = default) => _owner.Enqueue(this, operation, payload, cancellationToken);
     /// <summary>Releases the current idle worker. Throws if a call or cleanup is active.</summary>

@@ -6,6 +6,7 @@ namespace WeavePort.Hosting;
 internal sealed partial class PluginSession
 {
     private bool _clean;
+    private FileExchange? _files;
     private bool _freshNext;
     internal bool HasWorker => _worker is not null;
     internal bool LastAcquisitionReused { get; private set; }

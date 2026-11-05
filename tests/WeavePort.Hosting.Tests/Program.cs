@@ -8,6 +8,16 @@ if (args.Contains("--lifecycle-worker"))
     await LifecycleChecks.WorkerAsync();
     return;
 }
+if (args.Contains("--file-worker") || args.Contains("--file-worker-legacy"))
+{
+    await FileWorker.RunAsync(args.Contains("--file-worker"));
+    return;
+}
+if (args.Contains("--file-exchange"))
+{
+    Console.WriteLine($"PASS {await FileExchangeChecks.RunAsync()} function file exchange assertions");
+    return;
+}
 if (args.Contains("--mcp-worker"))
 {
     await McpFixture.RunAsync(args.Last());
@@ -40,6 +50,7 @@ if (args.Contains("--portable"))
 }
 DiagnosticCodeChecks.Run();
 Console.WriteLine($"PASS {await FileContractChecks.RunAsync()} function file contract assertions");
+Console.WriteLine($"PASS {await FileExchangeChecks.RunAsync()} function file exchange assertions");
 await ConsumerFindingChecks.RunAsync();
 await PortableInstallationChecks.RunAsync();
 Console.WriteLine($"PASS {await McpChecks.RunAsync()} MCP protocol, authority and lifecycle assertions");

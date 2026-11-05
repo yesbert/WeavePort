@@ -6,7 +6,7 @@ using WeavePort.Abstractions;
 
 namespace WeavePort.Hosting;
 
-internal sealed partial class PluginSession(SessionBinding binding, TenantAdmission admission, WorkerPool pool, TimeProvider clock, Action<PluginSession, TenantAdmission> removed, ILogger logger) : IPluginOperationSession
+internal sealed partial class PluginSession(SessionBinding binding, TenantAdmission admission, WorkerPool pool, TimeProvider clock, Action<PluginSession, TenantAdmission> removed, ILogger logger) : IPluginOperationSession, IPluginFileSession
 {
     private static readonly ActivitySource Traces = new("WeavePort.Hosting");
     private readonly SemaphoreSlim _gate = new(1);
@@ -22,7 +22,7 @@ internal sealed partial class PluginSession(SessionBinding binding, TenantAdmiss
     public string Instance => _instance;
     public string Tenant => binding.Context.Tenant;
 
-    internal async Task<InvocationResult> InvokeCoreAsync(string operation, JsonElement payload, bool streamExchange, CancellationToken cancellationToken = default)
+    internal async Task<InvocationResult> InvokeCoreAsync(string operation, JsonElement payload, bool streamExchange, CancellationToken cancellationToken = default, FileExchange? files = null)
     {
         long started = Stopwatch.GetTimestamp();
         if (_disposed)
@@ -45,7 +45,7 @@ internal sealed partial class PluginSession(SessionBinding binding, TenantAdmiss
 
         try
         {
-            return await InvokeAdmittedAsync(operation, payload, started, streamExchange, cancellationToken);
+            return await InvokeAdmittedAsync(operation, payload, started, streamExchange, cancellationToken, files);
         }
         finally
         {
@@ -60,7 +60,7 @@ internal sealed partial class PluginSession(SessionBinding binding, TenantAdmiss
         }
     }
 
-    private async Task<InvocationResult> InvokeAdmittedAsync(string operation, JsonElement payload, long started, bool streamExchange, CancellationToken cancellationToken)
+    private async Task<InvocationResult> InvokeAdmittedAsync(string operation, JsonElement payload, long started, bool streamExchange, CancellationToken cancellationToken, FileExchange? files)
     {
         _dispatched = false;
         _clean = false;
@@ -90,11 +90,7 @@ internal sealed partial class PluginSession(SessionBinding binding, TenantAdmiss
 
             deadline.Token.ThrowIfCancellationRequested();
             await EnsureStartedAsync(deadline.Token);
-            string trace = activity?.TraceId.ToString() ?? id;
-            JsonElement value = await DispatchAsync(new InvokeFrame(FrameKinds.Invoke, id, operation, payload, binding.Context, trace), deadline.Token);
-            deadline.Token.ThrowIfCancellationRequested();
-            await ReturnCleanWorkerAsync();
-            return new InvocationResult(FailureCodes.Ok, value, Instance, Stopwatch.GetElapsedTime(started).TotalMilliseconds, true);
+            return await ExecuteAsync(new InvokeFrame(FrameKinds.Invoke, id, operation, payload, binding.Context, activity?.TraceId.ToString() ?? id, files?.Descriptor), files, started, deadline.Token);
         }
         catch (WorkerCapacityException)
         {
@@ -103,15 +99,41 @@ internal sealed partial class PluginSession(SessionBinding binding, TenantAdmiss
         catch (Exception error) when (error is not OutOfMemoryException)
         {
             string code = ClassifyFailure(error, cancellationToken, deadline.Token);
-            return await CompleteFailureAsync(error, code, id, started, activity);
+            bool filesCleanupFailed = files is not null && await files.ReleaseAsync(FileExchange.AbortReason(code), logger, Instance);
+            return await CompleteFailureAsync(error, code, id, started, activity, filesCleanupFailed);
         }
         finally
         {
+            _files = null;
+            if (files is not null)
+            {
+                await files.ReleaseAsync(null, logger, Instance);
+            }
+
             if (admitted)
             {
                 admission.Calls.Release();
             }
         }
+    }
+
+    // Runs a started invocation: refuses files a worker cannot take, dispatches, then commits outputs before reuse.
+    private async Task<InvocationResult> ExecuteAsync(InvokeFrame frame, FileExchange? files, long started, CancellationToken token)
+    {
+        if (files is not null && (!_worker!.SupportsFiles || _worker.Mcp is not null))
+        {
+            return Result(FailureCodes.FilesUnsupported, started, false);
+        }
+
+        _files = files;
+        JsonElement value = await DispatchAsync(frame, token);
+        token.ThrowIfCancellationRequested();
+        IReadOnlyList<PluginOutputInfo> outputs = files is null ? [] : await files.CommitAsync(token);
+        await ReturnCleanWorkerAsync();
+        return new InvocationResult(FailureCodes.Ok, value, Instance, Stopwatch.GetElapsedTime(started).TotalMilliseconds, true)
+        {
+            Outputs = outputs
+        };
     }
 
     private async Task<JsonElement> DispatchAsync(InvokeFrame frame, CancellationToken token)

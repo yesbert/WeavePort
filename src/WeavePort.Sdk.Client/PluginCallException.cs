@@ -8,6 +8,8 @@ public sealed class PluginCallException(string status, bool mayHaveExecuted = tr
     public WeavePort.Abstractions.PluginFailure? Failure { get; init; }
     /// <summary>Expected and advertised artifact versions when startup failed before dispatch.</summary>
     public PluginVersionMismatch? VersionMismatch { get; init; }
+    /// <summary>Function outputs already committed when the call failed with output-commit-failed; otherwise empty.</summary>
+    public IReadOnlyList<PluginOutputInfo> Outputs { get; init; } = [];
     /// <summary>Host or SDK failure classification.</summary>
     public string Status { get; } = status;
     /// <summary>Gets the stable operation status code; unknown peer codes are preserved.</summary>

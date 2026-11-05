@@ -198,6 +198,14 @@ In return, read-ahead would need the following in all three SDKs:
 
 Task 6.1 measures the plugin's time per block and the round-trip time, locally and through the gateway. If the measurements show that gateway round trips dominate, SDK-internal read-ahead becomes a separate change. It needs no public API change. A host-side `PrefetchAsync` hint was rejected: a consumer can optimize its own storage access inside its reader.
 
+## Implementation notes (host, block 2)
+
+- **Worker retirement on file failures.** A call that fails with `output-limit`, `input-read-limit`, `output-incomplete` or `output-commit-failed` takes the existing failure path, which stops the worker. For the limit codes this is required, because the plugin is still inside the invocation. After a commit failure the worker would still be usable; retiring it anyway keeps one failure path.
+- **Scheduler.** `ScheduledPlugin` implements `IPluginFileSession` and carries `PluginFiles` through the queue. Without it, a host configured with `SchedulingOptions` would refuse every file call.
+- **Built-in reader for files.** `PluginInputReader.FromFile` takes an open `SafeFileHandle` instead of a path, so that the caller owns opening, sharing and closing.
+- **Refusals by the host.** A write or complete for an output name that was never created is refused with `output-not-permitted`. A reader that returns fewer bytes than the declared length before its end fails the call with `failed`.
+- **Callback replies with an error.** `callback-result` frames gain an optional `error` code. All three SDKs already turn a present `error` into an exception; the SDK changes in block 3 map the codes.
+
 ## Consumer confirmation
 
 HiveWeaver reviewed commit `43c53be` on 2026-11-05 and confirmed the design without asking for changes.

@@ -7,4 +7,6 @@ namespace WeavePort.Hosting;
 [JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase)]
 [JsonSerializable(typeof(InvokeFrame))]
 [JsonSerializable(typeof(CallbackResultFrame))]
+[JsonSerializable(typeof(FileReadReply))]
+[JsonSerializable(typeof(FileCompleteReply))]
 internal partial class WireJson : JsonSerializerContext;

@@ -44,6 +44,12 @@ internal sealed partial class PluginSession
     {
         string operation = frame.GetProperty(WireFields.Operation).GetString() ?? "";
         string callbackId = frame.GetProperty(WireFields.CallbackId).GetString() ?? "";
+        if (FileExchange.Handles(operation))
+        {
+            await RespondToFileAsync(frame, id, operation, callbackId, callbackIds, token);
+            return;
+        }
+
         if (!binding.Grants.Contains(operation) || !(InvocationScope.Current.Value?.Allows(operation) ?? false))
         {
             throw new UnauthorizedAccessException();
@@ -57,6 +63,31 @@ internal sealed partial class PluginSession
         var call = new HostCall(binding.Context, id, operation, frame.GetProperty(WireFields.Payload), trace);
         JsonElement value = await InvokeCallbackAsync(call, token);
         await Frames.WriteAsync(_worker!.Input, new CallbackResultFrame(FrameKinds.CallbackResult, id, callbackId, value), WireJson.Default.CallbackResultFrame, token);
+    }
+
+    // Reserved file operations bypass grants, the callback budget and callback admission by design.
+    private async Task RespondToFileAsync(JsonElement frame, string id, string operation, string callbackId, HashSet<string> callbackIds, CancellationToken token)
+    {
+        if (!callbackIds.Add(callbackId))
+        {
+            throw new InvalidDataException("Callback identity violation.");
+        }
+
+        JsonElement value;
+        string? error = null;
+        try
+        {
+            value = await (_files ?? FileExchange.None()).HandleAsync(operation, frame.GetProperty(WireFields.Payload), token);
+        }
+        catch (FileRefusal refusal)
+        {
+            value = JsonSerializer.SerializeToElement(new
+            {
+            });
+            error = refusal.Code;
+        }
+
+        await Frames.WriteAsync(_worker!.Input, new CallbackResultFrame(FrameKinds.CallbackResult, id, callbackId, value, error), WireJson.Default.CallbackResultFrame, token);
     }
 
     private async Task<JsonElement> InvokeCallbackAsync(HostCall call, CancellationToken token)
